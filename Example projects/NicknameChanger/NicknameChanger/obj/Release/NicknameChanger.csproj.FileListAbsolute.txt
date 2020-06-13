@@ -1,0 +1,14 @@
+C:\Users\ilink\source\repos\Anarchy\Example projects\NicknameChanger\NicknameChanger\bin\Release\NicknameChanger.exe.config
+C:\Users\ilink\source\repos\Anarchy\Example projects\NicknameChanger\NicknameChanger\bin\Release\NicknameChanger.exe
+C:\Users\ilink\source\repos\Anarchy\Example projects\NicknameChanger\NicknameChanger\bin\Release\NicknameChanger.pdb
+C:\Users\ilink\source\repos\Anarchy\Example projects\NicknameChanger\NicknameChanger\bin\Release\Anarchy.dll
+C:\Users\ilink\source\repos\Anarchy\Example projects\NicknameChanger\NicknameChanger\bin\Release\Newtonsoft.Json.dll
+C:\Users\ilink\source\repos\Anarchy\Example projects\NicknameChanger\NicknameChanger\bin\Release\websocket-sharp-with-proxy-support.dll
+C:\Users\ilink\source\repos\Anarchy\Example projects\NicknameChanger\NicknameChanger\bin\Release\Anarchy.pdb
+C:\Users\ilink\source\repos\Anarchy\Example projects\NicknameChanger\NicknameChanger\obj\Release\NicknameChanger.csproj.CoreCompileInputs.cache
+C:\Users\ilink\source\repos\Anarchy\Example projects\NicknameChanger\NicknameChanger\obj\Release\NicknameChanger.csproj.CopyComplete
+C:\Users\ilink\source\repos\Anarchy\Example projects\NicknameChanger\NicknameChanger\obj\Release\NicknameChanger.exe
+C:\Users\ilink\source\repos\Anarchy\Example projects\NicknameChanger\NicknameChanger\obj\Release\NicknameChanger.pdb
+C:\Users\ilink\source\repos\Anarchy\Example projects\NicknameChanger\NicknameChanger\bin\Release\Newtonsoft.Json.Schema.dll
+C:\Users\ilink\source\repos\Anarchy\Example projects\NicknameChanger\NicknameChanger\bin\Release\Newtonsoft.Json.Schema.xml
+C:\Users\ilink\source\repos\Anarchy\Example projects\NicknameChanger\NicknameChanger\obj\Release\NicknameChanger.csprojAssemblyReference.cache

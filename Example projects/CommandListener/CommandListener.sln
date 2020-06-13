@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29806.167
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommandListener", "CommandListener\CommandListener.csproj", "{59D049EE-4029-4568-A766-C7F6CA1C27A9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Anarchy", "..\..\Anarchy\Anarchy.csproj", "{18C13E5D-D4D2-4310-993C-2F2644DB8D54}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{59D049EE-4029-4568-A766-C7F6CA1C27A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{59D049EE-4029-4568-A766-C7F6CA1C27A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{59D049EE-4029-4568-A766-C7F6CA1C27A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{59D049EE-4029-4568-A766-C7F6CA1C27A9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{18C13E5D-D4D2-4310-993C-2F2644DB8D54}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{18C13E5D-D4D2-4310-993C-2F2644DB8D54}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{18C13E5D-D4D2-4310-993C-2F2644DB8D54}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{18C13E5D-D4D2-4310-993C-2F2644DB8D54}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6F28CEF4-3FDF-407C-89A7-BFC6E247E3A8}
+	EndGlobalSection
+EndGlobal

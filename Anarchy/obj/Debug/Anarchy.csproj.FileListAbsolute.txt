@@ -1,0 +1,13 @@
+C:\Users\edhbu\source\repos\Anarchy\Anarchy\obj\Debug\Anarchy.csproj.CoreCompileInputs.cache
+C:\Users\edhbu\source\repos\Anarchy\Anarchy\bin\Debug\Anarchy.dll
+C:\Users\edhbu\source\repos\Anarchy\Anarchy\bin\Debug\Anarchy.pdb
+C:\Users\edhbu\source\repos\Anarchy\Anarchy\bin\Debug\Leaf.xNet.dll
+C:\Users\edhbu\source\repos\Anarchy\Anarchy\bin\Debug\Newtonsoft.Json.dll
+C:\Users\edhbu\source\repos\Anarchy\Anarchy\bin\Debug\Newtonsoft.Json.Schema.dll
+C:\Users\edhbu\source\repos\Anarchy\Anarchy\bin\Debug\Leaf.xNet.xml
+C:\Users\edhbu\source\repos\Anarchy\Anarchy\bin\Debug\Newtonsoft.Json.xml
+C:\Users\edhbu\source\repos\Anarchy\Anarchy\bin\Debug\Newtonsoft.Json.Schema.xml
+C:\Users\edhbu\source\repos\Anarchy\Anarchy\obj\Debug\Anarchy.csproj.CopyComplete
+C:\Users\edhbu\source\repos\Anarchy\Anarchy\obj\Debug\Anarchy.dll
+C:\Users\edhbu\source\repos\Anarchy\Anarchy\obj\Debug\Anarchy.pdb
+C:\Users\edhbu\source\repos\Anarchy\Anarchy\obj\Debug\Anarchy.csprojAssemblyReference.cache

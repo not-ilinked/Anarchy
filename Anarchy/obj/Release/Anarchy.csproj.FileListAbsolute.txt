@@ -1,0 +1,2 @@
+C:\Users\edhbu\source\repos\Anarchy\Anarchy\obj\Release\Anarchy.csprojAssemblyReference.cache
+C:\Users\edhbu\source\repos\Anarchy\Anarchy\obj\Release\Anarchy.csproj.CoreCompileInputs.cache
