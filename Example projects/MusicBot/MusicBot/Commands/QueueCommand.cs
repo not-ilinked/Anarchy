@@ -32,7 +32,8 @@ namespace MusicBot
                     embed.Footer.Text = Program.EmbedFooter.Text;
                     embed.Footer.IconUrl = Program.EmbedFooter.IconUrl;
 
-                    embed.AddField(Program.Sessions[message.Guild].CurrentTrack.Name + " (currently playing)", Program.Sessions[message.Guild].CurrentTrack.Url);
+                    embed.AddField(Program.Sessions[message.Guild].CurrentTrack.Name + " (currently playing)", 
+                                   Program.Sessions[message.Guild].CurrentTrack.Url);
 
                     var queue = Program.Sessions[message.Guild].Queue.ToArray();
 
