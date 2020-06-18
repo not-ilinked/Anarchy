@@ -14,11 +14,11 @@ namespace Discord
         protected string _iconId;
 
 
-        public DiscordGuildIconCDNImage Icon
+        public DiscordGuildIcon Icon
         {
             get
             {
-                return new DiscordGuildIconCDNImage(Id, _iconId);
+                return new DiscordGuildIcon(Id, _iconId);
             }
         }
 

@@ -21,11 +21,11 @@ namespace Discord.Webhook
         [JsonProperty("avatar")]
         private string _avatarId;
 
-        public DiscordUserAvatarCDNImage Avatar
+        public DiscordUserAvatar Avatar
         {
             get
             {
-                return new DiscordUserAvatarCDNImage(Id, _avatarId);
+                return new DiscordUserAvatar(Id, _avatarId);
             }
         }
 

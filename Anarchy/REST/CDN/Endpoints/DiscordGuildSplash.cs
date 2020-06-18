@@ -2,7 +2,7 @@
 
 namespace Discord
 {
-    public class DiscordGuildSplashCDNImage : DiscordHashedCDNImage
+    public class DiscordGuildSplash : DiscordHashedCDNImage
     {
         protected override string BaseEndpoint { get; set; } = "splashes";
         protected override List<DiscordCDNImageFormat> SupportedFormats { get; set; } = new List<DiscordCDNImageFormat>()
@@ -12,7 +12,7 @@ namespace Discord
             DiscordCDNImageFormat.WebP
         };
 
-        public DiscordGuildSplashCDNImage(ulong id, string hash) : base(id, hash)
+        public DiscordGuildSplash(ulong id, string hash) : base(id, hash)
         { }
     }
 }

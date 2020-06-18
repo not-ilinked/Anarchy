@@ -55,7 +55,7 @@ namespace Discord
         /// </summary>
         public void Leave()
         {
-            Update(Client.DeleteChannel(Id).ToDMChannel());
+            Client.DeleteChannel(Id);
         }
 
 

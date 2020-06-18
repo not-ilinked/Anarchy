@@ -10,7 +10,7 @@ namespace Discord.Gateway
     /// </summary>
     internal class Login : ControllableEx, IDisposable
     {
-        public Login()
+        internal Login()
         {
             OnClientUpdated += (sender, e) =>
             {

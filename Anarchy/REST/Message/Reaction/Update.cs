@@ -19,11 +19,27 @@ namespace Discord
 
 
         [JsonProperty("channel_id")]
-        public ulong ChannelId { get; private set; }
+        private readonly ulong _channelId;
+
+        public MinimalTextChannel Channel
+        {
+            get
+            {
+                return new MinimalTextChannel(_channelId);
+            }
+        }
 
 
         [JsonProperty("guild_id")]
-        public ulong GuildId { get; private set; }
+        private readonly ulong _guildId;
+
+        public MinimalGuild Guild
+        {
+            get
+            {
+                return new MinimalGuild(_guildId);
+            }
+        }
 
 
         [JsonProperty("user_id")]

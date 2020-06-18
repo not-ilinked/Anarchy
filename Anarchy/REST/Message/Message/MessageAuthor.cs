@@ -2,7 +2,7 @@
 {
     public class MessageAuthor : Controllable
     {
-        public MessageAuthor(DiscordUser user, GuildMember member)
+        internal MessageAuthor(DiscordUser user, GuildMember member)
         {
             User = user;
 

@@ -2,7 +2,7 @@
 
 namespace Discord
 {
-    public class DiscordAppIconCDNImage : DiscordHashedCDNImage
+    public class DiscordAppIcon : DiscordHashedCDNImage
     {
         protected override string BaseEndpoint { get; set; } = "app-icons";
         protected override List<DiscordCDNImageFormat> SupportedFormats { get; set; } = new List<DiscordCDNImageFormat>()
@@ -13,7 +13,7 @@ namespace Discord
         };
 
 
-        public DiscordAppIconCDNImage(ulong id, string hash) : base(id, hash)
+        public DiscordAppIcon(ulong id, string hash) : base(id, hash)
         { }
     }
 }

@@ -26,7 +26,7 @@ namespace Discord
 
 
         [JsonProperty("status")]
-        public int Status { get; private set; } // not sure what htis is lol
+        public int Status { get; private set; } // not sure what this is lol
 
 
         [JsonProperty("description")]

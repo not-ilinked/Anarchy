@@ -6,11 +6,30 @@ namespace Discord.Gateway
     public class UserTyping
     {
         [JsonProperty("channel_id")]
-        public ulong ChannelId { get; private set; }
+        private readonly ulong _channelId;
+
+        public MinimalTextChannel Channel
+        {
+            get
+            {
+                return new MinimalTextChannel(_channelId);
+            }
+        }
 
 
         [JsonProperty("guild_id")]
-        public ulong? GuildId { get; private set; }
+        private readonly ulong? _guildId;
+
+        public MinimalGuild Guild
+        {
+            get
+            {
+                if (_guildId.HasValue)
+                    return new MinimalGuild(_guildId.Value);
+                else
+                    return null;
+            }
+        }
 
 
         [JsonProperty("user_id")]

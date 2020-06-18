@@ -2,7 +2,7 @@
 
 namespace Discord
 {
-    public class DiscordDefaultUserAvatarCDNImage : DiscordCDNImage
+    public class DiscordDefaultUserAvatar : DiscordCDNImage
     {
         protected override string BaseEndpoint { get; set; } = "embed/avatars";
         protected override List<DiscordCDNImageFormat> SupportedFormats { get; set; } = new List<DiscordCDNImageFormat>()
@@ -11,7 +11,7 @@ namespace Discord
         };
 
 
-        public DiscordDefaultUserAvatarCDNImage(int userDiscriminator) : base(userDiscriminator % 5)
+        public DiscordDefaultUserAvatar(int userDiscriminator) : base(userDiscriminator % 5)
         { }
     }
 }

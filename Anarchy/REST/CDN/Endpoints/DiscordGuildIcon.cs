@@ -2,13 +2,13 @@
 
 namespace Discord
 {
-    public class DiscordGuildIconCDNImage : DiscordHashedCDNImage
+    public class DiscordGuildIcon : DiscordHashedCDNImage
     {
         protected override string BaseEndpoint { get; set; } = "icons";
         protected override List<DiscordCDNImageFormat> SupportedFormats { get; set; }
 
 
-        public DiscordGuildIconCDNImage(ulong id, string hash) : base(id, hash)
+        public DiscordGuildIcon(ulong id, string hash) : base(id, hash)
         { }
     }
 }

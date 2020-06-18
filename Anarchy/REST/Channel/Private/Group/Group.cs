@@ -10,7 +10,15 @@ namespace Discord
     public class Group : PrivateChannel
     {
         [JsonProperty("icon")]
-        public string IconId { get; private set; }
+        private string _iconHash;
+
+        public DiscordChannelIcon Icon
+        {
+            get
+            {
+                return new DiscordChannelIcon(Id, _iconHash);
+            }
+        }
 
 
         [JsonProperty("owner_id")]
@@ -20,7 +28,7 @@ namespace Discord
         protected void Update(Group group)
         {
             base.Update(group);
-            IconId = group.IconId;
+            _iconHash = group._iconHash;
             OwnerId = group.OwnerId;
         }
 
@@ -55,15 +63,6 @@ namespace Discord
 
 
         /// <summary>
-        /// Adds a recipient to the group
-        /// </summary>
-        public void AddRecipient(DiscordUser user)
-        {
-            AddRecipient(user.Id);
-        }
-
-
-        /// <summary>
         /// Removes a user from the group
         /// </summary>
         /// <param name="userId">ID of the user</param>
@@ -82,14 +81,6 @@ namespace Discord
         }
 
 
-        public new void Leave()
-        {
-            Group group = Client.DeleteChannel(Id).ToGroup();
-
-            Update(group);
-        }
-
-
         /// <summary>
         /// Creates an invite
         /// </summary>
@@ -97,20 +88,6 @@ namespace Discord
         public DiscordInvite CreateInvite(InviteProperties properties = null)
         {
             return Client.CreateInvite(Id, properties);
-        }
-
-
-        /// <summary>
-        /// Gets the group's icon
-        /// </summary>
-        /// <returns>The icon (null if IconId is null)</returns>
-        public Image GetIcon()
-        {
-            if (IconId == null)
-                return null;
-
-            return (Bitmap)new ImageConverter()
-                        .ConvertFrom(new HttpClient().GetByteArrayAsync($"https://cdn.discordapp.com/icons/{Id}/{IconId}.png").Result);
         }
     }
 }

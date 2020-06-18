@@ -1,5 +1,14 @@
 (Please keep in mind that these are only the major/important changes. There have been way more than written here)<br>
 
+# 0.7.0.2
+### Additions
+- Added the newest messagetypes to MessageType.
+
+### Improvements
+- Updated various methods and properties in the following classes: Group, DeletedMessage, MessageReactionUpdate, UserTyping.
+
+
+
 # 0.7.0.0
 ### Additions
 - Added support for speaking through voice channels using a DiscordVoiceSession (even in private channels).

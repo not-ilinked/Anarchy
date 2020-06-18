@@ -9,6 +9,13 @@
         ChannelNameChange,
         ChannelIconChange,
         ChannelPinnedMessage,
-        GuildMemberJoin
+        GuildMemberJoin,
+        GuildBoosted,
+        GuildBoostedTier1,
+        GuildBoostedTier2,
+        GuildBoostedTier3,
+        ChannelFollowAdd,
+        GuildDiscoveryDisgualified,
+        GuildDiscoveryRequalified
     }
 }

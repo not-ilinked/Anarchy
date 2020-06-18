@@ -22,11 +22,11 @@ namespace Discord
         protected string _avatarHash;
 
 
-        public DiscordUserAvatarCDNImage Avatar
+        public DiscordUserAvatar Avatar
         {
             get
             {
-                return new DiscordUserAvatarCDNImage(Id, _avatarHash);
+                return new DiscordUserAvatar(Id, _avatarHash);
             }
         }
 

@@ -22,7 +22,7 @@ namespace Discord.Gateway
 
         public MinimalChannel Channel
         {
-            get { return new MinimalChannel(_channelId); }
+            get { return new MinimalChannel(_channelId).SetClient(Client); }
         }
     }
 }

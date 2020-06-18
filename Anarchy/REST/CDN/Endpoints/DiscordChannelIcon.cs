@@ -2,9 +2,9 @@
 
 namespace Discord
 {
-    public class DiscordGuildBannerCDNImage : DiscordHashedCDNImage
+    public class DiscordChannelIcon : DiscordHashedCDNImage
     {
-        protected override string BaseEndpoint { get; set; } = "banners";
+        protected override string BaseEndpoint { get; set; } = "channel-icons";
         protected override List<DiscordCDNImageFormat> SupportedFormats { get; set; } = new List<DiscordCDNImageFormat>()
         {
             DiscordCDNImageFormat.PNG,
@@ -12,8 +12,7 @@ namespace Discord
             DiscordCDNImageFormat.WebP
         };
 
-
-        public DiscordGuildBannerCDNImage(ulong id, string hash) : base(id, hash)
+        public DiscordChannelIcon(ulong id, string hash) : base(id, hash)
         { }
     }
 }

@@ -28,9 +28,9 @@ namespace Discord
         [JsonProperty("icon")]
         private string _icon;
 
-        public DiscordAppIconCDNImage Icon
+        public DiscordAppIcon Icon
         {
-            get { return new DiscordAppIconCDNImage(Id, _icon); }
+            get { return new DiscordAppIcon(Id, _icon); }
         }
 
 
