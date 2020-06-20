@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json.Schema;
-using Newtonsoft.Json.Schema.Generation;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 using System.Threading;
 using Newtonsoft.Json;
 using System;
@@ -13,7 +11,7 @@ namespace Discord
 {
     public class Response
     {
-        private string _content;
+        private readonly string _content;
 
         public Response(string content)
         {
@@ -30,11 +28,6 @@ namespace Discord
     public class DiscordHttpClient
     {
         private readonly DiscordClient _discordClient;
-
-#pragma warning disable IDE0044
-        private static JSchema _errorSchema = new JSchemaGenerator().Generate(typeof(DiscordHttpError));
-#pragma warning restore IDE0044
-
 
         public string Fingerprint { get; private set; }
 
@@ -59,7 +52,9 @@ namespace Discord
                     throw new RateLimitException(_discordClient, resp.ToString().Deserialize<RateLimit>());
                 else if (statusCode == 400)
                 {
-                    if (!resp.Deserialize<JObject>().IsValid(_errorSchema))
+                    var obj = resp.Deserialize<JObject>();
+
+                    if (!obj.ContainsKey("code") || !obj.ContainsKey("message"))
                         throw new InvalidParametersException(_discordClient, resp.ToString());
                 }
 

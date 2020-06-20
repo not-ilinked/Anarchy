@@ -1,21 +1,10 @@
 ﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace Discord
 {
     public class PartialGuild : BaseGuild
     {
-        [JsonProperty("description")]
-        public string Description { get; private set; }
-
-
-        [JsonProperty("verification_level")]
-        public GuildVerificationLevel VerificationLevel { get; private set; }
-
-
-        [JsonProperty("vanity_url_code")]
-        public string VanityInvite { get; private set; }
-
-
         [JsonProperty("owner")]
         public bool Owner { get; private set; }
 
@@ -28,6 +17,10 @@ namespace Discord
         }
 #pragma warning restore IDE0051, IDE1006
         public DiscordPermissions Permissions { get; private set; }
+
+
+        [JsonProperty("features")]
+        public IReadOnlyList<string> Features { get; private set; }
 
 
         /// <summary>

@@ -5,12 +5,6 @@ namespace Discord
     public static class GuildChannelExtensions
     {
 #pragma warning disable IDE1006
-        private static Treturn modifyChannel<Treturn, TProperties>(this DiscordClient client, ulong channelId, TProperties properties) where TProperties : GuildChannelProperties where Treturn : GuildChannel
-        {
-            return client.HttpClient.Patch($"/channels/{channelId}", properties).DeserializeEx<Treturn>().SetClient(client);
-        }
-
-
         /// <summary>
         /// Gets a guild's channels
         /// </summary>
@@ -40,42 +34,6 @@ namespace Discord
             channel.GuildId = guildId;
 
             return channel;
-        }
-
-
-        /// <summary>
-        /// Modifies a guild channel
-        /// </summary>
-        /// <param name="channelId">ID of the channel</param>
-        /// <param name="properties">Options for modifying the guild channel</param>
-        /// <returns>The modified <see cref="GuildChannel"/></returns>
-        public static GuildChannel ModifyGuildChannel(this DiscordClient client, ulong channelId, GuildChannelProperties properties)
-        {
-            return client.modifyChannel<GuildChannel, GuildChannelProperties>(channelId, properties);
-        }
-
-
-        /// <summary>
-        /// Modifies a guild text channel
-        /// </summary>
-        /// <param name="channelId">ID of the channel</param>
-        /// <param name="properties">Options for modifying the channel</param>
-        /// <returns>The modified <see cref="TextChannel"/></returns>
-        public static TextChannel ModifyTextChannel(this DiscordClient client, ulong channelId, TextChannelProperties properties)
-        {
-            return client.modifyChannel<TextChannel, TextChannelProperties>(channelId, properties);
-        }
-
-
-        /// <summary>
-        /// Modifies a guild voice channel
-        /// </summary>
-        /// <param name="channelId">ID of the channel</param>
-        /// <param name="properties">Options for modifying the channel</param>
-        /// <returns>The modified <see cref="VoiceChannel"/></returns>
-        public static VoiceChannel ModifyVoiceChannel(this DiscordClient client, ulong channelId, VoiceChannelProperties properties)
-        {
-            return client.modifyChannel<VoiceChannel, VoiceChannelProperties>(channelId, properties);
         }
 
 

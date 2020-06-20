@@ -21,9 +21,9 @@ namespace Discord
         /// <param name="channelId">ID of the channel</param>
         /// <param name="properties">Options for modifying the channel</param>
         /// <returns>The modified <see cref="DiscordChannel"/></returns>
-        public static DiscordChannel ModifyChannel(this DiscordClient client, ulong channelId, string name)
+        public static DiscordChannel ModifyChannel(this DiscordClient client, ulong channelId, ChannelProperties properties)
         {
-            return client.HttpClient.Patch($"/channels/{channelId}", new ChannelProperties() { Name = name }).DeserializeEx<DiscordChannel>().SetClient(client);
+            return client.HttpClient.Patch($"/channels/{channelId}", properties).DeserializeEx<DiscordChannel>().SetClient(client);
         }
 
 

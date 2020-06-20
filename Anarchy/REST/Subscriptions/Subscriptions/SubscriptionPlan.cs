@@ -2,7 +2,7 @@
 
 namespace Discord
 {
-    public class NitroSubscriptionPlan
+    public class SubscriptionPlan
     {
         [JsonProperty("sku_id")]
         public ulong SkuId { get; private set; }
@@ -28,7 +28,7 @@ namespace Discord
         public ulong Id { get; private set; }
 
 
-        public static implicit operator ulong(NitroSubscriptionPlan instance)
+        public static implicit operator ulong(SubscriptionPlan instance)
         {
             return instance.Id;
         }

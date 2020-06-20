@@ -7,8 +7,7 @@ namespace Discord
     public class DiscoveryGuild : BaseGuild
     {
         [JsonProperty("description")]
-        public string Description { get; private set; }
-
+        public string Description { get; protected set; }
 
         [JsonProperty("approximate_presence_count")]
         public int OnlineMembers { get; private set; }

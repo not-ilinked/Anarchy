@@ -5,7 +5,7 @@ namespace Discord
     public class ClientGuildSettings : Controllable
     {
         [JsonProperty("guild_id")]
-        private ulong? _guildId;
+        private readonly ulong? _guildId;
 
         public MinimalGuild Guild
         {

@@ -38,7 +38,7 @@ namespace Discord
         {
             return Client.PurchaseNitroGift(Id, nitroType);
         }
-
+            
 
         public static implicit operator ulong(PaymentMethod instance)
         {

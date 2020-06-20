@@ -1,6 +1,4 @@
-﻿using System.Drawing;
-using System.Net.Http;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace Discord
 {
@@ -84,10 +82,9 @@ namespace Discord
         /// <summary>
         /// Creates an invite
         /// </summary>
-        /// <param name="properties">Options for creating the invite</param>
-        public DiscordInvite CreateInvite(InviteProperties properties = null)
+        public DiscordInvite CreateInvite()
         {
-            return Client.CreateInvite(Id, properties);
+            return Client.CreateInvite(Id, new InviteProperties() { MaxAge = 10800 });
         }
     }
 }

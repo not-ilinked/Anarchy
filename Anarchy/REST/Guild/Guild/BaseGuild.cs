@@ -1,6 +1,4 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Drawing;
 
 namespace Discord
 {
@@ -20,17 +18,6 @@ namespace Discord
             {
                 return new DiscordGuildIcon(Id, _iconId);
             }
-        }
-
-
-        /// <summary>
-        /// Gets the guild's icon
-        /// </summary>
-        /// <returns>The guild's icon (returns null if IconId is null)</returns>
-        [Obsolete("GetIcon is obsolete. Use Icon.Download() instead", true)]
-        public Image GetIcon()
-        {
-            return null;
         }
 
 

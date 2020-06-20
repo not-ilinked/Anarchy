@@ -17,16 +17,16 @@ namespace Discord
         }
 
 
+        [JsonProperty("description")]
+        public string Description { get; protected set; }
+
+
         [JsonProperty("unavailable")]
         public bool Unavailable { get; internal set; }
 
 
         [JsonProperty("premium_subscription_count")]
         public uint? NitroBoosts { get; private set; }
-
-
-        [JsonProperty("description")]
-        public string Description { get; private set; }
 
 
         [JsonProperty("region")]

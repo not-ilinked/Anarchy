@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace Discord
 {
-    public class Payment
+    public class DiscordPayment
     {
         [JsonProperty("id")]
         public ulong Id { get; private set; }
@@ -34,7 +29,7 @@ namespace Discord
 
 
         [JsonProperty("flags")]
-        public int Flags { get; private set; }
+        public int Flags { get; private set; } // not sure what this is either
 
 
         [JsonProperty("payment_source")]

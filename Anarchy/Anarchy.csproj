@@ -28,14 +28,11 @@
     <NoWarn>IDE1006, CS0649, CS0414, IDE0051</NoWarn>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Leaf.xNet, Version=5.2.6.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Leaf.xNet.5.2.6\lib\net45\Leaf.xNet.dll</HintPath>
+    <Reference Include="Leaf.xNet, Version=5.2.10.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Leaf.xNet.5.2.10\lib\net45\Leaf.xNet.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json.Schema, Version=3.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.Schema.3.0.13\lib\net45\Newtonsoft.Json.Schema.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -95,14 +92,13 @@
     <Compile Include="REST\Billing\BillingAddress.cs" />
     <Compile Include="REST\Billing\CardPaymentMethod.cs" />
     <Compile Include="REST\Billing\Extensions.cs" />
-    <Compile Include="REST\Billing\Payment.cs" />
+    <Compile Include="REST\Billing\DiscordPayment.cs" />
     <Compile Include="REST\Billing\PaymentMethod.cs" />
     <Compile Include="REST\Billing\PaymentMethodType.cs" />
     <Compile Include="REST\Billing\PayPalPaymentMethod.cs" />
     <Compile Include="REST\CDN\Endpoints\DiscordChannelIcon.cs" />
     <Compile Include="REST\Gifts\DiscordGift.cs" />
     <Compile Include="REST\Gifts\DiscordGiftCode.cs" />
-    <Compile Include="REST\Gifts\DiscordNitroGift.cs" />
     <Compile Include="REST\Gifts\Extensions.cs" />
     <Compile Include="REST\Gifts\PurchaseOptions.cs" />
     <Compile Include="REST\Guild\Guild\SystemChannelInformation.cs" />
@@ -117,7 +113,7 @@
     <Compile Include="REST\Subscriptions\Nitro\DiscordNitroSubTypes.cs" />
     <Compile Include="REST\Subscriptions\Nitro\Extensions.cs" />
     <Compile Include="REST\OAuth2\Models\DiscordApplicationProperties.cs" />
-    <Compile Include="REST\Subscriptions\Nitro\NitroSubscriptionPlan.cs" />
+    <Compile Include="REST\Subscriptions\Subscriptions\SubscriptionPlan.cs" />
     <Compile Include="REST\Subscriptions\Nitro\PrivateNitroSubscriptionExtensions.cs" />
     <Compile Include="REST\Subscriptions\Subscriptions\AdditionalSubscriptionPlan.cs" />
     <Compile Include="REST\Subscriptions\Subscriptions\DiscordActiveSubscription.cs" />

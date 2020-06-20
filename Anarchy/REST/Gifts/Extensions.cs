@@ -48,10 +48,10 @@ namespace Discord
         }
 
 
-        public static DiscordNitroGift GetNitroGift(this DiscordClient client, string code)
+        public static DiscordGift GetNitroGift(this DiscordClient client, string code)
         {
             return client.HttpClient.Get($"/entitlements/gift-codes/{code}?with_application=false&with_subscription_plan=true")
-                                .Deserialize<DiscordNitroGift>();
+                                .Deserialize<DiscordGift>();
         }
 
 

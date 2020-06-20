@@ -20,11 +20,22 @@ namespace Discord
         public ulong GifterId { get; private set; }
 
 
+        // in certain cases this might be filled out instead
+        [JsonProperty("user")]
+        private DiscordUser _gifter 
+        { 
+            set
+            {
+                GifterId = value.Id;
+            } 
+        }
+
+
         [JsonProperty("consumed")]
         public bool Consumed { get; private set; }
 
 
         [JsonProperty("subscription_plan")]
-        public NitroSubscriptionPlan SubscriptionPlan { get; private set; }
+        public SubscriptionPlan SubscriptionPlan { get; private set; }
     }
 }

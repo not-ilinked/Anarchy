@@ -19,9 +19,9 @@ namespace Discord
         /// Modifies the channel
         /// </summary>
         /// <param name="properties">Options for modifying the channel</param>
-        public DiscordChannel Modify(string name)
+        public DiscordChannel Modify(ChannelProperties properties)
         {
-            return Client.ModifyChannel(Id, name);
+            return Client.ModifyChannel(Id, properties);
         }
 
 

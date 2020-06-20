@@ -32,9 +32,9 @@ namespace Discord
         /// Modifies the channel
         /// </summary>
         /// <param name="properties">Options for modifying the channel</param>
-        public new void Modify(string name)
+        public new void Modify(ChannelProperties properties)
         {
-            Update(base.Modify(name));
+            Update(base.Modify(properties));
         }
 
 

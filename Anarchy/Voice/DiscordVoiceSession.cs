@@ -140,8 +140,6 @@ namespace Discord.Voice
         {
             var payload = e.Data.Deserialize<DiscordVoiceResponse>();
 
-            Console.WriteLine(payload.Opcode.ToString());
-
             Task.Run(() =>
             {
                 switch (payload.Opcode)

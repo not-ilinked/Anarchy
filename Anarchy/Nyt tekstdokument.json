@@ -1,0 +1,20 @@
+{
+  [
+    {
+      "id": "251072485095636994",
+      "name": "Terraria",
+      "icon": "a_6a912a63a40ec7ed6b7aed052fedd9f3",
+      "owner": false,
+      "permissions": 104139776,
+      "features": [ "COMMUNITY", "ENABLED_DISCOVERABLE_BEFORE", "DISCOVERABLE", "VANITY_URL", "INVITE_SPLASH", "ANIMATED_ICON", "BANNER", "PUBLIC", "COMMERCE", "VERIFIED", "NEWS", "WELCOME_SCREEN_ENABLED", "FEATURABLE", "VIP_REGIONS" ]
+    },
+    {
+      "id": "723641357905952838",
+      "name": "big shibe's serveraaaaaaaa",
+      "icon": null,
+      "owner": true,
+      "permissions": 2147483647,
+      "features": []
+    }
+  ]
+}

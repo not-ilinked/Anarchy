@@ -54,7 +54,7 @@ namespace Discord
         /// <param name="properties">Options for modifying the channel</param>
         public void Modify(GuildChannelProperties properties)
         {
-            Update(Client.ModifyGuildChannel(Id, properties));
+            Update(Client.ModifyChannel(Id, properties));
         }
 
 
