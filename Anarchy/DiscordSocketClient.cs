@@ -31,6 +31,9 @@ namespace Discord.Gateway
     /// </summary>
     public class DiscordSocketClient : DiscordClient, IDisposable
     {
+        internal delegate void MemberListHandler(DiscordSocketClient client, GuildMemberListEventArgs args);
+        internal event MemberListHandler OnMemberListUpdate;
+
         #region events
         public delegate void UserHandler(DiscordSocketClient client, UserEventArgs args);
         public delegate void GuildMemberUpdateHandler(DiscordSocketClient client, GuildMemberEventArgs args);
@@ -283,9 +286,9 @@ namespace Discord.Gateway
                 switch (payload.Opcode)
                 {
                     case GatewayOpcode.Event:
-                        
-                        Console.WriteLine(payload.Title);
                         /*
+                        Console.WriteLine(payload.Title);
+                        
                         File.AppendAllText("Debug.log", $"{payload.Title}: {payload.Data}\n");*/
                         
                         switch (payload.Title)
@@ -414,24 +417,11 @@ namespace Discord.Gateway
                                 Task.Run(() => OnUserUpdated?.Invoke(this, new UserEventArgs(user)));
                                 break;
                             case "GUILD_MEMBER_LIST_UPDATE":
-                                var args = new GuildMembersEventArgs(payload.Deserialize<GatewayUserMemberQueryResponse>());
+                                var args = payload.Deserialize<GuildMemberListEventArgs>();
 
-                                if (args.Online == 0)
-                                {
+                                File.AppendAllText("Debug.log", $"{payload.Data}\n");
 
-                                }
-                                else
-                                {
-
-                                }
-
-                                foreach (var member in args.Members)
-                                {
-                                    member.SetClient(this);
-                                    member.GuildId = args.GuildId;
-                                }
-
-                                OnGuildMembersReceived?.Invoke(this, args);
+                                OnMemberListUpdate?.Invoke(this, args);
                                 break;
                             case "GUILD_CREATE":
                                 {

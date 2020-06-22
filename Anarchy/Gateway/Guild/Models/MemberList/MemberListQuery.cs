@@ -3,9 +3,9 @@ using Newtonsoft.Json;
 
 namespace Discord.Gateway
 {
-    internal class GatewayUserMemberQuery
+    internal class MemberListQuery
     {
-        public GatewayUserMemberQuery()
+        public MemberListQuery()
         {
             Channels = new Dictionary<ulong, int[][]>();
         }

@@ -72,9 +72,15 @@ namespace Discord.Gateway
         }
 
 
-        public IReadOnlyList<GuildMember> GetMembers()
+        public IReadOnlyList<GuildMember> GetMembers(uint limit = 0)
         {
-            return ((DiscordSocketClient)Client).GetAllGuildMembers(Id);
+            return ((DiscordSocketClient)Client).GetGuildMembers(Id, limit);
+        }
+
+
+        public IReadOnlyList<GuildMember> GetChannelMembers(ulong channelId, MemberListQueryOptions options = null)
+        {
+            return ((DiscordSocketClient)Client).GetGuildChannelMembers(Id, channelId, options);
         }
 
 

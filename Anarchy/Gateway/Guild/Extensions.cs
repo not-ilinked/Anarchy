@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading;
 
@@ -45,118 +47,39 @@ namespace Discord.Gateway
         }
 
 
-        /// <summary>
-        /// Requests a member chunk from a guild
-        /// </summary>
-        public static void RequestGuildMembers(this DiscordSocketClient client, GatewayMemberQuery query)
-        {
-            client.Send(GatewayOpcode.RequestGuildMembers, query);
-        }
-
-
-        
-        /// <summary>
-        /// Requests a member chunk from a guild
-        /// </summary>
-        /// <param name="guildId">ID of the guild</param>
-        /// <param name="channelId">ID of the channel</param>
-        /// <param name="chunks">Ranges to grab</param>
-        public static void RequestGuildMembersNew(this DiscordSocketClient client, ulong guildId, IEnumerable<ulong> channels, int[][] chunks)
-        {
-            var query = new GatewayUserMemberQuery()
-            {
-                GuildId = guildId
-            };
-
-            foreach (var channel in channels)
-                query.Channels.Add(channel, chunks);
-
-            client.Send(GatewayOpcode.RequestGuildMembersUser, query);
-        }
-
-
-        /// <summary>
-        /// Gets all memebers in a guild
-        /// </summary>
-        /// <param name="guildId">ID of the guild</param>
-        public static IReadOnlyList<GuildMember> GetAllGuildMembers(this DiscordSocketClient client, ulong guildId)
+        public static IReadOnlyList<GuildMember> GetGuildMembers(this DiscordSocketClient client, ulong guildId, uint limit = 0)
         {
             List<GuildMember> members = new List<GuildMember>();
-
-            DateTime lastUpdate = DateTime.Now;
-            int ChunkIndex = 0;
-            int ChunkCount = 2;
-
-            void lol(DiscordSocketClient c, GuildMembersEventArgs args)
-            {
-                if (args.GuildId == args.GuildId)
-                {
-                    lastUpdate = DateTime.Now;
-                    ChunkIndex = args.Index.Value;
-                    ChunkCount = args.Total;
-
-                    members.AddRange(args.Members);
-                }
-            }
-
-            client.OnGuildMembersReceived += lol;
-
-            //client.RequestGuildMembers(new GatewayMemberQuery() { GuildId = guildId, Limit = 0 });
-
-            while (ChunkIndex < ChunkCount - 1 && DateTime.Now - lastUpdate < new TimeSpan(0, 0, 5)) Thread.Sleep(1);
-
-            client.OnGuildMembersReceived -= lol;
-
-            return members; // for some reason members can sometimes be null
-        }
-
-
-        
-        public static IReadOnlyList<GuildMember> GetAllGuildMembersNew(this DiscordSocketClient client, ulong guildId, IEnumerable<ulong> channels)
-        {
-            List<GuildMember> members = new List<GuildMember>();
-            int lastOffset = 100;
-
-            DateTime lastUpdate = DateTime.Now;
             bool done = false;
 
             void handler(DiscordSocketClient c, GuildMembersEventArgs args)
             {
-                if (args.Sync.Value && args.GuildId == guildId)
+                if (args.GuildId == guildId)
                 {
-                    if (args.Members.Count > 0)
-                    {
-                        members.AddRange(args.Members);
+                    members.AddRange(args.Members);
 
-                        int offset = lastOffset;
-                        int limit = lastOffset + 99;
-                        lastUpdate = DateTime.Now;
-                        lastOffset = limit + 1;
-
-                        client.RequestGuildMembersNew(guildId, channels, new int[][] { new int[] { offset, limit } });
-                    }
-                    else
+                    if (args.Index + 1 == args.Total)
                         done = true;
                 }
             };
 
             client.OnGuildMembersReceived += handler;
 
-            client.RequestGuildMembersNew(guildId, channels, new int[][] { new int[] { 0, 99 } });
+            client.Send(GatewayOpcode.RequestGuildMembers, new GuildMemberQuery() { GuildId = guildId, Limit = limit });
 
-            while (!done) { Thread.Sleep(1); };
+            while (!done && client.LoggedIn) { Thread.Sleep(10); }
 
             client.OnGuildMembersReceived -= handler;
 
-            return members.GroupBy(m => m.User.Id).Select(m => m.First()).ToList();
+            return members;
         }
 
 
-        private static int[][] CreateChunks(int amount, int startIndex)
+        private static int RequestMembers(DiscordSocketClient client, ulong guildId, ulong channelId, int index)
         {
-            int index = startIndex;
+            const int rangesPerRequest = 3;
 
-            int[][] chunks = new int[amount][];
+            int[][] chunks = new int[rangesPerRequest][];
 
             for (int i = 0; i < chunks.Length; i++)
             {
@@ -165,55 +88,84 @@ namespace Discord.Gateway
                 index += 100;
             }
 
-            return chunks;
+            client.Send(GatewayOpcode.RequestGuildMembersUser, new MemberListQuery()
+            {
+                GuildId = guildId,
+                Channels = new Dictionary<ulong, int[][]>() { { channelId, chunks } }
+            });
+
+            return rangesPerRequest;
         }
 
 
-        public static IReadOnlyList<GuildMember> GetGuildMembers(this DiscordSocketClient client, ulong guildId, GuildMemberQueryOptions options)
+        /// <summary>
+        /// Warning: this does not work for official guilds
+        /// </summary>
+        public static IReadOnlyList<GuildMember> GetGuildChannelMembers(this DiscordSocketClient client, ulong guildId, ulong channelId, MemberListQueryOptions options = null)
         {
-            if (options.Channels == null)
-            {
-                return null;
-            }
-            else
-            {
-                List<GuildMember> members = new List<GuildMember>();
-                int index = options.Index;
-                bool done = false;
+            if (options == null)
+                options = new MemberListQueryOptions();
 
-                client.OnGuildMembersReceived += (c, args) =>
+            Dictionary<int, GuildMember> memberDict = new Dictionary<int, GuildMember>(); // might as well be a List right now, but this makes it easier to add more operations later
+            bool done = false;
+            int pendingRequests = 0;
+
+            void handler(DiscordSocketClient c, GuildMemberListEventArgs args)
+            {
+                if (args.GuildId == guildId)
                 {
-                    if (args.Sync.Value && args.Members.Count > 0)
+                    int combined = 0;
+                    foreach (var grp in args.Groups)
+                        combined += grp.Count;
+
+                    foreach (var op in args.Operations)
                     {
-                        members.AddRange(args.Members);
-                        index += args.Members.Count;
+                        if (op["op"].ToString() == "SYNC")
+                        {
+                            List<GuildMember> newMembers = new List<GuildMember>();
 
-                        done = ((members.Count >= options.Count) && options.Count != 0) || members.Count >= args.Online;
+                            foreach (var item in op["items"])
+                            {
+                                JToken obj = item["member"];
 
-                        if (!done)
-                            client.RequestGuildMembersNew(guildId, options.Channels, CreateChunks(3, index));
+                                if (obj != null)
+                                    newMembers.Add(obj.ToObject<GuildMember>());
+                            }
+
+                            if (newMembers.Count > 0)
+                            {
+                                int[] range = op["range"].ToObject<int[]>();
+
+                                for (int i = 0; i < newMembers.Count; i++)
+                                    memberDict[i + range[0]] = newMembers[i];
+
+                                pendingRequests--;
+
+                                if ((memberDict.Count >= options.Count && options.Count > 0) || memberDict.OrderBy(i => i.Key).Last().Key + 1 >= combined)
+                                    done = true;
+                                else if (pendingRequests == 0)
+                                    pendingRequests = RequestMembers(client, guildId, channelId, memberDict.OrderBy(i => i.Key).Last().Key);
+                            }
+                        }
                     }
-                };
-
-                client.RequestGuildMembersNew(guildId, options.Channels, CreateChunks(3, 0));
-
-                while (!done)
-                {
-                    Thread.Sleep(10);
                 }
-
-                return members.Take(options.Count).ToList();
             }
+
+            client.OnMemberListUpdate += handler;
+
+            pendingRequests = RequestMembers(client, guildId, channelId, options.Index);
+
+            while (!done && client.LoggedIn)
+                Thread.Sleep(10);
+
+            client.OnMemberListUpdate -= handler;
+
+            IEnumerable<GuildMember> members = memberDict.Select(i => i.Value);
+
+            if (options.Count > 0)
+                members = members.Take(options.Count);
+
+            return members.ToList();
         }
-    }
-
-    public class GuildMemberQueryOptions
-    {
-        // ignored when Channels = null
-        public int Index { get; set; }
-
-        public int Count { get; set; }
-
-        public IEnumerable<ulong> Channels { get; set; }
     }
 }
