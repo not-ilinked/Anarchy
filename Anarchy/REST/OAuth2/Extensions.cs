@@ -45,7 +45,7 @@ namespace Discord
         /// <returns>A redirect url containing the auth code</returns>
         public static string AuthorizeApp(this DiscordClient client, ulong appId, string scope)
         {
-            return client.HttpClient.Post($"/oauth2/authorize?client_id={appId}&response_type=code&scope={scope}").Deserialize<JObject>().Value<string>("location");
+            return client.HttpClient.Post($"/oauth2/authori ze?client_id={appId}&response_type=code&scope={scope}").Deserialize<JObject>().Value<string>("location");
         }
 
 

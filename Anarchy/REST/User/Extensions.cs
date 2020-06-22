@@ -19,9 +19,7 @@
         {
             try
             {
-                client.User = client.HttpClient.Get("/users/@me")
-                                        .Deserialize<DiscordClientUser>().SetClient(client);
-                return client.User;
+                return client.User = client.HttpClient.Get("/users/@me").Deserialize<DiscordClientUser>().SetClient(client);
             }
             catch (DiscordHttpException)
             {

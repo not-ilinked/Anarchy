@@ -114,7 +114,6 @@
     <Compile Include="REST\Subscriptions\Nitro\Extensions.cs" />
     <Compile Include="REST\OAuth2\Models\DiscordApplicationProperties.cs" />
     <Compile Include="REST\Subscriptions\Subscriptions\SubscriptionPlan.cs" />
-    <Compile Include="REST\Subscriptions\Nitro\PrivateNitroSubscriptionExtensions.cs" />
     <Compile Include="REST\Subscriptions\Subscriptions\AdditionalSubscriptionPlan.cs" />
     <Compile Include="REST\Subscriptions\Subscriptions\DiscordActiveSubscription.cs" />
     <Compile Include="REST\Subscriptions\Subscriptions\DiscordSubscription.cs" />

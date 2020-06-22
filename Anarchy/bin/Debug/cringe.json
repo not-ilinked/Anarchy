@@ -1,0 +1,85 @@
+﻿{
+  {
+    "ops": [
+      {
+        "op": "UPDATE",
+        "item": {
+          "member": {
+            "user": {
+              "username": "blab",
+              "public_flags": 128,
+              "id": "315780474360561664",
+              "discriminator": "7777",
+              "avatar": "b0ce7788e4b2841d8653fc9236afcf29"
+            },
+            "roles": [ "382958195552944130" ],
+            "presence": {
+              "user": { "id": "315780474360561664" },
+              "status": "idle",
+              "game": {
+                "type": 4,
+                "state": "your status are hilarious, keep being so funny!",
+                "name": "Custom Status",
+                "id": "custom",
+                "emoji": { "name": "👍" },
+                "created_at": 1592764866018
+              },
+              "client_status": { "desktop": "idle" },
+              "activities": [
+                {
+                  "type": 4,
+                  "state": "your status are hilarious, keep being so funny!",
+                  "name": "Custom Status",
+                  "id": "custom",
+                  "emoji": { "name": "👍" },
+                  "created_at": 1592764866018
+                },
+                {
+                  "type": 0,
+                  "timestamps": { "start": 1592762018214 },
+                  "name": "ROBLOX",
+                  "id": "160b12b38cda84c4",
+                  "created_at": 1592762017986,
+                  "application_id": "363445589247131668"
+                }
+              ]
+            },
+            "premium_since": null,
+            "nick": null,
+            "mute": false,
+            "joined_at": "2020-05-13T18:00:56.651694+02:00",
+            "hoisted_role": null,
+            "deaf": false
+          }
+        },
+        "index": 422
+      }
+    ],
+    "online_count": 4189,
+    "member_count": 30779,
+    "id": "everyone",
+    "guild_id": "230576022095921153",
+    "groups": [
+      {
+        "id": "230577127517323266",
+        "count": 4
+      },
+      {
+        "id": "577896823054925854",
+        "count": 17
+      },
+      {
+        "id": "523530288735715358",
+        "count": 9
+      },
+      {
+        "id": "580548926445191199",
+        "count": 15
+      },
+      {
+        "id": "online",
+        "count": 3629
+      }
+    ]
+  }
+}

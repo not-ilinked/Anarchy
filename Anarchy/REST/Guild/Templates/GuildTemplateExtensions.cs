@@ -45,5 +45,11 @@ namespace Discord
         {
             return client.HttpClient.Get($"/guilds/{guildId}/templates").DeserializeExArray<DiscordGuildTemplate>().SetClientsInList(client);
         }
+
+
+        public static DiscordGuildTemplate GetGuildTemplate(this DiscordClient client, string code)
+        {
+            return client.HttpClient.Get("/guilds/templates/" + code).DeserializeEx<DiscordGuildTemplate>().SetClient(client);
+        }
     }
 }

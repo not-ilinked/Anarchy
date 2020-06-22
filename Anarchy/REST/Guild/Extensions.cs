@@ -131,7 +131,7 @@ namespace Discord
         /// <param name="afterId">Guild ID to offset from</param>
         public static IReadOnlyList<PartialGuild> GetGuilds(this DiscordClient client, uint limit = 100, ulong afterId = 0)
         {
-            return client.HttpClient.Get($"/users/@me/guilds?limit={limit}&after={afterId}")
+                return client.HttpClient.Get($"/users/@me/guilds?limit={limit}&after={afterId}")
                                 .Deserialize<IReadOnlyList<PartialGuild>>().SetClientsInList(client);
         }
 

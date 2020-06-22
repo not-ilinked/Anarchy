@@ -283,11 +283,11 @@ namespace Discord.Gateway
                 switch (payload.Opcode)
                 {
                     case GatewayOpcode.Event:
-                        /*
-                        Console.WriteLine(payload.Title);
                         
-                        File.AppendAllText("Debug.log", $"{payload.Title}: {payload.Data}\n");
-                        */
+                        Console.WriteLine(payload.Title);
+                        /*
+                        File.AppendAllText("Debug.log", $"{payload.Title}: {payload.Data}\n");*/
+                        
                         switch (payload.Title)
                         {
                             case "READY":
@@ -415,6 +415,15 @@ namespace Discord.Gateway
                                 break;
                             case "GUILD_MEMBER_LIST_UPDATE":
                                 var args = new GuildMembersEventArgs(payload.Deserialize<GatewayUserMemberQueryResponse>());
+
+                                if (args.Online == 0)
+                                {
+
+                                }
+                                else
+                                {
+
+                                }
 
                                 foreach (var member in args.Members)
                                 {

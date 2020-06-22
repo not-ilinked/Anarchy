@@ -12,6 +12,7 @@ namespace Discord
         
         public int? Index { get; private set; }
         public int Total { get; private set; }
+        public int Online { get; private set; }
         
         internal GuildMembersEventArgs(GuildMemberList members)
         {
@@ -45,6 +46,7 @@ namespace Discord
             GuildId = memberPayload.GuildId;
             Members = members;
             Total = memberPayload.MemberCount;
+            Online = memberPayload.OnlineCount;
         }
     }
 }

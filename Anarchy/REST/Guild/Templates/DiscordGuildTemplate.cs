@@ -90,8 +90,7 @@ namespace Discord
 
         public void Update()
         {
-            var template = Client.GetGuildTemplates(_guildId)[0];
-            Code = template.Code;
+            var template = Client.GetGuildTemplate(Code);
             Name = template.Name;
             Usages = template.Usages;
             Creator = template.Creator;

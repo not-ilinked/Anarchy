@@ -101,7 +101,7 @@ namespace Discord.Gateway
 
             client.OnGuildMembersReceived += lol;
 
-            client.RequestGuildMembers(new GatewayMemberQuery() { GuildId = guildId, Limit = 0 });
+            //client.RequestGuildMembers(new GatewayMemberQuery() { GuildId = guildId, Limit = 0 });
 
             while (ChunkIndex < ChunkCount - 1 && DateTime.Now - lastUpdate < new TimeSpan(0, 0, 5)) Thread.Sleep(1);
 
@@ -134,8 +134,6 @@ namespace Discord.Gateway
                         lastOffset = limit + 1;
 
                         client.RequestGuildMembersNew(guildId, channels, new int[][] { new int[] { offset, limit } });
-
-                        Console.WriteLine("Another one " + members.Count);
                     }
                     else
                         done = true;
@@ -152,5 +150,70 @@ namespace Discord.Gateway
 
             return members.GroupBy(m => m.User.Id).Select(m => m.First()).ToList();
         }
+
+
+        private static int[][] CreateChunks(int amount, int startIndex)
+        {
+            int index = startIndex;
+
+            int[][] chunks = new int[amount][];
+
+            for (int i = 0; i < chunks.Length; i++)
+            {
+                chunks[i] = new int[] { index, index + 99 };
+
+                index += 100;
+            }
+
+            return chunks;
+        }
+
+
+        public static IReadOnlyList<GuildMember> GetGuildMembers(this DiscordSocketClient client, ulong guildId, GuildMemberQueryOptions options)
+        {
+            if (options.Channels == null)
+            {
+                return null;
+            }
+            else
+            {
+                List<GuildMember> members = new List<GuildMember>();
+                int index = options.Index;
+                bool done = false;
+
+                client.OnGuildMembersReceived += (c, args) =>
+                {
+                    if (args.Sync.Value && args.Members.Count > 0)
+                    {
+                        members.AddRange(args.Members);
+                        index += args.Members.Count;
+
+                        done = ((members.Count >= options.Count) && options.Count != 0) || members.Count >= args.Online;
+
+                        if (!done)
+                            client.RequestGuildMembersNew(guildId, options.Channels, CreateChunks(3, index));
+                    }
+                };
+
+                client.RequestGuildMembersNew(guildId, options.Channels, CreateChunks(3, 0));
+
+                while (!done)
+                {
+                    Thread.Sleep(10);
+                }
+
+                return members.Take(options.Count).ToList();
+            }
+        }
+    }
+
+    public class GuildMemberQueryOptions
+    {
+        // ignored when Channels = null
+        public int Index { get; set; }
+
+        public int Count { get; set; }
+
+        public IEnumerable<ulong> Channels { get; set; }
     }
 }
