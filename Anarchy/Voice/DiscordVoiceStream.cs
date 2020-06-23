@@ -55,7 +55,6 @@ namespace Discord.Voice
                 header[9] = (byte)(_session.SSRC >> 16);
                 header[10] = (byte)(_session.SSRC >> 8);
                 header[11] = (byte)(_session.SSRC >> 0);
-
                 Buffer.BlockCopy(header, 0, packet, 0, 12);
 
                 int frameSize = _encoder.EncodeFrame(buffer, offset, packet, 12);

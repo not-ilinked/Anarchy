@@ -176,6 +176,8 @@ namespace Discord.Voice
                         State = DiscordVoiceClientState.Connected;
 
                         OnConnected?.Invoke(this, null);
+
+                        StartSpeakAsync();
                         break;
                     case DiscordVoiceOpcode.Hello:
                         var ident = new DiscordVoiceIdentify()
@@ -199,6 +201,17 @@ namespace Discord.Voice
                         catch { }
 
                         break;
+                }
+            });
+        }
+
+        private async void StartSpeakAsync()
+        {
+            await Task.Run(() =>
+            {
+                while (true)
+                {
+                    // TODO: figure out a way to detect when the user has stopped speaking
                 }
             });
         }
