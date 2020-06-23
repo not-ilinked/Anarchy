@@ -31,9 +31,6 @@ namespace Discord.Gateway
     /// </summary>
     public class DiscordSocketClient : DiscordClient, IDisposable
     {
-        internal delegate void MemberListHandler(DiscordSocketClient client, GuildMemberListEventArgs args);
-        internal event MemberListHandler OnMemberListUpdate;
-
         #region events
         public delegate void UserHandler(DiscordSocketClient client, UserEventArgs args);
         public delegate void GuildMemberUpdateHandler(DiscordSocketClient client, GuildMemberEventArgs args);
@@ -51,11 +48,9 @@ namespace Discord.Gateway
         public delegate void LogoutHandler(DiscordSocketClient client, LogoutEventArgs args);
         public event LogoutHandler OnLoggedOut;
 
-        
         public delegate void SettingsHandler(DiscordSocketClient client, DiscordSettingsEventArgs args);
         public event SettingsHandler OnSettingsUpdated;
         
-
         public delegate void SessionsHandler(DiscordSocketClient client, DiscordSessionsEventArgs args);
         public event SessionsHandler OnSessionsUpdated;
 
@@ -75,8 +70,12 @@ namespace Discord.Gateway
 
         public delegate void GuildMemberHandler(DiscordSocketClient client, GuildMemberEventArgs args);
         public event GuildMemberHandler OnGuildMemberUpdated;
-        public delegate void GuildMembersHandler(DiscordSocketClient client, GuildMembersEventArgs args);
-        public event GuildMembersHandler OnGuildMembersReceived;
+
+        internal delegate void GuildMembersHandler(DiscordSocketClient client, GuildMembersEventArgs args);
+        internal event GuildMembersHandler OnGuildMembersReceived;
+
+        internal delegate void MemberListHandler(DiscordSocketClient client, GuildMemberListEventArgs args);
+        internal event MemberListHandler OnMemberListUpdate;
 
         public delegate void PresenceUpdateHandler(DiscordSocketClient client, PresenceUpdatedEventArgs args);
         public event PresenceUpdateHandler OnUserPresenceUpdated;
@@ -112,13 +111,6 @@ namespace Discord.Gateway
         public delegate void InviteDeleteHandler(DiscordSocketClient client, InviteDeletedEventArgs args);
         public event InviteDeleteHandler OnInviteDeleted;
 
-#pragma warning disable CS0067
-        [Obsolete("OnUserJoinedVoiceChannel is obsolete. Use OnVoiceStateUpdated instead.", true)]
-        public event VoiceStateHandler OnUserJoinedVoiceChannel;
-        [Obsolete("OnUserLeftVoiceChannel is obsolete. Use OnVoiceStateUpdated instead.", true)]
-        public event VoiceStateHandler OnUserLeftVoiceChannel;
-#pragma warning restore CS0067
-
         public event VoiceStateHandler OnVoiceStateUpdated;
 
         internal delegate void VoiceServerHandler(DiscordSocketClient client, DiscordVoiceServer server);
@@ -145,21 +137,25 @@ namespace Discord.Gateway
         public event RelationshipHandler OnRelationshipRemoved;
         #endregion
         
+        // caching
         internal Dictionary<ulong, SocketGuild> GuildCache { get; private set; }
         internal List<PrivateChannel> PrivateChannels { get; private set; }
         internal Dictionary<ulong, List<DiscordVoiceState>> PrivateVoiceStates { get; }
         internal Dictionary<ulong, ClientGuildSettings> ClientGuildSettings { get; private set; }
 
+        internal List<VoiceSessionInfo> VoiceSessions { get; private set; }
         public DiscordUserSettings UserSettings { get; private set; }
         public CommandHandler CommandHandler { get; private set; }
-        internal List<VoiceSessionInfo> VoiceSessions { get; private set; }
+        public new DiscordSocketConfig Config { get; private set; }
         internal ulong? Lurking { get; set; }
 
+        // websocket connection
         internal WebSocket Socket { get; private set; }
-        public new DiscordSocketConfig Config { get; private set; }
         public bool LoggedIn { get; private set; }
         internal uint? Sequence { get; set; }
         public string SessionId { get; set; }
+
+        
 
         public DiscordSocketClient(DiscordSocketConfig config = null) : base(config)
         {

@@ -19,6 +19,6 @@ namespace Discord
 
 
         [JsonProperty("permissions")]
-        public uint Permissions { get; set; }
+        public DiscordPermission Permissions { get; set; }
     }
 }

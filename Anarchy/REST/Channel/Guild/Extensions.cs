@@ -44,7 +44,7 @@ namespace Discord
         /// <param name="overwrite">The permission overwrite to add/edit</param>
         public static void AddPermissionOverwrite(this DiscordClient client, ulong channelId, DiscordPermissionOverwrite overwrite)
         {
-            client.HttpClient.Put($"/channels/{channelId}/permissions/{overwrite.Id}", overwrite);
+            client.HttpClient.Put($"/channels/{channelId}/permissions/{overwrite.AffectedId}", overwrite);
         }
 
 

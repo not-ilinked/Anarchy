@@ -10,13 +10,7 @@ namespace Discord
 
 
         [JsonProperty("permissions")]
-#pragma warning disable IDE0051, IDE1006
-        private uint _permissions
-        {
-            set { Permissions = new DiscordPermissions(value); }
-        }
-#pragma warning restore IDE0051, IDE1006
-        public DiscordPermissions Permissions { get; private set; }
+        public DiscordPermission Permissions { get; private set; }
 
 
         [JsonProperty("features")]

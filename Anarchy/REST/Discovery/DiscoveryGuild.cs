@@ -27,7 +27,7 @@ namespace Discord
 
         public DiscordGuild Lurk()
         {
-            if (SocketClient)
+            if (Client.GetType() == typeof(DiscordSocketClient))
                 return ((DiscordSocketClient)Client).LurkGuild(Id);
             else
                 throw new NotSupportedException("This method is only available for socket clients.");

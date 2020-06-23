@@ -127,7 +127,7 @@ namespace Discord
         {
             DiscordGuild guild = null;
 
-            if (SocketClient)
+            if (Client.GetType() == typeof(DiscordSocketClient))
             {
                 var socketClient = (DiscordSocketClient)Client;
 
@@ -141,7 +141,7 @@ namespace Discord
             if (guild.OwnerId == User.Id)
                 return true;
 
-            return guild.Roles.Where(r => _roles.Contains(r.Id) && (r.Permissions.Has(permission) || r.Permissions.Has(DiscordPermission.Administrator))).Count() > 0;
+            return guild.Roles.Where(r => _roles.Contains(r.Id) && (r.Permissions.HasFlag(permission) || r.Permissions.HasFlag(DiscordPermission.Administrator))).Count() > 0;
         }
 
 

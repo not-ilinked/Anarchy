@@ -111,6 +111,10 @@
     <Compile Include="REST\Guild\Settings\ClientGuildSettings.cs" />
     <Compile Include="REST\Guild\Settings\GuildMuteConfig.cs" />
     <Compile Include="REST\Message\Message\MessageAuthor.cs" />
+    <Compile Include="REST\Permissions\DiscordPermission.cs" />
+    <Compile Include="REST\Permissions\DiscordPermissionOverwrite.cs" />
+    <Compile Include="REST\Permissions\OverwrittenPermissionState.cs" />
+    <Compile Include="REST\Permissions\PermissionOverwriteType.cs" />
     <Compile Include="REST\Subscriptions\Nitro\DiscordNitroBoost.cs" />
     <Compile Include="REST\Subscriptions\Nitro\DiscordNitroSubType.cs" />
     <Compile Include="REST\Subscriptions\Nitro\DiscordNitroSubTypes.cs" />
@@ -283,12 +287,6 @@
     <Compile Include="REST\OAuth2\Models\AuthorizedApp.cs" />
     <Compile Include="REST\OAuth2\Models\DiscordBotAuthProperties.cs" />
     <Compile Include="REST\OAuth2\Models\OAuth2Application.cs" />
-    <Compile Include="REST\Guild\Permissions\DiscordEditablePermissions.cs" />
-    <Compile Include="REST\Guild\Permissions\Overwrite\DiscordPermissionOverwrite.cs" />
-    <Compile Include="REST\Guild\Permissions\Overwrite\Type.cs" />
-    <Compile Include="REST\Guild\Permissions\DiscordPermission.cs" />
-    <Compile Include="REST\Guild\Permissions\DiscordPermissionCalculator.cs" />
-    <Compile Include="REST\Guild\Permissions\DiscordPermissions.cs" />
     <Compile Include="REST\RateLimit\RateLimit.cs" />
     <Compile Include="REST\RateLimit\RateLimitException.cs" />
     <Compile Include="REST\Relationships\Extensions.cs" />
@@ -340,7 +338,6 @@
     <Compile Include="Voice\Base\DiscordVoiceResponse.cs" />
     <Compile Include="Voice\DiscordVoiceSession.cs" />
     <Compile Include="Voice\DiscordVoiceCloseEventArgs.cs" />
-    <Compile Include="Voice\DiscordVoiceUtils.cs" />
     <Compile Include="Voice\Payloads\DiscordVoiceIdentify.cs" />
     <Compile Include="Voice\Payloads\DiscordVoiceProtocolData.cs" />
     <Compile Include="Voice\Payloads\DiscordVoiceProtocolSelection.cs" />

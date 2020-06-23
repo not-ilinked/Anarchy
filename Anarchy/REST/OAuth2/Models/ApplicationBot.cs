@@ -24,7 +24,7 @@ namespace Discord
         public string Token { get; private set; }
 
 
-        public void Authorize(ulong guildId, DiscordPermissions permissions, string captchaKey)
+        public void Authorize(ulong guildId, DiscordPermission permissions, string captchaKey)
         {
             Client.AuthorizeBot(Id, guildId, permissions, captchaKey);
         }

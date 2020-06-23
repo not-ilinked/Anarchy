@@ -20,11 +20,6 @@ namespace Discord
         }
 
 
-        internal bool SocketClient
-        {
-            get { return _client.GetType() == typeof(DiscordSocketClient); }
-        }
-
         public void Dispose()
         {
             _client = null;

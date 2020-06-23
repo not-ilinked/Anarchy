@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Diagnostics;
+using System.IO;
 using System.Threading;
 
 namespace Discord.Voice
@@ -94,6 +96,24 @@ namespace Discord.Voice
             }
 
             return offset;
+        }
+
+        public int CopyFrom(string filePath, int offset = 0)
+        {
+            var process = Process.Start(new ProcessStartInfo
+            {
+                FileName = "ffmpeg.exe",
+                Arguments = $"-hide_banner -loglevel panic -i \"{filePath}\" -ac 2 -f s16le -ar 48000 pipe:1",
+                UseShellExecute = false,
+                RedirectStandardOutput = true,
+            });
+
+            using (MemoryStream memStream = new MemoryStream())
+            {
+                process.StandardOutput.BaseStream.CopyTo(memStream);
+
+                return CopyFrom(memStream.ToArray(), offset);
+            }
         }
     }
 }

@@ -26,7 +26,7 @@ namespace Discord
         /// <param name="guildId">the guild to add the bot to</param>
         /// <param name="permissions">permissions the bot should have</param>
         /// <param name="captchaKey">captcha key used to validate the request</param>
-        public static void AuthorizeBot(this DiscordClient client, ulong botId, ulong guildId, DiscordPermissions permissions, string captchaKey)
+        public static void AuthorizeBot(this DiscordClient client, ulong botId, ulong guildId, DiscordPermission permissions, string captchaKey)
         {
             client.HttpClient.Post($"/oauth2/authorize?client_id={botId}&scope=bot", JsonConvert.SerializeObject(new DiscordBotAuthProperties()
             {

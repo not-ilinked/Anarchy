@@ -1,8 +1,5 @@
-﻿using System;
-
-namespace Discord
+﻿namespace Discord
 {
-    [Flags]
     public enum DiscordPermission
     {
         CreateInstantInvite = 0x00000001,
@@ -30,7 +27,7 @@ namespace Discord
         MuteMembers = 0x00400000,
         DeafenVCMembers = 0x00800000,
         MoveVCMembers = 0x01000000,
-        UseVAD = 0x02000000,
+        ForcePushToTalk = 0x02000000,
         ChangeNickname = 0x04000000,
         ManageNicknames = 0x08000000,
         ManageRoles = 0x10000000,

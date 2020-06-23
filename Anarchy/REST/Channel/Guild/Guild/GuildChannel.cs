@@ -61,15 +61,20 @@ namespace Discord
         /// <summary>
         /// Adds/edits a permission overwrite to a channel
         /// </summary>
-        /// <param name="overwrite">The permission overwrite to add/edit</param>
-        public void AddPermissionOverwrite(DiscordPermissionOverwrite overwrite)
+        public void AddPermissionOverwrite(ulong affectedId, PermissionOverwriteType type, DiscordPermission allow, DiscordPermission deny)
         {
+            var overwrite = new DiscordPermissionOverwrite() { AffectedId = affectedId, Type = type, Allow = allow, Deny = deny };
+
             Client.AddPermissionOverwrite(Id, overwrite);
             List<DiscordPermissionOverwrite> overwrites = PermissionOverwrites.ToList();
-            if (overwrites.Where(pe => pe.Id == overwrite.Id).Count() > 0)
-                overwrites[overwrites.IndexOf(overwrites.First(pe => pe.Id == overwrite.Id))] = overwrite;
-            else
+
+            int i = overwrites.FindIndex(o => o.AffectedId == o.AffectedId);
+
+            if (i == -1)
                 overwrites.Add(overwrite);
+            else
+                overwrites[i] = overwrite;
+
             PermissionOverwrites = overwrites;
         }
 
@@ -77,15 +82,15 @@ namespace Discord
         /// <summary>
         /// Removes a permission overwrite from a channel
         /// </summary>
-        /// <param name="id">ID of the role or member affected by the overwrite</param>
-        public void RemovePermissionOverwrite(ulong id)
+        /// <param name="affectedId">ID of the role or member affected by the overwrite</param>
+        public void RemovePermissionOverwrite(ulong affectedId)
         {
-            Client.RemovePermissionOverwrite(Id, id);
+            Client.RemovePermissionOverwrite(Id, affectedId);
 
             try
             {
                 List<DiscordPermissionOverwrite> overwrites = PermissionOverwrites.ToList();
-                overwrites.Remove(PermissionOverwrites.First(pe => pe.Id == id));
+                overwrites.RemoveAll(o => o.AffectedId == affectedId);
                 PermissionOverwrites = overwrites;
             }
             catch { }

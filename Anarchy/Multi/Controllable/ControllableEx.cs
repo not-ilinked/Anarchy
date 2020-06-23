@@ -7,8 +7,8 @@ namespace Discord
 {
     public class ControllableEx : Controllable, IDisposable
     {
-        public delegate void JsonHandler(object sender, JObject json);
-        public event JsonHandler JsonUpdated;
+        internal delegate void JsonHandler(object sender, JObject json);
+        internal event JsonHandler JsonUpdated;
 
         private JObject _json;
         internal JObject Json
@@ -26,7 +26,7 @@ namespace Discord
         }
 
 
-        public void UpdateSelfJson()
+        internal void UpdateSelfJson()
         {
             foreach (var field in this.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance))
             {

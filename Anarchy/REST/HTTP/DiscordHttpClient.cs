@@ -102,7 +102,6 @@ namespace Discord
                             client.DefaultRequestHeaders.Add("Authorization", _discordClient.Token);
                         if (Fingerprint != null)
                             client.DefaultRequestHeaders.Add("X-Fingerprint", Fingerprint);
-                        client.DefaultRequestHeaders.Add("X-Context-Properties", "e30=");
 
                         client.DefaultRequestHeaders.Add("X-Super-Properties", _discordClient.Config.SuperProperties.Base64);
 
@@ -123,8 +122,8 @@ namespace Discord
                             msg.AddHeader(HttpHeader.ContentType, "application/json");
                         if (Fingerprint != null)
                             msg.AddHeader("X-Fingerprint", Fingerprint);
+
                         msg.AddHeader("X-Super-Properties", _discordClient.Config.SuperProperties.Base64);
-                        msg.AddHeader("X-Context-Properties", "e30=");
                         if (_discordClient.Config.Proxy != null)
                             msg.Proxy = _discordClient.Config.Proxy;
 

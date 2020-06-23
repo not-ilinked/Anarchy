@@ -3,6 +3,8 @@
 # 0.7.1.0
 ### Improvements
 - Pulling guild members has been improved. GetGuildMembers is for bots while GetGuildChannelMembers is for users. This is due to Discord making some changes to their API.
+- Removed DiscordVoiceUtils. Use the new overload for DiscordVoiceStream's CopyFrom method instead.
+- Rewrote how permissions work.
 
 # 0.7.0.2
 ### Additions
