@@ -1,10 +1,14 @@
 (Please keep in mind that these are only the major/important changes. There have been way more than written here)<br>
 
 # 0.7.1.0
+### Additions
+- Added a new CopyFrom (DiscordVoiceStream method) overload with a file path as a parameter, serving as a shortcut for DiscordVoiceUtils.ReadFromFile().
+
 ### Improvements
 - Pulling guild members has been improved. GetGuildMembers is for bots while GetGuildChannelMembers is for users. This is due to Discord making some changes to their API.
-- Removed DiscordVoiceUtils. Use the new overload for DiscordVoiceStream's CopyFrom method instead.
 - Rewrote how permissions work.
+
+
 
 # 0.7.0.2
 ### Additions

@@ -86,31 +86,6 @@ namespace Discord.Gateway
 
 
         /// <summary>
-        /// Gets all messages from a channel
-        /// </summary>
-        /// <param name="channelId">ID of the channel</param>
-        public static IReadOnlyList<DiscordMessage> GetAllChannelMessages(this DiscordSocketClient client, ulong channelId)
-        {
-            var messages = ((DiscordClient)client).GetAllChannelMessages(channelId);
-
-            if (client.Config.Cache)
-            {
-                DiscordChannel channel = client.GetChannel(channelId);
-
-                if (channel.Type == ChannelType.Text || channel.Type == ChannelType.Voice || channel.Type == ChannelType.Category)
-                {
-                    GuildChannel guildChannel = channel.ToGuildChannel();
-
-                    foreach (var message in messages)
-                        message.GuildId = guildChannel.GuildId;
-                }
-            }
-
-            return messages;
-        }
-
-
-        /// <summary>
         /// Gets all voice states in the specified private channel.
         /// </summary>
         public static IReadOnlyList<DiscordVoiceState> GetPrivateChannelVoiceStates(this DiscordSocketClient client, ulong channelId)

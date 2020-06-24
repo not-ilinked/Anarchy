@@ -1,8 +1,9 @@
 ﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace Discord
 {
-    public class ClientGuildSettings : Controllable
+    public class ClientGuildSettings : DiscordChannelSettings
     {
         [JsonProperty("guild_id")]
         private readonly ulong? _guildId;
@@ -33,5 +34,9 @@ namespace Discord
 
         [JsonProperty("mobile_push")]
         public bool MobilePushNotifications { get; private set; }
+
+
+        [JsonProperty("channel_overrides")]
+        public IReadOnlyList<DiscordChannelSettings> ChannelOverrides { get; private set; }
     }
 }

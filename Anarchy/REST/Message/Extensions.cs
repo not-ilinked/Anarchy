@@ -146,42 +146,6 @@ namespace Discord
 
 
         /// <summary>
-        /// Gets all messages from a channel
-        /// </summary>
-        /// <param name="channelId">ID of the channel</param>
-        public static IReadOnlyList<DiscordMessage> GetAllChannelMessages(this DiscordClient client, ulong channelId)
-        {
-            List<DiscordMessage> messages = new List<DiscordMessage>();
-            ulong beforeId = 0;
-
-            while (true)
-            {
-                try
-                {
-                    IReadOnlyList<DiscordMessage> newMessages = client.GetChannelMessages(channelId, new MessageFilters()
-                    {
-                        Limit = 100,
-                        BeforeId = beforeId
-                    });
-
-                    if (newMessages.Count == 0)
-                        break;
-
-                    messages.AddRange(newMessages);
-
-                    beforeId = newMessages.Last().Id;
-                }
-                catch
-                {
-                    break;
-                }
-            }
-
-            return messages;
-        }
-
-
-        /// <summary>
         /// Gets a list of messages from a channel
         /// </summary>
         /// <param name="channelId">ID of the channel</param>

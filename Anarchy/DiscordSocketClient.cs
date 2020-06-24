@@ -142,6 +142,7 @@ namespace Discord.Gateway
         internal List<PrivateChannel> PrivateChannels { get; private set; }
         internal Dictionary<ulong, List<DiscordVoiceState>> PrivateVoiceStates { get; }
         internal Dictionary<ulong, ClientGuildSettings> ClientGuildSettings { get; private set; }
+        internal Dictionary<ulong, DiscordChannelSettings> PrivateChannelSettings { get; private set; } // TODO
 
         internal List<VoiceSessionInfo> VoiceSessions { get; private set; }
         public DiscordUserSettings UserSettings { get; private set; }
@@ -307,9 +308,12 @@ namespace Discord.Gateway
 
                                         foreach (var notifSettings in login.ClientGuildSettings)
                                         {
-                                            if (notifSettings["guild_id"].ToObject<JValue>().Value != null)
+                                            ClientGuildSettings notifs = notifSettings.ToObject<ClientGuildSettings>().SetClient(this);
+
+                                            if (notifs.Guild == null)
+
                                             {
-                                                ClientGuildSettings notifs = notifSettings.ToObject<ClientGuildSettings>().SetClient(this);
+                                                
 
                                                 ClientGuildSettings.Add(notifs.Guild.Id, notifs);
                                             }

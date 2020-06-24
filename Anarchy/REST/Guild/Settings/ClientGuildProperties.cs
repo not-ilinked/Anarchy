@@ -1,35 +1,10 @@
 ﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace Discord
 {
-    public class ClientGuildProperties
+    public class ClientGuildProperties : ChannelSettingsProperties
     {
-        [JsonProperty("mute_config")]
-#pragma warning disable CS0169
-        private readonly GuildMuteConfig _muteConfig;
-#pragma warning restore CS0169
-
-
-        public bool ShouldSerialize_muteConfig()
-        {
-            return Muted;
-        }
-
-
-        private readonly Property<bool> _mutedProperty = new Property<bool>();
-        public bool Muted
-        {
-            get { return _mutedProperty; }
-            set { _mutedProperty.Value = value; }
-        }
-
-
-        public bool ShouldSerializeMuted()
-        {
-            return _mutedProperty.Set;
-        }
-
-
         private readonly Property<ClientGuildNotificationLevel> _notifsProperty = new Property<ClientGuildNotificationLevel>();
         [JsonProperty("message_notifications")]
         public ClientGuildNotificationLevel Notifications
@@ -72,6 +47,15 @@ namespace Discord
         public bool ShouldSerializeSupressRoles()
         {
             return _supressRolesProperty.Set;
+        }
+
+
+        private readonly Property<Dictionary<ulong, ChannelSettingsProperties>> _channelsProperty = new Property<Dictionary<ulong, ChannelSettingsProperties>>();
+        [JsonProperty("channel_overrides")]
+        public Dictionary<ulong, ChannelSettingsProperties> ChannelOverrides
+        {
+            get { return _channelsProperty; }
+            set { _channelsProperty.Value = value; }
         }
     }
 }

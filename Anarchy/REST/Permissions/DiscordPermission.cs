@@ -1,7 +1,11 @@
-﻿namespace Discord
+﻿using System;
+
+namespace Discord
 {
+    [Flags]
     public enum DiscordPermission
     {
+        None = 0,
         CreateInstantInvite = 0x00000001,
         KickMembers = 0x00000002,
         BanMembers = 0x00000004,

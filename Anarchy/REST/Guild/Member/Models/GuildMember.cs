@@ -123,6 +123,7 @@ namespace Discord
         }
 
 
+        // i don't like that this one will make REST requests if client doesn't have caching, idk how to improve tho...
         public bool HasPermission(DiscordPermission permission)
         {
             DiscordGuild guild = null;

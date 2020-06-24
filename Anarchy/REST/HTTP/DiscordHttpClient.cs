@@ -49,7 +49,7 @@ namespace Discord
             if (statusCode >= 400)
             {
                 if (statusCode == 429)
-                    throw new RateLimitException(_discordClient, resp.ToString().Deserialize<RateLimit>());
+                    throw new RateLimitException(_discordClient, resp.Deserialize<JObject>().Value<int>("retry_after"));
                 else if (statusCode == 400)
                 {
                     var obj = resp.Deserialize<JObject>();
