@@ -1,18 +1,18 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Discord
 {
     public class ChannelSettingsProperties
     {
+        // cba to implement this rn lol
         [JsonProperty("mute_config")]
-#pragma warning disable CS0169
-        private readonly GuildMuteConfig _muteConfig;
-#pragma warning restore CS0169
+#pragma warning disable IDE0052
+        private readonly GuildMuteConfig _muteConfig = new GuildMuteConfig() 
+        {
+            EndTime = null,
+            SelectedTimeWindow = -1
+        };
+#pragma warning restore
 
 
         public bool ShouldSerialize_muteConfig()
@@ -22,6 +22,7 @@ namespace Discord
 
 
         private readonly Property<bool> _mutedProperty = new Property<bool>();
+        [JsonProperty("muted")]
         public bool Muted
         {
             get { return _mutedProperty; }
@@ -32,6 +33,21 @@ namespace Discord
         public bool ShouldSerializeMuted()
         {
             return _mutedProperty.Set;
+        }
+
+
+        private readonly Property<ClientNotificationLevel> _notifsProperty = new Property<ClientNotificationLevel>();
+        [JsonProperty("message_notifications")]
+        public ClientNotificationLevel Notifications
+        {
+            get { return _notifsProperty; }
+            set { _notifsProperty.Value = value; }
+        }
+
+
+        public bool ShouldSerializeNotifications()
+        {
+            return _notifsProperty.Set;
         }
     }
 }

@@ -3,23 +3,8 @@ using System.Collections.Generic;
 
 namespace Discord
 {
-    public class ClientGuildProperties : ChannelSettingsProperties
+    public class GuildSettingsProperties : ChannelSettingsProperties
     {
-        private readonly Property<ClientGuildNotificationLevel> _notifsProperty = new Property<ClientGuildNotificationLevel>();
-        [JsonProperty("message_notifications")]
-        public ClientGuildNotificationLevel Notifications
-        {
-            get { return _notifsProperty; }
-            set { _notifsProperty.Value = value; }
-        }
-
-
-        public bool ShouldSerializeNotifications()
-        {
-            return _notifsProperty.Set;
-        }
-
-
         private readonly Property<bool> _supressProperty = new Property<bool>();
         [JsonProperty("supress_everyone")]
         public bool SupressEveryone

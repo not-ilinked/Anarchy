@@ -107,8 +107,8 @@
     <Compile Include="REST\Guild\Guild\SystemChannelInformation.cs" />
     <Compile Include="REST\Guild\Member\Models\PartialGuildMember.cs" />
     <Compile Include="REST\Guild\Settings\ChannelSettingsProperties.cs" />
-    <Compile Include="REST\Guild\Settings\ClientGuildNotificationLevel.cs" />
-    <Compile Include="REST\Guild\Settings\ClientGuildProperties.cs" />
+    <Compile Include="REST\Guild\Settings\ClientNotificationLevel.cs" />
+    <Compile Include="REST\Guild\Settings\GuildSettingsProperties.cs" />
     <Compile Include="REST\Guild\Settings\ClientGuildSettings.cs" />
     <Compile Include="REST\Guild\Settings\DiscordChannelSettings.cs" />
     <Compile Include="REST\Guild\Settings\GuildMuteConfig.cs" />

@@ -54,9 +54,9 @@ namespace Discord
             Client.ChangeClientNickname(Id, nickname);
         }
 
-        public ClientGuildSettings ModifyClientSettings(ClientGuildProperties properties)
+        public ClientGuildSettings ModifyClientSettings(GuildSettingsProperties properties)
         {
-            return Client.ModifyClientGuildSettings(Id, properties);
+            return Client.ModifyGuildSettings(Id, properties);
         }
 
         /// <summary>

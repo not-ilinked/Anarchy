@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using WebSocketSharp;
 using System.Reflection;
 using System.IO;
+using System.Runtime.Remoting.Channels;
 
 namespace Discord.Gateway
 {
@@ -141,8 +142,8 @@ namespace Discord.Gateway
         internal Dictionary<ulong, SocketGuild> GuildCache { get; private set; }
         internal List<PrivateChannel> PrivateChannels { get; private set; }
         internal Dictionary<ulong, List<DiscordVoiceState>> PrivateVoiceStates { get; }
-        internal Dictionary<ulong, ClientGuildSettings> ClientGuildSettings { get; private set; }
-        internal Dictionary<ulong, DiscordChannelSettings> PrivateChannelSettings { get; private set; } // TODO
+        internal Dictionary<ulong, ClientGuildSettings> GuildSettings { get; private set; }
+        internal List<DiscordChannelSettings> PrivateChannelSettings { get; private set; }
 
         internal List<VoiceSessionInfo> VoiceSessions { get; private set; }
         public DiscordUserSettings UserSettings { get; private set; }
@@ -170,7 +171,8 @@ namespace Discord.Gateway
                 GuildCache = new Dictionary<ulong, SocketGuild>();
                 PrivateChannels = new List<PrivateChannel>();
                 PrivateVoiceStates = new Dictionary<ulong, List<DiscordVoiceState>>();
-                ClientGuildSettings = new Dictionary<ulong, ClientGuildSettings>();
+                GuildSettings = new Dictionary<ulong, ClientGuildSettings>();
+                PrivateChannelSettings = new List<DiscordChannelSettings>();
             }
 
             VoiceSessions = new List<VoiceSessionInfo>();
@@ -268,7 +270,8 @@ namespace Discord.Gateway
                 GuildCache.Clear();
                 PrivateChannels.Clear();
                 PrivateVoiceStates.Clear();
-                ClientGuildSettings.Clear();
+                GuildSettings.Clear();
+                PrivateChannelSettings.Clear();
             }
         }
 
@@ -308,14 +311,13 @@ namespace Discord.Gateway
 
                                         foreach (var notifSettings in login.ClientGuildSettings)
                                         {
-                                            ClientGuildSettings notifs = notifSettings.ToObject<ClientGuildSettings>().SetClient(this);
-
-                                            if (notifs.Guild == null)
-
+                                            if (notifSettings["guild_id"].Type == JTokenType.Null)
+                                                PrivateChannelSettings = notifSettings["channel_overrides"].ToObject<List<DiscordChannelSettings>>();
+                                            else
                                             {
-                                                
+                                                var settings = notifSettings.ToObject<ClientGuildSettings>().SetClient(this);
 
-                                                ClientGuildSettings.Add(notifs.Guild.Id, notifs);
+                                                GuildSettings.Add(settings.Guild.Id, settings);
                                             }
                                         }
                                     }
@@ -323,7 +325,7 @@ namespace Discord.Gateway
                                     {
                                         PrivateChannels.Clear();
                                         GuildCache.Clear();
-                                        ClientGuildSettings.Clear();
+                                        GuildSettings.Clear();
                                     }
                                 }
 
@@ -374,14 +376,15 @@ namespace Discord.Gateway
                             case "USER_GUILD_SETTINGS_UPDATE":
                                 if (Config.Cache)
                                 {
-                                    ClientGuildSettings notifications = payload.Deserialize<ClientGuildSettings>();
+                                    JObject obj = payload.Deserialize<JObject>();
 
-                                    if (notifications.Guild != null)
+                                    if (obj["guild_id"].Type == JTokenType.Null)
+                                        PrivateChannelSettings = obj["channel_overrides"].ToObject<List<DiscordChannelSettings>>();
+                                    else
                                     {
-                                        if (ClientGuildSettings.ContainsKey(notifications.Guild.Id))
-                                            ClientGuildSettings[notifications.Guild.Id] = notifications;
-                                        else
-                                            ClientGuildSettings.Add(notifications.Guild.Id, notifications);
+                                        var settings = obj.ToObject<ClientGuildSettings>().SetClient(this);
+
+                                        GuildSettings[settings.Guild.Id] = settings;
                                     }
                                 }
                                 break;
@@ -461,7 +464,7 @@ namespace Discord.Gateway
                                         else
                                             GuildCache.Remove(guild.Id);
 
-                                        ClientGuildSettings.Remove(guild.Id);
+                                        GuildSettings.Remove(guild.Id);
                                     }
 
                                     Task.Run(() => OnLeftGuild?.Invoke(this, new GuildUnavailableEventArgs(guild)));

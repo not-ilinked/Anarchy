@@ -118,9 +118,20 @@ namespace Discord
         #endregion
 
 
-        public static ClientGuildSettings ModifyClientGuildSettings(this DiscordClient client, ulong guildId, ClientGuildProperties properties)
+        public static ClientGuildSettings ModifyGuildSettings(this DiscordClient client, ulong guildId, GuildSettingsProperties properties)
         {
             return client.HttpClient.Patch($"/users/@me/guilds/{guildId}/settings", properties).Deserialize<ClientGuildSettings>().SetClient(client);
+        }
+
+
+        public static IReadOnlyList<DiscordChannelSettings> SetPrivateChannelSettings(this DiscordClient client, Dictionary<ulong, ChannelSettingsProperties> channels)
+        {
+            JObject container = new JObject
+            {
+                ["channel_overrides"] = JObject.FromObject(channels)
+            };
+
+            return client.HttpClient.Patch($"/users/@me/guilds/@me/settings", container).Deserialize<JObject>()["channel_overrides"].ToObject<List<DiscordChannelSettings>>();
         }
 
 

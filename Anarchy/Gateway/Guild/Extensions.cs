@@ -34,16 +34,39 @@ namespace Discord.Gateway
         }
 
 
-        public static ClientGuildSettings GetClientGuildSettings(this DiscordSocketClient client, ulong guildId)
+        public static ClientGuildSettings GetGuildSettings(this DiscordSocketClient client, ulong guildId)
         {
+            client.GetCachedGuild(guildId);
+
             try
             {
-                return client.ClientGuildSettings[guildId];
+                return client.GuildSettings[guildId];
             }
-            catch
+            catch (KeyNotFoundException)
             {
-                throw new DiscordHttpException(client, new DiscordHttpError(DiscordError.UnknownGuild, "Guild notification settings were not found in the cache"));
+                return null;
             }
+        }
+
+
+        public static DiscordChannelSettings GetChannelSettings(this DiscordSocketClient client, ulong channelId)
+        {
+            foreach (var settings in client.PrivateChannelSettings)
+            {
+                if (settings.Id == channelId)
+                    return settings;
+            }
+
+            foreach (var guildSettings in client.GuildSettings.Values)
+            {
+                foreach (var channel in guildSettings.ChannelOverrides)
+                {
+                    if (channel.Id == channelId)
+                        return channel;
+                }
+            }
+
+            return null;
         }
 
 

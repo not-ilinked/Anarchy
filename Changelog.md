@@ -2,6 +2,7 @@
 
 # 0.7.1.0
 ### Additions
+- Added support for modifying client settings in channels (including private channels).
 - Added a new CopyFrom (DiscordVoiceStream method) overload with a file path as a parameter, serving as a shortcut for DiscordVoiceUtils.ReadFromFile().
 
 ### Improvements

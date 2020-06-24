@@ -3,25 +3,26 @@ using System.Collections.Generic;
 
 namespace Discord
 {
-    public class ClientGuildSettings : DiscordChannelSettings
+    public class ClientGuildSettings : Controllable
     {
         [JsonProperty("guild_id")]
-        private readonly ulong? _guildId;
+        private readonly ulong _guildId;
 
         public MinimalGuild Guild
         {
             get
             {
-                if (_guildId.HasValue)
-                    return new MinimalGuild(_guildId.Value).SetClient(Client);
-                else
-                    return null;
+                return new MinimalGuild(_guildId).SetClient(Client);
             }
         }
 
 
+        [JsonProperty("muted")]
+        public bool Muted { get; private set; }
+
+
         [JsonProperty("message_notifications")]
-        public ClientGuildNotificationLevel Notifications { get; private set; }
+        public ClientNotificationLevel Notifications { get; private set; }
 
 
         [JsonProperty("supress_everyone")]

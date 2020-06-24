@@ -1,6 +1,6 @@
 ﻿namespace Discord
 {
-    public enum ClientGuildNotificationLevel
+    public enum ClientNotificationLevel
     {
         AllMessages,
         OnlyMentions,
