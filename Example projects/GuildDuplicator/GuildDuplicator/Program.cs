@@ -35,7 +35,7 @@ namespace GuildDuplicator
             Console.WriteLine("Duplicating roles...");
             Dictionary<ulong, ulong> dupedRoles = new Dictionary<ulong, ulong>();
             foreach (var role in guild.Roles.OrderBy(r => r.Position).Reverse())
-                dupedRoles.Add(role.Id, ourGuild.CreateRole(new RoleProperties() { Name = role.Name, Color = role.Color, Mentionable = role.Mentionable, Permissions = new DiscordEditablePermissions(role.Permissions), Seperated = role.Seperated }).Id);
+                dupedRoles.Add(role.Id, ourGuild.CreateRole(new RoleProperties() { Name = role.Name, Color = role.Color, Mentionable = role.Mentionable, Permissions = role.Permissions, Seperated = role.Seperated }).Id);
 
             Console.WriteLine("Duplicating emojis...");
             foreach (var emoji in guild.Emojis)
@@ -84,7 +84,7 @@ namespace GuildDuplicator
                 foreach (var overwrite in channel.PermissionOverwrites)
                 {
                     if (overwrite.Type == PermissionOverwriteType.Role)
-                        ourChannel.AddPermissionOverwrite(new DiscordPermissionOverwrite() { Id = dupedRoles[overwrite.Id], Type = PermissionOverwriteType.Role, Allow = overwrite.Allow, Deny = overwrite.Deny });
+                        ourChannel.AddPermissionOverwrite(dupedRoles[overwrite.AffectedId], PermissionOverwriteType.Role, overwrite.Allow, overwrite.Deny);
                 }
 
                 if (ourChannel.Type == ChannelType.Category)

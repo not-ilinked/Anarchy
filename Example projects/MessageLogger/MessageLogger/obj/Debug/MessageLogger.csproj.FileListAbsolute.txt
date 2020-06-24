@@ -32,13 +32,10 @@ C:\Users\edhbu\source\repos\Anarchy\Example projects\MessageLogger\MessageLogger
 C:\Users\edhbu\source\repos\Anarchy\Example projects\MessageLogger\MessageLogger\bin\Debug\Anarchy.dll
 C:\Users\edhbu\source\repos\Anarchy\Example projects\MessageLogger\MessageLogger\bin\Debug\Leaf.xNet.dll
 C:\Users\edhbu\source\repos\Anarchy\Example projects\MessageLogger\MessageLogger\bin\Debug\Newtonsoft.Json.dll
-C:\Users\edhbu\source\repos\Anarchy\Example projects\MessageLogger\MessageLogger\bin\Debug\Newtonsoft.Json.Schema.dll
 C:\Users\edhbu\source\repos\Anarchy\Example projects\MessageLogger\MessageLogger\bin\Debug\websocket-sharp.dll
 C:\Users\edhbu\source\repos\Anarchy\Example projects\MessageLogger\MessageLogger\bin\Debug\Anarchy.pdb
 C:\Users\edhbu\source\repos\Anarchy\Example projects\MessageLogger\MessageLogger\bin\Debug\Leaf.xNet.xml
 C:\Users\edhbu\source\repos\Anarchy\Example projects\MessageLogger\MessageLogger\bin\Debug\Newtonsoft.Json.xml
-C:\Users\edhbu\source\repos\Anarchy\Example projects\MessageLogger\MessageLogger\bin\Debug\Newtonsoft.Json.Schema.xml
-C:\Users\edhbu\source\repos\Anarchy\Example projects\MessageLogger\MessageLogger\bin\Debug\websocket-sharp.pdb
 C:\Users\edhbu\source\repos\Anarchy\Example projects\MessageLogger\MessageLogger\obj\Debug\MessageLogger.csprojAssemblyReference.cache
 C:\Users\edhbu\source\repos\Anarchy\Example projects\MessageLogger\MessageLogger\obj\Debug\MessageLogger.csproj.CoreCompileInputs.cache
 C:\Users\edhbu\source\repos\Anarchy\Example projects\MessageLogger\MessageLogger\obj\Debug\MessageLogger.csproj.CopyComplete

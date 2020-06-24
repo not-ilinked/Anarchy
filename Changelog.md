@@ -6,9 +6,10 @@
 - Added a new CopyFrom (DiscordVoiceStream method) overload with a file path as a parameter, serving as a shortcut for DiscordVoiceUtils.ReadFromFile().
 
 ### Improvements
-- DiscordImages are now used when inputting images.
 - Pulling guild members has been improved. GetGuildMembers is for bots while GetGuildChannelMembers is for users. This is due to Discord making some changes to their API.
+- DiscordImages are now used when inputting images.
 - Rewrote how permissions work.
+- Replaced GuildMember's 'HasPermission' method with 'GetPermissions' to increase speeds.
 
 
 

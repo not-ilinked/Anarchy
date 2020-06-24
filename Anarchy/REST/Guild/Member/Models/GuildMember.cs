@@ -123,8 +123,11 @@ namespace Discord
         }
 
 
-        // i don't like that this one will make REST requests if client doesn't have caching, idk how to improve tho...
-        public bool HasPermission(DiscordPermission permission)
+        /// <summary>
+        /// Gets the user's permissions in the guild
+        /// </summary>
+        /// <returns></returns>
+        public DiscordPermission GetPermissions()
         {
             DiscordGuild guild = null;
 
@@ -139,13 +142,14 @@ namespace Discord
             if (guild == null)
                 guild = Client.GetGuild(GuildId);
 
-            if (guild.OwnerId == User.Id)
-                return true;
+            DiscordPermission permissions = DiscordPermission.None;
 
-            return guild.Roles.Where(r => _roles.Contains(r.Id) && (r.Permissions.HasFlag(permission) || r.Permissions.HasFlag(DiscordPermission.Administrator))).Count() > 0;
+            foreach (var role in guild.Roles.Where(r => _roles.Contains(r.Id) || r.Name == "@everyone"))
+                permissions |= role.Permissions;
+
+            return permissions;
         }
-
-
+        
 
         /// <summary>
         /// Kicks the member from the guild

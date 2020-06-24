@@ -51,5 +51,10 @@ namespace Discord
 
             return $"data:image/{type};base64,{Convert.ToBase64String((byte[])new ImageConverter().ConvertTo(Image, typeof(byte[])))}";
         }
+
+        public static implicit operator DiscordImage(Image instance)
+        {
+            return new DiscordImage(instance);
+        }
     }
 }

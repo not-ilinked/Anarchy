@@ -11,7 +11,6 @@ using System.Threading.Tasks;
 using WebSocketSharp;
 using System.Reflection;
 using System.IO;
-using System.Runtime.Remoting.Channels;
 
 namespace Discord.Gateway
 {
@@ -192,11 +191,8 @@ namespace Discord.Gateway
                 Token = token;
 
             Socket = new WebSocket("wss://gateway.discord.gg/?v=6&encoding=json");
-            if (Config.Proxy != null)
-            {
-                if (Config.Proxy.Type == ProxyType.HTTP) //WebSocketSharp only supports HTTP proxies :(
-                    Socket.SetProxy("http://" + Config.Proxy.Host + Config.Proxy.Port, Config.Proxy.Username, Config.Proxy.Password);
-            }
+            if (Config.Proxy != null && Config.Proxy.Type == ProxyType.HTTP) //WebSocketSharp only supports HTTP proxies :(
+                Socket.SetProxy("http://" + Config.Proxy.Host + Config.Proxy.Port, Config.Proxy.Username, Config.Proxy.Password);
             Socket.OnMessage += SocketDataReceived;
             Socket.OnClose += (sender, e) => 
             {

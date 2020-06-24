@@ -20,7 +20,7 @@ namespace Discord
         }
 
 
-        public Image Download(DiscordCDNImageFormat format = DiscordCDNImageFormat.Any)
+        public DiscordImage Download(DiscordCDNImageFormat format = DiscordCDNImageFormat.Any)
         {
             if (format != DiscordCDNImageFormat.Any && SupportedFormats != null && !SupportedFormats.Contains(format))
                 throw new NotSupportedException("Image format not supported. Supported formats for this endpoint: " + string.Join(", ", SupportedFormats));
@@ -29,7 +29,7 @@ namespace Discord
 
             try
             {
-                return (Bitmap)new ImageConverter().ConvertFrom(new HttpClient().GetByteArrayAsync(Url + extension).Result);
+                return new DiscordImage((Bitmap)new ImageConverter().ConvertFrom(new HttpClient().GetByteArrayAsync(Url + extension).Result));
             }
             catch
             {

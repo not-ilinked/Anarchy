@@ -19,13 +19,10 @@ C:\Users\edhbu\source\repos\Anarchy\Example projects\NicknameChanger\NicknameCha
 C:\Users\edhbu\source\repos\Anarchy\Example projects\NicknameChanger\NicknameChanger\bin\Debug\Anarchy.dll
 C:\Users\edhbu\source\repos\Anarchy\Example projects\NicknameChanger\NicknameChanger\bin\Debug\Leaf.xNet.dll
 C:\Users\edhbu\source\repos\Anarchy\Example projects\NicknameChanger\NicknameChanger\bin\Debug\Newtonsoft.Json.dll
-C:\Users\edhbu\source\repos\Anarchy\Example projects\NicknameChanger\NicknameChanger\bin\Debug\Newtonsoft.Json.Schema.dll
 C:\Users\edhbu\source\repos\Anarchy\Example projects\NicknameChanger\NicknameChanger\bin\Debug\websocket-sharp.dll
 C:\Users\edhbu\source\repos\Anarchy\Example projects\NicknameChanger\NicknameChanger\bin\Debug\Anarchy.pdb
 C:\Users\edhbu\source\repos\Anarchy\Example projects\NicknameChanger\NicknameChanger\bin\Debug\Leaf.xNet.xml
 C:\Users\edhbu\source\repos\Anarchy\Example projects\NicknameChanger\NicknameChanger\bin\Debug\Newtonsoft.Json.xml
-C:\Users\edhbu\source\repos\Anarchy\Example projects\NicknameChanger\NicknameChanger\bin\Debug\Newtonsoft.Json.Schema.xml
-C:\Users\edhbu\source\repos\Anarchy\Example projects\NicknameChanger\NicknameChanger\bin\Debug\websocket-sharp.pdb
 C:\Users\edhbu\source\repos\Anarchy\Example projects\NicknameChanger\NicknameChanger\obj\Debug\NicknameChanger.csprojAssemblyReference.cache
 C:\Users\edhbu\source\repos\Anarchy\Example projects\NicknameChanger\NicknameChanger\obj\Debug\NicknameChanger.csproj.CoreCompileInputs.cache
 C:\Users\edhbu\source\repos\Anarchy\Example projects\NicknameChanger\NicknameChanger\obj\Debug\NicknameChanger.csproj.CopyComplete

@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.29020.237
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NicknameChanger", "NicknameChanger\NicknameChanger.csproj", "{43610742-17A3-4BF5-9AC6-615F4F5FABD7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Anarchy", "..\..\Anarchy\Anarchy.csproj", "{18C13E5D-D4D2-4310-993C-2F2644DB8D54}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Anarchy", "..\..\Anarchy\Anarchy.csproj", "{7F6F1AAC-E4DC-4FE7-8166-5B7AEC6FEB4C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{43610742-17A3-4BF5-9AC6-615F4F5FABD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{43610742-17A3-4BF5-9AC6-615F4F5FABD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{43610742-17A3-4BF5-9AC6-615F4F5FABD7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{18C13E5D-D4D2-4310-993C-2F2644DB8D54}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{18C13E5D-D4D2-4310-993C-2F2644DB8D54}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{18C13E5D-D4D2-4310-993C-2F2644DB8D54}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{18C13E5D-D4D2-4310-993C-2F2644DB8D54}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7F6F1AAC-E4DC-4FE7-8166-5B7AEC6FEB4C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F6F1AAC-E4DC-4FE7-8166-5B7AEC6FEB4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F6F1AAC-E4DC-4FE7-8166-5B7AEC6FEB4C}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F6F1AAC-E4DC-4FE7-8166-5B7AEC6FEB4C}.Release|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

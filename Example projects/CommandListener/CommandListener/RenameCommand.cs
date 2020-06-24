@@ -22,11 +22,11 @@ namespace CommandListener
         {
             if (message.Guild != null)
             {
-                if (message.Author.Member.HasPermission(DiscordPermission.ManageChannels))
+                if (message.Author.Member.GetPermissions().HasFlag(DiscordPermission.ManageChannels))
                 {
                     try
                     {
-                        Channel.Modify(NewName);
+                        Channel.Modify(new TextChannelProperties() { Name = NewName });
 
                         message.Channel.SendMessage($"Success! channel has been renamed to \"{NewName}\"");
                     }

@@ -1,6 +1,6 @@
 # About
 Anarchy is an opensource Discord API wrapper allows you to create normal aswell as user bots.<br>
-iLinked (https://youtube.com/iLinked) is in charge of this project and has written the wrapper from scratch.<br>
+You can find more at https://anarchyteam.dev <br><br>
 
 Oh and also: if you're using a bot token make sure to prefix the token with 'Bot '.<br><br>
 
@@ -43,9 +43,9 @@ TextChannel channel = client.GetChannel(420).ToTextChannel(); // will throw an e
 
 //you can also set a bunch of images. im lazy
 EmbedMaker embed = new EmbedMaker();
-embed.Title = "this is an embed";
+embed.Title = "This is an embed";
 embed.TitleUrl = "https://github.com/iLinked1337/Anarchy";
-embed.Description = "sent from Anarchy";
+embed.Description = "Sent from Anarchy";
 embed.Color = Color.FromArgb(0, 104, 204);
 embed.AddField("Anarchy", "is a Discord API wrapper");
 embed.Footer.Text = "Made by iLinked";
@@ -138,9 +138,9 @@ private static void Session_OnConnected(DiscordVoiceSession session, EventArgs e
 ```csharp
 DiscordClient client = new DiscordClient("your token here");
 
-client.User.ChangeProfile(new UserProfile() { Avatar = Image.FromFile("lol.png") }); //this function is for updating profile related settings
+client.User.ChangeProfile(new UserProfileUpdate() { Avatar = Image.FromFile("lol.png") }); //this function is for updating profile related settings
 
-client.User.ChangeSettings(new UserSettings() { Language = Language.EnglishUS }); //this is for changing any other setting
+client.User.ChangeSettings(new UserSettingsProperties() { Language = Language.EnglishUS }); //this is for changing any other setting
 ```
 
 
