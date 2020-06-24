@@ -97,25 +97,11 @@ namespace Discord
 
 
         [JsonProperty("timestamp")]
-        private readonly string _timestamp;
-        public DateTime Timestamp
-        {
-            get { return DiscordTimestamp.FromString(_timestamp); }
-        }
+        public DateTime SentAt { get; private set; }
 
 
         [JsonProperty("edited_timestamp")]
-        private readonly string _editedTimestamp;
-        public DateTime? EditedAt
-        {
-            get
-            {
-                if (_editedTimestamp == null)
-                    return null;
-                else
-                    return DiscordTimestamp.FromString(_editedTimestamp);
-            }
-        }
+        public DateTime? EditedAt { get; private set; }
 
 
         [JsonProperty("pinned")]

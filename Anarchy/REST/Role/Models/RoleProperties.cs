@@ -8,7 +8,7 @@ namespace Discord
     /// </summary>
     public class RoleProperties
     {
-        private readonly Property<string> NameProperty = new Property<string>();
+        private readonly DiscordParameter<string> NameProperty = new DiscordParameter<string>();
         [JsonProperty("name")]
         public string Name
         {
@@ -23,7 +23,7 @@ namespace Discord
         }
 
 
-        private readonly Property<DiscordPermission> PermissionsProperty = new Property<DiscordPermission>();
+        private readonly DiscordParameter<DiscordPermission> PermissionsProperty = new DiscordParameter<DiscordPermission>();
         [JsonProperty("permissions")]
         public DiscordPermission Permissions
         {
@@ -38,7 +38,7 @@ namespace Discord
         }
 
 
-        private readonly Property<uint> ColorProperty = new Property<uint>();
+        private readonly DiscordParameter<uint> ColorProperty = new DiscordParameter<uint>();
         [JsonProperty("color")]
 #pragma warning disable IDE1006, IDE0051
         private uint _color
@@ -60,7 +60,7 @@ namespace Discord
         }
 
 
-        private readonly Property<bool> SeperatedProperty = new Property<bool>();
+        private readonly DiscordParameter<bool> SeperatedProperty = new DiscordParameter<bool>();
         [JsonProperty("hoist")]
         public bool Seperated
         {
@@ -75,7 +75,7 @@ namespace Discord
         }
 
 
-        private readonly Property<bool> MentionableProperty = new Property<bool>();
+        private readonly DiscordParameter<bool> MentionableProperty = new DiscordParameter<bool>();
         [JsonProperty("mentionable")]
         public bool Mentionable
         {

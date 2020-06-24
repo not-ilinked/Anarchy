@@ -13,14 +13,7 @@ namespace Discord
 
 
         [JsonProperty("image")]
-        private string _image;
-
-        
-        public Image Image
-        {
-            get { return DiscordImage.ToImage(_image); }
-            set { _image = DiscordImage.FromImage(value); }
-        }
+        public DiscordImage Image { get; set; }
 
         public override string ToString()
         {

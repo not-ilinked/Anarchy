@@ -13,7 +13,7 @@ namespace Discord
         /// </summary>
         /// <param name="properties">Options for creating the guild</param>
         /// <returns>The created <see cref="DiscordGuild"/></returns>
-        public static DiscordGuild CreateGuild(this DiscordClient client, string name, Image icon = null, string region = null)
+        public static DiscordGuild CreateGuild(this DiscordClient client, string name, DiscordImage icon = null, string region = null)
         {
             GuildCreationProperties properties = new GuildCreationProperties() { Name = name, Icon = icon, Region = region };
 

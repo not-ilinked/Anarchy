@@ -31,20 +31,7 @@ namespace Discord
 
 
         [JsonProperty("cooldown_ends_at")]
-#pragma warning disable CS0649
-        private readonly string _cooldown;
-#pragma warning restore CS0649
-
-        public DateTime? Cooldown
-        {
-            get
-            {
-                if (_cooldown == null)
-                    return null;
-                else
-                    return DiscordTimestamp.FromString(_cooldown);
-            }
-        }
+        public DateTime? Cooldown { get; private set; }
 
 
         public static implicit operator ulong(DiscordNitroBoost instance)

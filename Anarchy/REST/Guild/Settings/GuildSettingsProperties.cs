@@ -5,7 +5,7 @@ namespace Discord
 {
     public class GuildSettingsProperties : ChannelSettingsProperties
     {
-        private readonly Property<bool> _supressProperty = new Property<bool>();
+        private readonly DiscordParameter<bool> _supressProperty = new DiscordParameter<bool>();
         [JsonProperty("supress_everyone")]
         public bool SupressEveryone
         {
@@ -20,7 +20,7 @@ namespace Discord
         }
 
 
-        private readonly Property<bool> _supressRolesProperty = new Property<bool>();
+        private readonly DiscordParameter<bool> _supressRolesProperty = new DiscordParameter<bool>();
         [JsonProperty("supress_roles")]
         public bool SupressRoles
         {
@@ -35,7 +35,7 @@ namespace Discord
         }
 
 
-        private readonly Property<Dictionary<ulong, ChannelSettingsProperties>> _channelsProperty = new Property<Dictionary<ulong, ChannelSettingsProperties>>();
+        private readonly DiscordParameter<Dictionary<ulong, ChannelSettingsProperties>> _channelsProperty = new DiscordParameter<Dictionary<ulong, ChannelSettingsProperties>>();
         [JsonProperty("channel_overrides")]
         public Dictionary<ulong, ChannelSettingsProperties> ChannelOverrides
         {

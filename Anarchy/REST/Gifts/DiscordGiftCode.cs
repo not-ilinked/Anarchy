@@ -18,17 +18,7 @@ namespace Discord
 
 
         [JsonProperty("expires_at")]
-#pragma warning disable CS0649
-        private readonly string _expiresAt;
-#pragma warning restore CS0649
-
-        public DateTime ExpiresAt
-        {
-            get
-            {
-                return DiscordTimestamp.FromString(_expiresAt);
-            }
-        }
+        public DateTime ExpiresAt { get; private set; }
 
 
         [JsonProperty("redeemed")]

@@ -6,7 +6,7 @@ namespace Discord
 {
     public class DiscordApplicationProperties
     {
-        private readonly Property<string> _nameProperty = new Property<string>();
+        private readonly DiscordParameter<string> _nameProperty = new DiscordParameter<string>();
         [JsonProperty("name")]
         public string Name
         {
@@ -21,7 +21,7 @@ namespace Discord
         }
 
 
-        private readonly Property<string> _descriptionProperty = new Property<string>();
+        private readonly DiscordParameter<string> _descriptionProperty = new DiscordParameter<string>();
         [JsonProperty("description")]
         public string Description
         {
@@ -36,18 +36,12 @@ namespace Discord
         }
 
 
-        private readonly Property<string> IconProperty = new Property<string>();
+        private readonly DiscordParameter<DiscordImage> IconProperty = new DiscordParameter<DiscordImage>();
         [JsonProperty("icon")]
-        private string _icon
+        public DiscordImage Icon
         {
             get { return IconProperty; }
             set { IconProperty.Value = value; }
-        }
-
-        public Image Icon
-        {
-            get { return DiscordImage.ToImage(_icon); }
-            set { _icon = DiscordImage.FromImage(value); }
         }
 
         public bool ShouldSerialize_icon()
@@ -56,7 +50,7 @@ namespace Discord
         }
 
 
-        private readonly Property<bool> _publicProperty = new Property<bool>();
+        private readonly DiscordParameter<bool> _publicProperty = new DiscordParameter<bool>();
         [JsonProperty("bot_public")]
         public bool PublicBot
         {
@@ -71,7 +65,7 @@ namespace Discord
         }
 
 
-        private readonly Property<bool> _codeGrantProperty = new Property<bool>();
+        private readonly DiscordParameter<bool> _codeGrantProperty = new DiscordParameter<bool>();
         [JsonProperty("bot_require_code_grant")]
         public bool BotRequireCodeGrant
         {
@@ -86,7 +80,7 @@ namespace Discord
         }
 
 
-        private readonly Property<List<string>> _redirectsProperty = new Property<List<string>>();
+        private readonly DiscordParameter<List<string>> _redirectsProperty = new DiscordParameter<List<string>>();
         [JsonProperty("redirect_urls")]
         public List<string> RedirectUrls
         {

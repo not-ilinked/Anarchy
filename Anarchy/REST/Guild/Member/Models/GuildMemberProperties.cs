@@ -5,7 +5,7 @@ namespace Discord
 {
     public class GuildMemberProperties
     {
-        private readonly Property<string> NickProperty = new Property<string>();
+        private readonly DiscordParameter<string> NickProperty = new DiscordParameter<string>();
         [JsonProperty("nick")]
         public string Nickname
         {
@@ -20,7 +20,7 @@ namespace Discord
         }
 
 
-        private readonly Property<List<ulong>> RoleProperty = new Property<List<ulong>>();
+        private readonly DiscordParameter<List<ulong>> RoleProperty = new DiscordParameter<List<ulong>>();
         [JsonProperty("roles")]
         public List<ulong> Roles
         {
@@ -35,7 +35,7 @@ namespace Discord
         }
 
 
-        private readonly Property<bool> MuteProperty = new Property<bool>();
+        private readonly DiscordParameter<bool> MuteProperty = new DiscordParameter<bool>();
         [JsonProperty("mute")]
         public bool Muted
         {
@@ -50,7 +50,7 @@ namespace Discord
         }
 
 
-        private readonly Property<bool> DeafProperty = new Property<bool>();
+        private readonly DiscordParameter<bool> DeafProperty = new DiscordParameter<bool>();
         [JsonProperty("deaf")]
         public bool Deafened
         {

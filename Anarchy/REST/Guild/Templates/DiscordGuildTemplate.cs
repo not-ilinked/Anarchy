@@ -36,27 +36,11 @@ namespace Discord
 
 
         [JsonProperty("created_at")]
-        private string _createdAt;
-
-        public DateTime CreatedAt
-        {
-            get
-            {
-                return DiscordTimestamp.FromString(_createdAt);
-            }
-        }
+        public DateTime CreatedAt { get; private set; }
 
 
         [JsonProperty("updated_at")]
-        private readonly string _updatedAt;
-
-        public DateTime UpdatedAt
-        {
-            get
-            {
-                return DiscordTimestamp.FromString(_updatedAt);
-            }
-        }
+        public DateTime UpdatedAt { get; private set; }
 
 
         [JsonProperty("source_guild_id")]
@@ -94,7 +78,6 @@ namespace Discord
             Name = template.Name;
             Usages = template.Usages;
             Creator = template.Creator;
-            _createdAt = template._createdAt;
             _guildId = template._guildId;
             Template = template.Template;
         }

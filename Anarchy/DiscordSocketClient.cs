@@ -145,10 +145,12 @@ namespace Discord.Gateway
         internal Dictionary<ulong, ClientGuildSettings> GuildSettings { get; private set; }
         internal List<DiscordChannelSettings> PrivateChannelSettings { get; private set; }
 
-        internal List<VoiceSessionInfo> VoiceSessions { get; private set; }
-        public DiscordUserSettings UserSettings { get; private set; }
         public CommandHandler CommandHandler { get; private set; }
         public new DiscordSocketConfig Config { get; private set; }
+        internal List<VoiceSessionInfo> VoiceSessions { get; private set; }
+
+        public DiscordUserSettings UserSettings { get; private set; }
+
         internal ulong? Lurking { get; set; }
 
         // websocket connection

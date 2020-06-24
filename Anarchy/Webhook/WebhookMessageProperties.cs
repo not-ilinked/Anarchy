@@ -30,7 +30,7 @@ namespace Discord.Webhook
         }
 
 
-        internal Property<string> NameProperty = new Property<string>();
+        internal DiscordParameter<string> NameProperty = new DiscordParameter<string>();
         [JsonProperty("username")]
         public string Username
         {
@@ -45,7 +45,7 @@ namespace Discord.Webhook
         }
 
 
-        internal Property<string> AvatarProperty = new Property<string>();
+        internal DiscordParameter<string> AvatarProperty = new DiscordParameter<string>();
         [JsonProperty("avatar_url")]
         public string AvatarUrl
         {

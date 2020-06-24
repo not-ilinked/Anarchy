@@ -8,18 +8,12 @@ namespace Discord
     /// </summary>
     public class GroupProperties : ChannelProperties
     {
-        internal readonly Property<string> IconProperty = new Property<string>();
+        internal readonly DiscordParameter<DiscordImage> IconProperty = new DiscordParameter<DiscordImage>();
         [JsonProperty("icon")]
-        private string _icon
+        public DiscordImage Icon
         {
             get { return IconProperty; }
             set { IconProperty.Value = value; }
-        }
-
-        public Image Icon
-        {
-            get { return DiscordImage.ToImage(_icon); }
-            set { _icon = DiscordImage.FromImage(value); }
         }
 
 

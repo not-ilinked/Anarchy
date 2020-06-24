@@ -15,13 +15,7 @@ namespace Discord
 
 
         [JsonProperty("created_at")]
-        private string _createdAt;
-
-
-        public DateTime SubscribedAt
-        {
-            get { return DiscordTimestamp.FromString(_createdAt); }
-        }
+        public DateTime CreatedAt { get; private set; }
 
 
         [JsonProperty("status")]

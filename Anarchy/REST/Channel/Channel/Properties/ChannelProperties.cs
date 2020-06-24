@@ -7,7 +7,7 @@ namespace Discord
     /// </summary>
     public class ChannelProperties
     {
-        private readonly Property<string> NameProperty = new Property<string>();
+        private readonly DiscordParameter<string> NameProperty = new DiscordParameter<string>();
         [JsonProperty("name")]
         public string Name
         {

@@ -7,7 +7,7 @@ namespace Discord
     /// </summary>
     public class GuildChannelProperties : ChannelProperties
     {
-        private readonly Property<ulong?> ParentProperty = new Property<ulong?>();
+        private readonly DiscordParameter<ulong?> ParentProperty = new DiscordParameter<ulong?>();
         [JsonProperty("parent_id")]
         public ulong? ParentId
         {
@@ -22,7 +22,7 @@ namespace Discord
         }
 
 
-        private readonly Property<uint> PositionProperty = new Property<uint>();
+        private readonly DiscordParameter<uint> PositionProperty = new DiscordParameter<uint>();
         [JsonProperty("position")]
         public uint Position
         {

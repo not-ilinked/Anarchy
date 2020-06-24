@@ -8,7 +8,7 @@ namespace Discord
         /// <summary>
         /// Creates a guild from a template
         /// </summary>
-        public static IReadOnlyList<DiscordGuild> CreateTemplatedGuild(this DiscordClient client, string templateCode, string name, Image icon = null)
+        public static IReadOnlyList<DiscordGuild> CreateTemplatedGuild(this DiscordClient client, string templateCode, string name, DiscordImage icon = null)
         {
             GuildCreationProperties properties = new GuildCreationProperties()
             {

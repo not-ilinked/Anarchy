@@ -6,7 +6,7 @@ namespace Discord
 {
     public class UserSettingsProperties
     {
-        private readonly Property<string> ThemeProperty = new Property<string>();
+        private readonly DiscordParameter<string> ThemeProperty = new DiscordParameter<string>();
         [JsonProperty("theme")]
         private string _theme
         {
@@ -26,7 +26,7 @@ namespace Discord
         }
 
 
-        private readonly Property<ExplicitContentFilter> ExplicityProperty = new Property<ExplicitContentFilter>();
+        private readonly DiscordParameter<ExplicitContentFilter> ExplicityProperty = new DiscordParameter<ExplicitContentFilter>();
         [JsonProperty("explicit_content_filter")]
         public ExplicitContentFilter ExplicitContentFilter
         {
@@ -41,7 +41,7 @@ namespace Discord
         }
 
 
-        private readonly Property<bool> DevProperty = new Property<bool>();
+        private readonly DiscordParameter<bool> DevProperty = new DiscordParameter<bool>();
         [JsonProperty("developer_mode")]
         public bool DeveloperMode
         {
@@ -56,7 +56,7 @@ namespace Discord
         }
 
 
-        private readonly Property<bool> CompactProperty = new Property<bool>();
+        private readonly DiscordParameter<bool> CompactProperty = new DiscordParameter<bool>();
         [JsonProperty("message_display_compact")]
         public bool CompactMessages
         {
@@ -71,7 +71,7 @@ namespace Discord
         }
 
 
-        private readonly Property<DiscordLanguage> LocaleProperty = new Property<DiscordLanguage>();
+        private readonly DiscordParameter<DiscordLanguage> LocaleProperty = new DiscordParameter<DiscordLanguage>();
         [JsonProperty("locale")]
 #pragma warning disable IDE0051
         private string _locale
@@ -93,7 +93,7 @@ namespace Discord
         }
 
 
-        private readonly Property<bool> TtsProperty = new Property<bool>();
+        private readonly DiscordParameter<bool> TtsProperty = new DiscordParameter<bool>();
         [JsonProperty("enable_tts_playback")]
         public bool EnableTts
         {
@@ -108,7 +108,7 @@ namespace Discord
         }
 
 
-        private readonly Property<bool> GifProperty = new Property<bool>();
+        private readonly DiscordParameter<bool> GifProperty = new DiscordParameter<bool>();
         [JsonProperty("gif_auto_play")]
         public bool PlayGifsAutomatically
         {
@@ -123,7 +123,7 @@ namespace Discord
         }
 
 
-        private readonly Property<CustomStatus> StatusProperty = new Property<CustomStatus>();
+        private readonly DiscordParameter<CustomStatus> StatusProperty = new DiscordParameter<CustomStatus>();
         [JsonProperty("custom_status")]
         public CustomStatus CustomStatus
         {
@@ -138,7 +138,7 @@ namespace Discord
         }
 
 
-        private readonly Property<List<DiscordGuildFolderUpdate>> _folderProperty = new Property<List<DiscordGuildFolderUpdate>>();
+        private readonly DiscordParameter<List<DiscordGuildFolderUpdate>> _folderProperty = new DiscordParameter<List<DiscordGuildFolderUpdate>>();
         [JsonProperty("guild_folders")]
         public List<DiscordGuildFolderUpdate> GuildFolders
         {

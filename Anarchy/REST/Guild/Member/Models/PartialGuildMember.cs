@@ -41,30 +41,10 @@ namespace Discord
 
 
         [JsonProperty("joined_at")]
-        private string _joinedAt;
-        public DateTime? JoinedAt
-        {
-            get
-            {
-                if (_joinedAt == null)
-                    return null;
-
-                return DiscordTimestamp.FromString(_joinedAt);
-            }
-        }
+        public DateTime? JoinedAt { get; private set; }
 
         [JsonProperty("premium_since")]
-        private string _premiumSince;
-        public DateTime? BoostingSince
-        {
-            get
-            {
-                if (_premiumSince == null)
-                    return null;
-                else
-                    return DiscordTimestamp.FromString(_premiumSince);
-            }
-        }
+        public DateTime? BoostingSince { get; private set; }
 
 
         [JsonProperty("mute")]
@@ -80,8 +60,6 @@ namespace Discord
             base.Dispose();
             Nickname = null;
             _roles = null;
-            _joinedAt = null;
-            _premiumSince = null;
         }
     }
 }

@@ -2,7 +2,7 @@
 {
     public class DiscordWebhookProfile
     {
-        internal Property<string> NameProperty = new Property<string>();
+        internal DiscordParameter<string> NameProperty = new DiscordParameter<string>();
         public string Username
         {
             get { return NameProperty; }
@@ -10,7 +10,7 @@
         }
 
 
-        internal Property<string> AvatarProperty = new Property<string>();
+        internal DiscordParameter<string> AvatarProperty = new DiscordParameter<string>();
         public string AvatarUrl
         {
             get { return AvatarProperty; }

@@ -19,12 +19,7 @@ namespace Discord.Gateway
 
 
         [JsonProperty("created_at")]
-        private readonly string _createdAt;
-
-        public DateTime CreatedAt
-        {
-            get { return DiscordTimestamp.FromString(_createdAt); }
-        }
+        public DateTime CreatedAt { get; private set; }
 
 
         [JsonProperty("guild_id")]

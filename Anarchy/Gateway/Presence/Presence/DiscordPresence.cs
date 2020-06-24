@@ -60,18 +60,7 @@ namespace Discord.Gateway
 
 
         [JsonProperty("premium_since")]
-        private readonly string _premiumSince;
-
-        public DateTime? BoostingSince
-        {
-            get
-            {
-                if (_premiumSince == null)
-                    return null;
-                else
-                    return DiscordTimestamp.FromString(_premiumSince);
-            }
-        }
+        public DateTime? BoostingSince { get; private set; }
 
 
         public override string ToString()

@@ -1,40 +1,55 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.IO;
 
 namespace Discord
 {
-    public static class DiscordImage
+    class ImageJsonConverter : JsonConverter
     {
-        public static string FromImage(Image image)
+        public override bool CanConvert(Type objectType)
         {
-            if (image == null)
+            return objectType == typeof(DiscordImage);
+        }
+
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        {
+            throw new NotSupportedException();
+        }
+
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        {
+            writer.WriteValue(value.ToString());
+        }
+    }
+
+    [JsonConverter(typeof(ImageJsonConverter))]
+    public class DiscordImage
+    {
+        public Image Image { get; private set; }
+
+        public DiscordImage(Image image)
+        {
+            Image = image;
+        }
+
+        public override string ToString()
+        {
+            if (Image == null)
                 return null;
 
             string type;
 
-            if (ImageFormat.Jpeg.Equals(image.RawFormat))
+            if (ImageFormat.Jpeg.Equals(Image.RawFormat))
                 type = "jpeg";
-            else if (ImageFormat.Png.Equals(image.RawFormat))
+            else if (ImageFormat.Png.Equals(Image.RawFormat))
                 type = "png";
-            else if (ImageFormat.Gif.Equals(image.RawFormat))
+            else if (ImageFormat.Gif.Equals(Image.RawFormat))
                 type = "gif";
             else
                 throw new NotSupportedException("File extension not supported");
 
-            return $"data:image/{type};base64,{Convert.ToBase64String((byte[])new ImageConverter().ConvertTo(image, typeof(byte[])))}";
-        }
-
-
-        public static Image ToImage(string str)
-        {
-            if (str == null)
-                return null;
-
-            MemoryStream stream = new MemoryStream(Convert.FromBase64String(str.Split(',')[1]));
-
-            return Image.FromStream(stream);
+            return $"data:image/{type};base64,{Convert.ToBase64String((byte[])new ImageConverter().ConvertTo(Image, typeof(byte[])))}";
         }
     }
 }

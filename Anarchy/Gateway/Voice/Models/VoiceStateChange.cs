@@ -12,7 +12,7 @@ namespace Discord.Gateway
         public ulong? ChannelId { get; set; }
 
 
-        private Property<bool> _mutedProperty = new Property<bool>();
+        private DiscordParameter<bool> _mutedProperty = new DiscordParameter<bool>();
         [JsonProperty("self_mute")]
         public bool Muted
         {
@@ -27,7 +27,7 @@ namespace Discord.Gateway
         }
 
 
-        private Property<bool> _deafProperty = new Property<bool>();
+        private DiscordParameter<bool> _deafProperty = new DiscordParameter<bool>();
         [JsonProperty("self_deaf")]
         public bool Deafened
         {

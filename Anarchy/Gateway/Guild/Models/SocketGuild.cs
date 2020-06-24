@@ -48,13 +48,7 @@ namespace Discord.Gateway
 
 
         [JsonProperty("joined_at")]
-#pragma warning disable CS0649
-        private string _joinedAt;
-#pragma warning restore CS0659
-        public DateTime JoinedAt
-        {
-            get { return DiscordTimestamp.FromString(_joinedAt); }
-        }
+        public DateTime JoinedAt { get; private set; }
 
 
         [JsonProperty("voice_states")]
@@ -99,7 +93,6 @@ namespace Discord.Gateway
         {
             base.Dispose();
             _channels = null;
-            _joinedAt = null;
             _voiceStates = null;
         }
     }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace Discord
@@ -32,14 +33,7 @@ namespace Discord
 
 
         [JsonProperty("premium_since")]
-#pragma warning disable CS0649
-        private readonly string _premiumSince;
-#pragma warning restore CS0649
-
-        public DiscordNitro Nitro
-        {
-            get { return new DiscordNitro(_premiumSince); }
-        }
+        public DateTime? NitroSince { get; private set; }
 
 
         [JsonProperty("mutual_guilds")]

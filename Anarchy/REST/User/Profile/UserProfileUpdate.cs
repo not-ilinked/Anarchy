@@ -8,7 +8,7 @@ namespace Discord
     /// </summary>
     public class UserProfileUpdate
     {
-        private readonly Property<string> NameProperty = new Property<string>();
+        private readonly DiscordParameter<string> NameProperty = new DiscordParameter<string>();
         [JsonProperty("username")]
         public string Username
         {
@@ -23,7 +23,7 @@ namespace Discord
         }
 
 
-        internal Property<uint> DiscriminatorProperty = new Property<uint>();
+        internal DiscordParameter<uint> DiscriminatorProperty = new DiscordParameter<uint>();
         [JsonProperty("discriminator")]
         public uint Discriminator
         {
@@ -38,7 +38,7 @@ namespace Discord
         }
 
 
-        private readonly Property<string> EmailProperty = new Property<string>();
+        private readonly DiscordParameter<string> EmailProperty = new DiscordParameter<string>();
         [JsonProperty("email")]
         public string Email
         {
@@ -53,18 +53,12 @@ namespace Discord
         }
 
 
-        private readonly Property<string> AvatarProperty = new Property<string>();
+        private readonly DiscordParameter<DiscordImage> AvatarProperty = new DiscordParameter<DiscordImage>();
         [JsonProperty("avatar")]
-        private string _avatar
+        public DiscordImage Avatar
         {
             get { return AvatarProperty; }
             set { AvatarProperty.Value = value; }
-        }
-
-        public Image Avatar
-        {
-            get { return DiscordImage.ToImage(_avatar); }
-            set { _avatar = DiscordImage.FromImage(value); }
         }
 
 

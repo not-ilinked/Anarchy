@@ -21,7 +21,7 @@ namespace Discord
         }
 
 
-        private readonly Property<bool> _mutedProperty = new Property<bool>();
+        private readonly DiscordParameter<bool> _mutedProperty = new DiscordParameter<bool>();
         [JsonProperty("muted")]
         public bool Muted
         {
@@ -36,7 +36,7 @@ namespace Discord
         }
 
 
-        private readonly Property<ClientNotificationLevel> _notifsProperty = new Property<ClientNotificationLevel>();
+        private readonly DiscordParameter<ClientNotificationLevel> _notifsProperty = new DiscordParameter<ClientNotificationLevel>();
         [JsonProperty("message_notifications")]
         public ClientNotificationLevel Notifications
         {

@@ -8,7 +8,7 @@ namespace Discord.Webhook
     /// </summary>
     public class DiscordWebhookProperties
     {
-        private readonly Property<string> NameProperty = new Property<string>();
+        private readonly DiscordParameter<string> NameProperty = new DiscordParameter<string>();
         [JsonProperty("name")]
         public string Name
         {
@@ -23,18 +23,12 @@ namespace Discord.Webhook
         }
 
 
-        private readonly Property<string> AvatarProperty = new Property<string>();
+        private readonly DiscordParameter<DiscordImage> AvatarProperty = new DiscordParameter<DiscordImage>();
         [JsonProperty("avatar")]
-        private string _avatar
+        public DiscordImage Avatar
         {
             get { return AvatarProperty; }
             set { AvatarProperty.Value = value; }
-        }
-
-        public Image Avatar
-        {
-            get { return DiscordImage.ToImage(_avatar); }
-            set { _avatar = DiscordImage.FromImage(value); }
         }
 
 
@@ -44,7 +38,7 @@ namespace Discord.Webhook
         }
 
 
-        private readonly Property<ulong> ChannelProperty = new Property<ulong>();
+        private readonly DiscordParameter<ulong> ChannelProperty = new DiscordParameter<ulong>();
         [JsonProperty("channel_id")]
         public ulong ChannelId
         {

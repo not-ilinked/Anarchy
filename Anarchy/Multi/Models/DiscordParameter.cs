@@ -1,7 +1,7 @@
 ﻿namespace Discord
 {
     /// <typeparam name="T">Type of property</typeparam>
-    internal class Property<T>
+    internal class DiscordParameter<T>
     {
         public bool Set { get; private set; }
 
@@ -18,7 +18,7 @@
         }
 
 
-        public static implicit operator T(Property<T> instance)
+        public static implicit operator T(DiscordParameter<T> instance)
         {
             return instance.Value;
         }

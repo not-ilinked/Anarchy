@@ -8,7 +8,7 @@ namespace Discord
     /// </summary>
     public class GuildProperties
     {
-        private readonly Property<string> NameProperty = new Property<string>();
+        private readonly DiscordParameter<string> NameProperty = new DiscordParameter<string>();
         [JsonProperty("name")]
         public string Name
         {
@@ -23,7 +23,7 @@ namespace Discord
         }
 
 
-        private readonly Property<string> RegionProperty = new Property<string>();
+        private readonly DiscordParameter<string> RegionProperty = new DiscordParameter<string>();
         [JsonProperty("region")]
         public string Region
         {
@@ -38,18 +38,12 @@ namespace Discord
         }
 
 
-        internal readonly Property<string> IconProperty = new Property<string>();
+        internal readonly DiscordParameter<DiscordImage> IconProperty = new DiscordParameter<DiscordImage>();
         [JsonProperty("icon")]
-        private string _icon
+        public DiscordImage Icon
         {
             get { return IconProperty; }
             set { IconProperty.Value = value; }
-        }
-
-        public Image Icon
-        {
-            get { return DiscordImage.ToImage(_icon); }
-            set { _icon = DiscordImage.FromImage(value); }
         }
 
 
@@ -59,7 +53,7 @@ namespace Discord
         }
 
 
-        private readonly Property<ulong> OwnerProperty = new Property<ulong>();
+        private readonly DiscordParameter<ulong> OwnerProperty = new DiscordParameter<ulong>();
         [JsonProperty("owner_id")]
         public ulong OwnerId
         {
@@ -74,7 +68,7 @@ namespace Discord
         }
 
 
-        private readonly Property<GuildVerificationLevel> VerificationProperty = new Property<GuildVerificationLevel>();
+        private readonly DiscordParameter<GuildVerificationLevel> VerificationProperty = new DiscordParameter<GuildVerificationLevel>();
         [JsonProperty("verification_level")]
         public GuildVerificationLevel VerificationLevel
         {
@@ -89,7 +83,7 @@ namespace Discord
         }
 
 
-        private readonly Property<GuildDefaultNotifications> NotificationsProperty = new Property<GuildDefaultNotifications>();
+        private readonly DiscordParameter<GuildDefaultNotifications> NotificationsProperty = new DiscordParameter<GuildDefaultNotifications>();
         [JsonProperty("default_message_notifications")]
         public GuildDefaultNotifications DefaultNotifications
         {
@@ -104,7 +98,7 @@ namespace Discord
         }
 
 
-        internal readonly Property<string> VanityProperty = new Property<string>();
+        internal readonly DiscordParameter<string> VanityProperty = new DiscordParameter<string>();
         public string VanityUrlCode
         {
             get { return VanityProperty; }

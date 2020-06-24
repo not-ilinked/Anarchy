@@ -167,10 +167,9 @@
     <Compile Include="Multi\Controllable\Extensions.cs" />
     <Compile Include="Multi\Controllable\JsonExtensions.cs" />
     <Compile Include="Multi\Models\DiscordException.cs" />
-    <Compile Include="Multi\Models\DiscordTimestamp.cs" />
     <Compile Include="Multi\Models\InvalidConvertionException.cs" />
     <Compile Include="Multi\Models\InvalidParametersException.cs" />
-    <Compile Include="Multi\Models\Property.cs" />
+    <Compile Include="Multi\Models\DiscordParameter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="REST\Guild\AuditLog\Extensions.cs" />
     <Compile Include="REST\Guild\AuditLog\Models\ActionType.cs" />
@@ -309,7 +308,6 @@
     <Compile Include="REST\User\Profile\DiscordProfile.cs" />
     <Compile Include="REST\User\Profile\Hypesquad.cs" />
     <Compile Include="REST\User\Profile\MutualGuild.cs" />
-    <Compile Include="REST\User\Profile\DiscordNitro.cs" />
     <Compile Include="REST\User\Profile\ProfileUpdatedEventArgs.cs" />
     <Compile Include="REST\User\Profile\Status.cs" />
     <Compile Include="REST\User\Settings\CustomStatus.cs" />

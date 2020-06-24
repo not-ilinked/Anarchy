@@ -17,12 +17,6 @@ namespace Discord
 
 
         [JsonProperty("icon")]
-        private string _icon;
-
-        public Image Icon
-        {
-            get { return DiscordImage.ToImage(_icon); }
-            set { _icon = DiscordImage.FromImage(value); }
-        }
+        public DiscordImage Icon { get; set; }
     }
 }
