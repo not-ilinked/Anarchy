@@ -42,9 +42,13 @@ namespace Discord
         /// </summary>
         /// <param name="channelId">ID of the channel</param>
         /// <param name="overwrite">The permission overwrite to add/edit</param>
-        public static void AddPermissionOverwrite(this DiscordClient client, ulong channelId, DiscordPermissionOverwrite overwrite)
+        public static DiscordPermissionOverwrite AddPermissionOverwrite(this DiscordClient client, ulong channelId, ulong affectedId, PermissionOverwriteType type, DiscordPermission allow, DiscordPermission deny)
         {
+            var overwrite = new DiscordPermissionOverwrite() { AffectedId = affectedId, Type = type, Allow = allow, Deny = deny };
+
             client.HttpClient.Put($"/channels/{channelId}/permissions/{overwrite.AffectedId}", overwrite);
+
+            return overwrite;
         }
 
 
@@ -53,9 +57,9 @@ namespace Discord
         /// </summary>
         /// <param name="channelId">ID of the channel</param>
         /// <param name="id">ID of the role or member affected by the overwrite</param>
-        public static void RemovePermissionOverwrite(this DiscordClient client, ulong channelId, ulong id)
+        public static void RemovePermissionOverwrite(this DiscordClient client, ulong channelId, ulong affectedId)
         {
-            client.HttpClient.Delete($"/channels/{channelId}/permissions/{id}");
+            client.HttpClient.Delete($"/channels/{channelId}/permissions/{affectedId}");
         }
 #pragma warning restore IDE1006
     }

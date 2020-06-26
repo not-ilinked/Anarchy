@@ -63,9 +63,7 @@ namespace Discord
         /// </summary>
         public void AddPermissionOverwrite(ulong affectedId, PermissionOverwriteType type, DiscordPermission allow, DiscordPermission deny)
         {
-            var overwrite = new DiscordPermissionOverwrite() { AffectedId = affectedId, Type = type, Allow = allow, Deny = deny };
-
-            Client.AddPermissionOverwrite(Id, overwrite);
+            var overwrite = Client.AddPermissionOverwrite(Id, affectedId, type, allow, deny);
             List<DiscordPermissionOverwrite> overwrites = PermissionOverwrites.ToList();
 
             int i = overwrites.FindIndex(o => o.AffectedId == o.AffectedId);

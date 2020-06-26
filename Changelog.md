@@ -1,5 +1,11 @@
 (Please keep in mind that these are only the major/important changes. There have been way more than written here)<br>
 
+# haven't decided the number for this version yet lol
+### Improvements
+- Updated some outdated methods.
+
+
+
 # 0.7.1.1
 ### Additions
 - Added [Gateway Intents](https://discord.com/developers/docs/topics/gateway#gateway-intents).
