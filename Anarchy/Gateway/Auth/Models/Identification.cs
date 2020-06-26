@@ -20,13 +20,15 @@ namespace Discord.Gateway
         public bool Compress { get; set; }
 
 
-        [JsonProperty("guild_subscriptions")]
-        public bool GuildSubscriptions { get; set; }
-
-        /*
         [JsonProperty("intents")]
-        public DiscordGatewayIntent Intents { get; set; }
-        */
+        public DiscordGatewayIntent? Intents { get; set; }
+        
+
+        public bool ShouldSerializeIntents()
+        {
+            return Intents.HasValue;
+        }
+
 
         public override string ToString()
         {

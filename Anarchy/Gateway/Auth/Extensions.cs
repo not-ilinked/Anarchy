@@ -11,8 +11,7 @@
             {
                 Token = client.Token,
                 Properties = client.Config.SuperProperties,
-                GuildSubscriptions = client.Config.GuildSubscriptions,
-                //Intents = client.Config.Intents.Intents
+                Intents = client.Config.Intents
             };
 
             client.Send(GatewayOpcode.Identify, identification);

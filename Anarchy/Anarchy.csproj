@@ -77,9 +77,7 @@
     <Compile Include="Gateway\Guild\Models\MemberList\MemberListQueryOptions.cs" />
     <Compile Include="Gateway\Guild\Models\UnavailableGuild.cs" />
     <Compile Include="Gateway\Guild\Models\GuildUnavailableEventArgs.cs" />
-    <Compile Include="Gateway\Intents\DiscordGatewayIntent.cs" />
-    <Compile Include="Gateway\Intents\DiscordGatewayIntents.cs" />
-    <Compile Include="Gateway\Intents\GatewayIntentCalculator.cs" />
+    <Compile Include="Gateway\Auth\Session\DiscordGatewayIntent.cs" />
     <Compile Include="Gateway\Invite\InviteDeletedEventArgs.cs" />
     <Compile Include="Gateway\Presence\Activity\User\UserActivity.cs" />
     <Compile Include="Gateway\Presence\Activity\User\UserCustomStatusActivity.cs" />
@@ -198,8 +196,7 @@
     <Compile Include="REST\Channel\Channel\IMessageChannel.cs" />
     <Compile Include="REST\Channel\Channel\MinimalChannel.cs" />
     <Compile Include="REST\Channel\Guild\Text\MinimalTextChannel.cs" />
-    <Compile Include="REST\Channel\Channel\Properties\ChannelProperties.cs" />
-    <Compile Include="REST\Channel\Channel\Properties\CreationProperties.cs" />
+    <Compile Include="REST\Channel\Channel\CreationProperties.cs" />
     <Compile Include="REST\Channel\Guild\Extensions.cs" />
     <Compile Include="REST\Channel\Guild\Guild\CreationProperties.cs" />
     <Compile Include="REST\Channel\Guild\Guild\GuildChannel.cs" />

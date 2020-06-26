@@ -32,7 +32,7 @@ namespace Discord.Webhook
         }
 
 
-        public bool ShouldSeriaize_avatar()
+        public bool ShouldSeriaizeAvatar()
         {
             return AvatarProperty.Set;
         }

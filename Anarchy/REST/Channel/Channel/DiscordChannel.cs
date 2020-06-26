@@ -28,16 +28,6 @@ namespace Discord
         }
 
 
-        /// <summary>
-        /// Modifies the channel
-        /// </summary>
-        /// <param name="properties">Options for modifying the channel</param>
-        public new void Modify(ChannelProperties properties)
-        {
-            Update(base.Modify(properties));
-        }
-
-
         public override string ToString()
         {
             return Name;

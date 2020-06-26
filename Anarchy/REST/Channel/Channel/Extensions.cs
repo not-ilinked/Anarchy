@@ -15,15 +15,15 @@ namespace Discord
         }
 
 
-        /// <summary>
-        /// Modifies a channel
-        /// </summary>
-        /// <param name="channelId">ID of the channel</param>
-        /// <param name="properties">Options for modifying the channel</param>
-        /// <returns>The modified <see cref="DiscordChannel"/></returns>
-        public static DiscordChannel ModifyChannel(this DiscordClient client, ulong channelId, ChannelProperties properties)
+        public static Group ModifyGroup(this DiscordClient client, ulong groupId, GroupProperties properties)
         {
-            return client.HttpClient.Patch($"/channels/{channelId}", properties).DeserializeEx<DiscordChannel>().SetClient(client);
+            return client.HttpClient.Patch($"/channels/{groupId}", properties).DeserializeEx<Group>().SetClient(client);
+        }
+
+
+        public static GuildChannel ModifyGuildChannel(this DiscordClient client, ulong channelId, GuildChannelProperties properties)
+        {
+            return client.HttpClient.Patch($"/channels/{channelId}", properties).DeserializeEx<GuildChannel>().SetClient(client);
         }
 
 

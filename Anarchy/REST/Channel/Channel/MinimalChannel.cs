@@ -16,16 +16,6 @@ namespace Discord
         }
 
         /// <summary>
-        /// Modifies the channel
-        /// </summary>
-        /// <param name="properties">Options for modifying the channel</param>
-        public DiscordChannel Modify(ChannelProperties properties)
-        {
-            return Client.ModifyChannel(Id, properties);
-        }
-
-
-        /// <summary>
         /// Deletes the channel
         /// </summary>
         /// <returns>The deleted <see cref="DiscordChannel"/></returns>

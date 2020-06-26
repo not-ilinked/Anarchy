@@ -10,8 +10,10 @@ namespace Discord
         /// </summary>
         public static void Ring(this DiscordClient client, ulong channelId, List<ulong> recipients)
         {
-            JObject obj = new JObject();
-            obj["recipients"] = recipients == null ? null : JArray.FromObject(recipients);
+            JObject obj = new JObject
+            {
+                ["recipients"] = recipients == null ? null : JArray.FromObject(recipients)
+            };
 
             client.HttpClient.Post($"/channels/{channelId}/call/ring", obj);
         }
@@ -31,8 +33,10 @@ namespace Discord
         /// </summary>
         public static void StopRinging(this DiscordClient client, ulong channelId, List<ulong> recipients)
         {
-            JObject obj = new JObject();
-            obj["recipients"] = recipients == null ? null : JArray.FromObject(recipients);
+            JObject obj = new JObject
+            {
+                ["recipients"] = recipients == null ? null : JArray.FromObject(recipients)
+            };
 
             client.HttpClient.Post($"https://discordapp.com/api/v6/channels/{channelId}/call/stop-ringing", obj);
         }

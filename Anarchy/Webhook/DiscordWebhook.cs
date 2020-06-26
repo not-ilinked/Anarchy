@@ -19,13 +19,13 @@ namespace Discord.Webhook
 
 
         [JsonProperty("avatar")]
-        private string _avatarId;
+        private string _avatarHash;
 
         public DiscordUserAvatar Avatar
         {
             get
             {
-                return new DiscordUserAvatar(Id, _avatarId);
+                return new DiscordUserAvatar(Id, _avatarHash);
             }
         }
 
@@ -53,7 +53,7 @@ namespace Discord.Webhook
         {
             DiscordWebhook hook = Client.GetWebhook(Id, Token);
             Name = hook.Name;
-            _avatarId = hook.Avatar.Hash;
+            _avatarHash = hook.Avatar.Hash;
             Creator = hook.Creator;
             ChannelId = hook.ChannelId;
         }
@@ -67,7 +67,7 @@ namespace Discord.Webhook
         {
             DiscordWebhook hook = Client.ModifyWebhook(Id, properties);
             Name = hook.Name;
-            _avatarId = hook.Avatar.Hash;
+            _avatarHash = hook.Avatar.Hash;
             ChannelId = hook.ChannelId;
         }
 
@@ -93,17 +93,6 @@ namespace Discord.Webhook
         }
 
 
-        /// <summary>
-        /// Gets the webhook's avatar
-        /// </summary>
-        /// <returns>The avatar (returns null if AvatarId is null)</returns>
-        [Obsolete("GetAvatar is obsolete. Use Avatar.Download() instead")]
-        public Image GetAvatar()
-        {
-            return null;
-        }
-
-
         public override string ToString()
         {
             return Name;
@@ -113,14 +102,6 @@ namespace Discord.Webhook
         public static implicit operator ulong(DiscordWebhook instance)
         {
             return instance.Id;
-        }
-
-
-        public static DiscordWebhook FromUrl(string webhookUrl)
-        {
-            string[] info = webhookUrl.Substring(webhookUrl.IndexOf("https://discordapp.com/api/webhooks/") + 35).Split('/');
-
-            return new DiscordClient(new DiscordConfig() { GetFingerprint = false }).GetWebhook(ulong.Parse(info[0]), info[1]);
         }
     }
 }

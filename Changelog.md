@@ -1,5 +1,15 @@
 (Please keep in mind that these are only the major/important changes. There have been way more than written here)<br>
 
+# 0.7.1.1
+### Additions
+- Added [Gateway Intents](https://discord.com/developers/docs/topics/gateway#gateway-intents).
+
+### Improvements
+- Split ModifyChannel up into ModifyGroup and ModifyGuildChannel to prevent modifying a DM channel.
+- Fixed a bug with DiscordImages.
+
+
+
 # 0.7.1.0
 ### Additions
 - Added support for modifying client settings in channels (including private channels).

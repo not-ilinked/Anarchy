@@ -5,8 +5,22 @@ namespace Discord
     /// <summary>
     /// Options for modifying a <see cref="GuildChannel"/>
     /// </summary>
-    public class GuildChannelProperties : ChannelProperties
+    public class GuildChannelProperties
     {
+        private readonly DiscordParameter<string> NameProperty = new DiscordParameter<string>();
+        [JsonProperty("name")]
+        public string Name
+        {
+            get { return NameProperty; }
+            set { NameProperty.Value = value; }
+        }
+
+
+        public bool ShouldSerializeName()
+        {
+            return NameProperty.Set;
+        }
+
         private readonly DiscordParameter<ulong?> ParentProperty = new DiscordParameter<ulong?>();
         [JsonProperty("parent_id")]
         public ulong? ParentId

@@ -29,18 +29,6 @@ namespace Discord
         }
 
 
-        /// <summary>
-        /// Modifies a group
-        /// </summary>
-        /// <param name="groupId">ID of the group</param>
-        /// <param name="properties">Options for modifying the group</param>
-        /// <returns>The modified <see cref="Group"/></returns>
-        public static Group ModifyGroup(this DiscordClient client, ulong groupId, GroupProperties properties)
-        {
-            return client.HttpClient.Patch($"/channels/{groupId}", properties).DeserializeEx<Group>().SetClient(client);
-        }
-
-
         // This does the same as DeleteChannel(), i just decided to leave it be because DeleteChannel() is a weird name for a function for leaving groups
         /// <summary>
         /// Leaves a group.

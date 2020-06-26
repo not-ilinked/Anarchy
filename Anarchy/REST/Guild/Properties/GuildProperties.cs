@@ -47,7 +47,7 @@ namespace Discord
         }
 
 
-        public bool ShouldSerialize_icon()
+        public bool ShouldSerializeIcon()
         {
             return IconProperty.Set;
         }

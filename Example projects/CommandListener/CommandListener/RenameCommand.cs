@@ -26,7 +26,7 @@ namespace CommandListener
                 {
                     try
                     {
-                        Channel.Modify(new TextChannelProperties() { Name = NewName });
+                        client.GetChannel(Channel.Id).ToGuildChannel().Modify(new GuildChannelProperties() { Name = NewName });
 
                         message.Channel.SendMessage($"Success! channel has been renamed to \"{NewName}\"");
                     }

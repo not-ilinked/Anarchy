@@ -62,7 +62,7 @@ namespace Discord
         }
 
 
-        public bool ShouldSerialize_avatar()
+        public bool ShouldSerializeAvatar()
         {
             return AvatarProperty.Set;
         }
