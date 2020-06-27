@@ -12,25 +12,26 @@ namespace Discord
         /// <param name="query">The name to search for</param>
         /// <param name="limit">Max amount of guilds to receive</param>
         /// <param name="offset">The offset in the list</param>
-        public static IReadOnlyList<DiscoveryGuild> QueryGuilds(this DiscordClient client, string query, int limit = 20, int offset = 0)
+        public static IReadOnlyList<DiscoveryGuild> QueryGuilds(this DiscordClient client, GuildQueryOptions options = null)
         {
+            if (options == null)
+                options = new GuildQueryOptions();
+
             List<DiscoveryGuild> guilds = new List<DiscoveryGuild>();
 
-            foreach (var lol in client.HttpClient.Get($"/discoverable-guilds?query={query}&offset={offset}&limit={limit}").Deserialize<JObject>().Value<JArray>("guilds"))
+            string query = $"?limit={options.Limit}&offset={options.Offset}";
+
+            if (options.Query != null)
+                query += "&query=" + options.Query;
+
+            if (options.Category.HasValue)
+                query += "&categories=" + (int)options.Category;
+
+
+            foreach (var lol in client.HttpClient.Get($"/discoverable-guilds" + query).Deserialize<JObject>().Value<JArray>("guilds"))
                 guilds.Add(lol.ToObject<DiscoveryGuild>());
 
             return guilds.SetClientsInList(client);
-        }
-
-
-        /// <summary>
-        /// Queries guilds in Server Discovery
-        /// </summary>
-        /// <param name="limit">Max amount of guilds to receive</param>
-        /// <param name="offset">The offset in the list</param>
-        public static IReadOnlyList<DiscoveryGuild> QueryGuilds(this DiscordClient client, int limit = 20, int offset = 0)
-        {
-            return client.QueryGuilds("", limit, offset);
         }
 
 

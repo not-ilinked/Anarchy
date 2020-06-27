@@ -98,6 +98,8 @@
     <Compile Include="REST\Billing\PaymentMethodType.cs" />
     <Compile Include="REST\Billing\PayPalPaymentMethod.cs" />
     <Compile Include="REST\CDN\Endpoints\DiscordChannelIcon.cs" />
+    <Compile Include="REST\Discovery\DiscoveryCategory.cs" />
+    <Compile Include="REST\Discovery\GuildQueryOptions.cs" />
     <Compile Include="REST\Gifts\DiscordGift.cs" />
     <Compile Include="REST\Gifts\DiscordGiftCode.cs" />
     <Compile Include="REST\Gifts\Extensions.cs" />
