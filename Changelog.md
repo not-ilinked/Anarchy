@@ -1,8 +1,9 @@
 (Please keep in mind that these are only the major/important changes. There have been way more than written here)<br>
 
-# haven't decided the number for this version yet lol
+# 0.7.1.2
 ### Improvements
 - Updated some outdated methods.
+- Removed socket client debug log hell (i'm sorry for that btw :/).
 
 
 
