@@ -164,7 +164,7 @@ namespace Discord
         /// <returns>The invite used to join the guild</returns>
         public static GuildInvite JoinGuild(this DiscordClient client, string invCode)
         {
-            return client.HttpClient.Post($"/invite/{invCode}")
+            return client.HttpClient.Post($"/invites/{invCode}")
                                 .Deserialize<GuildInvite>().SetClient(client);
         }
 

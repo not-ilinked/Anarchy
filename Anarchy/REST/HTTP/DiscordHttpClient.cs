@@ -6,6 +6,7 @@ using System.Text;
 using System.Net.Http;
 using Leaf.xNet;
 using System.Net;
+using Discord.Gateway;
 
 namespace Discord
 {
@@ -95,9 +96,22 @@ namespace Discord
                     string resp;
                     int statusCode;
 
-                    if (_discordClient.Config.Proxy == null || _discordClient.Config.Proxy.Type == ProxyType.HTTP)
+                    // C# is retarded as shit
+                    ProxyClient proxy = null;
+
+                    if (_discordClient.GetType() == typeof(DiscordSocketClient))
                     {
-                        HttpClient client = new HttpClient(new HttpClientHandler() { Proxy = _discordClient.Config.Proxy == null ? null : new WebProxy(_discordClient.Config.Proxy.Host, _discordClient.Config.Proxy.Port) });
+                        var client = (DiscordSocketClient)_discordClient;
+
+                        if (client.Config != null)
+                            proxy = client.Config.Proxy;
+                    }
+                    else
+                        proxy = _discordClient.Config.Proxy;
+
+                    if (proxy == null || proxy.Type == ProxyType.HTTP)
+                    {
+                        HttpClient client = new HttpClient(new HttpClientHandler() { Proxy = proxy == null ? null : new WebProxy(proxy.Host, proxy.Port) });
                         if (_discordClient.Token != null)
                             client.DefaultRequestHeaders.Add("Authorization", _discordClient.Token);
                         if (Fingerprint != null)
@@ -124,8 +138,8 @@ namespace Discord
                             msg.AddHeader("X-Fingerprint", Fingerprint);
 
                         msg.AddHeader("X-Super-Properties", _discordClient.Config.SuperProperties.Base64);
-                        if (_discordClient.Config.Proxy != null)
-                            msg.Proxy = _discordClient.Config.Proxy;
+                        if (proxy != null)
+                            msg.Proxy = proxy;
 
                         var response = msg.Raw(method, endpoint, hasData ? new Leaf.xNet.StringContent(json) : null);
                         resp = response.ToString();

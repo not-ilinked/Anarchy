@@ -294,6 +294,11 @@ namespace Discord.Gateway
                             case "READY":
                                 Login login = payload.DeserializeEx<Login>().SetClient(this);
 
+                                if (login.User == null)
+                                {
+
+                                }
+
                                 this.User = login.User;
                                 this.UserSettings = login.Settings;
                                 this.SessionId = login.SessionId;

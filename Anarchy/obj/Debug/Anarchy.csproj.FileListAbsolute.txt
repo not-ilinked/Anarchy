@@ -9,3 +9,4 @@ C:\Users\edhbu\source\repos\Anarchy\Anarchy\obj\Debug\Anarchy.csproj.CopyComplet
 C:\Users\edhbu\source\repos\Anarchy\Anarchy\obj\Debug\Anarchy.dll
 C:\Users\edhbu\source\repos\Anarchy\Anarchy\obj\Debug\Anarchy.pdb
 C:\Users\edhbu\source\repos\Anarchy\Anarchy\bin\Debug\websocket-sharp.dll
+C:\Users\edhbu\source\repos\Anarchy\Anarchy\obj\Debug\Anarchy.csprojAssemblyReference.cache
