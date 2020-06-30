@@ -1,0 +1,15 @@
+C:\Users\edhbu\source\repos\Anarchy\Example projects\Broadcaster\Broadcaster\bin\Debug\Broadcaster.exe.config
+C:\Users\edhbu\source\repos\Anarchy\Example projects\Broadcaster\Broadcaster\bin\Debug\Broadcaster.exe
+C:\Users\edhbu\source\repos\Anarchy\Example projects\Broadcaster\Broadcaster\bin\Debug\Broadcaster.pdb
+C:\Users\edhbu\source\repos\Anarchy\Example projects\Broadcaster\Broadcaster\bin\Debug\Anarchy.dll
+C:\Users\edhbu\source\repos\Anarchy\Example projects\Broadcaster\Broadcaster\bin\Debug\Leaf.xNet.dll
+C:\Users\edhbu\source\repos\Anarchy\Example projects\Broadcaster\Broadcaster\bin\Debug\Newtonsoft.Json.dll
+C:\Users\edhbu\source\repos\Anarchy\Example projects\Broadcaster\Broadcaster\bin\Debug\websocket-sharp.dll
+C:\Users\edhbu\source\repos\Anarchy\Example projects\Broadcaster\Broadcaster\bin\Debug\Anarchy.pdb
+C:\Users\edhbu\source\repos\Anarchy\Example projects\Broadcaster\Broadcaster\bin\Debug\Leaf.xNet.xml
+C:\Users\edhbu\source\repos\Anarchy\Example projects\Broadcaster\Broadcaster\bin\Debug\Newtonsoft.Json.xml
+C:\Users\edhbu\source\repos\Anarchy\Example projects\Broadcaster\Broadcaster\obj\Debug\Broadcaster.csprojAssemblyReference.cache
+C:\Users\edhbu\source\repos\Anarchy\Example projects\Broadcaster\Broadcaster\obj\Debug\Broadcaster.csproj.CoreCompileInputs.cache
+C:\Users\edhbu\source\repos\Anarchy\Example projects\Broadcaster\Broadcaster\obj\Debug\Broadcaster.csproj.CopyComplete
+C:\Users\edhbu\source\repos\Anarchy\Example projects\Broadcaster\Broadcaster\obj\Debug\Broadcaster.exe
+C:\Users\edhbu\source\repos\Anarchy\Example projects\Broadcaster\Broadcaster\obj\Debug\Broadcaster.pdb

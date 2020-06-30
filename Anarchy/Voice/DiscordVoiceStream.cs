@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
-using System.IO;
 using System.Threading;
 
 namespace Discord.Voice
@@ -62,7 +60,6 @@ namespace Discord.Voice
                 int frameSize = _encoder.EncodeFrame(buffer, offset, packet, 12);
                 int encSize = Sodium.Encrypt(packet, 12, frameSize, packet, 12, header, _session.SecretKey);
 
-                _session.SetSpeaking(true);
                 _session.UdpClient.Send(packet, encSize + 12);
 
 

@@ -91,7 +91,10 @@ namespace Discord.Voice
         {
             try
             {
-                _client.ChangeVoiceState(new VoiceStateChange() { GuildId = Server.Guild == null ? null : (ulong?)Server.Guild.Id, ChannelId = null });
+                if (_client.User.Type == DiscordUserType.User)
+                    _client.ChangeVoiceState(new VoiceStateChange() { GuildId = null, ChannelId = null });
+                else
+                    _client.ChangeVoiceState(new VoiceStateChange() { GuildId = Server.Guild.Id, ChannelId = null });
             }
             catch { }
 
@@ -101,25 +104,19 @@ namespace Discord.Voice
         }
 
 
-        /// <summary>
-        /// Tells Discord whether you're going to send data or not.
-        /// This automatically gets set to true whenever there is being sent data through a <see cref="DiscordVoiceStream"/>. 
-        /// You will however need to set it to false once you won't be sending any more data through.
-        /// </summary>
-        /// <param name="speaking">Whether there will be getting sent data through or not</param>
-        public void SetSpeaking(bool speaking)
+        public void SetSpeakingState(DiscordVoiceSpeakingState state)
         {
             if (State != DiscordVoiceClientState.Connected)
                 throw new InvalidOperationException("Connection has been closed.");
 
             SendSocketData(DiscordVoiceOpcode.Speaking, new DiscordSpeakingRequest()
             {
-                State = speaking ? DiscordVoiceSpeakingState.Microphone : DiscordVoiceSpeakingState.NotSpeaking,
+                State = state,
                 Delay = 0,
                 SSRC = SSRC
             });
 
-            Speaking = speaking;
+            Speaking = state != DiscordVoiceSpeakingState.NotSpeaking;
         }
 
 

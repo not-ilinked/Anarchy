@@ -158,6 +158,9 @@ namespace Discord.Gateway
         internal uint? Sequence { get; set; }
         public string SessionId { get; set; }
 
+        internal DateTime Cooldown { get; set; }
+        internal object RequestLock { get; private set; } = new object();
+
         
 
         public DiscordSocketClient(DiscordSocketConfig config = null) : base(config)
@@ -293,11 +296,6 @@ namespace Discord.Gateway
                         {
                             case "READY":
                                 Login login = payload.DeserializeEx<Login>().SetClient(this);
-
-                                if (login.User == null)
-                                {
-
-                                }
 
                                 this.User = login.User;
                                 this.UserSettings = login.Settings;
@@ -752,7 +750,7 @@ namespace Discord.Gateway
                         Task.Run(() =>
                         {
                             int interval = payload.Deserialize<JObject>().GetValue("heartbeat_interval").ToObject<int>();
-                            
+
                             try
                             {
                                 while (true)

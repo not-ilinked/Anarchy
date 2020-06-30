@@ -1,5 +1,6 @@
 ﻿using Discord;
 using Discord.Voice;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Concurrent;
 using System.IO;
@@ -16,16 +17,22 @@ namespace Broadcaster
     {
         public static ConcurrentQueue<GuildInfo> AvailableGuilds { get; private set; } = new ConcurrentQueue<GuildInfo>();
         public static ConcurrentQueue<BroadcastClient> AvailableClients { get; private set; } = new ConcurrentQueue<BroadcastClient>();
-        public static byte[] Audio = DiscordVoiceUtils.ReadFromFile(@"C:\Users\edhbu\Downloads\goodbye_monkey.mp4");
+        public static byte[] Audio { get; private set; }
+        public static string[] Nicknames { get; private set; }
 
         static void Main(string[] args)
         {
-            foreach (var inv in File.ReadAllLines("Invites.txt"))
+            Config config = JsonConvert.DeserializeObject<Config>(File.ReadAllText("Config.json"));
+
+            Audio = DiscordVoiceUtils.ReadFromFile(config.AudioPath);
+            Nicknames = config.Nicknames;
+
+            foreach (var inv in File.ReadAllLines(config.InvitesPath))
                 AvailableGuilds.Enqueue(new GuildInfo(inv));
 
             StartAssignerAsync();
 
-            foreach (var token in File.ReadAllLines("Tokens.txt"))
+            foreach (var token in File.ReadAllLines(config.TokensPath))
             {
                 try
                 {

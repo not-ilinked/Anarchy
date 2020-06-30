@@ -27,6 +27,12 @@ namespace Discord.Gateway
         public uint MemberCount { get; private set; }
 
 
+        // i'm not 100% sure of how this functions yet. All i have so far is https://discord.com/developers/docs/topics/gateway#request-guild-members, but it doesn't seem like that applies to users.
+        /*
+        [JsonProperty("members")]
+        public List<GuildMember> Members { get; private set; }
+        */
+
         internal List<GuildChannel> _channels;
         [JsonIgnore]
         public IReadOnlyList<GuildChannel> Channels

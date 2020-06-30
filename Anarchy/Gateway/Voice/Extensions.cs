@@ -28,13 +28,6 @@ namespace Discord.Gateway
         {
             if (client.Config.ConnectToVoiceChannels)
             {
-                DiscordVoiceServer server = null;
-
-                client.OnVoiceServer += (c, result) =>
-                {
-                    server = result;
-                };
-
                 VoiceSessionInfo info = null;
 
                 if (client.User.Type == DiscordUserType.User)
@@ -53,16 +46,23 @@ namespace Discord.Gateway
                     catch { }
                 }
 
+                DiscordVoiceServer server = null;
+
+                client.OnVoiceServer += (c, result) =>
+                {
+                    server = result;
+                };
+
                 client.ChangeVoiceState(new VoiceStateChange() { GuildId = guildId, ChannelId = channelId, Muted = muted, Deafened = deafened });
 
                 int attempts = 0;
 
                 while (server == null)
                 {
-                    if (attempts >= 5000)
+                    if (attempts >= 300)
                         throw new TimeoutException("Gateway did not respond with a server");
 
-                    Thread.Sleep(1);
+                    Thread.Sleep(10);
 
                     attempts++;
                 }

@@ -34,13 +34,15 @@ namespace Broadcaster
             {
                 Console.WriteLine($"[{client.User}] Joined guild {args.Guild.Id}. Processing...");
 
-                ProcessGuild(args.Guild);
+                BeginBroadcast(args.Guild);
             }
         }
 
         private void OnLoggedIn(DiscordSocketClient client, LoginEventArgs args)
         {
             Console.WriteLine($"[{client.User}] Logged in.");
+
+            StartNicknamerAsync();
 
             Program.AvailableClients.Enqueue(this);
         }
@@ -57,7 +59,7 @@ namespace Broadcaster
 
                     Console.WriteLine($"[{_client.User}] Already in guild {guild.Id}. Processing...");
 
-                    ProcessGuild(socketGuild);
+                    BeginBroadcast(socketGuild);
                 }
                 catch (DiscordHttpException ex)
                 {
@@ -69,8 +71,13 @@ namespace Broadcaster
             });
         }
 
-        private void ProcessGuild(SocketGuild guild)
+        private void BeginBroadcast(SocketGuild guild)
         {
+            DiscordPermission permissions = guild.GetMember(_client.User.Id).GetPermissions();
+
+            // if our role(s) don't allow connecting + speaking in vc, those permissions being explicitly marked as "allowed" in perm overwrites is necessary
+            OverwrittenPermissionState minimumOverwriteState = permissions.HasFlag(DiscordPermission.ConnectToVC) && permissions.HasFlag(DiscordPermission.SpeakInVC) ? OverwrittenPermissionState.Inherit : OverwrittenPermissionState.Allow;
+
             do
             {
                 foreach (var channel in guild.Channels.Where(c => c.Type == ChannelType.Voice))
@@ -82,7 +89,7 @@ namespace Broadcaster
                     {
                         if (overwrite.Type == PermissionOverwriteType.Role && ourRoles.Contains(overwrite.AffectedId) || overwrite.Type == PermissionOverwriteType.Member && overwrite.AffectedId == _client.User.Id)
                         {
-                            if (overwrite.GetPermissionState(DiscordPermission.ConnectToVC) == OverwrittenPermissionState.Deny || overwrite.GetPermissionState(DiscordPermission.SpeakInVC) == OverwrittenPermissionState.Deny)
+                            if (overwrite.GetPermissionState(DiscordPermission.ConnectToVC) < minimumOverwriteState || overwrite.GetPermissionState(DiscordPermission.SpeakInVC) < minimumOverwriteState)
                             {
                                 connect = false;
 
@@ -130,6 +137,37 @@ namespace Broadcaster
             };
 
             while (!done) { Thread.Sleep(10); }
+        }
+
+
+        private async void StartNicknamerAsync()
+        {
+            await Task.Run(() =>
+            {
+                while (true)
+                {
+                    try
+                    {
+                        foreach (var nick in Program.Nicknames)
+                        {
+                            _client.ChangeClientNickname(_currentGuild.Id, nick);
+
+                            Thread.Sleep(1000);
+                        }
+                    }
+                    catch (DiscordHttpException ex)
+                    {
+                        if (ex.Code == DiscordError.MissingPermissions || ex.Code == DiscordError.UnknownMember)
+                        {
+                            ulong expectedGuildId = _currentGuild.Id;
+
+                            while (expectedGuildId == _currentGuild.Id) { Thread.Sleep(100); }
+                        }
+                        else
+                            throw;
+                    }
+                }
+            });
         }
     }
 }

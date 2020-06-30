@@ -1,5 +1,11 @@
 (Please keep in mind that these are only the major/important changes. There have been way more than written here)<br>
 
+# don't know what to name this version yet
+### Additions
+- Added a cooldown to prevent [Rate Limits](https://discord.com/developers/docs/topics/gateway#rate-limiting) to DiscordSocketClient.
+
+
+
 # 0.7.1.2
 ### Improvements
 - Updated some outdated methods.
