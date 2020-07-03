@@ -33,7 +33,6 @@ namespace Discord.Gateway
     {
         #region events
         public delegate void UserHandler(DiscordSocketClient client, UserEventArgs args);
-        public delegate void GuildMemberUpdateHandler(DiscordSocketClient client, GuildMemberEventArgs args);
         public delegate void ChannelHandler(DiscordSocketClient client, ChannelEventArgs args);
         public delegate void VoiceStateHandler(DiscordSocketClient client, VoiceStateEventArgs args);
         public delegate void MessageHandler(DiscordSocketClient client, MessageEventArgs args);
@@ -65,8 +64,11 @@ namespace Discord.Gateway
         public delegate void GuildUnavailableHandler(DiscordSocketClient client, GuildUnavailableEventArgs args);
         public event GuildUnavailableHandler OnLeftGuild;
 
-        public event GuildMemberUpdateHandler OnUserJoinedGuild;
-        public event GuildMemberUpdateHandler OnUserLeftGuild;
+        public delegate void MemberAddedHandler(DiscordSocketClient client, GuildMemberEventArgs args);
+        public event MemberAddedHandler OnUserJoinedGuild;
+
+        public delegate void MemberRemovedHandler(DiscordSocketClient client, MemberRemovedEventArgs args);
+        public event MemberRemovedHandler OnUserLeftGuild;
 
         public delegate void GuildMemberHandler(DiscordSocketClient client, GuildMemberEventArgs args);
         public event GuildMemberHandler OnGuildMemberUpdated;
@@ -290,8 +292,8 @@ namespace Discord.Gateway
                         /*
                         Console.WriteLine(payload.Title);
                         
-                        File.AppendAllText("Debug.log", $"{payload.Title}: {payload.Data}\n");*/
-                        
+                        File.AppendAllText("Debug.log", $"{payload.Title}: {payload.Data}\n");
+                        */
                         switch (payload.Title)
                         {
                             case "READY":
@@ -472,10 +474,10 @@ namespace Discord.Gateway
                                 }
                                 break;
                             case "GUILD_MEMBER_ADD":
-                                Task.Run(() => OnUserJoinedGuild?.Invoke(this, new GuildMemberEventArgs(payload.Deserialize<GuildMemberUpdate>().SetClient(this).Member)));
+                                Task.Run(() => OnUserJoinedGuild?.Invoke(this, new GuildMemberEventArgs(payload.Deserialize<GuildMember>().SetClient(this))));
                                 break;
                             case "GUILD_MEMBER_REMOVE":
-                                Task.Run(() => OnUserLeftGuild?.Invoke(this, new GuildMemberEventArgs(payload.Deserialize<GuildMemberUpdate>().SetClient(this).Member)));
+                                Task.Run(() => OnUserLeftGuild?.Invoke(this, new MemberRemovedEventArgs(payload.Deserialize<PartialGuildMember>().SetClient(this))));
                                 break;
                             case "GUILD_MEMBER_UPDATE":
                                 Task.Run(() => OnGuildMemberUpdated?.Invoke(this, new GuildMemberEventArgs(payload.Deserialize<GuildMember>().SetClient(this))));

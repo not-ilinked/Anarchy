@@ -54,7 +54,7 @@ namespace Discord.Gateway
 
 
         [JsonProperty("joined_at")]
-        public DateTime JoinedAt { get; private set; }
+        public DateTime CreatedAt { get; private set; }
 
 
         [JsonProperty("voice_states")]

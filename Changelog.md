@@ -4,6 +4,9 @@
 ### Additions
 - Added a cooldown to prevent [Rate Limits](https://discord.com/developers/docs/topics/gateway#rate-limiting) to DiscordSocketClient.
 
+### Improvements
+- Updated the GuildMember and PartialGuildMember classes. This means that OnUserJoinedGuild, OnGuildMemberUpdated and OnUserLeftGuild have been updated as well.
+
 
 
 # 0.7.1.2

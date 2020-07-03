@@ -97,6 +97,8 @@ namespace Discord.Commands
                                     if (arguments[i].StartsWith("<#") && expectedParameters[i].Key.PropertyType == typeof(MinimalTextChannel)) // channels have a minimal class :D
                                         translated = new MinimalTextChannel(ulong.Parse(parsedArg)).SetClient(_client);
                                 }
+                                else if (expectedParameters[i].Key.PropertyType == typeof(string) && i == expectedParameters.Count - 1) // if the last expected arg is a string, we want to send the rest of the users message
+                                    translated = string.Join(" ", arguments.Skip(i));
 
                                 if (translated == null)
                                     translated = Convert.ChangeType(parsedArg, expectedParameters[i].Key.PropertyType);

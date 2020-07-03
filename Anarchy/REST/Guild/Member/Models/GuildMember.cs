@@ -8,14 +8,32 @@ namespace Discord
 {
     public class GuildMember : PartialGuildMember, IDisposable
     {
-        public GuildMember()
+        [JsonProperty("nick")]
+        public string Nickname { get; private set; }
+
+
+        [JsonProperty("roles")]
+        protected List<ulong> _roles;
+
+        public IReadOnlyList<MinimalRole> Roles
         {
-            OnClientUpdated += (sender, e) => User.SetClient(Client);
+            get
+            {
+                var roles = new List<MinimalRole>();
+
+                foreach (var role in _roles)
+                    roles.Add(new MinimalRole(GuildId, role).SetClient(Client));
+
+                return roles;
+            }
         }
 
 
-        [JsonProperty("user")]
-        public DiscordUser User { get; internal set; }
+        [JsonProperty("joined_at")]
+        public DateTime JoinedAt { get; private set; }
+
+        [JsonProperty("premium_since")]
+        public DateTime? BoostingSince { get; private set; }
 
 
         /// <summary>
@@ -27,8 +45,7 @@ namespace Discord
             User = member.User;
             Nickname = member.Nickname;
             _roles = member._roles;
-            Muted = member.Muted;
-            Deafened = member.Deafened;
+            BoostingSince = member.BoostingSince;
         }
 
 
@@ -200,8 +217,10 @@ namespace Discord
 
         public new void Dispose()
         {
+            Nickname = null;
+            _roles = null;
+            BoostingSince = null;
             base.Dispose();
-            User = null;
         }
     }
 }
