@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 namespace Discord
 {
     /// <summary>
-    /// Options for modifying a <see cref="Group"/>
+    /// Options for modifying a <see cref="DiscordGroup"/>
     /// </summary>
     public class GroupProperties
     {

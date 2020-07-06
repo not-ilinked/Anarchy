@@ -1,5 +1,6 @@
 ﻿using Discord;
 using Discord.Gateway;
+using Discord.Voice;
 using System;
 using System.Linq;
 using System.Threading;
@@ -130,8 +131,12 @@ namespace Broadcaster
             {
                 Console.WriteLine($"[{_client.User}] Speaking in channel.");
 
+                session.SetSpeakingState(DiscordVoiceSpeakingState.Microphone);
+
                 var stream = session.CreateStream(channel.Bitrate);
                 stream.CopyFrom(Program.Audio);
+
+                session.SetSpeakingState(DiscordVoiceSpeakingState.NotSpeaking);
 
                 done = true;
             };

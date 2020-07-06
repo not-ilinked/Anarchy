@@ -1,7 +1,6 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 using System;
-using System.Reflection;
+using System.Linq;
 
 namespace Discord
 {
@@ -21,45 +20,23 @@ namespace Discord
             {
                 _json = value;
 
-                JsonUpdated?.Invoke(this, value);
+                JsonUpdated?.Invoke(this, _json);
             }
         }
 
 
         internal void UpdateSelfJson()
         {
-            foreach (var field in this.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance))
+            JObject updated = JObject.FromObject(this);
+
+            foreach (var property in updated.Properties())
             {
-                foreach (var attr in field.CustomAttributes)
-                {
-                    if (attr.AttributeType == typeof(JsonPropertyAttribute))
-                    {
-                        var value = field.GetValue(this);
-
-                        Json[attr.ConstructorArguments[0].Value.ToString()] = value == null ? null : JProperty.FromObject(value);
-
-                        break;
-                    }
-                }
-            }
-
-
-            foreach (var property in this.GetType().GetProperties())
-            {
-                foreach (var attr in property.CustomAttributes)
-                {
-                    if (attr.AttributeType == typeof(JsonPropertyAttribute))
-                    {
-                        var value = property.GetValue(this);
-
-                        Json[attr.ConstructorArguments[0].Value.ToString()] = value == null ? null : JProperty.FromObject(property.GetValue(this));
-
-                        break;
-                    }
-                }
+                if (!property.Name.Any(char.IsUpper)) // json.net has a habit of serializing properties without JsonProperty attributes
+                    Json[property.Name] = property.Value;
             }
 
             JsonUpdated?.Invoke(this, Json);
+            //SignalClientUpdate(); // currently we completely overwrite lists when JsonUpdated is fired, causing ControllableEx Client references to dissapear. this is a temporary fix for that issue
         }
 
 

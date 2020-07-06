@@ -30,7 +30,7 @@ namespace Discord
 
 
         [JsonProperty("joined_at")]
-        public DateTime JoinedAt { get; private set; }
+        public DateTime JoinedAt { get; internal set; }
 
         [JsonProperty("premium_since")]
         public DateTime? BoostingSince { get; private set; }
@@ -86,19 +86,6 @@ namespace Discord
         public void SetRoles(List<ulong> roles)
         {
             Client.SetGuildMemberRoles(GuildId, User.Id, roles);
-        }
-
-
-        /// <summary>
-        /// Sets the member's roles
-        /// </summary>
-        public void SetRoles(List<DiscordRole> roles)
-        {
-            List<ulong> ids = new List<ulong>();
-            foreach (var role in roles)
-                ids.Add(role.Id);
-
-            SetRoles(ids);
         }
 
 
@@ -161,8 +148,16 @@ namespace Discord
 
             DiscordPermission permissions = DiscordPermission.None;
 
-            foreach (var role in guild.Roles.Where(r => _roles.Contains(r.Id) || r.Name == "@everyone"))
-                permissions |= role.Permissions;
+            if (guild.OwnerId == User.Id)
+            {
+                foreach (DiscordPermission permission in Enum.GetValues(typeof(DiscordPermission)))
+                    permissions |= permission;
+            }
+            else
+            {
+                foreach (var role in guild.Roles.Where(r => _roles.Contains(r.Id) || r.Name == "@everyone"))
+                    permissions |= role.Permissions;
+            }
 
             return permissions;
         }

@@ -142,7 +142,7 @@ namespace Discord.Gateway
         // caching
         internal Dictionary<ulong, SocketGuild> GuildCache { get; private set; }
         internal List<PrivateChannel> PrivateChannels { get; private set; }
-        internal Dictionary<ulong, List<DiscordVoiceState>> PrivateVoiceStates { get; }
+        internal Dictionary<ulong, DiscordVoiceState> VoiceStates { get; private set; }
         internal Dictionary<ulong, ClientGuildSettings> GuildSettings { get; private set; }
         internal List<DiscordChannelSettings> PrivateChannelSettings { get; private set; }
 
@@ -176,7 +176,7 @@ namespace Discord.Gateway
             {
                 GuildCache = new Dictionary<ulong, SocketGuild>();
                 PrivateChannels = new List<PrivateChannel>();
-                PrivateVoiceStates = new Dictionary<ulong, List<DiscordVoiceState>>();
+                VoiceStates = new Dictionary<ulong, DiscordVoiceState>();
                 GuildSettings = new Dictionary<ulong, ClientGuildSettings>();
                 PrivateChannelSettings = new List<DiscordChannelSettings>();
             }
@@ -272,7 +272,7 @@ namespace Discord.Gateway
             {
                 GuildCache.Clear();
                 PrivateChannels.Clear();
-                PrivateVoiceStates.Clear();
+                VoiceStates.Clear();
                 GuildSettings.Clear();
                 PrivateChannelSettings.Clear();
             }
@@ -310,25 +310,20 @@ namespace Discord.Gateway
                                         PrivateChannels = login.PrivateChannels;
 
                                         foreach (var guild in login.Guilds)
-                                            GuildCache.Add(guild.Id, guild.ToSocketGuild());
-
-                                        foreach (var notifSettings in login.ClientGuildSettings)
                                         {
-                                            if (notifSettings["guild_id"].Type == JTokenType.Null)
-                                                PrivateChannelSettings = notifSettings["channel_overrides"].ToObject<List<DiscordChannelSettings>>();
-                                            else
-                                            {
-                                                var settings = notifSettings.ToObject<ClientGuildSettings>().SetClient(this);
+                                            GuildCache[guild.Id] = guild.ToSocketGuild();
 
-                                                GuildSettings.Add(settings.Guild.Id, settings);
-                                            }
+                                            foreach (var state in GuildCache[guild.Id].VoiceStates)
+                                                VoiceStates[state.UserId] = state;
                                         }
-                                    }
-                                    else
-                                    {
-                                        PrivateChannels.Clear();
-                                        GuildCache.Clear();
-                                        GuildSettings.Clear();
+
+                                        foreach (var settings in login.ClientGuildSettings)
+                                        {
+                                            if (settings.GuildId.HasValue)
+                                                GuildSettings.Add(settings.Guild.Id, settings);
+                                            else
+                                                PrivateChannelSettings = settings.ChannelOverrides.ToList();
+                                        }
                                     }
                                 }
 
@@ -379,16 +374,12 @@ namespace Discord.Gateway
                             case "USER_GUILD_SETTINGS_UPDATE":
                                 if (Config.Cache)
                                 {
-                                    JObject obj = payload.Deserialize<JObject>();
+                                    ClientGuildSettings settings = payload.Deserialize<ClientGuildSettings>();
 
-                                    if (obj["guild_id"].Type == JTokenType.Null)
-                                        PrivateChannelSettings = obj["channel_overrides"].ToObject<List<DiscordChannelSettings>>();
-                                    else
-                                    {
-                                        var settings = obj.ToObject<ClientGuildSettings>().SetClient(this);
-
+                                    if (settings.GuildId.HasValue)
                                         GuildSettings[settings.Guild.Id] = settings;
-                                    }
+                                    else
+                                        PrivateChannelSettings = settings.ChannelOverrides.ToList();
                                 }
                                 break;
                             case "USER_UPDATE":
@@ -423,11 +414,7 @@ namespace Discord.Gateway
                                 Task.Run(() => OnUserUpdated?.Invoke(this, new UserEventArgs(user)));
                                 break;
                             case "GUILD_MEMBER_LIST_UPDATE":
-                                var args = payload.Deserialize<GuildMemberListEventArgs>();
-
-                                File.AppendAllText("Debug.log", $"{payload.Data}\n");
-
-                                OnMemberListUpdate?.Invoke(this, args);
+                                OnMemberListUpdate?.Invoke(this, payload.Deserialize<GuildMemberListEventArgs>());
                                 break;
                             case "GUILD_CREATE":
                                 {
@@ -480,7 +467,20 @@ namespace Discord.Gateway
                                 Task.Run(() => OnUserLeftGuild?.Invoke(this, new MemberRemovedEventArgs(payload.Deserialize<PartialGuildMember>().SetClient(this))));
                                 break;
                             case "GUILD_MEMBER_UPDATE":
-                                Task.Run(() => OnGuildMemberUpdated?.Invoke(this, new GuildMemberEventArgs(payload.Deserialize<GuildMember>().SetClient(this))));
+                                GuildMember member = payload.Deserialize<GuildMember>().SetClient(this);
+
+                                if (Config.Cache && member.User.Id == User.Id)
+                                {
+                                    SocketGuild guild = this.GetCachedGuild(member.GuildId);
+
+                                    // Discord doesn't send us the user's JoinedAt on updates
+                                    member.JoinedAt = guild.Member.JoinedAt;
+                                    guild.Member = member;
+
+                                    break;
+                                }
+
+                                Task.Run(() => OnGuildMemberUpdated?.Invoke(this, new GuildMemberEventArgs(member)));
                                 break;
                             case "GUILD_MEMBERS_CHUNK":
                                 Task.Run(() => OnGuildMembersReceived?.Invoke(this, new GuildMembersEventArgs(payload.Deserialize<GuildMemberList>().SetClient(this))));
@@ -489,28 +489,31 @@ namespace Discord.Gateway
                                 Task.Run(() => OnGiftCodeCreated?.Invoke(this, payload.Deserialize<GiftCodeCreatedEventArgs>()));
                                 break;
                             case "PRESENCE_UPDATE":
-                                Task.Run(() => OnUserPresenceUpdated?.Invoke(this, new PresenceUpdatedEventArgs(payload.Deserialize<DiscordPresence>().SetClient(this))));
+                                Task.Run(() => OnUserPresenceUpdated?.Invoke(this, new PresenceUpdatedEventArgs(payload.DeserializeEx<DiscordPresence>().SetClient(this))));
                                 break;
                             case "VOICE_STATE_UPDATE":
                                 DiscordVoiceState newState = payload.Deserialize<DiscordVoiceState>().SetClient(this);
 
-                                // TODO: figure out how the client gets the initial voice states
-
                                 if (Config.Cache)
                                 {
-                                    List<DiscordVoiceState> voiceStates;
+                                    // this doesn't work very well for bot accounts since those can be connected to a channel in multiple guilds at once.
+                                    VoiceStates[newState.UserId] = newState;
 
-                                    if (newState.Guild == null)
-                                        voiceStates = PrivateVoiceStates[newState.Channel.Id];
-                                    else
-                                        voiceStates = GuildCache[newState.Guild]._voiceStates;
+                                    // we also store voice states within SocketGuilds, so make sure to update those.
+                                    foreach (var guild in this.GetCachedGuilds())
+                                    {
+                                        if (newState.Guild == null || guild.Id != newState.Guild.Id)
+                                            guild._voiceStates.RemoveAll(s => s.UserId == newState.UserId);
+                                        else
+                                        {
+                                            int i = guild._voiceStates.FindIndex(s => s.UserId == newState.UserId);
 
-                                    int i = voiceStates.FindIndex(s => s.UserId == newState.UserId);
-
-                                    if (i > -1)
-                                        voiceStates[i] = newState;
-                                    else
-                                        voiceStates.Add(newState);
+                                            if (i > -1)
+                                                guild._voiceStates[i] = newState;
+                                            else
+                                                guild._voiceStates.Add(newState);
+                                        }
+                                    }
                                 }
 
                                 Task.Run(() => OnVoiceStateUpdated?.Invoke(this, new VoiceStateEventArgs(newState)));
@@ -622,13 +625,9 @@ namespace Discord.Gateway
 
                                 if (Config.Cache)
                                 {
-                                    try
-                                    {
-                                        var channel = PrivateChannels.First(c => c.Id == message.Channel.Id);
+                                    var channel = this.GetChannel(message.Channel.Id);
 
-                                        channel.LastMessageId = message.Id;
-                                    }
-                                    catch { }
+                                    channel.Json["last_message_id"] = JToken.FromObject(message.Id);
                                 }
 
                                 Task.Run(() => OnMessageReceived?.Invoke(this, new MessageEventArgs(message)));
@@ -673,9 +672,6 @@ namespace Discord.Gateway
                                         {
                                             if (channel.Id == recipUpdate.Channel.Id)
                                             {
-                                                if (channel._recipients == null)
-                                                    channel._recipients = new List<DiscordUser>();
-
                                                 channel._recipients.Add(recipUpdate.User);
 
                                                 channel.UpdateSelfJson();
@@ -696,13 +692,10 @@ namespace Discord.Gateway
                                         {
                                             if (channel.Id == recipUpdate.Channel.Id)
                                             {
-                                                if (channel._recipients != null)
-                                                {
-                                                    channel._recipients.RemoveAll(u => u.Id == recipUpdate.User.Id);
+                                                channel._recipients.RemoveAll(u => u.Id == recipUpdate.User.Id);
 
-                                                    channel.UpdateSelfJson();
-                                                }
-                                                
+                                                channel.UpdateSelfJson();
+
                                                 break;
                                             }
                                         }
@@ -719,9 +712,10 @@ namespace Discord.Gateway
                                     JObject obj = payload.Deserialize<JObject>();
 
                                     var call = obj.ToObject<DiscordCall>().SetClient(this);
-                                    var voiceStates = obj.Value<IReadOnlyList<DiscordVoiceState>>("voice_states").SetClientsInList(this);
+                                    var voiceStates = obj.Value<JToken>("voice_states").ToObject<IReadOnlyList<DiscordVoiceState>>().SetClientsInList(this);
 
-                                    PrivateVoiceStates[call.Channel.Id] = voiceStates.ToList();
+                                    foreach (var state in voiceStates)
+                                        VoiceStates[state.UserId] = state;
 
                                     Task.Run(() => OnRinging?.Invoke(this, new RingingEventArgs(call, voiceStates)));
                                 }
@@ -732,7 +726,11 @@ namespace Discord.Gateway
                             case "CALL_DELETE":
                                 ulong channelId = payload.Deserialize<JObject>().Value<ulong>("channel_id");
 
-                                PrivateVoiceStates.Remove(channelId);
+                                foreach (var state in new Dictionary<ulong, DiscordVoiceState>.ValueCollection(VoiceStates))
+                                {
+                                    if (state.Channel != null && state.Channel.Id == channelId)
+                                        VoiceStates.Remove(state.UserId);
+                                }
 
                                 Task.Run(() => OnCallEnded?.Invoke(this, channelId));
                                 break;

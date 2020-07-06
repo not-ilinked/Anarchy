@@ -5,7 +5,7 @@ namespace Discord
 {
     public static class ControllableExtensions
     {
-        public static T SetClient<T>(this T @class, DiscordClient client) where T : Controllable
+        internal static T SetClient<T>(this T @class, DiscordClient client) where T : Controllable
         {
             if (@class != null)
                 @class.Client = client;
@@ -13,7 +13,7 @@ namespace Discord
         }
 
 
-        public static IReadOnlyList<T> SetClientsInList<T>(this IReadOnlyList<T> classes, DiscordClient client) where T : Controllable
+        internal static IReadOnlyList<T> SetClientsInList<T>(this IReadOnlyList<T> classes, DiscordClient client) where T : Controllable
         {
             if (classes != null)
             {
@@ -26,7 +26,8 @@ namespace Discord
 
         internal static T SetJson<T>(this T @class, JObject obj) where T : ControllableEx
         {
-            @class.Json = obj;
+            if (@class != null)
+                @class.Json = obj;
             return @class;
         }
     }

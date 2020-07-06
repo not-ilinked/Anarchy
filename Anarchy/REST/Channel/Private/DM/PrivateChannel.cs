@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace Discord
@@ -18,20 +17,17 @@ namespace Discord
         internal List<DiscordUser> _recipients;
 
 
-        [JsonProperty("last_message_id")]
-        public ulong? LastMessageId { get; internal set; }
-
-
         public IReadOnlyList<DiscordUser> Recipients
         {
-            get 
+            get
             {
-                if (_recipients == null)
-                    return new List<DiscordUser>();
-                else
-                    return _recipients;
+                return _recipients;
             }
         }
+
+
+        [JsonProperty("last_message_id")]
+        public ulong? LastMessageId { get; internal set; }
 
 
         protected void Update(PrivateChannel channel)

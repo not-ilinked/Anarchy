@@ -75,6 +75,7 @@
     <Compile Include="Gateway\Guild\Member\List\GuildMemberListEventArgs.cs" />
     <Compile Include="Gateway\Guild\Member\List\MemberListGroup.cs" />
     <Compile Include="Gateway\Guild\Member\List\MemberListQueryOptions.cs" />
+    <Compile Include="Gateway\Guild\Models\LoginGuild.cs" />
     <Compile Include="Gateway\Guild\Models\UnavailableGuild.cs" />
     <Compile Include="Gateway\Guild\Models\GuildUnavailableEventArgs.cs" />
     <Compile Include="Gateway\Auth\Session\DiscordGatewayIntent.cs" />
@@ -83,6 +84,8 @@
     <Compile Include="Gateway\Presence\Activity\User\UserCustomStatusActivity.cs" />
     <Compile Include="Gateway\Presence\Activity\User\UserGameActivity.cs" />
     <Compile Include="Gateway\Presence\Activity\User\UserListeningActivity.cs" />
+    <Compile Include="Gateway\Presence\Presence\ActiveSessionPlatforms.cs" />
+    <Compile Include="Gateway\Presence\Presence\DiscordGuildPresence.cs" />
     <Compile Include="Gateway\Research\GoLiveStreamKey.cs" />
     <Compile Include="Gateway\Role\DeletedRole.cs" />
     <Compile Include="Gateway\Role\GatewayRoleExtensions.cs" />
@@ -129,16 +132,17 @@
     <Compile Include="REST\Subscriptions\Subscriptions\DiscordSubscription.cs" />
     <Compile Include="REST\Subscriptions\Subscriptions\DiscordSubscriptionStatus.cs" />
     <Compile Include="REST\Subscriptions\Subscriptions\Extensions.cs" />
+    <Compile Include="REST\User\Connections\ClientConnectedAccount.cs" />
     <Compile Include="REST\User\Settings\GuildFolders\DiscordGuildFolder.cs" />
     <Compile Include="REST\User\Settings\DiscordSettingsEventArgs.cs" />
     <Compile Include="REST\User\Settings\DiscordUserSettings.cs" />
     <Compile Include="REST\User\Settings\GuildFolders\DiscordGuildFolderUpdate.cs" />
+    <Compile Include="REST\User\User\UserStatusConverter.cs" />
     <Compile Include="Voice\DiscordVoiceClientState.cs" />
     <Compile Include="Gateway\Auth\Extensions.cs" />
     <Compile Include="Gateway\Auth\Models\Identification.cs" />
     <Compile Include="Gateway\Auth\Models\Login.cs" />
     <Compile Include="Gateway\Auth\Models\LoginEventArgs.cs" />
-    <Compile Include="Gateway\Guild\Models\LoginGuild.cs" />
     <Compile Include="Gateway\Auth\Session\DiscordSession.cs" />
     <Compile Include="Gateway\Auth\Session\DiscordSessionClientInfo.cs" />
     <Compile Include="Gateway\Auth\Session\DiscordSessionsEventArgs.cs" />
@@ -212,7 +216,7 @@
     <Compile Include="REST\Channel\Private\DM\Extensions.cs" />
     <Compile Include="REST\Channel\Private\DM\RecipientList.cs" />
     <Compile Include="REST\Channel\Private\Group\Extensions.cs" />
-    <Compile Include="REST\Channel\Private\Group\Group.cs" />
+    <Compile Include="REST\Channel\Private\Group\DiscordGroup.cs" />
     <Compile Include="REST\Channel\Private\Group\GroupProperties.cs" />
     <Compile Include="REST\Discovery\DiscoveryGuild.cs" />
     <Compile Include="REST\Discovery\Extensions.cs" />
@@ -237,7 +241,7 @@
     <Compile Include="REST\Guild\Member\Models\GuildMember.cs" />
     <Compile Include="Gateway\Guild\Member\Query\GuildMemberList.cs" />
     <Compile Include="REST\Guild\Member\Models\GuildMemberProperties.cs" />
-    <Compile Include="REST\Guild\Ban\Ban.cs" />
+    <Compile Include="REST\Guild\Ban\DiscordBan.cs" />
     <Compile Include="REST\Guild\Ban\BanContainer.cs" />
     <Compile Include="REST\Guild\Ban\UpdateEventArgs.cs" />
     <Compile Include="REST\Guild\Extensions.cs" />

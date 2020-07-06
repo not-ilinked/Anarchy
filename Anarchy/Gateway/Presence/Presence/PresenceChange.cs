@@ -12,12 +12,9 @@ namespace Discord.Gateway
         {
             get
             {
-                if (_status == "dnd")
-                    return UserStatus.DoNotDisturb;
-                else
-                    return (UserStatus)Enum.Parse(typeof(UserStatus), _status, true);
+                return UserStatusConverter.FromString(_status);
             }
-            set { _status = value != UserStatus.DoNotDisturb ? value.ToString().ToLower() : "dnd"; }
+            set { _status = UserStatusConverter.ToString(value); }
         }
 
 

@@ -1,4 +1,5 @@
 ﻿using Discord.Gateway;
+using Newtonsoft.Json;
 using System;
 
 namespace Discord
@@ -8,6 +9,7 @@ namespace Discord
         protected event EventHandler OnClientUpdated;
 
         private DiscordClient _client;
+        [JsonIgnore]
         public DiscordClient Client
         {
             get { return _client; }
@@ -15,8 +17,14 @@ namespace Discord
             {
                 _client = value;
 
-                OnClientUpdated?.Invoke(this, new EventArgs());
+                SignalClientUpdate();
             }
+        }
+
+
+        protected void SignalClientUpdate()
+        {
+            OnClientUpdated?.Invoke(this, new EventArgs());
         }
 
 

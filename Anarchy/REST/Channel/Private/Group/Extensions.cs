@@ -21,11 +21,11 @@ namespace Discord
         /// Creates a group
         /// </summary>
         /// <param name="recipients">The IDs of the recipients to add</param>
-        /// <returns>The created <see cref="Group"/></returns>
-        public static Group CreateGroup(this DiscordClient client, List<ulong> recipients)
+        /// <returns>The created <see cref="DiscordGroup"/></returns>
+        public static DiscordGroup CreateGroup(this DiscordClient client, List<ulong> recipients)
         {
             return client.HttpClient.Post($"/users/@me/channels", new RecipientList() { Recipients = recipients })
-                                .DeserializeEx<Group>().SetClient(client);
+                                .DeserializeEx<DiscordGroup>().SetClient(client);
         }
 
 
@@ -34,7 +34,7 @@ namespace Discord
         /// Leaves a group.
         /// </summary>
         /// <param name="groupId">ID of the group</param>
-        /// <returns>The leaved <see cref="Group"/></returns>
+        /// <returns>The leaved <see cref="DiscordGroup"/></returns>
         public static DiscordChannel LeaveGroup(this DiscordClient client, ulong groupId)
         {
             return client.DeleteChannel(groupId);

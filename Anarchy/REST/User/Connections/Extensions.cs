@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 
 namespace Discord
 {
     public static class ConnectedAccountsExtensions
     {
-        public static IReadOnlyList<ConnectedAccount> GetConnectedAccounts(this DiscordClient client)
+        public static IReadOnlyList<ClientConnectedAccount> GetConnectedAccounts(this DiscordClient client)
         {
             return client.HttpClient.Get($"/users/@me/connections")
-                                .Deserialize<IReadOnlyList<ConnectedAccount>>().SetClientsInList(client);
+                                .Deserialize<IReadOnlyList<ClientConnectedAccount>>().SetClientsInList(client);
         }
 
 

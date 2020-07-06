@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Discord.Gateway
 {
@@ -82,25 +83,6 @@ namespace Discord.Gateway
         public static IReadOnlyList<DiscordMessage> GetChannelMessages(this DiscordSocketClient client, ulong channelId, uint limit)
         {
             return client.GetChannelMessages(channelId, new MessageFilters() { Limit = limit });
-        }
-
-
-        /// <summary>
-        /// Gets all voice states in the specified private channel.
-        /// </summary>
-        public static IReadOnlyList<DiscordVoiceState> GetPrivateChannelVoiceStates(this DiscordSocketClient client, ulong channelId)
-        {
-            if (!client.Config.Cache)
-                throw new NotSupportedException("Caching is disabled for this client.");
-
-            try
-            {
-                return client.PrivateVoiceStates[channelId];
-            }
-            catch (KeyNotFoundException)
-            {
-                throw new DiscordHttpException(client, new DiscordHttpError(DiscordError.UnknownChannel, "No voice states were found in cache. This does not necessarily mean that the channel ID is invalid, but that no call has been started yet"));
-            }
         }
     }
 }

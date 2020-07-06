@@ -5,7 +5,7 @@ namespace Discord
     /// <summary>
     /// Represents a <see cref="DiscordChannel"/> specific to groups
     /// </summary>
-    public class Group : PrivateChannel
+    public class DiscordGroup : PrivateChannel
     {
         [JsonProperty("icon")]
         private string _iconHash;
@@ -23,7 +23,7 @@ namespace Discord
         public ulong OwnerId { get; private set; }
 
 
-        protected void Update(Group group)
+        protected void Update(DiscordGroup group)
         {
             base.Update(group);
             _iconHash = group._iconHash;

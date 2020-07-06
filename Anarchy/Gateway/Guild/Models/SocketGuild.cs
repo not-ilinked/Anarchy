@@ -28,10 +28,24 @@ namespace Discord.Gateway
 
 
         // i'm not 100% sure of how this functions yet. All i have so far is https://discord.com/developers/docs/topics/gateway#request-guild-members, but it doesn't seem like that applies to users.
-        /*
         [JsonProperty("members")]
-        public List<GuildMember> Members { get; private set; }
-        */
+        internal List<GuildMember> Members { get; private set; }
+
+        private GuildMember _member;
+        public GuildMember Member
+        {
+            get
+            {
+                if (_member == null)
+                    _member = Members.First(m => m.User.Id == Client.User.Id);
+
+                return _member;
+            }
+            internal set
+            {
+                _member = value;
+            }
+        }
 
         internal List<GuildChannel> _channels;
         [JsonIgnore]

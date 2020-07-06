@@ -6,13 +6,13 @@ namespace Discord
     public class ClientGuildSettings : Controllable
     {
         [JsonProperty("guild_id")]
-        private readonly ulong _guildId;
+        internal ulong? GuildId { get; private set; }
 
         public MinimalGuild Guild
         {
             get
             {
-                return new MinimalGuild(_guildId).SetClient(Client);
+                return new MinimalGuild(GuildId.Value).SetClient(Client);
             }
         }
 

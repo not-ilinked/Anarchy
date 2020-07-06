@@ -76,12 +76,12 @@ namespace Discord
         }
 
 
-        public Group ToGroup()
+        public DiscordGroup ToGroup()
         {
             if (Type != ChannelType.Group)
                 throw new InvalidConvertionException(Client, "Channel is not of type: Group");
 
-            return Json.ToObject<Group>().SetJson(Json).SetClient(Client);
+            return Json.ToObject<DiscordGroup>().SetJson(Json).SetClient(Client);
         }
     }
 }

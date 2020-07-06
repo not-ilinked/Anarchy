@@ -68,10 +68,10 @@ namespace Discord
         /// Gets the guild's banned users
         /// </summary>
         /// <param name="guildId">ID of the guild</param>
-        public static IReadOnlyList<Ban> GetGuildBans(this DiscordClient client, ulong guildId)
+        public static IReadOnlyList<DiscordBan> GetGuildBans(this DiscordClient client, ulong guildId)
         {
-            IReadOnlyList<Ban> bans = client.HttpClient.Get($"/guilds/{guildId}/bans")
-                                                    .Deserialize<IReadOnlyList<Ban>>().SetClientsInList(client);
+            IReadOnlyList<DiscordBan> bans = client.HttpClient.Get($"/guilds/{guildId}/bans")
+                                                    .Deserialize<IReadOnlyList<DiscordBan>>().SetClientsInList(client);
             foreach (var ban in bans)
                 ban.GuildId = guildId;
             return bans;
@@ -84,10 +84,10 @@ namespace Discord
         /// <param name="guildId">ID of the guild</param>
         /// <param name="userId">ID of the user</param>
         /// <returns></returns>
-        public static Ban GetGuildBan(this DiscordClient client, ulong guildId, ulong userId)
+        public static DiscordBan GetGuildBan(this DiscordClient client, ulong guildId, ulong userId)
         {
-            Ban ban = client.HttpClient.Get($"/guilds/{guildId}/bans/{userId}")
-                                   .Deserialize<Ban>().SetClient(client);
+            DiscordBan ban = client.HttpClient.Get($"/guilds/{guildId}/bans/{userId}")
+                                   .Deserialize<DiscordBan>().SetClient(client);
             ban.GuildId = guildId;
             return ban;
         }

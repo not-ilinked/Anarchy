@@ -30,12 +30,6 @@ namespace Discord
         public bool Verified { get; private set; }
 
 
-        public void Remove()
-        {
-            Client.RemoveConnectedAccount(Type, Id);
-        }
-
-
         public override string ToString()
         {
             return Name;

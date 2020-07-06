@@ -2,10 +2,17 @@
 
 # don't know what to name this version yet
 ### Additions
-- Added a cooldown to prevent [Rate Limits](https://discord.com/developers/docs/topics/gateway#rate-limiting) to DiscordSocketClient.
+- Added a new property 'Member' to SocketGuild, which returns the client's member for that guild.
+- Added a cooldown to prevent [Rate Limits](https://discord.com/developers/docs/topics/gateway#rate-limiting) from happening to DiscordSocketClients.
+- Added ConnectedAccounts and Presences to LoginEventArgs.
 
 ### Improvements
+- Improved Anarchy's Connections functionality, adding 'ClientConnectedAccount' for connections the current user owns.
+- Improved DiscordPresence, putting all the guild-only stuff in DiscordGuildPresence. The method 'ToGuildPresence' has been added to DiscordPresence.
+- Improve voice state caching, changing 'GetPrivateChannelVoiceStates' to 'GetChannelVoiceStates' and adding 'GetVoiceState' for individual users.
+- GuildMember.GetPermissions will now return all permissions if the current user owns the guild.
 - Updated the GuildMember and PartialGuildMember classes. This means that OnUserJoinedGuild, OnGuildMemberUpdated and OnUserLeftGuild have been updated as well.
+- Renamed 'Group' to 'DiscordGroup' and 'Ban' to 'DiscordBan'.
 
 
 

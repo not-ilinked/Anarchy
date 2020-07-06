@@ -88,15 +88,39 @@ namespace Discord.Gateway
         }
 
 
-        /// <summary>
-        /// Gets a guild's voice states
-        /// </summary>
+        public static DiscordVoiceState GetVoiceState(this DiscordSocketClient client, ulong userId)
+        {
+            if (!client.Config.Cache)
+                throw new NotSupportedException("Caching is disabled for this client.");
+
+            try
+            {
+                return client.VoiceStates[userId];
+            }
+            catch (KeyNotFoundException)
+            {
+                throw new DiscordHttpException(client, new DiscordHttpError(DiscordError.UnknownUser, "User's voice state was not found in cache"));
+            }
+        }
+
+
         public static IReadOnlyList<DiscordVoiceState> GetGuildVoiceStates(this DiscordSocketClient client, ulong guildId)
         {
             if (!client.Config.Cache)
                 throw new NotSupportedException("Caching is disabled for this client.");
 
             return client.GetCachedGuild(guildId).VoiceStates;
+        }
+
+
+        public static IReadOnlyList<DiscordVoiceState> GetChannelVoiceStates(this DiscordSocketClient client, ulong channelId)
+        {
+            if (!client.Config.Cache)
+                throw new NotSupportedException("Caching is disabled for this client.");
+
+            client.GetChannel(channelId);
+
+            return client.VoiceStates.Values.Where(s => s.Channel != null && s.Channel.Id == channelId).ToList();
         }
     }
 }

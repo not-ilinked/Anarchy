@@ -200,7 +200,7 @@ namespace Discord
         /// <summary>
         /// Gets the guild's banned users
         /// </summary>
-        public IReadOnlyList<Ban> GetBans()
+        public IReadOnlyList<DiscordBan> GetBans()
         {
             return Client.GetGuildBans(Id);
         }
@@ -210,7 +210,7 @@ namespace Discord
         /// Gets a banned member
         /// </summary>
         /// <param name="userId">ID of the user</param>
-        public Ban GetBan(ulong userId)
+        public DiscordBan GetBan(ulong userId)
         {
             return Client.GetGuildBan(Id, userId);
         }

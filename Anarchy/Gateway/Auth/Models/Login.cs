@@ -18,11 +18,15 @@ namespace Discord.Gateway
                 Guilds.SetClientsInList(Client);
                 Relationships.SetClientsInList(Client);
                 PrivateChannels.SetClientsInList(Client);
+                ClientGuildSettings.SetClientsInList(Client);
+                ConnectedAccounts.SetClientsInList(Client);
+                Presences.SetClientsInList(Client);
             };
             JsonUpdated += (sender, json) =>
             {
                 Guilds = json.Value<JArray>("guilds").PopulateListJson<LoginGuild>();
                 PrivateChannels = json.Value<JArray>("private_channels").PopulateListJson<PrivateChannel>();
+                Presences = json.Value<JArray>("presences").PopulateListJson<DiscordPresence>();
             };
         }
 
@@ -48,11 +52,19 @@ namespace Discord.Gateway
 
 
         [JsonProperty("user_guild_settings")]
-        public IReadOnlyList<JObject> ClientGuildSettings { get; private set; }
+        public IReadOnlyList<ClientGuildSettings> ClientGuildSettings { get; private set; }
+
+
+        [JsonProperty("connected_accounts")]
+        public IReadOnlyList<ClientConnectedAccount> ConnectedAccounts { get; private set; }
 
 
         [JsonProperty("user_settings")]
         public DiscordUserSettings Settings { get; private set; }
+
+
+        [JsonProperty("presences")]
+        public IReadOnlyList<DiscordPresence> Presences { get; private set; }
 
 
         public override string ToString()

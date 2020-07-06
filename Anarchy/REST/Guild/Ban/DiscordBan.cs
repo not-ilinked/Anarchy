@@ -2,9 +2,9 @@
 
 namespace Discord
 {
-    public class Ban : Controllable
+    public class DiscordBan : Controllable
     {
-        public Ban()
+        public DiscordBan()
         {
             OnClientUpdated += (sender, e) => User.SetClient(Client);
         }

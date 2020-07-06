@@ -15,9 +15,9 @@ namespace Discord
         }
 
 
-        public static Group ModifyGroup(this DiscordClient client, ulong groupId, GroupProperties properties)
+        public static DiscordGroup ModifyGroup(this DiscordClient client, ulong groupId, GroupProperties properties)
         {
-            return client.HttpClient.Patch($"/channels/{groupId}", properties).DeserializeEx<Group>().SetClient(client);
+            return client.HttpClient.Patch($"/channels/{groupId}", properties).DeserializeEx<DiscordGroup>().SetClient(client);
         }
 
 

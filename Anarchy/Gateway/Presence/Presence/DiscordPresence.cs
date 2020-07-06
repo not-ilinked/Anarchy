@@ -1,71 +1,83 @@
 ﻿using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Discord.Gateway
 {
-    public class DiscordPresence : Controllable
+    public class DiscordPresence : ControllableEx
     {
+        public DiscordPresence()
+        {
+            OnClientUpdated += (sender, e) =>
+            {
+                Activities.SetClientsInList(Client);
+            };
+            JsonUpdated += (sender, json) =>
+            {
+                Activities = json.Value<JArray>("activities").PopulateListJson<UserActivity>();
+            };
+        }
+
+
+        [JsonProperty("guild_id")]
+        protected ulong? _guildId;
+
+
+        public bool IsGuild
+        {
+            get
+            {
+                return _guildId.HasValue;
+            }
+        }
+
+
         [JsonProperty("user")]
-        public DiscordUser User { get; private set; }
+        private readonly JObject _user;
 
-
-        [JsonProperty("nick")]
-        public string Nickname { get; private set; }
-
-
-        [JsonProperty("roles")]
-        public IReadOnlyList<ulong> Roles { get; private set; }
-
-
-        [JsonProperty("game")]
-        public UserActivity Activity { get; private set; }
+        public ulong UserId
+        {
+            get { return _user["id"].ToObject<ulong>(); }
+        }
 
 
         [JsonProperty("activities")]
         public IReadOnlyList<UserActivity> Activities { get; private set; }
 
 
-        [JsonProperty("guild_id")]
-        private ulong? _guildId;
-
-        public MinimalGuild Guild
-        {
-            get
-            {
-                if (_guildId.HasValue)
-                    return new MinimalGuild(_guildId.Value).SetClient(Client);
-                else
-                    return null;
-            }
-        }
-
-
         [JsonProperty("status")]
         private string _status;
+
         public UserStatus Status
         {
             get
             {
-                if (_status == "dnd")
-                    return UserStatus.DoNotDisturb;
-                else
-                    return (UserStatus)Enum.Parse(typeof(UserStatus), _status, true);
+                return UserStatusConverter.FromString(_status);
             }
             set
             {
-                _status = value != UserStatus.DoNotDisturb ? value.ToString().ToLower() : "dnd";
+                _status = UserStatusConverter.ToString(value);
             }
         }
 
 
-        [JsonProperty("premium_since")]
-        public DateTime? BoostingSince { get; private set; }
+        [JsonProperty("client_status")]
+        public ActiveSessionPlatforms ActivePlatforms { get; private set; }
+
+        
+        public DiscordGuildPresence ToGuildPresence()
+        {
+            if (IsGuild)
+                return Json.ToObject<DiscordGuildPresence>().SetJson(Json).SetClient(Client);
+            else
+                throw new InvalidConvertionException(Client, "This presence is not of a guild member");
+        }
 
 
         public override string ToString()
         {
-            return User.ToString();
+            return UserId.ToString();
         }
     }
 }
