@@ -4,7 +4,6 @@
     {
         None,
         Classic,
-        Nitro,
-        Unknown
+        Nitro
     }
 }

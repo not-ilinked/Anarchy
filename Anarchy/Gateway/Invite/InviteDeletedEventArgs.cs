@@ -3,7 +3,7 @@ using System;
 
 namespace Discord.Gateway
 {
-    public class InviteDeletedEventArgs : EventArgs
+    public class InviteDeletedEventArgs : Controllable
     {
         [JsonProperty("code")]
         public string Code { get; private set; }
@@ -17,7 +17,7 @@ namespace Discord.Gateway
             get
             {
                 if (_guildId.HasValue)
-                    return new MinimalGuild(_guildId.Value);
+                    return new MinimalGuild(_guildId.Value).SetClient(Client);
                 else
                     return null;
             }
@@ -29,7 +29,7 @@ namespace Discord.Gateway
 
         public MinimalTextChannel Channel
         {
-            get { return new MinimalTextChannel(_channelId); }
+            get { return new MinimalTextChannel(_channelId).SetClient(Client); }
         }
     }
 }

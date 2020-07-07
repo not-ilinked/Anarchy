@@ -13,24 +13,12 @@ namespace Discord
 
 
         [JsonProperty("roles")]
-        protected List<ulong> _roles;
-
-        public IReadOnlyList<MinimalRole> Roles
-        {
-            get
-            {
-                var roles = new List<MinimalRole>();
-
-                foreach (var role in _roles)
-                    roles.Add(new MinimalRole(GuildId, role).SetClient(Client));
-
-                return roles;
-            }
-        }
+        public IReadOnlyList<ulong> Roles { get; private set; }
 
 
         [JsonProperty("joined_at")]
         public DateTime JoinedAt { get; internal set; }
+
 
         [JsonProperty("premium_since")]
         public DateTime? BoostingSince { get; private set; }
@@ -44,7 +32,7 @@ namespace Discord
             GuildMember member = Client.GetGuildMember(GuildId, User.Id);
             User = member.User;
             Nickname = member.Nickname;
-            _roles = member._roles;
+            Roles = member.Roles;
             BoostingSince = member.BoostingSince;
         }
 
@@ -155,7 +143,7 @@ namespace Discord
             }
             else
             {
-                foreach (var role in guild.Roles.Where(r => _roles.Contains(r.Id) || r.Name == "@everyone"))
+                foreach (var role in guild.Roles.Where(r => Roles.Contains(r.Id) || r.Name == "@everyone"))
                     permissions |= role.Permissions;
             }
 
@@ -213,7 +201,7 @@ namespace Discord
         public new void Dispose()
         {
             Nickname = null;
-            _roles = null;
+            Roles = null;
             BoostingSince = null;
             base.Dispose();
         }

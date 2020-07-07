@@ -22,7 +22,15 @@ namespace Discord
 
 
         [JsonProperty("preferred_locale")]
-        public string PreferredLocale { get; private set; }
+        private readonly string _locale;
+
+        public DiscordLanguage PreferredLanguage
+        {
+            get
+            {
+                return LanguageConverter.FromString(_locale);
+            }
+        }
 
 
         public DiscordGuild Lurk()

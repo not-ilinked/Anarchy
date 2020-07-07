@@ -6,6 +6,6 @@
         Low,
         Medium,
         High,
-        VeryHigh
+        Highest
     }
 }

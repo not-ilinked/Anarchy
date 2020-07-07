@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 
 namespace Discord
@@ -24,7 +25,12 @@ namespace Discord
         /// <returns>The created <see cref="DiscordGroup"/></returns>
         public static DiscordGroup CreateGroup(this DiscordClient client, List<ulong> recipients)
         {
-            return client.HttpClient.Post($"/users/@me/channels", new RecipientList() { Recipients = recipients })
+            JObject obj = new JObject()
+            {
+                ["recipients"] = JArray.FromObject(recipients)
+            };
+
+            return client.HttpClient.Post($"/users/@me/channels", obj)
                                 .DeserializeEx<DiscordGroup>().SetClient(client);
         }
 

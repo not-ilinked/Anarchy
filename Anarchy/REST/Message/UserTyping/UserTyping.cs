@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace Discord.Gateway
 {
-    public class UserTyping
+    public class UserTyping : Controllable
     {
         [JsonProperty("channel_id")]
         private readonly ulong _channelId;
@@ -12,7 +12,7 @@ namespace Discord.Gateway
         {
             get
             {
-                return new MinimalTextChannel(_channelId);
+                return new MinimalTextChannel(_channelId).SetClient(Client);
             }
         }
 
@@ -25,7 +25,7 @@ namespace Discord.Gateway
             get
             {
                 if (_guildId.HasValue)
-                    return new MinimalGuild(_guildId.Value);
+                    return new MinimalGuild(_guildId.Value).SetClient(Client);
                 else
                     return null;
             }

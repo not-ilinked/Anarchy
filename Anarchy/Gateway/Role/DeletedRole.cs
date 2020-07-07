@@ -9,7 +9,7 @@ namespace Discord.Gateway
 
         public MinimalGuild Guild
         {
-            get { return new MinimalGuild(_guildId); }
+            get { return new MinimalGuild(_guildId).SetClient(Client); }
         }
 
 

@@ -10,9 +10,7 @@ namespace Discord
 
 
         [JsonProperty("type")]
-#pragma warning disable CS0649
         private readonly string _type;
-#pragma warning restore CS0649
         public AccountType Type
         {
             get

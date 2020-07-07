@@ -32,7 +32,7 @@ namespace Discord
 
         public DiscordLanguage Language
         {
-            get { return LanguageUtils.StringToLanguage(_locale); }
+            get { return LanguageConverter.FromString(_locale); }
         }
 
         [JsonProperty("premium_type")]
@@ -93,7 +93,7 @@ namespace Discord
         public DiscordUserSettings GetSettings()
         {
             return Client.HttpClient.Get("/users/@me/settings")
-                                .Deserialize<DiscordUserSettings>();
+                                .Deserialize<DiscordUserSettings>().SetClient(Client);
         }
 
 
@@ -103,7 +103,7 @@ namespace Discord
         public DiscordUserSettings ChangeSettings(UserSettingsProperties settings)
         {
             return Client.HttpClient.Patch("/users/@me/settings", settings)
-                                .Deserialize<DiscordUserSettings>();
+                                .Deserialize<DiscordUserSettings>().SetClient(Client);
         }
 
 

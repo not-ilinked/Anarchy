@@ -25,7 +25,7 @@ namespace Discord
         {
             get
             {
-                return new MinimalTextChannel(_channelId);
+                return new MinimalTextChannel(_channelId).SetClient(Client);
             }
         }
 
@@ -37,7 +37,7 @@ namespace Discord
         {
             get
             {
-                return new MinimalGuild(_guildId);
+                return new MinimalGuild(_guildId).SetClient(Client);
             }
         }
 

@@ -4,7 +4,7 @@ namespace Discord
 {
     public class MinimalTextChannel : MinimalChannel, IMessageChannel
     {
-        public MinimalTextChannel(ulong channelId) : base(channelId)
+        internal MinimalTextChannel(ulong channelId) : base(channelId)
         { }
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace Discord
             Client.DeleteMessages(Id, messages);
         }
 
-
+        
         /// <summary>
         /// Gets a list of messages from the channel
         /// </summary>
@@ -59,7 +59,7 @@ namespace Discord
         {
             return Client.GetChannelMessages(Id, filters);
         }
-
+        
 
         /// <summary>
         /// Gets the channel's pinned messages

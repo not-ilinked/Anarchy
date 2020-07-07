@@ -50,7 +50,8 @@ namespace Discord.Gateway
 
 
         /// <summary>
-        /// Gets a list of messages from a channel
+        /// Gets a list of messages from a channel.
+        /// The list is ordered first -> last.
         /// </summary>
         /// <param name="channelId">ID of the channel</param>
         /// <param name="filters">Options for filtering out messages</param>
@@ -74,7 +75,7 @@ namespace Discord.Gateway
             return messages;
         }
 
-
+        
         /// <summary>
         /// Gets a list of messages from a channel
         /// </summary>

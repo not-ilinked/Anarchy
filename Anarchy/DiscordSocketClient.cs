@@ -519,7 +519,7 @@ namespace Discord.Gateway
                                 Task.Run(() => OnVoiceStateUpdated?.Invoke(this, new VoiceStateEventArgs(newState)));
                                 break;
                             case "VOICE_SERVER_UPDATE":
-                                Task.Run(() => OnVoiceServer?.Invoke(this, payload.Deserialize<DiscordVoiceServer>()));
+                                Task.Run(() => OnVoiceServer?.Invoke(this, payload.Deserialize<DiscordVoiceServer>().SetClient(this)));
                                 break;
                             case "GUILD_ROLE_CREATE":
                                 {
@@ -618,7 +618,7 @@ namespace Discord.Gateway
                                 }
                                 break;
                             case "TYPING_START":
-                                Task.Run(() => OnUserTyping?.Invoke(this, new UserTypingEventArgs(payload.Deserialize<UserTyping>())));
+                                Task.Run(() => OnUserTyping?.Invoke(this, new UserTypingEventArgs(payload.Deserialize<UserTyping>().SetClient(this))));
                                 break;
                             case "MESSAGE_CREATE":
                                 var message = payload.Deserialize<DiscordMessage>().SetClient(this);
@@ -636,7 +636,7 @@ namespace Discord.Gateway
                                 Task.Run(() => OnMessageEdited?.Invoke(this, new MessageEventArgs(payload.Deserialize<DiscordMessage>().SetClient(this))));
                                 break;
                             case "MESSAGE_DELETE":
-                                Task.Run(() => OnMessageDeleted?.Invoke(this, new MessageDeletedEventArgs(payload.Deserialize<DeletedMessage>())));
+                                Task.Run(() => OnMessageDeleted?.Invoke(this, new MessageDeletedEventArgs(payload.Deserialize<DeletedMessage>().SetClient(this))));
                                 break;
                             case "MESSAGE_REACTION_ADD":
                                 Task.Run(() => OnMessageReactionAdded?.Invoke(this, new ReactionEventArgs(payload.Deserialize<MessageReactionUpdate>().SetClient(this))));
@@ -645,16 +645,16 @@ namespace Discord.Gateway
                                 Task.Run(() => OnMessageReactionRemoved?.Invoke(this, new ReactionEventArgs(payload.Deserialize<MessageReactionUpdate>().SetClient(this))));
                                 break;
                             case "GUILD_BAN_ADD":
-                                Task.Run(() => OnUserBanned?.Invoke(this, new BanUpdateEventArgs(payload.Deserialize<BanContainer>().SetClient(this))));
+                                Task.Run(() => OnUserBanned?.Invoke(this, payload.Deserialize<BanUpdateEventArgs>().SetClient(this)));
                                 break;
                             case "GUILD_BAN_REMOVE":
-                                Task.Run(() => OnUserUnbanned?.Invoke(this, new BanUpdateEventArgs(payload.Deserialize<BanContainer>().SetClient(this))));
+                                Task.Run(() => OnUserUnbanned?.Invoke(this, payload.Deserialize<BanUpdateEventArgs>().SetClient(this)));
                                 break;
                             case "INVITE_CREATE":
-                                Task.Run(() => OnInviteCreated?.Invoke(this, payload.Deserialize<InviteCreatedEventArgs>()));
+                                Task.Run(() => OnInviteCreated?.Invoke(this, payload.Deserialize<InviteCreatedEventArgs>().SetClient(this)));
                                 break;
                             case "INVITE_DELETE":
-                                Task.Run(() => OnInviteDeleted?.Invoke(this, payload.Deserialize<InviteDeletedEventArgs>()));
+                                Task.Run(() => OnInviteDeleted?.Invoke(this, payload.Deserialize<InviteDeletedEventArgs>().SetClient(this)));
                                 break;
                             case "RELATIONSHIP_ADD":
                                 Task.Run(() => OnRelationshipAdded?.Invoke(this, new RelationshipEventArgs(payload.Deserialize<Relationship>().SetClient(this))));

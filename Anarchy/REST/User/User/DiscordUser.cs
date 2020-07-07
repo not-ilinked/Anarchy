@@ -40,9 +40,7 @@ namespace Discord
 
 
         [JsonProperty("bot")]
-#pragma warning disable 0414, 0649
         private readonly bool _bot;
-#pragma warning restore 0414, 0649
 
 
         public DiscordUserType Type
@@ -136,17 +134,6 @@ namespace Discord
                 throw new NotSupportedException("Cannot remove relationship from self.");
 
             Client.RemoveRelationship(Id);
-        }
-
-
-        /// <summary>
-        /// Gets the user's avatar
-        /// </summary>
-        /// <returns>The avatar (returns null if AvatarId is null)</returns>
-        [Obsolete("GetAvatar is obsolete. Use Avatar.Download() instead", true)]
-        public Image GetAvatar()
-        {
-            return null;
         }
 
 

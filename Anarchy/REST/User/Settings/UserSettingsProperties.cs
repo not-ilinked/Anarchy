@@ -73,12 +73,10 @@ namespace Discord
 
         private readonly DiscordParameter<DiscordLanguage> LocaleProperty = new DiscordParameter<DiscordLanguage>();
         [JsonProperty("locale")]
-#pragma warning disable IDE0051
         private string _locale
         {
-            get { return LanguageUtils.LanguageToString(LocaleProperty); }
+            get { return LanguageConverter.ToString(LocaleProperty); }
         }
-#pragma warning restore IDE0051
 
         public DiscordLanguage Language
         {

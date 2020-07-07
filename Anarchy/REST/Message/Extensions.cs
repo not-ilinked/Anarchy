@@ -121,7 +121,8 @@ namespace Discord
 
 
         /// <summary>
-        /// Gets a list of messages from a channel
+        /// Gets a list of messages from a channel.
+        /// The list is ordered first -> last.
         /// </summary>
         /// <param name="channelId">ID of the channel</param>
         /// <param name="filters">Options for filtering out messages</param>
@@ -130,21 +131,35 @@ namespace Discord
             if (filters == null)
                 filters = new MessageFilters();
 
-            string parameters = "";
-            if (filters.LimitProperty.Set) parameters += $"limit={filters.Limit}&";
-            if (filters.BeforeProperty.Set) parameters += $"before={filters.BeforeId}&";
-            if (filters.AfterProperty.Set) parameters += $"after={filters.AfterId}&";
+            const int messagesPerRequest = 100;
 
-            IReadOnlyList<DiscordMessage> messages = client.HttpClient.Get($"/channels/{channelId}/messages?{parameters}")
+            List<DiscordMessage> messages = new List<DiscordMessage>();
+
+            while (true)
+            {
+                string parameters = "";
+                if (filters.Limit.HasValue)
+                    parameters += $"limit={(uint)Math.Min(messagesPerRequest, filters.Limit.Value - messages.Count)}";
+                if (filters.BeforeId.HasValue)
+                    parameters += $"before={filters.BeforeId.Value}&";
+                if (filters.AfterId.HasValue)
+                    parameters += $"after={filters.AfterId.Value}&";
+                
+                var newMessages = client.HttpClient.Get($"/channels/{channelId}/messages?{parameters}")
                                                           .Deserialize<IReadOnlyList<DiscordMessage>>().SetClientsInList(client);
 
-            if (filters.UserProperty.Set)
-                messages = messages.Where(msg => msg.Author.User.Id == filters.UserId).ToList();
+                messages.AddRange(newMessages);
+
+                filters.BeforeId = messages.Last().Id;
+
+                if (newMessages.Count < messagesPerRequest)
+                    break;
+            }
 
             return messages;
         }
 
-
+        
         /// <summary>
         /// Gets a list of messages from a channel
         /// </summary>
@@ -155,7 +170,7 @@ namespace Discord
             return client.GetChannelMessages(channelId, new MessageFilters() { Limit = limit });
         }
 
-
+        
         /// <summary>
         /// Gets a message's reactions
         /// </summary>
@@ -206,14 +221,9 @@ namespace Discord
         #endregion
 
 
-        public static string AcknowledgeMessage(this DiscordClient client, ulong channelId, ulong messageId, string previousToken)
+        public static void AcknowledgeMessage(this DiscordClient client, ulong channelId, ulong messageId)
         {
-            JObject obj = new JObject
-            {
-                ["token"] = previousToken == null ? null : JValue.FromObject(previousToken)
-            };
-
-            return client.HttpClient.Post($"/channels/{channelId}/messages/{messageId}/ack", obj).Deserialize<JObject>().Value<string>("token");
+            client.HttpClient.Post($"/channels/{channelId}/messages/{messageId}/ack", "{\"token\":null}");
         }
     }
 }

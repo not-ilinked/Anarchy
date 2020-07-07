@@ -1,0 +1,35 @@
+﻿namespace Discord
+{
+    public enum DiscordLanguage
+    {
+        Danish,
+        German,
+        EnglishUK,
+        EnglishUS,
+        Spanish,
+        French,
+        Croatian,
+        Italian,
+        Lithuanian,
+        Hungarian,
+        Dutch,
+        Norwegian,
+        Polish,
+        Portuguese,
+        Romanian,
+        Finnish,
+        Swedish,
+        Viatnamese,
+        Turkish,
+        Czech,
+        Greek,
+        Bulgarian,
+        Russian,
+        Ukranian,
+        Thai,
+        Chinese,
+        Japanese,
+        ChineseThai,
+        Korean
+    }
+}

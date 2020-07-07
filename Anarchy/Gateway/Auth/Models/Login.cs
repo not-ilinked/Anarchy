@@ -17,6 +17,7 @@ namespace Discord.Gateway
                 User.SetClient(Client);
                 Guilds.SetClientsInList(Client);
                 Relationships.SetClientsInList(Client);
+                Settings.SetClient(Client);
                 PrivateChannels.SetClientsInList(Client);
                 ClientGuildSettings.SetClientsInList(Client);
                 ConnectedAccounts.SetClientsInList(Client);

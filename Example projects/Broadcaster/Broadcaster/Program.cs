@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 namespace Broadcaster
 {
     // notes:
-    // should probably allow the user to specify a file or something
     // currently this bot doesn't give a single shit about being banned
 
     class Program

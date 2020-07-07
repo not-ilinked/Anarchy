@@ -1,16 +1,31 @@
-﻿namespace Discord.Gateway
+﻿using Newtonsoft.Json;
+
+namespace Discord.Gateway
 {
-    public class BanUpdateEventArgs
+    public class BanUpdateEventArgs : Controllable
     {
-        public ulong GuildId { get; private set; }
-        public DiscordUser User { get; private set; }
-
-
-        internal BanUpdateEventArgs(BanContainer ban)
+        public BanUpdateEventArgs()
         {
-            GuildId = ban.GuildId;
-            User = ban.User;
+            OnClientUpdated += (sender, e) =>
+            {
+                User.SetClient(Client);
+            };
         }
+
+        [JsonProperty("guild_id")]
+        private readonly ulong _guildId;
+
+        public MinimalGuild Guild
+        {
+            get
+            {
+                return new MinimalGuild(_guildId).SetClient(Client);
+            }
+        }
+
+
+        [JsonProperty("user")]
+        public DiscordUser User { get; private set; }
 
 
         public override string ToString()

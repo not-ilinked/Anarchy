@@ -64,8 +64,8 @@ namespace Discord
         
 
         [JsonProperty("attachments")]
-        private readonly IReadOnlyList<Attachment> _attachments;
-        public Attachment Attachment
+        private readonly IReadOnlyList<DiscordAttachment> _attachments;
+        public DiscordAttachment Attachment
         {
             get { return _attachments == null || _attachments.Count == 0 ? null : _attachments[0]; }
         }
@@ -168,6 +168,12 @@ namespace Discord
         public void Delete()
         {
             Client.DeleteMessage(Channel.Id, Id);
+        }
+
+
+        public void Acknowledge()
+        {
+            Client.AcknowledgeMessage(Channel.Id, Id);
         }
 
 

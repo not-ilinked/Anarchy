@@ -107,7 +107,7 @@ namespace Discord
 
         public SystemChannelInformation SystemChannel
         {
-            get { return new SystemChannelInformation(_sysChannelId, _sysChannelFlags); }
+            get { return new SystemChannelInformation(_sysChannelId, _sysChannelFlags).SetClient(Client); }
         }
 
 

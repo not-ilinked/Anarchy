@@ -1,6 +1,6 @@
 ﻿namespace Discord
 {
-    public class SystemChannelInformation
+    public class SystemChannelInformation : Controllable
     {
         private readonly ulong? _channelId;
 
@@ -9,7 +9,7 @@
             get
             {
                 if (_channelId.HasValue)
-                    return new MinimalTextChannel(_channelId.Value);
+                    return new MinimalTextChannel(_channelId.Value).SetClient(Client);
                 else
                     return null;
             }

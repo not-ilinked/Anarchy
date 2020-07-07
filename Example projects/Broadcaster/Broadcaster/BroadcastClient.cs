@@ -83,7 +83,7 @@ namespace Broadcaster
             {
                 foreach (var channel in guild.Channels.Where(c => c.Type == ChannelType.Voice))
                 {
-                    var ourRoles = guild.GetMember(_client.User.Id).Roles.Select(r => r.Id);
+                    var ourRoles = guild.GetMember(_client.User.Id).Roles;
 
                     bool connect = true;
                     foreach (var overwrite in channel.PermissionOverwrites)

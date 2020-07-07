@@ -4,8 +4,13 @@ using System.Collections.Generic;
 
 namespace Discord
 {
-    public class DiscordUserSettings
+    public class DiscordUserSettings : Controllable
     {
+        public DiscordUserSettings()
+        {
+            GuildFolders.SetClientsInList(Client);
+        }
+
         [JsonProperty("theme")]
         private readonly string _theme;
 
@@ -32,7 +37,7 @@ namespace Discord
 
         public DiscordLanguage Language
         {
-            get { return LanguageUtils.StringToLanguage(_locale); }
+            get { return LanguageConverter.FromString(_locale); }
         }
 
 
@@ -49,19 +54,7 @@ namespace Discord
 
 
         [JsonProperty("guild_positions")]
-        private IReadOnlyList<ulong> _guildPositions;
-
-        public IReadOnlyList<MinimalGuild> GuildPositions
-        {
-            get
-            {
-                List<MinimalGuild> guilds = new List<MinimalGuild>();
-                foreach (var guildId in _guildPositions)
-                    guilds.Add(new MinimalGuild(guildId));
-
-                return guilds;
-            }
-        }
+        public IReadOnlyList<ulong> GuildPositions { get; private set; }
 
 
         [JsonProperty("guild_folders")]
