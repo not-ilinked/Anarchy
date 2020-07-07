@@ -123,11 +123,13 @@ private static void Session_OnConnected(DiscordVoiceSession session, EventArgs e
     // Create a stream with 96kbps, optimized for music
     DiscordVoiceStream stream = session.CreateStream(96000, AudioApplication.Music);
 
+	// to play audio in a voice channel, we must first update our voice state
+	session.SetSpeakingState(DiscordVoiceSpeakingState.Microphone);
+	
     // Play audio from 'Audio.mp3'
     stream.CopyFrom(DiscordVoiceUtils.ReadFromFile("Audio.mp3"));
 
-	// Anarchy notifies Discord that you're sending audio through, but you have to tell it that you've stopped yourself.
-	session.SetSpeaking(false);
+	session.SetSpeakingState(DiscordVoiceSpeakingState.NotSpeaking);
 	
     session.Disconnect();
 }
@@ -138,9 +140,9 @@ private static void Session_OnConnected(DiscordVoiceSession session, EventArgs e
 ```csharp
 DiscordClient client = new DiscordClient("your token here");
 
-client.User.ChangeProfile(new UserProfileUpdate() { Avatar = Image.FromFile("lol.png") }); //this function is for updating profile related settings
+client.User.ChangeProfile(new UserProfileUpdate() { Avatar = Image.FromFile("lol.png") }); //this method is for updating profile related settings
 
-client.User.ChangeSettings(new UserSettingsProperties() { Language = Language.EnglishUS }); //this is for changing any other setting
+client.User.ChangeSettings(new UserSettingsProperties() { Language = DiscordLanguage.EnglishUS }); //this is for changing any other setting
 ```
 
 
