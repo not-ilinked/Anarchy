@@ -7,7 +7,6 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace Discord
 {
@@ -29,7 +28,7 @@ namespace Discord
         /// <returns>The message</returns>
         public static DiscordMessage SendMessage(this DiscordClient client, ulong channelId, string message, bool tts = false, DiscordEmbed embed = null)
         {
-            return client.SendMessageAsync(channelId, message, tts, embed).Result;
+            return client.SendMessageAsync(channelId, message, tts, embed).GetAwaiter().GetResult();
         }
 
 
@@ -51,7 +50,7 @@ namespace Discord
                 { new ByteArrayContent(fileData), "file", fileName }
             };
 
-            return (await httpClient.PostAsync(client.Config.ApiBaseUrl + $"/channels/{channelId}/messages", content).Result
+            return (await httpClient.PostAsync(client.Config.ApiBaseUrl + $"/channels/{channelId}/messages", content).GetAwaiter().GetResult()
                                     .Content.ReadAsStringAsync()).Deserialize<DiscordMessage>().SetClient(client);
         }
 
@@ -65,7 +64,7 @@ namespace Discord
         /// <param name="tts">Whether the message should be TTS or not</param>
         public static DiscordMessage SendFile(this DiscordClient client, ulong channelId, string fileName, byte[] fileData, string message = null, bool tts = false)
         {
-            return client.SendFileAsync(channelId, fileName, fileData, message, tts).Result;
+            return client.SendFileAsync(channelId, fileName, fileData, message, tts).GetAwaiter().GetResult();
         }
 
 
@@ -83,7 +82,7 @@ namespace Discord
         /// <param name="tts">Whether the message should be TTS or not</param>
         public static DiscordMessage SendFile(this DiscordClient client, ulong channelId, string filePath, string message = null, bool tts = false)
         {
-            return client.SendFileAsync(channelId, filePath, message, tts).Result;
+            return client.SendFileAsync(channelId, filePath, message, tts).GetAwaiter().GetResult();
         }
 
 
@@ -102,7 +101,7 @@ namespace Discord
         /// <returns>The edited message</returns>
         public static DiscordMessage EditMessage(this DiscordClient client, ulong channelId, ulong messageId, string message)
         {
-            return client.EditMessageAsync(channelId, messageId, message).Result;
+            return client.EditMessageAsync(channelId, messageId, message).GetAwaiter().GetResult();
         }
 
 
@@ -198,7 +197,7 @@ namespace Discord
 
         public static IReadOnlyList<DiscordMessage> GetChannelMessages(this DiscordClient client, ulong channelId, MessageFilters filters = null)
         {
-            return client.GetChannelMessagesAsync(channelId, filters).Result;
+            return client.GetChannelMessagesAsync(channelId, filters).GetAwaiter().GetResult();
         }
 
         
@@ -214,7 +213,7 @@ namespace Discord
 
         public static IReadOnlyList<DiscordMessage> GetChannelMessages(this DiscordClient client, ulong channelId, uint limit)
         {
-            return client.GetChannelMessagesAsync(channelId, limit).Result;
+            return client.GetChannelMessagesAsync(channelId, limit).GetAwaiter().GetResult();
         }
 
 
@@ -234,7 +233,7 @@ namespace Discord
         /// <param name="afterId">Reaction ID to offset from</param>
         public static IReadOnlyList<DiscordUser> GetMessageReactions(this DiscordClient client, ulong channelId, ulong messageId, string reaction, uint limit = 25, ulong afterId = 0)
         {
-            return client.GetMessageReactionsAsync(channelId, messageId, reaction, limit, afterId).Result;
+            return client.GetMessageReactionsAsync(channelId, messageId, reaction, limit, afterId).GetAwaiter().GetResult();
         }
 
 
@@ -263,7 +262,7 @@ namespace Discord
         /// <param name="channelId">ID of the channel</param>
         public static IReadOnlyList<DiscordMessage> GetPinnedMessages(this DiscordClient client, ulong channelId)
         {
-            return client.GetPinnedMessagesAsync(channelId).Result;
+            return client.GetPinnedMessagesAsync(channelId).GetAwaiter().GetResult();
         }
 
 

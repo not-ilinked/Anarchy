@@ -22,7 +22,7 @@ namespace Discord
         /// <returns>The created <see cref="DiscordEmoji"/></returns>
         public static DiscordEmoji CreateEmoji(this DiscordClient client, ulong guildId, EmojiProperties properties)
         {
-            return client.CreateEmojiAsync(guildId, properties).Result;
+            return client.CreateEmojiAsync(guildId, properties).GetAwaiter().GetResult();
         }
 
 
@@ -41,7 +41,7 @@ namespace Discord
         /// <returns>The moeified <see cref="DiscordEmoji"/></returns>
         public static DiscordEmoji ModifyEmoji(this DiscordClient client, ulong guildId, ulong emojiId, string name)
         {
-            return client.ModifyEmojiAsync(guildId, emojiId, name).Result;
+            return client.ModifyEmojiAsync(guildId, emojiId, name).GetAwaiter().GetResult();
         }
 
 
@@ -76,7 +76,7 @@ namespace Discord
         /// <param name="guildId">ID of the guild</param>
         public static IReadOnlyList<DiscordEmoji> GetGuildEmojis(this DiscordClient client, ulong guildId)
         {
-            return client.GetGuildEmojisAsync(guildId).Result;
+            return client.GetGuildEmojisAsync(guildId).GetAwaiter().GetResult();
         }
 
 
@@ -95,7 +95,7 @@ namespace Discord
         /// <param name="emojiId">ID of the emoji</param>
         public static DiscordEmoji GetGuildEmoji(this DiscordClient client, ulong guildId, ulong emojiId)
         {
-            return client.GetGuildEmojiAsync(guildId, emojiId).Result;
+            return client.GetGuildEmojiAsync(guildId, emojiId).GetAwaiter().GetResult();
         }
 
 

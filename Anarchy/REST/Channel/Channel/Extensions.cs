@@ -17,7 +17,7 @@ namespace Discord
         /// <param name="channelId">ID of the channel</param>
         public static DiscordChannel GetChannel(this DiscordClient client, ulong channelId)
         {
-            return client.GetChannelAsync(channelId).Result;
+            return client.GetChannelAsync(channelId).GetAwaiter().GetResult();
         }
 
 
@@ -28,7 +28,7 @@ namespace Discord
 
         public static DiscordGroup ModifyGroup(this DiscordClient client, ulong groupId, GroupProperties properties)
         {
-            return client.ModifyGroupAsync(groupId, properties).Result;
+            return client.ModifyGroupAsync(groupId, properties).GetAwaiter().GetResult();
         }
 
 
@@ -39,7 +39,7 @@ namespace Discord
 
         public static GuildChannel ModifyGuildChannel(this DiscordClient client, ulong channelId, GuildChannelProperties properties)
         {
-            return client.ModifyGuildChannelAsync(channelId, properties).Result;
+            return client.ModifyGuildChannelAsync(channelId, properties).GetAwaiter().GetResult();
         }
 
 
@@ -56,7 +56,7 @@ namespace Discord
         /// <returns>The deleted channel</returns>
         public static DiscordChannel DeleteChannel(this DiscordClient client, ulong channelId)
         {
-            return client.DeleteChannelAsync(channelId).Result;
+            return client.DeleteChannelAsync(channelId).GetAwaiter().GetResult();
         }
     }
 }

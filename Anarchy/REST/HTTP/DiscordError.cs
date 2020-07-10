@@ -72,6 +72,7 @@
         PaymentMethodRequired = 100006,
         PendingPurchaseRequest = 100016,
         PaymentRequied = 100018,
+        AdditionalPlansMustMatchSubscriptionInterval = 10028,
         PaymentRequiresAuthentication = 100029,
         ResourceOverloaded = 130000
     }

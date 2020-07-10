@@ -44,7 +44,7 @@ namespace Discord
 
         public DiscordGuild Lurk()
         {
-            return LurkAsync().Result;
+            return LurkAsync().GetAwaiter().GetResult();
         }
     }
 }

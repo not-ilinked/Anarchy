@@ -20,7 +20,7 @@ namespace Discord
         /// </summary>
         public static IReadOnlyList<DiscordGuild> CreateTemplatedGuild(this DiscordClient client, string templateCode, string name, DiscordImage icon = null)
         {
-            return client.CreateTemplatedGuildAsync(templateCode, name, icon).Result;
+            return client.CreateTemplatedGuildAsync(templateCode, name, icon).GetAwaiter().GetResult();
         }
 
 
@@ -48,7 +48,7 @@ namespace Discord
         /// </summary>
         public static DiscordGuildTemplate DeleteGuildTemplate(this DiscordClient client, ulong guildId, string templateCode)
         {
-            return client.DeleteGuildTemplateAsync(guildId, templateCode).Result;
+            return client.DeleteGuildTemplateAsync(guildId, templateCode).GetAwaiter().GetResult();
         }
 
 
@@ -62,7 +62,7 @@ namespace Discord
         /// </summary>
         public static IReadOnlyList<DiscordGuildTemplate> GetGuildTemplates(this DiscordClient client, ulong guildId)
         {
-            return client.GetGuildTemplatesAsync(guildId).Result;
+            return client.GetGuildTemplatesAsync(guildId).GetAwaiter().GetResult();
         }
 
 
@@ -73,7 +73,7 @@ namespace Discord
 
         public static DiscordGuildTemplate GetGuildTemplate(this DiscordClient client, string code)
         {
-            return client.GetGuildTemplateAsync(code).Result;
+            return client.GetGuildTemplateAsync(code).GetAwaiter().GetResult();
         }
     }
 }

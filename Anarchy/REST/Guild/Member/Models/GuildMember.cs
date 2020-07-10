@@ -130,7 +130,7 @@ namespace Discord
         /// <returns></returns>
         public DiscordPermission GetPermissions()
         {
-            return GetPermissionsAsync().Result;
+            return GetPermissionsAsync().GetAwaiter().GetResult();
         }
 
 

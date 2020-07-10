@@ -83,7 +83,7 @@ namespace Discord
 
         public ClientGuildSettings ModifyClientSettings(GuildSettingsProperties properties)
         {
-            return ModifyClientSettingsAsync(properties).Result;
+            return ModifyClientSettingsAsync(properties).GetAwaiter().GetResult();
         }
 
 
@@ -97,7 +97,7 @@ namespace Discord
         /// </summary>
         public IReadOnlyList<DiscordGuildTemplate> GetTemplates()
         {
-            return GetTemplatesAsync().Result;
+            return GetTemplatesAsync().GetAwaiter().GetResult();
         }
 
 
@@ -111,7 +111,7 @@ namespace Discord
         /// </summary>
         public DiscordGuildTemplate CreateTemplate(string name, string description)
         {
-            return CreateTemplateAsync(name, description).Result;
+            return CreateTemplateAsync(name, description).GetAwaiter().GetResult();
         }
 
 
@@ -122,7 +122,7 @@ namespace Discord
 
         public DiscordGuildTemplate DeleteTemplate(string templateCode)
         {
-            return DeleteTemplateAsync(templateCode).Result;
+            return DeleteTemplateAsync(templateCode).GetAwaiter().GetResult();
         }
 
 
@@ -147,7 +147,7 @@ namespace Discord
         /// </summary>
         public virtual IReadOnlyList<GuildChannel> GetChannels()
         {
-            return GetChannelsAsync().Result;
+            return GetChannelsAsync().GetAwaiter().GetResult();
         }
 
 
@@ -163,7 +163,7 @@ namespace Discord
         /// <returns>The created channel</returns>
         public GuildChannel CreateChannel(string name, ChannelType type, ulong? parentId = null)
         {
-            return CreateChannelAsync(name, type, parentId).Result;
+            return CreateChannelAsync(name, type, parentId).GetAwaiter().GetResult();
         }
 
 
@@ -192,7 +192,7 @@ namespace Discord
         /// <param name="emojiId">ID of the emoji</param>
         public DiscordEmoji GetEmoji(ulong emojiId)
         {
-            return GetEmojiAsync(emojiId).Result;
+            return GetEmojiAsync(emojiId).GetAwaiter().GetResult();
         }
 
 
@@ -221,7 +221,7 @@ namespace Discord
         /// </summary>
         public virtual IReadOnlyList<DiscordRole> GetRoles()
         {
-            return GetRolesAsync().Result;
+            return GetRolesAsync().GetAwaiter().GetResult();
         }
 
 
@@ -237,7 +237,7 @@ namespace Discord
         /// <returns>The created role</returns>
         public DiscordRole CreateRole(RoleProperties properties = null)
         {
-            return CreateRoleAsync(properties).Result;
+            return CreateRoleAsync(properties).GetAwaiter().GetResult();
         }
 
 
@@ -251,7 +251,7 @@ namespace Discord
         /// </summary>
         public IReadOnlyList<GuildInvite> GetInvites()
         {
-            return GetInvitesAsync().Result;
+            return GetInvitesAsync().GetAwaiter().GetResult();
         }
 
 
@@ -265,7 +265,7 @@ namespace Discord
         /// </summary>
         public IReadOnlyList<DiscordWebhook> GetWebhooks()
         {
-            return GetWebhooksAsync().Result;
+            return GetWebhooksAsync().GetAwaiter().GetResult();
         }
 
 
@@ -280,7 +280,7 @@ namespace Discord
         /// <param name="filters"></param>
         public IReadOnlyList<AuditLogEntry> GetAuditLog(AuditLogFilters filters = null)
         {
-            return GetAuditLogAsync(filters).Result;
+            return GetAuditLogAsync(filters).GetAwaiter().GetResult();
         }
 
 
@@ -296,7 +296,7 @@ namespace Discord
         /// <returns></returns>
         public GuildMember GetMember(ulong userId)
         {
-            return GetMemberAsync(userId).Result;
+            return GetMemberAsync(userId).GetAwaiter().GetResult();
         }
 
 
@@ -310,7 +310,7 @@ namespace Discord
         /// </summary>
         public IReadOnlyList<DiscordBan> GetBans()
         {
-            return GetBansAsync().Result;
+            return GetBansAsync().GetAwaiter().GetResult();
         }
 
         public async Task<DiscordBan> GetBanAsync(ulong userId)
@@ -324,7 +324,7 @@ namespace Discord
         /// <param name="userId">ID of the user</param>
         public DiscordBan GetBan(ulong userId)
         {
-            return GetBanAsync(userId).Result;
+            return GetBanAsync(userId).GetAwaiter().GetResult();
         }
 
 

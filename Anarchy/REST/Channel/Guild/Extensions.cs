@@ -23,7 +23,7 @@ namespace Discord
         /// <param name="guildId">ID of the guild</param>
         public static IReadOnlyList<GuildChannel> GetGuildChannels(this DiscordClient client, ulong guildId)
         {
-            return client.GetGuildChannelsAsync(guildId).Result;
+            return client.GetGuildChannelsAsync(guildId).GetAwaiter().GetResult();
         }
 
 
@@ -44,7 +44,7 @@ namespace Discord
         /// <returns>The created <see cref="GuildChannel"/></returns>
         public static GuildChannel CreateGuildChannel(this DiscordClient client, ulong guildId, string name, ChannelType type, ulong? parentId = null)
         {
-            return client.CreateGuildChannelAsync(guildId, name, type, parentId).Result;
+            return client.CreateGuildChannelAsync(guildId, name, type, parentId).GetAwaiter().GetResult();
         }
 
 
@@ -64,7 +64,7 @@ namespace Discord
         /// <param name="overwrite">The permission overwrite to add/edit</param>
         public static DiscordPermissionOverwrite AddPermissionOverwrite(this DiscordClient client, ulong channelId, ulong affectedId, PermissionOverwriteType type, DiscordPermission allow, DiscordPermission deny)
         {
-            return client.AddPermissionOverwriteAsync(channelId, affectedId, type, allow, deny).Result;
+            return client.AddPermissionOverwriteAsync(channelId, affectedId, type, allow, deny).GetAwaiter().GetResult();
         }
 
 

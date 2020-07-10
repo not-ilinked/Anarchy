@@ -15,7 +15,7 @@ namespace Discord
         /// <param name="userId">ID of the user</param>
         public static DiscordUser GetUser(this DiscordClient client, ulong userId)
         {
-            return client.GetUserAsync(userId).Result;
+            return client.GetUserAsync(userId).GetAwaiter().GetResult();
         }
 
 
@@ -37,7 +37,7 @@ namespace Discord
         /// </summary>
         public static DiscordClientUser GetClientUser(this DiscordClient client)
         {
-            return client.GetClientUserAsync().Result;
+            return client.GetClientUserAsync().GetAwaiter().GetResult();
         }
     }
 }

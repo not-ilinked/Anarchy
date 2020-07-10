@@ -206,7 +206,7 @@ namespace Discord
         /// <param name="afterId">The reaction ID to offset from</param>
         public IReadOnlyList<DiscordUser> GetReactions(string reaction, uint limit = 25, ulong afterId = 0)
         {
-            return GetReactionsAsync(reaction, limit, afterId).Result;
+            return GetReactionsAsync(reaction, limit, afterId).GetAwaiter().GetResult();
         }
 
 

@@ -13,7 +13,7 @@ namespace Discord
 
         public static IReadOnlyList<DiscordPayment> GetPayments(this DiscordClient client, int limit = 100)
         {
-            return client.GetPaymentsAsync(limit).Result;
+            return client.GetPaymentsAsync(limit).GetAwaiter().GetResult();
         }
 
 
@@ -25,7 +25,7 @@ namespace Discord
 
         public static IReadOnlyList<PaymentMethod> GetPaymentMethods(this DiscordClient client)
         {
-            return client.GetPaymentMethodsAsync().Result;
+            return client.GetPaymentMethodsAsync().GetAwaiter().GetResult();
         }
     }
 }

@@ -101,7 +101,7 @@ namespace Discord
         /// </summary>
         public DiscordInvite CreateInvite()
         {
-            return CreateInviteAsync().Result;
+            return CreateInviteAsync().GetAwaiter().GetResult();
         }
     }
 }

@@ -18,7 +18,7 @@ namespace Discord
 
         public static string PurchaseGift(this DiscordClient client, ulong paymentMethodId, ulong skuId, ulong subPlanId, int expectedAmount)
         {
-            return client.PurchaseGiftAsync(paymentMethodId, skuId, subPlanId, expectedAmount).Result;
+            return client.PurchaseGiftAsync(paymentMethodId, skuId, subPlanId, expectedAmount).GetAwaiter().GetResult();
         }
 
 
@@ -29,7 +29,7 @@ namespace Discord
 
         public static IReadOnlyList<DiscordGift> GetGiftInventory(this DiscordClient client)
         {
-            return client.GetGiftInventoryAsync().Result;
+            return client.GetGiftInventoryAsync().GetAwaiter().GetResult();
         }
 
 
@@ -41,7 +41,7 @@ namespace Discord
 
         public static IReadOnlyList<DiscordGiftCode> QueryGiftCodes(this DiscordClient client, ulong skuId, ulong subPlanId)
         {
-            return client.QueryGiftCodesAsync(skuId, subPlanId).Result;
+            return client.QueryGiftCodesAsync(skuId, subPlanId).GetAwaiter().GetResult();
         }
 
 
@@ -53,7 +53,7 @@ namespace Discord
 
         public static DiscordGiftCode CreateGiftCode(this DiscordClient client, ulong skuId, ulong subPlanId)
         {
-            return client.CreateGiftCodeAsync(skuId, subPlanId).Result;
+            return client.CreateGiftCodeAsync(skuId, subPlanId).GetAwaiter().GetResult();
         }
 
 
@@ -87,7 +87,7 @@ namespace Discord
 
         public static DiscordGift GetNitroGift(this DiscordClient client, string code)
         {
-            return client.GetNitroGiftAsync(code).Result;
+            return client.GetNitroGiftAsync(code).GetAwaiter().GetResult();
         }
 
 

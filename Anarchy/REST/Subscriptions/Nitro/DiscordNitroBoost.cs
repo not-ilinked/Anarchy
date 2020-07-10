@@ -19,7 +19,7 @@ namespace Discord
 
 
         [JsonProperty("subscription_id")]
-        public ulong SubscriptionId { get; private set; }
+        public ulong ActiveSubscriptionId { get; private set; }
 
 
         [JsonProperty("premium_guild_subscription")]

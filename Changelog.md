@@ -5,6 +5,7 @@
 - Added async methods (with the same name as their sync methods but the suffix 'Async').
 
 ### Improvements
+- Improved the way Anarchy deals with purchasing subscriptions.
 - Removed various useless/bloaty methods (GetGuildRole, Mute/DeafenGuildMember and so on).
 - In progress: Removed redundant info from method names such as: CreateChannelWebhook -> CreateWebhook.
 

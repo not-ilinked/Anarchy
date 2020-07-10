@@ -58,7 +58,7 @@ namespace Discord
         /// <param name="properties">Options for modifying the role</param>
         public DiscordRole Modify(RoleProperties properties)
         {
-            return ModifyAsync(properties).Result;
+            return ModifyAsync(properties).GetAwaiter().GetResult();
         }
 
 

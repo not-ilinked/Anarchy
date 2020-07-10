@@ -79,7 +79,7 @@ namespace Discord
         /// </summary>
         public static IReadOnlyList<VoiceRegion> GetVoiceRegions(this DiscordClient client)
         {
-            return client.GetVoiceRegionsAsync().Result;
+            return client.GetVoiceRegionsAsync().GetAwaiter().GetResult();
         }
     }
 }

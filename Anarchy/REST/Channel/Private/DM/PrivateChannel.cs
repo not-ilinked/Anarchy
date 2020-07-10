@@ -105,7 +105,7 @@ namespace Discord
         /// <returns>The message</returns>
         public DiscordMessage SendMessage(string message, bool tts = false, DiscordEmbed embed = null)
         {
-            return SendMessageAsync(message, tts, embed).Result;
+            return SendMessageAsync(message, tts, embed).GetAwaiter().GetResult();
         }
 
 
@@ -116,7 +116,7 @@ namespace Discord
 
         public DiscordMessage SendFile(string fileName, byte[] fileData, string message = null, bool tts = false)
         {
-            return SendFileAsync(fileName, fileData, message, tts).Result;
+            return SendFileAsync(fileName, fileData, message, tts).GetAwaiter().GetResult();
         }
 
 
@@ -127,7 +127,7 @@ namespace Discord
 
         public DiscordMessage SendFile(string filePath, string message = null, bool tts = false)
         {
-            return SendFileAsync(filePath, message, tts).Result;
+            return SendFileAsync(filePath, message, tts).GetAwaiter().GetResult();
         }
 
 
@@ -172,7 +172,7 @@ namespace Discord
         /// </summary>
         public IReadOnlyList<DiscordMessage> GetPinnedMessages()
         {
-            return GetPinnedMessagesAsync().Result;
+            return GetPinnedMessagesAsync().GetAwaiter().GetResult();
         }
 
 

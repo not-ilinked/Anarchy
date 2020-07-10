@@ -22,7 +22,7 @@ namespace Discord
         /// <returns>The created invite</returns>
         public static DiscordInvite CreateInvite(this DiscordClient client, ulong channelId, InviteProperties properties = null)
         {
-            return client.CreateInviteAsync(channelId, properties).Result;
+            return client.CreateInviteAsync(channelId, properties).GetAwaiter().GetResult();
         }
 
 
@@ -39,7 +39,7 @@ namespace Discord
         /// <returns>The deleted invite</returns>
         public static DiscordInvite DeleteInvite(this DiscordClient client, string invCode)
         {
-            return client.DeleteInviteAsync(invCode).Result;
+            return client.DeleteInviteAsync(invCode).GetAwaiter().GetResult();
         }
 
 
@@ -54,7 +54,7 @@ namespace Discord
         /// </summary>
         public static DiscordInvite GetInvite(this DiscordClient client, string invCode)
         {
-            return client.GetInviteAsync(invCode).Result;
+            return client.GetInviteAsync(invCode).GetAwaiter().GetResult();
         }
 
 
@@ -70,7 +70,7 @@ namespace Discord
         /// <param name="guildId">ID of the guild</param>
         public static IReadOnlyList<GuildInvite> GetGuildInvites(this DiscordClient client, ulong guildId)
         {
-            return client.GetGuildInvitesAsync(guildId).Result;
+            return client.GetGuildInvitesAsync(guildId).GetAwaiter().GetResult();
         }
     }
 }

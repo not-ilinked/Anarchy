@@ -108,7 +108,7 @@ namespace Discord
         /// </summary>
         public DiscordProfile GetProfile()
         {
-            return GetProfileAsync().Result;
+            return GetProfileAsync().GetAwaiter().GetResult();
         }
 
 

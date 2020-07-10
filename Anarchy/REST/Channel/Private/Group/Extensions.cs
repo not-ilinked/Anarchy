@@ -20,7 +20,7 @@ namespace Discord
         /// <returns>The invite used</returns>
         public static DiscordInvite JoinGroup(this DiscordClient client, string inviteCode)
         {
-            return client.JoinGroupAsync(inviteCode).Result;
+            return client.JoinGroupAsync(inviteCode).GetAwaiter().GetResult();
         }
 
 
@@ -39,7 +39,7 @@ namespace Discord
         /// <returns>The created <see cref="DiscordGroup"/></returns>
         public static DiscordGroup CreateGroup(this DiscordClient client, List<ulong> recipients)
         {
-            return client.CreateGroupAsync(recipients).Result;
+            return client.CreateGroupAsync(recipients).GetAwaiter().GetResult();
         }
 
 
@@ -56,7 +56,7 @@ namespace Discord
         /// <returns>The leaved <see cref="DiscordGroup"/></returns>
         public static DiscordChannel LeaveGroup(this DiscordClient client, ulong groupId)
         {
-            return client.LeaveGroupAsync(groupId).Result;
+            return client.LeaveGroupAsync(groupId).GetAwaiter().GetResult();
         }
 
 

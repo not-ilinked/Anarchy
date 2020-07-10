@@ -104,7 +104,7 @@ namespace Discord
         /// </summary>
         public DiscordUserSettings GetSettings()
         {
-            return GetSettingsAsync().Result;
+            return GetSettingsAsync().GetAwaiter().GetResult();
         }
 
 
@@ -119,7 +119,7 @@ namespace Discord
         /// </summary>
         public DiscordUserSettings ChangeSettings(UserSettingsProperties settings)
         {
-            return ChangeSettingsAsync(settings).Result;
+            return ChangeSettingsAsync(settings).GetAwaiter().GetResult();
         }
 
 

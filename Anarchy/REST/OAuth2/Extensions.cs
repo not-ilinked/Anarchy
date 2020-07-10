@@ -15,7 +15,7 @@ namespace Discord
 
         public static IReadOnlyList<AuthorizedApp> GetAuthorizedApps(this DiscordClient client)
         {
-            return client.GetAuthorizedAppsAsync().Result;
+            return client.GetAuthorizedAppsAsync().GetAwaiter().GetResult();
         }
 
         public static async Task DeauthorizeAppAsync(this DiscordClient client, ulong appId)
@@ -65,7 +65,7 @@ namespace Discord
         /// <returns>A redirect url containing the auth code</returns>
         public static string AuthorizeApp(this DiscordClient client, ulong appId, string scope)
         {
-            return client.AuthorizeAppAsync(appId, scope).Result;
+            return client.AuthorizeAppAsync(appId, scope).GetAwaiter().GetResult();
         }
 
 
@@ -80,7 +80,7 @@ namespace Discord
         /// </summary>
         public static IReadOnlyList<OAuth2Application> GetApplications(this DiscordClient client)
         {
-            return client.GetApplicationsAsync().Result;
+            return client.GetApplicationsAsync().GetAwaiter().GetResult();
         }
 
 
@@ -95,7 +95,7 @@ namespace Discord
         /// <param name="id">The application's ID</param>
         public static OAuth2Application GetApplication(this DiscordClient client, ulong id)
         {
-            return client.GetApplicationAsync(id).Result;
+            return client.GetApplicationAsync(id).GetAwaiter().GetResult();
         }
 
 
@@ -111,7 +111,7 @@ namespace Discord
         /// <param name="name">name for the application</param>
         public static OAuth2Application CreateApplication(this DiscordClient client, string name)
         {
-            return client.CreateApplicationAsync(name).Result;
+            return client.CreateApplicationAsync(name).GetAwaiter().GetResult();
         }
 
 
@@ -127,7 +127,7 @@ namespace Discord
         /// <param name="properties">Your changes</param>
         public static OAuth2Application ModifyApplication(this DiscordClient client, ulong id, DiscordApplicationProperties properties)
         {
-            return client.ModifyApplicationAsync(id, properties).Result;
+            return client.ModifyApplicationAsync(id, properties).GetAwaiter().GetResult();
         }
 
 
@@ -143,7 +143,7 @@ namespace Discord
         /// <returns></returns>
         public static ApplicationBot AddBotToApplication(this DiscordClient client, ulong appId)
         {
-            return client.AddBotToApplicationAsync(appId).Result;
+            return client.AddBotToApplicationAsync(appId).GetAwaiter().GetResult();
         }
 
 

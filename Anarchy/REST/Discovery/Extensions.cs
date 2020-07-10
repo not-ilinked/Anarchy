@@ -26,7 +26,7 @@ namespace Discord
         /// </summary>
         public static GuildQueryResult QueryGuilds(this DiscordClient client, GuildQueryOptions options = null)
         {
-            return client.QueryGuildsAsync(options).Result;
+            return client.QueryGuildsAsync(options).GetAwaiter().GetResult();
         }
 
 
@@ -57,7 +57,7 @@ namespace Discord
         /// <param name="guildId">ID of the guild</param>
         public static DiscordGuild LurkGuild(this DiscordSocketClient client, ulong guildId)
         {
-            return client.LurkGuildAsync(guildId).Result;
+            return client.LurkGuildAsync(guildId).GetAwaiter().GetResult();
         }
 
 
@@ -74,7 +74,7 @@ namespace Discord
         /// <returns></returns>
         public static DiscordGuild JoinGuild(this DiscordClient client, ulong guildId)
         {
-            return client.JoinGuildAsync(guildId).Result;
+            return client.JoinGuildAsync(guildId).GetAwaiter().GetResult();
         }
     }
 }

@@ -16,7 +16,7 @@ namespace Discord
         /// </summary>
         public static IReadOnlyList<PrivateChannel> GetPrivateChannels(this DiscordClient client)
         {
-            return client.GetPrivateChannelsAsync().Result;
+            return client.GetPrivateChannelsAsync().GetAwaiter().GetResult();
         }
 
 
@@ -33,7 +33,7 @@ namespace Discord
         /// <returns>The created <see cref="PrivateChannel"/></returns>
         public static PrivateChannel CreateDM(this DiscordClient client, ulong recipientId)
         {
-            return client.CreateDMAsync(recipientId).Result;
+            return client.CreateDMAsync(recipientId).GetAwaiter().GetResult();
         }
 
 

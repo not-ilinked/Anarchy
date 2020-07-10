@@ -28,7 +28,7 @@ namespace Discord
         /// </summary>
         public DiscordGuild GetGuild()
         {
-            return GetGuildAsync().Result;
+            return GetGuildAsync().GetAwaiter().GetResult();
         }
     }
 }

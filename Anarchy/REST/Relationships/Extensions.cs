@@ -16,7 +16,7 @@ namespace Discord
         /// </summary>
         public static IReadOnlyList<Relationship> GetRelationships(this DiscordClient client)
         {
-            return client.GetRelationshipsAsync().Result;
+            return client.GetRelationshipsAsync().GetAwaiter().GetResult();
         }
 
 
@@ -72,7 +72,7 @@ namespace Discord
         /// <param name="userId">ID of the user</param>
         public static DiscordProfile GetProfile(this DiscordClient client, ulong userId)
         {
-            return client.GetProfileAsync(userId).Result;
+            return client.GetProfileAsync(userId).GetAwaiter().GetResult();
         }
 
 
@@ -89,7 +89,7 @@ namespace Discord
         /// <returns></returns>
         public static IReadOnlyList<DiscordUser> GetMutualFriends(this DiscordClient client, ulong userId)
         {
-            return client.GetMutualFriendsAsync(userId).Result;
+            return client.GetMutualFriendsAsync(userId).GetAwaiter().GetResult();
         }
 
 

@@ -19,7 +19,7 @@ namespace Discord
         /// <param name="userId">ID of the user</param>
         public static GuildMember GetGuildMember(this DiscordClient client, ulong guildId, ulong userId)
         {
-            return client.GetGuildMemberAsync(guildId, userId).Result;
+            return client.GetGuildMemberAsync(guildId, userId).GetAwaiter().GetResult();
         }
 
 

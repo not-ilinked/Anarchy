@@ -14,7 +14,7 @@ namespace Discord
 
         public static IReadOnlyList<DiscordGuildSubscription> BoostGuild(this DiscordClient client, ulong guildId, IEnumerable<ulong> boosts)
         {
-            return client.BoostGuildAsync(guildId, boosts).Result;
+            return client.BoostGuildAsync(guildId, boosts).GetAwaiter().GetResult();
         }
 
 
@@ -36,32 +36,20 @@ namespace Discord
 
         public static IReadOnlyList<DiscordNitroBoost> GetNitroBoosts(this DiscordClient client)
         {
-            return client.GetNitroBoostsAsync().Result;
+            return client.GetNitroBoostsAsync().GetAwaiter().GetResult();
         }
 
 
-        public static async Task<DiscordActiveSubscription> PurchaseGuildBoostAsync(this DiscordClient client, ulong paymentMethodId, int quantity = 1)
+        public static async Task<DiscordActiveSubscription> SetAdditionalBoostsAsync(this DiscordClient client, ulong paymentMethodId, ulong activeSubscriptionId, uint amount)
         {
-            var activeSubs = await client.GetActiveSubscriptionsAsync();
+            string plan = JsonConvert.SerializeObject(new AdditionalSubscriptionPlan() { Id = DiscordNitroSubTypes.GuildBoost.SubscriptionPlanId, Quantity = (int)amount });
 
-            if (activeSubs.Count > 0)
-                return await client.AddPlanToSubscriptionAsync(paymentMethodId, activeSubs[0].Id, DiscordNitroSubTypes.GuildBoost.SubscriptionPlanId, quantity);
-            else
-            {
-                return await client.PurchaseSubscriptionAsync(paymentMethodId, DiscordNitroSubTypes.GuildBoost.SkuId, new List<AdditionalSubscriptionPlan>()
-                {
-                    new AdditionalSubscriptionPlan()
-                    {
-                        Id = DiscordNitroSubTypes.GuildBoost.SubscriptionPlanId,
-                        Quantity = quantity
-                    }
-                });
-            }
+            return (await client.HttpClient.PatchAsync("/users/@me/billing/subscriptions/" + activeSubscriptionId, $"{{\"payment_source_id\":{paymentMethodId},\"additional_plans\":[{plan}]}}")).Deserialize<DiscordActiveSubscription>();
         }
 
-        public static DiscordActiveSubscription PurchaseGuildBoost(this DiscordClient client, ulong paymentMethodId, int quantity = 1)
+        public static DiscordActiveSubscription SetAdditionalBoosts(this DiscordClient client, ulong paymentMethodId, ulong activeSubscriptionId, uint amount)
         {
-            return client.PurchaseGuildBoostAsync(paymentMethodId, quantity).Result;
+            return client.SetAdditionalBoostsAsync(paymentMethodId, activeSubscriptionId, amount).GetAwaiter().GetResult();
         }
     }
 }

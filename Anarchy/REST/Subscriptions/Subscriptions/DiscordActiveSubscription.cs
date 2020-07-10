@@ -18,6 +18,10 @@ namespace Discord
         public DateTime CreatedAt { get; private set; }
 
 
+        [JsonProperty("currency")]
+        public string Currency { get; private set; }
+
+
         [JsonProperty("status")]
         public DiscordSubscriptionStatus Status { get; private set; }
 
@@ -27,18 +31,14 @@ namespace Discord
 
 
         [JsonProperty("payment_gateway_plan_id")]
-        public string GatewayPlanId { get; private set; }
+        public string SubscriptionTier { get; private set; }
 
 
         [JsonProperty("plan_id")]
-        public ulong PlanId { get; private set; }
+        public ulong PrimaryPlanId { get; private set; }
 
 
         [JsonProperty("items")]
         public IReadOnlyList<DiscordSubscription> Subscriptions { get; private set; }
-
-
-        [JsonProperty("currency")]
-        public string Currency { get; private set; }
     }
 }

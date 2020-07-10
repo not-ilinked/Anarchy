@@ -22,7 +22,7 @@ namespace Discord
         /// <returns>A <see cref="IReadOnlyList{AuditLogEntry}"/></returns>
         public static IReadOnlyList<AuditLogEntry> GetAuditLog(this DiscordClient client, ulong guildId, AuditLogFilters filters = null)
         {
-            return client.GetAuditLogAsync(guildId, filters).Result;
+            return client.GetAuditLogAsync(guildId, filters).GetAwaiter().GetResult();
         }
     }
 }

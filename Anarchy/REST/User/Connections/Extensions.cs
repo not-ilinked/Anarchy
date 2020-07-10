@@ -13,7 +13,7 @@ namespace Discord
 
         public static IReadOnlyList<ClientConnectedAccount> GetConnectedAccounts(this DiscordClient client)
         {
-            return client.GetConnectedAccountsAsync().Result;
+            return client.GetConnectedAccountsAsync().GetAwaiter().GetResult();
         }
 
 

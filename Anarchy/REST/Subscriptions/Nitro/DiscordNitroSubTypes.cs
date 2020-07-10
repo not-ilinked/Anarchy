@@ -8,7 +8,6 @@
         public static DiscordNitroSubType NitroMonthly = new DiscordNitroSubType("Nitro Monthly", 521847234246082599, 511651880837840896, 999);
         public static DiscordNitroSubType NitroYearly = new DiscordNitroSubType("Nitro Yearly", 521847234246082599, 511651885459963904, 9999);
 
-        // Note: This thing uses its skuId for storing the ID used when u wanna buy nitro without a pre-existing nitro subscription.
         public static DiscordNitroSubType GuildBoost = new DiscordNitroSubType("Guild Boost", 628379151761408000, 590665532894740483, 499);
     }
 }

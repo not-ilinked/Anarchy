@@ -26,7 +26,7 @@ namespace Discord
         /// <returns>The created <see cref="DiscordGuild"/></returns>
         public static DiscordGuild CreateGuild(this DiscordClient client, string name, DiscordImage icon = null, string region = null)
         {
-            return client.CreateGuildAsync(name, icon, region).Result;
+            return client.CreateGuildAsync(name, icon, region).GetAwaiter().GetResult();
         }
 
 
@@ -46,7 +46,7 @@ namespace Discord
         /// <returns>The modified <see cref="DiscordGuild"/></returns>
         public static DiscordGuild ModifyGuild(this DiscordClient client, ulong guildId, GuildProperties properties)
         {
-            return client.ModifyGuildAsync(guildId, properties).Result;
+            return client.ModifyGuildAsync(guildId, properties).GetAwaiter().GetResult();
         }
 
 
@@ -107,7 +107,7 @@ namespace Discord
         /// <param name="guildId">ID of the guild</param>
         public static IReadOnlyList<DiscordBan> GetGuildBans(this DiscordClient client, ulong guildId)
         {
-            return client.GetGuildBansAsync(guildId).Result;
+            return client.GetGuildBansAsync(guildId).GetAwaiter().GetResult();
         }
 
 
@@ -127,7 +127,7 @@ namespace Discord
         /// <returns></returns>
         public static DiscordBan GetGuildBan(this DiscordClient client, ulong guildId, ulong userId)
         {
-            return client.GetGuildBanAsync(guildId, userId).Result;
+            return client.GetGuildBanAsync(guildId, userId).GetAwaiter().GetResult();
         }
 
 
@@ -173,7 +173,7 @@ namespace Discord
 
         public static ClientGuildSettings ModifyGuildSettings(this DiscordClient client, ulong guildId, GuildSettingsProperties properties)
         {
-            return client.ModifyGuildSettingsAsync(guildId, properties).Result;
+            return client.ModifyGuildSettingsAsync(guildId, properties).GetAwaiter().GetResult();
         }
 
 
@@ -189,7 +189,7 @@ namespace Discord
 
         public static IReadOnlyList<DiscordChannelSettings> SetPrivateChannelSettings(this DiscordClient client, Dictionary<ulong, ChannelSettingsProperties> channels)
         {
-            return client.SetPrivateChannelSettingsAsync(channels).Result;
+            return client.SetPrivateChannelSettingsAsync(channels).GetAwaiter().GetResult();
         }
 
 
@@ -206,7 +206,7 @@ namespace Discord
         /// <param name="afterId">Guild ID to offset from</param>
         public static IReadOnlyList<PartialGuild> GetGuilds(this DiscordClient client, uint limit = 100, ulong afterId = 0)
         {
-            return client.GetGuildsAsync(limit, afterId).Result;
+            return client.GetGuildsAsync(limit, afterId).GetAwaiter().GetResult();
         }
 
 
@@ -222,7 +222,7 @@ namespace Discord
         /// <param name="guildId">ID of the guild</param>
         public static DiscordGuild GetGuild(this DiscordClient client, ulong guildId)
         {
-            return client.GetGuildAsync(guildId).Result;
+            return client.GetGuildAsync(guildId).GetAwaiter().GetResult();
         }
 
 
@@ -238,7 +238,7 @@ namespace Discord
         /// <returns>The invite used to join the guild</returns>
         public static GuildInvite JoinGuild(this DiscordClient client, string invCode)
         {
-            return client.JoinGuildAsync(invCode).Result;
+            return client.JoinGuildAsync(invCode).GetAwaiter().GetResult();
         }
 
 
@@ -295,7 +295,7 @@ namespace Discord
 
         public static Image GetGoLivePreview(this DiscordClient client, ulong guildId, ulong channelId, ulong userId)
         {
-            return client.GetGoLivePreviewAsync(guildId, channelId, userId).Result;
+            return client.GetGoLivePreviewAsync(guildId, channelId, userId).GetAwaiter().GetResult();
         }
     }
 }

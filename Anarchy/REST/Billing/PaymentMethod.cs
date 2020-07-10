@@ -36,7 +36,7 @@ namespace Discord
 
         public string PurchaseGift(ulong skuId, ulong subPlanId, int expectedAmount)
         {
-            return PurchaseGiftAsync(skuId, subPlanId, expectedAmount).Result;
+            return PurchaseGiftAsync(skuId, subPlanId, expectedAmount).GetAwaiter().GetResult();
         }
 
 
@@ -47,7 +47,7 @@ namespace Discord
 
         public string PurchaseNitroGift(DiscordNitroSubType nitroType)
         {
-            return PurchaseNitroGiftAsync(nitroType).Result;
+            return PurchaseNitroGiftAsync(nitroType).GetAwaiter().GetResult();
         }
             
 

@@ -26,7 +26,7 @@ namespace Discord
         /// <returns>The created <see cref="DiscordRole"/></returns>
         public static DiscordRole CreateRole(this DiscordClient client, ulong guildId, RoleProperties properties = null)
         {
-            return client.CreateRoleAsync(guildId, properties).Result;
+            return client.CreateRoleAsync(guildId, properties).GetAwaiter().GetResult();
         }
 
 
@@ -46,7 +46,7 @@ namespace Discord
         /// <returns>The modified <see cref="DiscordRole"/></returns>
         public static DiscordRole ModifyRole(this DiscordClient client, ulong guildId, ulong roleId, RoleProperties properties)
         {
-            return client.ModifyRoleAsync(guildId, roleId, properties).Result;
+            return client.ModifyRoleAsync(guildId, roleId, properties).GetAwaiter().GetResult();
         }
 
 
@@ -132,7 +132,7 @@ namespace Discord
         /// <param name="guildId">ID of the guild</param>
         public static IReadOnlyList<DiscordRole> GetGuildRoles(this DiscordClient client, ulong guildId)
         {
-            return client.GetGuildRolesAsync(guildId).Result;
+            return client.GetGuildRolesAsync(guildId).GetAwaiter().GetResult();
         }
     }
 }
