@@ -8,7 +8,7 @@ namespace Discord.Commands
 {
     public class CommandHandler
     {
-        private DiscordSocketClient _client;
+        private readonly DiscordSocketClient _client;
         public string Prefix { get; private set; }
         private readonly List<KeyValuePair<DiscordCommand, Type>> _commands;
         public List<DiscordCommand> Commands { get; private set; }

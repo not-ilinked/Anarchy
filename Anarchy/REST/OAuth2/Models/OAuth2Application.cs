@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 
 namespace Discord
@@ -66,7 +67,7 @@ namespace Discord
         public IReadOnlyList<string> RedirectUris { get; private set; }
 
 
-        private void _updateProperties(OAuth2Application app)
+        private void Update(OAuth2Application app)
         {
             Name = app.Name;
             _icon = app.Icon.Hash;
@@ -81,15 +82,25 @@ namespace Discord
         }
 
 
+        public async Task UpdateAsync()
+        {
+            Update(await Client.GetApplicationAsync(Id));
+        }
+
         public void Update()
         {
-            _updateProperties(Client.GetApplication(Id));
+            UpdateAsync().GetAwaiter().GetResult();
         }
 
 
+        public async Task ModifyAsync(DiscordApplicationProperties properties)
+        {
+            Update(await Client.ModifyApplicationAsync(Id, properties));
+        }
+
         public void Modify(DiscordApplicationProperties properties)
         {
-            _updateProperties(Client.ModifyApplication(Id, properties));
+            ModifyAsync(properties).GetAwaiter().GetResult();
         }
 
 
@@ -99,20 +110,14 @@ namespace Discord
         }
 
 
-        public void Delete()
+        public async Task DeleteAsync()
         {
-            Client.DeleteApplication(Id);
+            await Client.DeleteApplicationAsync(Id);
         }
 
-
-        /// <summary>
-        /// Gets the application's icon
-        /// </summary>
-        /// <returns>The icon (returns null if IconId is null)</returns>
-        [Obsolete("GetIcon is obsolete. Use Icon.Download() instead")]
-        public Image GetAvatar()
+        public void Delete()
         {
-            return null;
+            DeleteAsync().GetAwaiter().GetResult();
         }
 
 

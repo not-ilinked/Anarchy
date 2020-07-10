@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Threading.Tasks;
 
 namespace Discord
 {
@@ -65,11 +66,7 @@ namespace Discord
         }
 
 
-        /// <summary>
-        /// Changes the user's profile
-        /// </summary>
-        /// <param name="settings">Options for changing the profile</param>
-        public void ChangeProfile(UserProfileUpdate settings)
+        public async Task ChangeProfileAsync(UserProfileUpdate settings)
         {
             if (settings.Email == null)
                 settings.Email = Email;
@@ -78,7 +75,7 @@ namespace Discord
             if (settings.Username == null)
                 settings.Username = Username;
 
-            DiscordClientUser user = Client.HttpClient.Patch("/users/@me", settings).Deserialize<DiscordClientUser>();
+            DiscordClientUser user = (await Client.HttpClient.PatchAsync("/users/@me", settings)).Deserialize<DiscordClientUser>();
 
             Update(user);
 
@@ -86,26 +83,50 @@ namespace Discord
                 Client.Token = user.Token;
         }
 
+        /// <summary>
+        /// Changes the user's profile
+        /// </summary>
+        /// <param name="settings">Options for changing the profile</param>
+        public void ChangeProfile(UserProfileUpdate settings)
+        {
+            ChangeProfileAsync(settings).GetAwaiter().GetResult();
+        }
+
+
+        public async Task<DiscordUserSettings> GetSettingsAsync()
+        {
+            return (await Client.HttpClient.GetAsync("/users/@me/settings"))
+                                .Deserialize<DiscordUserSettings>().SetClient(Client);
+        }
 
         /// <summary>
         /// Gets the users settings
         /// </summary>
         public DiscordUserSettings GetSettings()
         {
-            return Client.HttpClient.Get("/users/@me/settings")
-                                .Deserialize<DiscordUserSettings>().SetClient(Client);
+            return GetSettingsAsync().Result;
         }
 
+
+        public async Task<DiscordUserSettings> ChangeSettingsAsync(UserSettingsProperties settings)
+        {
+            return (await Client.HttpClient.PatchAsync("/users/@me/settings", settings))
+                                .Deserialize<DiscordUserSettings>().SetClient(Client);
+        }
 
         /// <summary>
         /// Changes the user's settings
         /// </summary>
         public DiscordUserSettings ChangeSettings(UserSettingsProperties settings)
         {
-            return Client.HttpClient.Patch("/users/@me/settings", settings)
-                                .Deserialize<DiscordUserSettings>().SetClient(Client);
+            return ChangeSettingsAsync(settings).Result;
         }
 
+
+        public async Task DeleteAsync(string password)
+        {
+            await Client.HttpClient.PostAsync("/users/@me/delete", $"{{\"password\":\"{password}\"}}");
+        }
 
         /// <summary>
         /// Deletes the account
@@ -113,9 +134,14 @@ namespace Discord
         /// <param name="password">The account's password</param>
         public void Delete(string password)
         {
-            Client.HttpClient.Post("/users/@me/delete", $"{{\"password\":\"{password}\"}}");
+            DeleteAsync(password).GetAwaiter().GetResult();
         }
 
+
+        public async Task DisableAsync(string password)
+        {
+            await Client.HttpClient.PostAsync("/users/@me/disable", $"{{\"password\":\"{password}\"}}");
+        }
 
         /// <summary>
         /// Disables the account
@@ -123,19 +149,24 @@ namespace Discord
         /// <param name="password">The account's password</param>
         public void Disable(string password)
         {
-            Client.HttpClient.Post("/users/@me/disable", $"{{\"password\":\"{password}\"}}");
+            DisableAsync(password).GetAwaiter().GetResult();
         }
 
+
+        public async Task SetHypesquadAsync(Hypesquad house)
+        {
+            if (house == Hypesquad.None)
+                await Client.HttpClient.DeleteAsync("/hypesquad/online");
+            else
+                await Client.HttpClient.PostAsync("/hypesquad/online", $"{{\"house_id\":{(int)house}}}");
+        }
 
         /// <summary>
         /// Sets the account's hypesquad
         /// </summary>
         public void SetHypesquad(Hypesquad house)
         {
-            if (house == Hypesquad.None)
-                Client.HttpClient.Delete("/hypesquad/online");
-            else
-                Client.HttpClient.Post("/hypesquad/online", $"{{\"house_id\":{(int)house}}}");
+            SetHypesquadAsync(house).GetAwaiter().GetResult();
         }
     }
 }

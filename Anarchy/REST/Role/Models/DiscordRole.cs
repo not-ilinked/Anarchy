@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System.Drawing;
+using System.Threading.Tasks;
 
 namespace Discord
 {
@@ -46,22 +47,32 @@ namespace Discord
         public DiscordPermission Permissions { get; private set; }
 
 
+        public async Task<DiscordRole> ModifyAsync(RoleProperties properties)
+        {
+            return await Client.ModifyRoleAsync(GuildId, Id, properties);
+        }
+
         /// <summary>
         /// Modifies the role
         /// </summary>
         /// <param name="properties">Options for modifying the role</param>
         public DiscordRole Modify(RoleProperties properties)
         {
-            return Client.ModifyRole(GuildId, Id, properties);
+            return ModifyAsync(properties).Result;
         }
 
+
+        public async Task DeleteAsync()
+        {
+            await Client.DeleteRoleAsync(GuildId, Id);
+        }
 
         /// <summary>
         /// Deletes the role
         /// </summary>
         public void Delete()
         {
-            Client.DeleteRole(GuildId, Id);
+            DeleteAsync().GetAwaiter().GetResult();
         }
 
 

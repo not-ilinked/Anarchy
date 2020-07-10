@@ -1,11 +1,18 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Discord
 {
     public static class GroupExtensions
     {
+        public static async Task<DiscordInvite> JoinGroupAsync(this DiscordClient client, string inviteCode)
+        {
+            return (await client.HttpClient.PostAsync($"/invites/{inviteCode}"))
+                                .Deserialize<DiscordInvite>().SetClient(client);
+        }
+
         /// <summary>
         /// Joins a group
         /// </summary>
@@ -13,10 +20,17 @@ namespace Discord
         /// <returns>The invite used</returns>
         public static DiscordInvite JoinGroup(this DiscordClient client, string inviteCode)
         {
-            return client.HttpClient.Post($"/invites/{inviteCode}")
-                                .Deserialize<DiscordInvite>().SetClient(client);
+            return client.JoinGroupAsync(inviteCode).Result;
         }
 
+
+        public static async Task<DiscordGroup> CreateGroupAsync(this DiscordClient client, List<ulong> recipients)
+        {
+            return (await client.HttpClient.PostAsync($"/users/@me/channels", new JObject()
+            {
+                ["recipients"] = JArray.FromObject(recipients)
+            })).DeserializeEx<DiscordGroup>().SetClient(client);
+        }
 
         /// <summary>
         /// Creates a group
@@ -25,15 +39,14 @@ namespace Discord
         /// <returns>The created <see cref="DiscordGroup"/></returns>
         public static DiscordGroup CreateGroup(this DiscordClient client, List<ulong> recipients)
         {
-            JObject obj = new JObject()
-            {
-                ["recipients"] = JArray.FromObject(recipients)
-            };
-
-            return client.HttpClient.Post($"/users/@me/channels", obj)
-                                .DeserializeEx<DiscordGroup>().SetClient(client);
+            return client.CreateGroupAsync(recipients).Result;
         }
 
+
+        public static async Task<DiscordChannel> LeaveGroupAsync(this DiscordClient client, ulong groupId)
+        {
+            return await client.DeleteChannelAsync(groupId);
+        }
 
         // This does the same as DeleteChannel(), i just decided to leave it be because DeleteChannel() is a weird name for a function for leaving groups
         /// <summary>
@@ -43,9 +56,14 @@ namespace Discord
         /// <returns>The leaved <see cref="DiscordGroup"/></returns>
         public static DiscordChannel LeaveGroup(this DiscordClient client, ulong groupId)
         {
-            return client.DeleteChannel(groupId);
+            return client.LeaveGroupAsync(groupId).Result;
         }
 
+
+        public static async Task AddUserToGroupAsync(this DiscordClient client, ulong groupId, ulong userId)
+        {
+            await client.HttpClient.PutAsync($"/channels/{groupId}/recipients/{userId}");
+        }
 
         /// <summary>
         /// Adds a user to a group
@@ -54,9 +72,14 @@ namespace Discord
         /// <param name="userId">ID of the user</param>
         public static void AddUserToGroup(this DiscordClient client, ulong groupId, ulong userId)
         {
-            client.HttpClient.Put($"/channels/{groupId}/recipients/{userId}");
+            client.AddUserToGroupAsync(groupId, userId).GetAwaiter().GetResult();
         }
 
+
+        public static async Task RemoveUserFromGroupAsync(this DiscordClient client, ulong groupId, ulong userId)
+        {
+            await client.HttpClient.DeleteAsync($"/channels/{groupId}/recipients/{userId}");
+        }
 
         /// <summary>
         /// Removes a user from a group
@@ -65,7 +88,7 @@ namespace Discord
         /// <param name="userId">ID of the user</param>
         public static void RemoveUserFromGroup(this DiscordClient client, ulong groupId, ulong userId)
         {
-            client.HttpClient.Delete($"/channels/{groupId}/recipients/{userId}");
+            client.RemoveUserFromGroupAsync(groupId, userId).GetAwaiter().GetResult();
         }
     }
 }

@@ -1,12 +1,17 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Threading.Tasks;
 
 namespace Discord
 {
     public static class GuildMemberExtensions
     {
+        public static async Task<GuildMember> GetGuildMemberAsync(this DiscordClient client, ulong guildId, ulong userId)
+        {
+            GuildMember member = (await client.HttpClient.GetAsync($"/guilds/{guildId}/members/{userId}"))
+                                            .Deserialize<GuildMember>().SetClient(client);
+            member.GuildId = guildId;
+            return member;
+        }
+
         /// <summary>
         /// Gets a member of a guild
         /// </summary>
@@ -14,12 +19,14 @@ namespace Discord
         /// <param name="userId">ID of the user</param>
         public static GuildMember GetGuildMember(this DiscordClient client, ulong guildId, ulong userId)
         {
-            GuildMember member = client.HttpClient.Get($"/guilds/{guildId}/members/{userId}")
-                                            .Deserialize<GuildMember>().SetClient(client);
-            member.GuildId = guildId;
-            return member;
+            return client.GetGuildMemberAsync(guildId, userId).Result;
         }
 
+
+        public static async Task ModifyGuildMemberAsync(this DiscordClient client, ulong guildId, ulong userId, GuildMemberProperties properties)
+        {
+            await client.HttpClient.PatchAsync($"/guilds/{guildId}/members/{userId}", properties);
+        }
 
         /// <summary>
         /// Modifies the specified guild member
@@ -29,9 +36,14 @@ namespace Discord
         /// <param name="properties">Things to change</param>
         public static void ModifyGuildMember(this DiscordClient client, ulong guildId, ulong userId, GuildMemberProperties properties)
         {
-            client.HttpClient.Patch($"/guilds/{guildId}/members/{userId}", properties);
+            client.ModifyGuildMemberAsync(guildId, userId, properties).GetAwaiter().GetResult();
         }
 
+
+        public static async Task ChangeNicknameAsync(this DiscordClient client, ulong guildId, ulong userId, string nickname)
+        {
+            await client.ModifyGuildMemberAsync(guildId, userId, new GuildMemberProperties() { Nickname = nickname });
+        }
 
         /// <summary>
         /// Changes a user's nickname in a guild
@@ -41,7 +53,7 @@ namespace Discord
         /// <param name="nickname">New nickname</param>
         public static void ChangeNickname(this DiscordClient client, ulong guildId, ulong userId, string nickname)
         {
-            client.ModifyGuildMember(guildId, userId, new GuildMemberProperties() { Nickname = nickname });
+            client.ChangeNicknameAsync(guildId, userId, nickname).GetAwaiter().GetResult();
         }
     }
 }

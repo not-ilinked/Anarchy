@@ -8,7 +8,7 @@ namespace Discord
     public class DiscordGuildFolder : Controllable
     {
         [JsonProperty("guild_ids")]
-        private IReadOnlyList<ulong> _guilds;
+        private readonly IReadOnlyList<ulong> _guilds;
 
 
         public IReadOnlyList<MinimalGuild> Guilds
@@ -33,7 +33,7 @@ namespace Discord
 
 
         [JsonProperty("color")]
-        private int? _color;
+        private readonly int? _color;
 
         public Color? Color
         {

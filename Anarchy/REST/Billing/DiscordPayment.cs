@@ -2,8 +2,16 @@
 
 namespace Discord
 {
-    public class DiscordPayment
+    public class DiscordPayment : Controllable
     {
+        public DiscordPayment()
+        {
+            OnClientUpdated += (sender, e) =>
+            {
+                PaymentMethod.SetClient(Client);
+            };
+        }
+
         [JsonProperty("id")]
         public ulong Id { get; private set; }
 

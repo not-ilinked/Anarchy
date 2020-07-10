@@ -7,6 +7,7 @@ using System.Net.Http;
 using Leaf.xNet;
 using System.Net;
 using Discord.Gateway;
+using System.Threading.Tasks;
 
 namespace Discord
 {
@@ -41,7 +42,7 @@ namespace Discord
 
         public void UpdateFingerprint()
         {
-            Fingerprint = Get("/experiments").Deserialize<JObject>().Value<string>("fingerprint");
+            Fingerprint = GetAsync("/experiments").Result.Deserialize<JObject>().Value<string>("fingerprint");
         }
 
 
@@ -70,7 +71,7 @@ namespace Discord
         /// <param name="method">HTTP method to use</param>
         /// <param name="endpoint">API endpoint (fx. /users/@me)</param>
         /// <param name="payload">JSON content</param>
-        private Response Send(Leaf.xNet.HttpMethod method, string endpoint, object payload = null)
+        private async Task<Response> SendAsync(Leaf.xNet.HttpMethod method, string endpoint, object payload = null)
         {
             string json = "{}";
 
@@ -119,7 +120,7 @@ namespace Discord
 
                         client.DefaultRequestHeaders.Add("X-Super-Properties", _discordClient.Config.SuperProperties.Base64);
 
-                        var response = client.SendAsync(new HttpRequestMessage() { Content = hasData ? new System.Net.Http.StringContent(json, Encoding.UTF8, "application/json") : null, Method = new System.Net.Http.HttpMethod(method.ToString()), RequestUri = new Uri(endpoint) }).Result;
+                        var response = await client.SendAsync(new HttpRequestMessage() { Content = hasData ? new System.Net.Http.StringContent(json, Encoding.UTF8, "application/json") : null, Method = new System.Net.Http.HttpMethod(method.ToString()), RequestUri = new Uri(endpoint) });
 
                         resp = response.Content.ReadAsStringAsync().Result;
                         statusCode = (int)response.StatusCode;
@@ -160,33 +161,33 @@ namespace Discord
         }
 
 
-        public Response Get(string endpoint)
+        public async Task<Response> GetAsync(string endpoint)
         {
-            return Send(Leaf.xNet.HttpMethod.GET, endpoint);
+            return await SendAsync(Leaf.xNet.HttpMethod.GET, endpoint);
         }
 
 
-        public Response Post(string endpoint, object payload = null)
+        public async Task<Response> PostAsync(string endpoint, object payload = null)
         {
-            return Send(Leaf.xNet.HttpMethod.POST, endpoint, payload);
+            return await SendAsync(Leaf.xNet.HttpMethod.POST, endpoint, payload);
         }
 
 
-        public Response Delete(string endpoint, object payload = null)
+        public async Task<Response> DeleteAsync(string endpoint, object payload = null)
         {
-            return Send(Leaf.xNet.HttpMethod.DELETE, endpoint, payload);
+            return await SendAsync(Leaf.xNet.HttpMethod.DELETE, endpoint, payload);
         }
 
 
-        public Response Put(string endpoint, object payload = null)
+        public async Task<Response> PutAsync(string endpoint, object payload = null)
         {
-            return Send(Leaf.xNet.HttpMethod.PUT, endpoint, payload);
+            return await SendAsync(Leaf.xNet.HttpMethod.PUT, endpoint, payload);
         }
 
 
-        public Response Patch(string endpoint, object payload = null)
+        public async Task<Response> PatchAsync(string endpoint, object payload = null)
         {
-            return Send(Leaf.xNet.HttpMethod.PATCH, endpoint, payload);
+            return await SendAsync(Leaf.xNet.HttpMethod.PATCH, endpoint, payload);
         }
     }
 }

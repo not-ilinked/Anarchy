@@ -1,6 +1,7 @@
 ﻿using Discord.Webhook;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Discord
 {
@@ -18,32 +19,52 @@ namespace Discord
         }
 
 
+        public async Task DeleteAsync()
+        {
+            await Client.DeleteGuildAsync(Id);
+        }
+
         /// <summary>
         /// Deletes the guild
         /// </summary>
         public void Delete()
         {
-            Client.DeleteGuild(Id);
+            DeleteAsync().GetAwaiter().GetResult();
         }
 
+
+        public async Task LeaveAsync(bool lurking = false)
+        {
+            await Client.LeaveGuildAsync(Id, lurking);
+        }
 
         /// <summary>
         /// Leaves the guild
         /// </summary>
         public void Leave(bool lurking = false)
         {
-            Client.LeaveGuild(Id, lurking);
+            LeaveAsync(lurking).GetAwaiter().GetResult();
         }
 
+
+        public async Task AcknowledgeMessagesAsync()
+        {
+            await Client.AcknowledgeGuildMessagesAsync(Id);
+        }
 
         /// <summary>
         /// Acknowledges all messages and pings in the guild
         /// </summary>
         public void AcknowledgeMessages()
         {
-            Client.AcknowledgeGuildMessages(Id);
+            AcknowledgeMessagesAsync().GetAwaiter().GetResult();
         }
 
+
+        public async Task ChangeClientNicknameAsync(string nickname)
+        {
+            await Client.ChangeClientNicknameAsync(Id, nickname);
+        }
 
         /// <summary>
         /// Changes the client's nickname for this guild
@@ -51,12 +72,24 @@ namespace Discord
         /// <param name="nickname">New nickname</param>
         public void ChangeClientNickname(string nickname)
         {
-            Client.ChangeClientNickname(Id, nickname);
+            ChangeClientNicknameAsync(nickname).GetAwaiter().GetResult();
+        }
+
+
+        public async Task<ClientGuildSettings> ModifyClientSettingsAsync(GuildSettingsProperties properties)
+        {
+            return await Client.ModifyGuildSettingsAsync(Id, properties);
         }
 
         public ClientGuildSettings ModifyClientSettings(GuildSettingsProperties properties)
         {
-            return Client.ModifyGuildSettings(Id, properties);
+            return ModifyClientSettingsAsync(properties).Result;
+        }
+
+
+        public async Task<IReadOnlyList<DiscordGuildTemplate>> GetTemplatesAsync()
+        {
+            return await Client.GetGuildTemplatesAsync(Id);
         }
 
         /// <summary>
@@ -64,39 +97,64 @@ namespace Discord
         /// </summary>
         public IReadOnlyList<DiscordGuildTemplate> GetTemplates()
         {
-            return Client.GetGuildTemplates(Id);
+            return GetTemplatesAsync().Result;
         }
 
+
+        public async Task<DiscordGuildTemplate> CreateTemplateAsync(string name, string description)
+        {
+            return await Client.CreateGuildTemplateAsync(Id, name, description);
+        }
 
         /// <summary>
         /// Creates a template for the guild
         /// </summary>
         public DiscordGuildTemplate CreateTemplate(string name, string description)
         {
-            return Client.CreateGuildTemplate(Id, name, description);
+            return CreateTemplateAsync(name, description).Result;
         }
 
+
+        public async Task<DiscordGuildTemplate> DeleteTemplateAsync(string templateCode)
+        {
+            return await Client.DeleteGuildTemplateAsync(Id, templateCode);
+        }
 
         public DiscordGuildTemplate DeleteTemplate(string templateCode)
         {
-            return Client.DeleteGuildTemplate(Id, templateCode);
+            return DeleteTemplateAsync(templateCode).Result;
         }
 
+
+        public async Task SetVanityUrlAsync(string vanityCode)
+        {
+            await Client.SetGuildVanityUrlAsync(Id, vanityCode);
+        }
 
         public void SetVanityUrl(string vanityCode)
         {
-            Client.SetGuildVanityUrl(Id, vanityCode);
+            SetVanityUrlAsync(vanityCode).GetAwaiter().GetResult();
         }
 
+
+        public virtual async Task<IReadOnlyList<GuildChannel>> GetChannelsAsync()
+        {
+            return await Client.GetGuildChannelsAsync(Id);
+        }
 
         /// <summary>
         /// Gets the guild's channels
         /// </summary>
         public virtual IReadOnlyList<GuildChannel> GetChannels()
         {
-            return Client.GetGuildChannels(Id);
+            return GetChannelsAsync().Result;
         }
 
+
+        public async Task<GuildChannel> CreateChannelAsync(string name, ChannelType type, ulong? parentId = null)
+        {
+            return await Client.CreateGuildChannelAsync(Id, name, type, parentId);
+        }
 
         /// <summary>
         /// Creates a channel
@@ -105,18 +163,28 @@ namespace Discord
         /// <returns>The created channel</returns>
         public GuildChannel CreateChannel(string name, ChannelType type, ulong? parentId = null)
         {
-            return Client.CreateGuildChannel(Id, name, type, parentId);
+            return CreateChannelAsync(name, type, parentId).Result;
         }
 
+
+        public virtual async Task<IReadOnlyList<DiscordEmoji>> GetEmojisAsync()
+        {
+            return await Client.GetGuildEmojisAsync(Id);
+        }
 
         /// <summary>
         /// Gets the guild's emojis
         /// </summary>
         public virtual IReadOnlyList<DiscordEmoji> GetEmojis()
         {
-            return Client.GetGuildEmojis(Id);
+            return GetEmojisAsync().GetAwaiter().GetResult();
         }
 
+
+        public async Task<DiscordEmoji> GetEmojiAsync(ulong emojiId)
+        {
+            return await Client.GetGuildEmojiAsync(Id, emojiId);
+        }
 
         /// <summary>
         /// Gets an emoji in the guild
@@ -124,9 +192,14 @@ namespace Discord
         /// <param name="emojiId">ID of the emoji</param>
         public DiscordEmoji GetEmoji(ulong emojiId)
         {
-            return Client.GetGuildEmoji(Id, emojiId);
+            return GetEmojiAsync(emojiId).Result;
         }
 
+
+        public async Task<DiscordEmoji> CreateEmojiAsync(EmojiProperties properties)
+        {
+            return await Client.CreateEmojiAsync(Id, properties);
+        }
 
         /// <summary>
         /// Creates an emoji
@@ -134,18 +207,28 @@ namespace Discord
         /// <param name="properties">Options for creating the emoji</param>
         public DiscordEmoji CreateEmoji(EmojiProperties properties)
         {
-            return Client.CreateEmoji(Id, properties);
+            return CreateEmojiAsync(properties).GetAwaiter().GetResult();
         }
 
+
+        public virtual async Task<IReadOnlyList<DiscordRole>> GetRolesAsync()
+        {
+            return await Client.GetGuildRolesAsync(Id);
+        }
 
         /// <summary>
         /// Gets the guild's roles
         /// </summary>
         public virtual IReadOnlyList<DiscordRole> GetRoles()
         {
-            return Client.GetGuildRoles(Id);
+            return GetRolesAsync().Result;
         }
 
+
+        public async Task<DiscordRole> CreateRoleAsync(RoleProperties properties = null)
+        {
+            return await Client.CreateRoleAsync(Id, properties);
+        }
 
         /// <summary>
         /// Creates a role
@@ -154,27 +237,42 @@ namespace Discord
         /// <returns>The created role</returns>
         public DiscordRole CreateRole(RoleProperties properties = null)
         {
-            return Client.CreateRole(Id, properties);
+            return CreateRoleAsync(properties).Result;
         }
 
+
+        public async Task<IReadOnlyList<GuildInvite>> GetInvitesAsync()
+        {
+            return await Client.GetGuildInvitesAsync(Id);
+        }
 
         /// <summary>
         /// Gets an invite
         /// </summary>
         public IReadOnlyList<GuildInvite> GetInvites()
         {
-            return Client.GetGuildInvites(Id);
+            return GetInvitesAsync().Result;
         }
 
+
+        public async Task<IReadOnlyList<DiscordWebhook>> GetWebhooksAsync()
+        {
+            return await Client.GetGuildWebhooksAsync(Id);
+        }
 
         /// <summary>
         /// Gets the guild's webhooks
         /// </summary>
         public IReadOnlyList<DiscordWebhook> GetWebhooks()
         {
-            return Client.GetGuildWebhooks(Id);
+            return GetWebhooksAsync().Result;
         }
 
+
+        public async Task<IReadOnlyList<AuditLogEntry>> GetAuditLogAsync(AuditLogFilters filters = null)
+        {
+            return await Client.GetAuditLogAsync(Id, filters);
+        }
 
         /// <summary>
         /// Gets the guild's audit log
@@ -182,9 +280,14 @@ namespace Discord
         /// <param name="filters"></param>
         public IReadOnlyList<AuditLogEntry> GetAuditLog(AuditLogFilters filters = null)
         {
-            return Client.GetAuditLog(Id, filters);
+            return GetAuditLogAsync(filters).Result;
         }
 
+
+        public async Task<GuildMember> GetMemberAsync(ulong userId)
+        {
+            return await Client.GetGuildMemberAsync(Id, userId);
+        }
 
         /// <summary>
         /// Gets a member from the server
@@ -193,18 +296,27 @@ namespace Discord
         /// <returns></returns>
         public GuildMember GetMember(ulong userId)
         {
-            return Client.GetGuildMember(Id, userId);
+            return GetMemberAsync(userId).Result;
         }
 
+
+        public async Task<IReadOnlyList<DiscordBan>> GetBansAsync()
+        {
+            return await Client.GetGuildBansAsync(Id);
+        }
 
         /// <summary>
         /// Gets the guild's banned users
         /// </summary>
         public IReadOnlyList<DiscordBan> GetBans()
         {
-            return Client.GetGuildBans(Id);
+            return GetBansAsync().Result;
         }
 
+        public async Task<DiscordBan> GetBanAsync(ulong userId)
+        {
+            return await Client.GetGuildBanAsync(Id, userId);
+        }
 
         /// <summary>
         /// Gets a banned member
@@ -212,7 +324,7 @@ namespace Discord
         /// <param name="userId">ID of the user</param>
         public DiscordBan GetBan(ulong userId)
         {
-            return Client.GetGuildBan(Id, userId);
+            return GetBanAsync(userId).Result;
         }
 
 

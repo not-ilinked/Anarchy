@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Threading.Tasks;
 
 namespace Discord
 {
@@ -28,15 +29,25 @@ namespace Discord
         public bool Default { get; private set; }
 
 
+        public async Task<string> PurchaseGiftAsync(ulong skuId, ulong subPlanId, int expectedAmount)
+        {
+            return await Client.PurchaseGiftAsync(Id, skuId, subPlanId, expectedAmount);
+        }
+
         public string PurchaseGift(ulong skuId, ulong subPlanId, int expectedAmount)
         {
-            return Client.PurchaseGift(Id, skuId, subPlanId, expectedAmount);
+            return PurchaseGiftAsync(skuId, subPlanId, expectedAmount).Result;
         }
 
 
+        public async Task<string> PurchaseNitroGiftAsync(DiscordNitroSubType nitroType)
+        {
+            return await Client.PurchaseNitroGiftAsync(Id, nitroType);
+        }
+
         public string PurchaseNitroGift(DiscordNitroSubType nitroType)
         {
-            return Client.PurchaseNitroGift(Id, nitroType);
+            return PurchaseNitroGiftAsync(nitroType).Result;
         }
             
 

@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Drawing;
+using System.Threading.Tasks;
 
 namespace Discord
 {
@@ -83,57 +84,82 @@ namespace Discord
         }
 
 
+        public async Task UpdateAsync()
+        {
+            Update(await Client.GetUserAsync(Id));
+        }
+
         /// <summary>
         /// Updates the user's info
         /// </summary>
         public void Update()
         {
-            Update(Client.GetUser(Id));
+            UpdateAsync().GetAwaiter().GetResult();
         }
 
+
+        public async Task<DiscordProfile> GetProfileAsync()
+        {
+            return await Client.GetProfileAsync(Id);
+        }
 
         /// <summary>
         /// Gets the user's profile
         /// </summary>
         public DiscordProfile GetProfile()
         {
-            return Client.GetProfile(Id);
+            return GetProfileAsync().Result;
         }
 
+
+        public async Task SendFriendRequestAsync()
+        {
+            if (Id == Client.User.Id)
+                throw new NotSupportedException("Cannot send a friend request to self.");
+
+            await Client.SendFriendRequestAsync(Username, Discriminator);
+        }
 
         /// <summary>
         /// Sends a friend request to the user
         /// </summary>
         public void SendFriendRequest()
         {
-            if (Id == Client.User.Id)
-                throw new NotSupportedException("Cannot send a friend request to self.");
-
-            Client.SendFriendRequest(Username, Discriminator);
+            SendFriendRequestAsync().GetAwaiter().GetResult();
         }
 
+
+        public async Task BlockAsync()
+        {
+            if (Id == Client.User.Id)
+                throw new NotSupportedException("Cannot block self.");
+
+            await Client.BlockUserAsync(Id);
+        }
 
         /// <summary>
         /// Blocks the user
         /// </summary>
         public void Block()
         {
-            if (Id == Client.User.Id)
-                throw new NotSupportedException("Cannot block self.");
-
-            Client.BlockUser(Id);
+            BlockAsync().GetAwaiter().GetResult();
         }
 
+
+        public async Task RemoveRelationshipAsync()
+        {
+            if (Id == Client.User.Id)
+                throw new NotSupportedException("Cannot remove relationship from self.");
+
+            await Client.RemoveRelationshipAsync(Id);
+        }
 
         /// <summary>
         /// Removes any relationship (unfriending, unblocking etc.)
         /// </summary>
         public void RemoveRelationship()
         {
-            if (Id == Client.User.Id)
-                throw new NotSupportedException("Cannot remove relationship from self.");
-
-            Client.RemoveRelationship(Id);
+            RemoveRelationshipAsync().GetAwaiter().GetResult();
         }
 
 

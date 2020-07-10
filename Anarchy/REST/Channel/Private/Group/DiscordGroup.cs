@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Threading.Tasks;
 
 namespace Discord
 {
@@ -31,14 +32,24 @@ namespace Discord
         }
 
 
+        public new async Task UpdateAsync()
+        {
+            Update((await Client.GetChannelAsync(Id)).ToGroup());
+        }
+
         /// <summary>
         /// Updates the group's info
         /// </summary>
         public new void Update()
         {
-            Update(Client.GetChannel(Id).ToGroup());
+            UpdateAsync().GetAwaiter().GetResult();
         }
 
+
+        public async Task ModifyAsync(GroupProperties properties)
+        {
+            Update(await Client.ModifyGroupAsync(Id, properties));
+        }
 
         /// <summary>
         /// Modifies the group
@@ -46,9 +57,14 @@ namespace Discord
         /// <param name="properties">Options for modifying the group</param>
         public void Modify(GroupProperties properties)
         {
-            Update(Client.ModifyGroup(Id, properties));
+            ModifyAsync(properties).GetAwaiter().GetResult();
         }
 
+
+        public async Task AddRecipientAsync(ulong userId)
+        {
+            await Client.AddUserToGroupAsync(Id, userId);
+        }
 
         /// <summary>
         /// Adds a recipient to the group
@@ -56,9 +72,14 @@ namespace Discord
         /// <param name="userId">ID of the user</param>
         public void AddRecipient(ulong userId)
         {
-            Client.AddUserToGroup(Id, userId);
+            AddRecipientAsync(userId).GetAwaiter().GetResult();
         }
 
+
+        public async Task RemoveRecipientAsync(ulong userId)
+        {
+            await Client.RemoveUserFromGroupAsync(Id, userId);
+        }
 
         /// <summary>
         /// Removes a user from the group
@@ -66,25 +87,21 @@ namespace Discord
         /// <param name="userId">ID of the user</param>
         public void RemoveRecipient(ulong userId)
         {
-            Client.RemoveUserFromGroup(Id, userId);
+            RemoveRecipientAsync(userId).GetAwaiter().GetResult();
         }
 
 
-        /// <summary>
-        /// Removes a user from the group
-        /// </summary>
-        public void RemoveRecipient(DiscordUser user)
+        public async Task<DiscordInvite> CreateInviteAsync()
         {
-            RemoveRecipient(user.Id);
+            return await Client.CreateInviteAsync(Id, new InviteProperties() { MaxAge = 10800 });
         }
-
 
         /// <summary>
         /// Creates an invite
         /// </summary>
         public DiscordInvite CreateInvite()
         {
-            return Client.CreateInvite(Id, new InviteProperties() { MaxAge = 10800 });
+            return CreateInviteAsync().Result;
         }
     }
 }

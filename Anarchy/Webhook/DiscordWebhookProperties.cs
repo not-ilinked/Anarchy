@@ -40,7 +40,7 @@ namespace Discord.Webhook
 
         private readonly DiscordParameter<ulong> ChannelProperty = new DiscordParameter<ulong>();
         [JsonProperty("channel_id")]
-        public ulong ChannelId
+        internal ulong ChannelId
         {
             get { return ChannelProperty; }
             set { ChannelProperty.Value = value; }

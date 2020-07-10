@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Discord
 {
@@ -17,12 +18,17 @@ namespace Discord
         public IReadOnlyList<string> Features { get; private set; }
 
 
+        public async Task<DiscordGuild> GetGuildAsync()
+        {
+            return await Client.GetGuildAsync(Id);
+        }
+
         /// <summary>
         /// Gets the full guild (<see cref="DiscordGuild"/>)
         /// </summary>
         public DiscordGuild GetGuild()
         {
-            return Client.GetGuild(Id);
+            return GetGuildAsync().Result;
         }
     }
 }

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Discord
 {
@@ -125,14 +126,24 @@ namespace Discord
         }
 
 
+        public async Task UpdateAsync()
+        {
+            Update(await Client.GetGuildAsync(Id));
+        }
+
         /// <summary>
         /// Updates the guild's info
         /// </summary>
         public void Update()
         {
-            Update(Client.GetGuild(Id));
+            UpdateAsync().GetAwaiter().GetResult();
         }
 
+
+        public async Task ModifyAsync(GuildProperties properties)
+        {
+            Update(await Client.ModifyGuildAsync(Id, properties));
+        }
 
         /// <summary>
         /// Modifies the guild
@@ -140,25 +151,35 @@ namespace Discord
         /// <param name="properties">Options for modifying the guild</param>
         public void Modify(GuildProperties properties)
         {
-            Update(Client.ModifyGuild(Id, properties));
+            ModifyAsync(properties).GetAwaiter().GetResult();
         }
 
+
+        public override async Task<IReadOnlyList<DiscordRole>> GetRolesAsync()
+        {
+            return _roles = (await base.GetRolesAsync()).ToList();
+        }
 
         /// <summary>
         /// Gets the guild's roles
         /// </summary>
         public override IReadOnlyList<DiscordRole> GetRoles()
         {
-            return _roles = base.GetRoles().ToList();
+            return GetRolesAsync().Result;
         }
 
+
+        public override async Task<IReadOnlyList<DiscordEmoji>> GetEmojisAsync()
+        {
+            return _emojis = (await base.GetEmojisAsync()).ToList();
+        }
 
         /// <summary>
         /// Gets the guild's emojis
         /// </summary>
         public override IReadOnlyList<DiscordEmoji> GetEmojis()
         {
-            return _emojis = base.GetEmojis().ToList();
+            return GetEmojisAsync().Result;
         }
 
 

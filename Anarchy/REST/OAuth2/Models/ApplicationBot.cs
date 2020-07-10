@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Threading.Tasks;
 
 namespace Discord
 {
@@ -24,9 +25,14 @@ namespace Discord
         public string Token { get; private set; }
 
 
+        public async Task AuthorizeAsync(ulong guildId, DiscordPermission permissions, string captchaKey)
+        {
+            await Client.AuthorizeBotAsync(Id, guildId, permissions, captchaKey);
+        }
+
         public void Authorize(ulong guildId, DiscordPermission permissions, string captchaKey)
         {
-            Client.AuthorizeBot(Id, guildId, permissions, captchaKey);
+            AuthorizeAsync(guildId, permissions, captchaKey).GetAwaiter().GetResult();
         }
 
 

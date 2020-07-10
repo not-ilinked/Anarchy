@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Threading.Tasks;
 
 namespace Discord
 {
@@ -17,9 +18,14 @@ namespace Discord
         public RelationshipType Type { get; internal set; }
 
 
+        public async Task RemoveAsync()
+        {
+            await Client.RemoveRelationshipAsync(User.Id);
+        }
+
         public void Remove()
         {
-            Client.RemoveRelationship(User.Id);
+            RemoveAsync().GetAwaiter().GetResult();
         }
 
 

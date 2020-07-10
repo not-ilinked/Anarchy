@@ -6,12 +6,20 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace Discord
 {
     public static class MessageExtensions
     {
         #region management
+        public static async Task<DiscordMessage> SendMessageAsync(this DiscordClient client, ulong channelId, string message, bool tts = false, DiscordEmbed embed = null)
+        {
+            return (await client.HttpClient.PostAsync($"/channels/{channelId}/messages", new MessageProperties() { Content = message, Tts = tts, Embed = embed }))
+                                 .Deserialize<DiscordMessage>().SetClient(client);
+        }
+
         /// <summary>
         /// Sends a message to a channel
         /// </summary>
@@ -21,20 +29,11 @@ namespace Discord
         /// <returns>The message</returns>
         public static DiscordMessage SendMessage(this DiscordClient client, ulong channelId, string message, bool tts = false, DiscordEmbed embed = null)
         {
-            return client.HttpClient.Post($"/channels/{channelId}/messages", new MessageProperties() { Content = message, Tts = tts, Embed = embed })
-                                 .Deserialize<DiscordMessage>().SetClient(client);
+            return client.SendMessageAsync(channelId, message, tts, embed).Result;
         }
 
 
-        /// <summary>
-        /// Sends a message with a file attached.
-        /// </summary>
-        /// <param name="channelId">ID of the channel</param>
-        /// <param name="fileName">Name for the attachment to have</param>
-        /// <param name="fileData">Raw byte data from file</param>
-        /// <param name="message">Contents of the message</param>
-        /// <param name="tts">Whether the message should be TTS or not</param>
-        public static DiscordMessage SendFile(this DiscordClient client, ulong channelId, string fileName, byte[] fileData, string message = null, bool tts = false)
+        public static async Task<DiscordMessage> SendFileAsync(this DiscordClient client, ulong channelId, string fileName, byte[] fileData, string message = null, bool tts = false)
         {
             HttpClient httpClient = new HttpClient(new HttpClientHandler() { Proxy = client.Config.Proxy != null && client.Config.Proxy.Type == Leaf.xNet.ProxyType.HTTP ? new WebProxy(client.Config.Proxy.Host + client.Config.Proxy.Port, false, new string[] { }, new NetworkCredential() { UserName = client.Config.Proxy.Username, Password = client.Config.Proxy.Password }) : null });
             httpClient.DefaultRequestHeaders.Add("Authorization", client.Token);
@@ -52,10 +51,28 @@ namespace Discord
                 { new ByteArrayContent(fileData), "file", fileName }
             };
 
-            return httpClient.PostAsync(client.Config.ApiBaseUrl + $"/channels/{channelId}/messages", content).Result
-                                    .Content.ReadAsStringAsync().Result.Deserialize<DiscordMessage>().SetClient(client);
+            return (await httpClient.PostAsync(client.Config.ApiBaseUrl + $"/channels/{channelId}/messages", content).Result
+                                    .Content.ReadAsStringAsync()).Deserialize<DiscordMessage>().SetClient(client);
         }
 
+        /// <summary>
+        /// Sends a message with a file attached.
+        /// </summary>
+        /// <param name="channelId">ID of the channel</param>
+        /// <param name="fileName">Name for the attachment to have</param>
+        /// <param name="fileData">Raw byte data from file</param>
+        /// <param name="message">Contents of the message</param>
+        /// <param name="tts">Whether the message should be TTS or not</param>
+        public static DiscordMessage SendFile(this DiscordClient client, ulong channelId, string fileName, byte[] fileData, string message = null, bool tts = false)
+        {
+            return client.SendFileAsync(channelId, fileName, fileData, message, tts).Result;
+        }
+
+
+        public static async Task<DiscordMessage> SendFileAsync(this DiscordClient client, ulong channelId, string filePath, string message = null, bool tts = false)
+        {
+            return await client.SendFileAsync(channelId, new FileInfo(filePath).Name, File.ReadAllBytes(filePath), message, tts);
+        }
 
         /// <summary>
         /// Sends a message with a file attached.
@@ -66,9 +83,15 @@ namespace Discord
         /// <param name="tts">Whether the message should be TTS or not</param>
         public static DiscordMessage SendFile(this DiscordClient client, ulong channelId, string filePath, string message = null, bool tts = false)
         {
-            return client.SendFile(channelId, new FileInfo(filePath).Name, File.ReadAllBytes(filePath), message, tts);
+            return client.SendFileAsync(channelId, filePath, message, tts).Result;
         }
 
+
+        public static async Task<DiscordMessage> EditMessageAsync(this DiscordClient client, ulong channelId, ulong messageId, string message)
+        {
+            return (await client.HttpClient.PatchAsync($"/channels/{channelId}/messages/{messageId}", $"{{\"content\":\"{message}\"}}"))
+                                .Deserialize<DiscordMessage>().SetClient(client);
+        }
 
         /// <summary>
         /// Edits a message
@@ -79,10 +102,14 @@ namespace Discord
         /// <returns>The edited message</returns>
         public static DiscordMessage EditMessage(this DiscordClient client, ulong channelId, ulong messageId, string message)
         {
-            return client.HttpClient.Patch($"/channels/{channelId}/messages/{messageId}", $"{{\"content\":\"{message}\"}}")
-                                .Deserialize<DiscordMessage>().SetClient(client);
+            return client.EditMessageAsync(channelId, messageId, message).Result;
         }
 
+
+        public static async Task DeleteMessageAsync(this DiscordClient client, ulong channelId, ulong messageId)
+        {
+            await client.HttpClient.DeleteAsync($"/channels/{channelId}/messages/{messageId}");
+        }
 
         /// <summary>
         /// Deletes a message
@@ -91,9 +118,14 @@ namespace Discord
         /// <param name="messageId">ID of the message</param>
         public static void DeleteMessage(this DiscordClient client, ulong channelId, ulong messageId)
         {
-            client.HttpClient.Delete($"/channels/{channelId}/messages/{messageId}");
+            client.DeleteMessageAsync(channelId, messageId).GetAwaiter().GetResult();
         }
 
+
+        public static async Task DeleteMessagesAsync(this DiscordClient client, ulong channelId, List<ulong> messages)
+        {
+            await client.HttpClient.PostAsync($"/channels/{channelId}/messages/bulk-delete", $"{{\"messages\":{JsonConvert.SerializeObject(messages)}}}");
+        }
 
         /// <summary>
         /// Bulk deletes messages (this is a bot only endpoint)
@@ -102,10 +134,18 @@ namespace Discord
         /// <param name="messages">IDs of the messages</param>
         public static void DeleteMessages(this DiscordClient client, ulong channelId, List<ulong> messages)
         {
-            client.HttpClient.Post($"/channels/{channelId}/messages/bulk-delete", $"{{\"messages\":{JsonConvert.SerializeObject(messages)}}}");
+            client.DeleteMessagesAsync(channelId, messages).GetAwaiter().GetResult();
         }
         #endregion
 
+
+        public static async Task TriggerTypingAsync(this DiscordClient client, ulong channelId)
+        {
+            var resp = await client.HttpClient.PostAsync($"/channels/{channelId}/typing");
+
+            if (resp.ToString().Contains("cooldown"))
+                throw new RateLimitException(client, resp.Deserialize<JObject>().GetValue("message_send_cooldown_ms").ToObject<int>());
+        }
 
         /// <summary>
         /// Triggers a 'user typing...'
@@ -113,10 +153,7 @@ namespace Discord
         /// <param name="channelId">ID of the channel</param>
         public static void TriggerTyping(this DiscordClient client, ulong channelId)
         {
-            var resp = client.HttpClient.Post($"/channels/{channelId}/typing");
-
-            if (resp.ToString().Contains("cooldown"))
-                throw new RateLimitException(client, resp.Deserialize<JObject>().GetValue("message_send_cooldown_ms").ToObject<int>());
+            client.TriggerTypingAsync(channelId).GetAwaiter().GetResult();
         }
 
 
@@ -126,7 +163,7 @@ namespace Discord
         /// </summary>
         /// <param name="channelId">ID of the channel</param>
         /// <param name="filters">Options for filtering out messages</param>
-        public static IReadOnlyList<DiscordMessage> GetChannelMessages(this DiscordClient client, ulong channelId, MessageFilters filters = null)
+        public static async Task<IReadOnlyList<DiscordMessage>> GetChannelMessagesAsync(this DiscordClient client, ulong channelId, MessageFilters filters = null)
         {
             if (filters == null)
                 filters = new MessageFilters();
@@ -145,7 +182,7 @@ namespace Discord
                 if (filters.AfterId.HasValue)
                     parameters += $"after={filters.AfterId.Value}&";
                 
-                var newMessages = client.HttpClient.Get($"/channels/{channelId}/messages?{parameters}")
+                var newMessages = (await client.HttpClient.GetAsync($"/channels/{channelId}/messages?{parameters}"))
                                                           .Deserialize<IReadOnlyList<DiscordMessage>>().SetClientsInList(client);
 
                 messages.AddRange(newMessages);
@@ -159,18 +196,34 @@ namespace Discord
             return messages;
         }
 
+        public static IReadOnlyList<DiscordMessage> GetChannelMessages(this DiscordClient client, ulong channelId, MessageFilters filters = null)
+        {
+            return client.GetChannelMessagesAsync(channelId, filters).Result;
+        }
+
         
         /// <summary>
         /// Gets a list of messages from a channel
         /// </summary>
         /// <param name="channelId">ID of the channel</param>
         /// <param name="limit">Max amount of messages to receive</param>
-        public static IReadOnlyList<DiscordMessage> GetChannelMessages(this DiscordClient client, ulong channelId, uint limit)
+        public static async Task<IReadOnlyList<DiscordMessage>> GetChannelMessagesAsync(this DiscordClient client, ulong channelId, uint limit)
         {
-            return client.GetChannelMessages(channelId, new MessageFilters() { Limit = limit });
+            return await client.GetChannelMessagesAsync(channelId, new MessageFilters() { Limit = limit });
         }
 
-        
+        public static IReadOnlyList<DiscordMessage> GetChannelMessages(this DiscordClient client, ulong channelId, uint limit)
+        {
+            return client.GetChannelMessagesAsync(channelId, limit).Result;
+        }
+
+
+        public static async Task<IReadOnlyList<DiscordUser>> GetMessageReactionsAsync(this DiscordClient client, ulong channelId, ulong messageId, string reaction, uint limit = 25, ulong afterId = 0)
+        {
+            return (await client.HttpClient.GetAsync($"/channels/{channelId}/messages/{messageId}/reactions/{reaction}?limit={limit}&after={afterId}"))
+                                .Deserialize<IReadOnlyList<DiscordUser>>().SetClientsInList(client);
+        }
+
         /// <summary>
         /// Gets a message's reactions
         /// </summary>
@@ -181,33 +234,71 @@ namespace Discord
         /// <param name="afterId">Reaction ID to offset from</param>
         public static IReadOnlyList<DiscordUser> GetMessageReactions(this DiscordClient client, ulong channelId, ulong messageId, string reaction, uint limit = 25, ulong afterId = 0)
         {
-            return client.HttpClient.Get($"/channels/{channelId}/messages/{messageId}/reactions/{reaction}?limit={limit}&after={afterId}")
-                                .Deserialize<IReadOnlyList<DiscordUser>>().SetClientsInList(client);
+            return client.GetMessageReactionsAsync(channelId, messageId, reaction, limit, afterId).Result;
         }
 
 
         #region pins
+        [Obsolete("GetChannelPinnedMessagesAsync is depricated. Call GetPinnedMessagesAsync instead", true)]
+        public static Task<IReadOnlyList<DiscordMessage>> GetChannelPinnedMessagesAsync(this DiscordClient client, ulong channelId)
+        {
+            return null;
+        }
+
+        public static async Task<IReadOnlyList<DiscordMessage>> GetPinnedMessagesAsync(this DiscordClient client, ulong channelId)
+        {
+            return (await client.HttpClient.GetAsync($"/channels/{channelId}/pins"))
+                                .Deserialize<IReadOnlyList<DiscordMessage>>().SetClientsInList(client);
+        }
+
+        [Obsolete("GetChannelPinnedMessages is depricated. Call GetPinnedMessages instead", true)]
+        public static IReadOnlyList<DiscordMessage> GetChannelPinnedMessages(this DiscordClient client, ulong channelId)
+        {
+            return null;
+        }
+
         /// <summary>
         /// Gets a channel's pinned messages
         /// </summary>
         /// <param name="channelId">ID of the channel</param>
-        public static IReadOnlyList<DiscordMessage> GetChannelPinnedMessages(this DiscordClient client, ulong channelId)
+        public static IReadOnlyList<DiscordMessage> GetPinnedMessages(this DiscordClient client, ulong channelId)
         {
-            return client.HttpClient.Get($"/channels/{channelId}/pins")
-                                .Deserialize<IReadOnlyList<DiscordMessage>>().SetClientsInList(client);
+            return client.GetPinnedMessagesAsync(channelId).Result;
         }
 
+
+        [Obsolete("PinChannelMessageAsync is depricated. Call PinMessageAsync instead", true)]
+        public static Task PinChannelMessageAsync(this DiscordClient client, ulong channelId, ulong messageId)
+        {
+            return null;
+        }
+
+        public static async Task PinMessageAsync(this DiscordClient client, ulong channelId, ulong messageId)
+        {
+            await client.HttpClient.PutAsync($"/channels/{channelId}/pins/{messageId}");
+        }
+
+        [Obsolete("PinChannelMessage is depricated. Call PinMessage instead", true)]
+        public static void PinChannelMessage(this DiscordClient client, ulong channelId, ulong messageId)
+        {
+
+        }
 
         /// <summary>
         /// Pins a message to a channel
         /// </summary>
         /// <param name="channelId">ID of the channel</param>
         /// <param name="messageId">ID of the message</param>
-        public static void PinChannelMessage(this DiscordClient client, ulong channelId, ulong messageId)
+        public static void PinMessage(this DiscordClient client, ulong channelId, ulong messageId)
         {
-            client.HttpClient.Put($"/channels/{channelId}/pins/{messageId}");
+            client.PinMessageAsync(channelId, messageId).GetAwaiter().GetResult();
         }
 
+
+        public static async Task UnpinChannelMessageAsync(this DiscordClient client, ulong channelId, ulong messageId)
+        {
+            await client.HttpClient.DeleteAsync($"/channels/{channelId}/pins/{messageId}");
+        }
 
         /// <summary>
         /// Unpins a message from a channel
@@ -216,14 +307,19 @@ namespace Discord
         /// <param name="messageId">ID of the message</param>
         public static void UnpinChannelMessage(this DiscordClient client, ulong channelId, ulong messageId)
         {
-            client.HttpClient.Delete($"/channels/{channelId}/pins/{messageId}");
+            client.UnpinChannelMessageAsync(channelId, messageId).GetAwaiter().GetResult();
         }
         #endregion
 
 
+        public static async Task AcknowledgeMessageAsync(this DiscordClient client, ulong channelId, ulong messageId)
+        {
+            await client.HttpClient.PostAsync($"/channels/{channelId}/messages/{messageId}/ack", "{\"token\":null}");
+        }
+
         public static void AcknowledgeMessage(this DiscordClient client, ulong channelId, ulong messageId)
         {
-            client.HttpClient.Post($"/channels/{channelId}/messages/{messageId}/ack", "{\"token\":null}");
+            client.AcknowledgeMessageAsync(channelId, messageId).GetAwaiter().GetResult();
         }
     }
 }

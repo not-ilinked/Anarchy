@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Drawing;
+using System.Threading.Tasks;
 
 namespace Discord.Webhook
 {
@@ -46,12 +45,8 @@ namespace Discord.Webhook
         public ulong GuildId { get; private set; }
 
 
-        /// <summary>
-        /// Updates the webhook's info
-        /// </summary>
-        public void Update()
+        private void Update(DiscordWebhook hook)
         {
-            DiscordWebhook hook = Client.GetWebhook(Id, Token);
             Name = hook.Name;
             _avatarHash = hook.Avatar.Hash;
             Creator = hook.Creator;
@@ -59,27 +54,52 @@ namespace Discord.Webhook
         }
 
 
+        public async Task UpdateAsync()
+        {
+            Update(await Client.GetWebhookAsync(Id, Token));
+        }
+
+        /// <summary>
+        /// Updates the webhook's info
+        /// </summary>
+        public void Update()
+        {
+            UpdateAsync().GetAwaiter().GetResult();
+        }
+
+        public async Task ModifyAsync(DiscordWebhookProperties properties)
+        {
+            Update(await Client.ModifyWebhookAsync(Id, properties));
+        }
+
         /// <summary>
         /// Modifies the webhook
         /// </summary>
         /// <param name="properties">Options for modifying the webhook</param>
         public void Modify(DiscordWebhookProperties properties)
         {
-            DiscordWebhook hook = Client.ModifyWebhook(Id, properties);
-            Name = hook.Name;
-            _avatarHash = hook.Avatar.Hash;
-            ChannelId = hook.ChannelId;
+            ModifyAsync(properties).GetAwaiter().GetResult();
         }
 
+
+        public async Task DeleteAsync()
+        {
+            await Client.DeleteWebhookAsync(Id, Token);
+        }
 
         /// <summary>
         /// Deletes the webhook
         /// </summary>
         public void Delete()
         {
-            Client.DeleteChannelWebhook(Id, Token);
+            DeleteAsync().GetAwaiter().GetResult();
         }
 
+
+        public async Task SendMessageAsync(string content, DiscordEmbed embed = null, DiscordWebhookProfile profile = null)
+        {
+            await Client.SendWebhookMessageAsync(Id, Token, content, embed, profile);
+        }
 
         /// <summary>
         /// Sends a message through the webhook
@@ -89,7 +109,7 @@ namespace Discord.Webhook
         /// <param name="profile">Custom Username and Avatar url (both are optional)</param>
         public void SendMessage(string content, DiscordEmbed embed = null, DiscordWebhookProfile profile = null)
         {
-            Client.SendWebhookMessage(Id, Token, content, embed, profile);
+            SendMessageAsync(content, embed, profile).GetAwaiter().GetResult();
         }
 
 

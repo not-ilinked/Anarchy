@@ -5,7 +5,7 @@ namespace Discord
 {
     public class GuildMemberProperties
     {
-        private readonly DiscordParameter<string> NickProperty = new DiscordParameter<string>();
+        internal readonly DiscordParameter<string> NickProperty = new DiscordParameter<string>();
         [JsonProperty("nick")]
         public string Nickname
         {
@@ -20,7 +20,7 @@ namespace Discord
         }
 
 
-        private readonly DiscordParameter<List<ulong>> RoleProperty = new DiscordParameter<List<ulong>>();
+        internal readonly DiscordParameter<List<ulong>> RoleProperty = new DiscordParameter<List<ulong>>();
         [JsonProperty("roles")]
         public List<ulong> Roles
         {

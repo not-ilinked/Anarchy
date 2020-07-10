@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Discord
 {
@@ -7,14 +8,24 @@ namespace Discord
         internal MinimalTextChannel(ulong channelId) : base(channelId)
         { }
 
+        public async Task TriggerTypingAsync()
+        {
+            await Client.TriggerTypingAsync(Id);
+        }
+
         /// <summary>
         /// Triggers a 'user typing...'
         /// </summary>
         public void TriggerTyping()
         {
-            Client.TriggerTyping(Id);
+            TriggerTypingAsync().GetAwaiter().GetResult();
         }
 
+
+        public async Task<DiscordMessage> SendMessageAsync(string message, bool tts = false, DiscordEmbed embed = null)
+        {
+            return await Client.SendMessageAsync(Id, message, tts, embed);
+        }
 
         /// <summary>
         /// Sends a message to the channel
@@ -24,21 +35,36 @@ namespace Discord
         /// <returns>The message</returns>
         public DiscordMessage SendMessage(string message, bool tts = false, DiscordEmbed embed = null)
         {
-            return Client.SendMessage(Id, message, tts, embed);
+            return SendMessageAsync(message, tts, embed).Result;
         }
 
+
+        public async Task<DiscordMessage> SendFileAsync(string fileName, byte[] fileData, string message = null, bool tts = false)
+        {
+            return await Client.SendFileAsync(Id, fileName, fileData, message, tts);
+        }
 
         public DiscordMessage SendFile(string fileName, byte[] fileData, string message = null, bool tts = false)
         {
-            return Client.SendFile(Id, fileName, fileData, message, tts);
+            return SendFileAsync(fileName, fileData, message, tts).Result;
         }
 
+
+        public async Task<DiscordMessage> SendFileAsync(string filePath, string message = null, bool tts = false)
+        {
+            return await Client.SendFileAsync(Id, filePath, message, tts);
+        }
 
         public DiscordMessage SendFile(string filePath, string message = null, bool tts = false)
         {
-            return Client.SendFile(Id, filePath, message, tts);
+            return SendFileAsync(filePath, message, tts).Result;
         }
 
+
+        public async Task DeleteMessagesAsync(List<ulong> messages)
+        {
+            await Client.DeleteMessagesAsync(Id, messages);
+        }
 
         /// <summary>
         /// Bulk deletes messages (this is a bot only endpoint)
@@ -47,28 +73,43 @@ namespace Discord
         /// <param name="messages">IDs of the messages</param>
         public void DeleteMessages(List<ulong> messages)
         {
-            Client.DeleteMessages(Id, messages);
+            DeleteMessagesAsync(messages).GetAwaiter().GetResult();
         }
 
-        
+
+        public async Task<IReadOnlyList<DiscordMessage>> GetMessagesAsync(MessageFilters filters = null)
+        {
+            return await Client.GetChannelMessagesAsync(Id, filters);
+        }
+
         /// <summary>
         /// Gets a list of messages from the channel
         /// </summary>
         /// <param name="filters">Options for filtering out messages</param>
         public IReadOnlyList<DiscordMessage> GetMessages(MessageFilters filters = null)
         {
-            return Client.GetChannelMessages(Id, filters);
+            return GetMessagesAsync(filters).GetAwaiter().GetResult();
         }
-        
+
+
+        public async Task<IReadOnlyList<DiscordMessage>> GetPinnedMessagesAsync()
+        {
+            return await Client.GetPinnedMessagesAsync(Id);
+        }
 
         /// <summary>
         /// Gets the channel's pinned messages
         /// </summary>
         public IReadOnlyList<DiscordMessage> GetPinnedMessages()
         {
-            return Client.GetChannelPinnedMessages(Id);
+            return GetPinnedMessagesAsync().Result;
         }
 
+
+        public async Task PinMessageAsync(ulong messageId)
+        {
+            await Client.PinMessageAsync(Id, messageId);
+        }
 
         /// <summary>
         /// Pins a message to the channel
@@ -76,18 +117,14 @@ namespace Discord
         /// <param name="messageId">ID of the message</param>
         public void PinMessage(ulong messageId)
         {
-            Client.PinChannelMessage(Id, messageId);
+            PinMessageAsync(messageId).GetAwaiter().GetResult();
         }
 
 
-        /// <summary>
-        /// Pins a message to the channel
-        /// </summary>
-        public void PinMessage(DiscordMessage message)
+        public async Task UnpinMessageAsync(ulong messageId)
         {
-            PinMessage(message.Id);
+            await Client.UnpinChannelMessageAsync(Id, messageId);
         }
-
 
         /// <summary>
         /// Unpins a message from the channel
@@ -95,16 +132,7 @@ namespace Discord
         /// <param name="messageId">ID of the message</param>
         public void UnpinMessage(ulong messageId)
         {
-            Client.UnpinChannelMessage(Id, messageId);
-        }
-
-
-        /// <summary>
-        /// Unpins a message from the channel
-        /// </summary>
-        public void UnpinMessage(DiscordMessage message)
-        {
-            Client.UnpinChannelMessage(Id, message.Id);
+            UnpinMessageAsync(messageId).GetAwaiter().GetResult();
         }
     }
 }

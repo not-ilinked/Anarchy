@@ -1,15 +1,11 @@
 ﻿using Discord.Gateway;
-using Newtonsoft.Json.Linq;
-using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Discord
 {
     public static class GuildDiscoveryExtensions
     {
-        /// <summary>
-        /// Queries guilds in Server Discovery
-        /// </summary>
-        public static GuildQueryResult QueryGuilds(this DiscordClient client, GuildQueryOptions options = null)
+        public static async Task<GuildQueryResult> QueryGuildsAsync(this DiscordClient client, GuildQueryOptions options = null)
         {
             if (options == null)
                 options = new GuildQueryOptions();
@@ -22,17 +18,19 @@ namespace Discord
             if (options.Category.HasValue)
                 query += "&categories=" + (int)options.Category;
 
-            return client.HttpClient.Get($"/discoverable-guilds" + query).Deserialize<GuildQueryResult>().SetClient(client);
+            return (await client.HttpClient.GetAsync($"/discoverable-guilds" + query)).Deserialize<GuildQueryResult>().SetClient(client);
+        }
+
+        /// <summary>
+        /// Queries guilds in Server Discovery
+        /// </summary>
+        public static GuildQueryResult QueryGuilds(this DiscordClient client, GuildQueryOptions options = null)
+        {
+            return client.QueryGuildsAsync(options).Result;
         }
 
 
-        /// <summary>
-        /// Activate lurker mode on a guild.
-        /// 
-        /// Note: this currently does not actually get you into lurk mode on the server because of some weird session_id issues.
-        /// </summary>
-        /// <param name="guildId">ID of the guild</param>
-        public static DiscordGuild LurkGuild(this DiscordSocketClient client, ulong guildId)
+        public static async Task<DiscordGuild> LurkGuildAsync(this DiscordSocketClient client, ulong guildId)
         {
             client.Lurking = guildId;
 
@@ -40,7 +38,7 @@ namespace Discord
             {
                 try
                 {
-                    return client.HttpClient.Put($"/guilds/{guildId}/members/@me?lurker=true&session_id={client.SessionId}")
+                    return (await client.HttpClient.PutAsync($"/guilds/{guildId}/members/@me?lurker=true&session_id={client.SessionId}"))
                                         .Deserialize<DiscordGuild>().SetClient(client);
                 }
                 catch (DiscordHttpException ex)
@@ -51,6 +49,23 @@ namespace Discord
             }
         }
 
+        /// <summary>
+        /// Activate lurker mode on a guild.
+        /// 
+        /// Note: this currently does not actually get you into lurk mode on the server because of some weird session_id issues.
+        /// </summary>
+        /// <param name="guildId">ID of the guild</param>
+        public static DiscordGuild LurkGuild(this DiscordSocketClient client, ulong guildId)
+        {
+            return client.LurkGuildAsync(guildId).Result;
+        }
+
+
+        public static async Task<DiscordGuild> JoinGuildAsync(this DiscordClient client, ulong guildId)
+        {
+            return (await client.HttpClient.PutAsync($"/guilds/{guildId}/members/@me?lurker=false"))
+                                .Deserialize<DiscordGuild>().SetClient(client);
+        }
 
         /// <summary>
         /// Joins a lurkable guild
@@ -59,8 +74,7 @@ namespace Discord
         /// <returns></returns>
         public static DiscordGuild JoinGuild(this DiscordClient client, ulong guildId)
         {
-            return client.HttpClient.Put($"/guilds/{guildId}/members/@me?lurker=false")
-                                .Deserialize<DiscordGuild>().SetClient(client);
+            return client.JoinGuildAsync(guildId).Result;
         }
     }
 }

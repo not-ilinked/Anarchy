@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Threading.Tasks;
 
 namespace Discord
 {
@@ -18,13 +19,17 @@ namespace Discord
             Name = channel.Name;
         }
 
+        public async Task UpdateAsync()
+        {
+            Update(await Client.GetChannelAsync(Id));
+        }
 
         /// <summary>
         /// Updates the channel's info
         /// </summary>
         public void Update()
         {
-            Update(Client.GetChannel(Id));
+            UpdateAsync().GetAwaiter().GetResult();
         }
 
 

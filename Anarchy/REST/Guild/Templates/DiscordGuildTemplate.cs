@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -72,14 +73,19 @@ namespace Discord
         }
 
 
-        public void Update()
+        public async Task UpdateAsync()
         {
-            var template = Client.GetGuildTemplate(Code);
+            var template = await Client.GetGuildTemplateAsync(Code);
             Name = template.Name;
             Usages = template.Usages;
             Creator = template.Creator;
             _guildId = template._guildId;
             Template = template.Template;
+        }
+
+        public void Update()
+        {
+            UpdateAsync().GetAwaiter().GetResult();
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Threading.Tasks;
 
 namespace Discord
 {
@@ -23,14 +24,24 @@ namespace Discord
         }
 
 
+        public new async Task UpdateAsync()
+        {
+            Update((await Client.GetChannelAsync(Id)).ToVoiceChannel());
+        }
+
         /// <summary>
         /// Updates the channel's info
         /// </summary>
         public new void Update()
         {
-            Update(Client.GetChannel(Id).ToVoiceChannel());
+            UpdateAsync().GetAwaiter().GetResult();
         }
 
+
+        public async Task ModifyAsync(VoiceChannelProperties properties)
+        {
+            Update(await Client.ModifyGuildChannelAsync(Id, properties));
+        }
 
         /// <summary>
         /// Modifies the channel
@@ -38,9 +49,14 @@ namespace Discord
         /// <param name="properties">Options for modifying the channel</param>
         public void Modify(VoiceChannelProperties properties)
         {
-            Update(Client.ModifyGuildChannel(Id, properties));
+            ModifyAsync(properties).GetAwaiter().GetResult();
         }
 
+
+        public async Task<DiscordInvite> CreateInviteAsync(InviteProperties properties = null)
+        {
+            return await Client.CreateInviteAsync(Id, properties);
+        }
 
         /// <summary>
         /// Creates an invite
@@ -49,7 +65,7 @@ namespace Discord
         /// <returns></returns>
         public DiscordInvite CreateInvite(InviteProperties properties = null)
         {
-            return Client.CreateInvite(Id, properties);
+            return CreateInviteAsync(properties).GetAwaiter().GetResult();
         }
     }
 }

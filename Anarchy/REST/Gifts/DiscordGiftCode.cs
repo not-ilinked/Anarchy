@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 
 namespace Discord
@@ -40,16 +41,25 @@ namespace Discord
         [JsonProperty("max_uses")]
         public uint MaxUses { get; private set; }
 
+        public async Task RedeemAsync(ulong? channelId = null)
+        {
+            await Client.RedeemGiftAsync(Code, channelId);
+        }
 
         public void Redeem(ulong? channelId = null)
         {
-            Client.RedeemGift(Code, channelId);
+            RedeemAsync(channelId).GetAwaiter().GetResult();
         }
 
 
+        public async Task RevokeAsync()
+        {
+            await Client.RevokeGiftCodeAsync(Code);
+        }
+
         public void Revoke()
         {
-            Client.RevokeGiftCode(Code);
+            RevokeAsync().GetAwaiter().GetResult();
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Discord
 {
@@ -39,14 +40,24 @@ namespace Discord
         }
 
 
+        public new async Task UpdateAsync()
+        {
+            Update((await Client.GetChannelAsync(Id)).ToGuildChannel());
+        }
+
         /// <summary>
         /// Updates the channel
         /// </summary>
         public new void Update()
         {
-            Update(Client.GetChannel(Id).ToGuildChannel());
+            UpdateAsync().GetAwaiter().GetResult();
         }
 
+
+        public async Task ModifyAsync(GuildChannelProperties properties)
+        {
+            Update(await Client.ModifyGuildChannelAsync(Id, properties));
+        }
 
         /// <summary>
         /// Modifies the channel
@@ -54,16 +65,13 @@ namespace Discord
         /// <param name="properties">Options for modifying the channel</param>
         public void Modify(GuildChannelProperties properties)
         {
-            Update(Client.ModifyGuildChannel(Id, properties));
+            ModifyAsync(properties).GetAwaiter().GetResult();
         }
 
 
-        /// <summary>
-        /// Adds/edits a permission overwrite to a channel
-        /// </summary>
-        public void AddPermissionOverwrite(ulong affectedId, PermissionOverwriteType type, DiscordPermission allow, DiscordPermission deny)
+        public async Task AddPermissionOverwriteAsync(ulong affectedId, PermissionOverwriteType type, DiscordPermission allow, DiscordPermission deny)
         {
-            var overwrite = Client.AddPermissionOverwrite(Id, affectedId, type, allow, deny);
+            var overwrite = await Client.AddPermissionOverwriteAsync(Id, affectedId, type, allow, deny);
             List<DiscordPermissionOverwrite> overwrites = PermissionOverwrites.ToList();
 
             int i = overwrites.FindIndex(o => o.AffectedId == o.AffectedId);
@@ -76,14 +84,18 @@ namespace Discord
             PermissionOverwrites = overwrites;
         }
 
-
         /// <summary>
-        /// Removes a permission overwrite from a channel
+        /// Adds/edits a permission overwrite to a channel
         /// </summary>
-        /// <param name="affectedId">ID of the role or member affected by the overwrite</param>
-        public void RemovePermissionOverwrite(ulong affectedId)
+        public void AddPermissionOverwrite(ulong affectedId, PermissionOverwriteType type, DiscordPermission allow, DiscordPermission deny)
         {
-            Client.RemovePermissionOverwrite(Id, affectedId);
+            AddPermissionOverwriteAsync(affectedId, type, allow, deny).GetAwaiter().GetResult();
+        }
+
+
+        public async Task RemovePermissionOverwriteAsync(ulong affectedId)
+        {
+            await Client.RemovePermissionOverwriteAsync(Id, affectedId);
 
             try
             {
@@ -92,6 +104,15 @@ namespace Discord
                 PermissionOverwrites = overwrites;
             }
             catch { }
+        }
+
+        /// <summary>
+        /// Removes a permission overwrite from a channel
+        /// </summary>
+        /// <param name="affectedId">ID of the role or member affected by the overwrite</param>
+        public void RemovePermissionOverwrite(ulong affectedId)
+        {
+            RemovePermissionOverwriteAsync(affectedId).GetAwaiter().GetResult();
         }
 
 

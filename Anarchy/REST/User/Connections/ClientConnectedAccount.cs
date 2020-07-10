@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Threading.Tasks;
 
 namespace Discord
 {
@@ -11,9 +12,15 @@ namespace Discord
         [JsonProperty("show_activity")]
         public bool ShowActivity { get; private set; }
 
+
+        public async Task RemoveAsync()
+        {
+            await Client.RemoveConnectedAccountAsync(Type, Id);
+        }
+
         public void Remove()
         {
-            Client.RemoveConnectedAccount(Type, Id);
+            RemoveAsync().GetAwaiter().GetResult();
         }
     }
 }

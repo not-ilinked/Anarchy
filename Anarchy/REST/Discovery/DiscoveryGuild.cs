@@ -1,6 +1,7 @@
 ﻿using Discord.Gateway;
 using Newtonsoft.Json;
 using System;
+using System.Threading.Tasks;
 
 namespace Discord
 {
@@ -33,12 +34,17 @@ namespace Discord
         }
 
 
-        public DiscordGuild Lurk()
+        public async Task<DiscordGuild> LurkAsync()
         {
             if (Client.GetType() == typeof(DiscordSocketClient))
-                return ((DiscordSocketClient)Client).LurkGuild(Id);
+                return await ((DiscordSocketClient)Client).LurkGuildAsync(Id);
             else
                 throw new NotSupportedException("This method is only available for socket clients.");
+        }
+
+        public DiscordGuild Lurk()
+        {
+            return LurkAsync().Result;
         }
     }
 }

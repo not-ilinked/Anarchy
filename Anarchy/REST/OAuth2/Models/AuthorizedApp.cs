@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 
 namespace Discord
@@ -17,9 +18,14 @@ namespace Discord
         public OAuth2Application Application { get; private set; }
 
 
+        public async Task DeauthorizeAsync()
+        {
+            await Client.DeauthorizeAppAsync(Id);
+        }
+
         public void Deauthorize()
         {
-            Client.DeauthorizeApp(Id);
+            DeauthorizeAsync().GetAwaiter().GetResult();
         }
 
 

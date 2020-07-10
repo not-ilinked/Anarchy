@@ -1,6 +1,7 @@
 ﻿using Discord.Webhook;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Discord
 {
@@ -39,14 +40,24 @@ namespace Discord
         }
 
 
+        public new async Task UpdateAsync()
+        {
+            Update((await Client.GetChannelAsync(Id)).ToTextChannel());
+        }
+
         /// <summary>
         /// Updates the channel's info
         /// </summary>
         public new void Update()
         {
-            Update(Client.GetChannel(Id).ToTextChannel());
+            UpdateAsync().GetAwaiter().GetResult();
         }
 
+
+        public async Task ModifyAsync(TextChannelProperties properties)
+        {
+            Update(await Client.ModifyGuildChannelAsync(Id, properties));
+        }
 
         /// <summary>
         /// Modifies the channel
@@ -54,19 +65,29 @@ namespace Discord
         /// <param name="properties">Options for modifying the channel</param>
         public void Modify(TextChannelProperties properties)
         {
-            Update(Client.ModifyGuildChannel(Id, properties));
+            ModifyAsync(properties).GetAwaiter().GetResult();
         }
 
 
         #region messages
+        public async Task TriggerTypingAsync()
+        {
+            await Client.TriggerTypingAsync(Id);
+        }
+
         /// <summary>
         /// Triggers a 'user typing...'
         /// </summary>
         public void TriggerTyping()
         {
-            Client.TriggerTyping(Id);
+            TriggerTypingAsync().GetAwaiter().GetResult();
         }
 
+
+        public async Task<DiscordMessage> SendMessageAsync(string message, bool tts = false, DiscordEmbed embed = null)
+        {
+            return await Client.SendMessageAsync(Id, message, tts, embed);
+        }
 
         /// <summary>
         /// Sends a message to the channel
@@ -76,21 +97,52 @@ namespace Discord
         /// <returns>The message</returns>
         public DiscordMessage SendMessage(string message, bool tts = false, DiscordEmbed embed = null)
         {
-            return Client.SendMessage(Id, message, tts, embed);
+            return SendMessageAsync(message, tts, embed).Result;
         }
 
+
+        public async Task<DiscordMessage> SendFileAsync(string fileName, byte[] fileData, string message = null, bool tts = false)
+        {
+            return await Client.SendFileAsync(Id, fileName, fileData, message, tts);
+        }
 
         public DiscordMessage SendFile(string fileName, byte[] fileData, string message = null, bool tts = false)
         {
-            return Client.SendFile(Id, fileName, fileData, message, tts);
+            return SendFileAsync(fileName, fileData, message, tts).Result;
         }
 
+
+        public async Task<DiscordMessage> SendFileAsync(string filePath, string message = null, bool tts = false)
+        {
+            return await Client.SendFileAsync(Id, filePath, message, tts);
+        }
 
         public DiscordMessage SendFile(string filePath, string message = null, bool tts = false)
         {
-            return Client.SendFile(Id, filePath, message, tts);
+            return SendFileAsync(filePath, message, tts).Result;
         }
 
+
+        public async Task DeleteMessagesAsync(List<ulong> messages)
+        {
+            await Client.DeleteMessagesAsync(Id, messages);
+        }
+
+        /// <summary>
+        /// Bulk deletes messages (this is a bot only endpoint)
+        /// </summary>
+        /// <param name="channelId">ID of the channel</param>
+        /// <param name="messages">IDs of the messages</param>
+        public void DeleteMessages(List<ulong> messages)
+        {
+            DeleteMessagesAsync(messages).GetAwaiter().GetResult();
+        }
+
+
+        public async Task<IReadOnlyList<DiscordMessage>> GetMessagesAsync(MessageFilters filters = null)
+        {
+            return await Client.GetChannelMessagesAsync(Id, filters);
+        }
 
         /// <summary>
         /// Gets a list of messages from the channel
@@ -98,28 +150,28 @@ namespace Discord
         /// <param name="filters">Options for filtering out messages</param>
         public IReadOnlyList<DiscordMessage> GetMessages(MessageFilters filters = null)
         {
-            return Client.GetChannelMessages(Id, filters);
+            return GetMessagesAsync(filters).GetAwaiter().GetResult();
         }
 
 
-        /// <summary>
-        /// Bulk deletes messages (this is a bot only endpoint)
-        /// </summary>
-        /// <param name="messages">IDs of the messages</param>
-        public void DeleteMessages(List<ulong> messages)
+        public async Task<IReadOnlyList<DiscordMessage>> GetPinnedMessagesAsync()
         {
-            Client.DeleteMessages(Id, messages);
+            return await Client.GetPinnedMessagesAsync(Id);
         }
-
 
         /// <summary>
         /// Gets the channel's pinned messages
         /// </summary>
         public IReadOnlyList<DiscordMessage> GetPinnedMessages()
         {
-            return Client.GetChannelPinnedMessages(Id);
+            return GetPinnedMessagesAsync().Result;
         }
 
+
+        public async Task PinMessageAsync(ulong messageId)
+        {
+            await Client.PinMessageAsync(Id, messageId);
+        }
 
         /// <summary>
         /// Pins a message to the channel
@@ -127,18 +179,14 @@ namespace Discord
         /// <param name="messageId">ID of the message</param>
         public void PinMessage(ulong messageId)
         {
-            Client.PinChannelMessage(Id, messageId);
+            PinMessageAsync(messageId).GetAwaiter().GetResult();
         }
 
 
-        /// <summary>
-        /// Pins a message to the channel
-        /// </summary>
-        public void PinMessage(DiscordMessage message)
+        public async Task UnpinMessageAsync(ulong messageId)
         {
-            PinMessage(message.Id);
+            await Client.UnpinChannelMessageAsync(Id, messageId);
         }
-
 
         /// <summary>
         /// Unpins a message from the channel
@@ -146,19 +194,15 @@ namespace Discord
         /// <param name="messageId">ID of the message</param>
         public void UnpinMessage(ulong messageId)
         {
-            Client.UnpinChannelMessage(Id, messageId);
-        }
-
-
-        /// <summary>
-        /// Unpins a message from the channel
-        /// </summary>
-        public void UnpinMessage(DiscordMessage message)
-        {
-            Client.UnpinChannelMessage(Id, message.Id);
+            UnpinMessageAsync(messageId).GetAwaiter().GetResult();
         }
         #endregion
 
+
+        public async Task<DiscordInvite> CreateInviteAsync(InviteProperties properties = null)
+        {
+            return await Client.CreateInviteAsync(Id, properties);
+        }
 
         /// <summary>
         /// Creates an invite for the channel
@@ -167,18 +211,28 @@ namespace Discord
         /// <returns>The created invite</returns>
         public DiscordInvite CreateInvite(InviteProperties properties = null)
         {
-            return Client.CreateInvite(Id, properties);
+            return CreateInviteAsync(properties).GetAwaiter().GetResult();
         }
 
+
+        public async Task<IReadOnlyList<DiscordWebhook>> GetWebhooksAsync()
+        {
+            return await Client.GetChannelWebhooksAsync(Id);
+        }
 
         /// <summary>
         /// Gets the channel's webhooks
         /// </summary>
         public IReadOnlyList<DiscordWebhook> GetWebhooks()
         {
-            return Client.GetChannelWebhooks(Id);
+            return GetWebhooksAsync().GetAwaiter().GetResult();
         }
 
+
+        public async Task<DiscordWebhook> CreateWebhookAsync(DiscordWebhookProperties properties)
+        {
+            return await Client.CreateWebhookAsync(Id, properties);
+        }
 
         /// <summary>
         /// Creates a webhook
@@ -187,9 +241,7 @@ namespace Discord
         /// <returns>The created webhook</returns>
         public DiscordWebhook CreateWebhook(DiscordWebhookProperties properties)
         {
-            properties.ChannelId = Id;
-
-            return Client.CreateChannelWebhook(Id, properties);
+            return CreateWebhookAsync(properties).Result;
         }
     }
 }

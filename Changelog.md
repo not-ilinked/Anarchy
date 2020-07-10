@@ -1,5 +1,15 @@
 (Please keep in mind that these are only the major/important changes. There have been way more than written here)<br>
 
+# idk what to name this version yet
+### Additions
+- Added async methods (with the same name as their sync methods but the suffix 'Async').
+
+### Improvements
+- Removed various useless/bloaty methods (GetGuildRole, Mute/DeafenGuildMember and so on).
+- In progress: Removed redundant info from method names such as: CreateChannelWebhook -> CreateWebhook.
+
+
+
 # 0.7.2.0
 ### Additions
 - Added a new property 'Member' to SocketGuild, which returns the client's member for that guild.

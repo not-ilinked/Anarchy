@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Threading.Tasks;
 
 namespace Discord
 {
@@ -30,9 +31,14 @@ namespace Discord
         public bool Ended { get; private set; }
 
 
+        public async Task RemoveAsync()
+        {
+            await Client.RemoveGuildBoostAsync(_guildId, Id);
+        }
+
         public void Remove()
         {
-            Client.RemoveGuildBoost(_guildId, Id);
+            RemoveAsync().GetAwaiter().GetResult();
         }
     }
 }

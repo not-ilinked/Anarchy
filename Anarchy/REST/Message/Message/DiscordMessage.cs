@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 
 namespace Discord
@@ -143,16 +144,12 @@ namespace Discord
         public MessageType Type { get; private set; }
 
 
-        /// <summary>
-        /// Edits the message
-        /// </summary>
-        /// <param name="message">The new contents of the message</param>
-        public void Edit(string message)
+        public async Task EditAsync(string message)
         {
             if (Type != MessageType.Default)
-                return;
+                throw new InvalidOperationException("Can only edit messages with a Type of 'Default'");
 
-            DiscordMessage msg = Client.EditMessage(Channel.Id, Id, message);
+            DiscordMessage msg = await Client.EditMessageAsync(Channel.Id, Id, message);
             Content = msg.Content;
             Pinned = msg.Pinned;
             Mentions = msg.Mentions;
@@ -161,21 +158,45 @@ namespace Discord
             Embed = msg.Embed;
         }
 
+        /// <summary>
+        /// Edits the message
+        /// </summary>
+        /// <param name="message">The new contents of the message</param>
+        public void Edit(string message)
+        {
+            EditAsync(message).GetAwaiter().GetResult();
+        }
+
+
+        public async Task DeleteAsync()
+        {
+            await Client.DeleteMessageAsync(Channel.Id, Id);
+        }
 
         /// <summary>
         /// Deletes the message
         /// </summary>
         public void Delete()
         {
-            Client.DeleteMessage(Channel.Id, Id);
+            DeleteAsync().GetAwaiter().GetResult();
         }
 
+
+        public async Task AcknowledgeAsync()
+        {
+            await Client.AcknowledgeMessageAsync(Channel.Id, Id);
+        }
 
         public void Acknowledge()
         {
-            Client.AcknowledgeMessage(Channel.Id, Id);
+            AcknowledgeAsync().GetAwaiter().GetResult();
         }
 
+
+        public async Task<IReadOnlyList<DiscordUser>> GetReactionsAsync(string reaction, uint limit = 25, ulong afterId = 0)
+        {
+            return await Client.GetMessageReactionsAsync(Channel.Id, Id, reaction, limit, afterId);
+        }
 
         /// <summary>
         /// Gets instances of a reaction to a message
@@ -185,18 +206,28 @@ namespace Discord
         /// <param name="afterId">The reaction ID to offset from</param>
         public IReadOnlyList<DiscordUser> GetReactions(string reaction, uint limit = 25, ulong afterId = 0)
         {
-            return Client.GetMessageReactions(Channel.Id, Id, reaction, limit, afterId);
+            return GetReactionsAsync(reaction, limit, afterId).Result;
         }
 
+
+        public async Task AddReactionAsync(string reaction)
+        {
+            await Client.AddMessageReactionAsync(Channel.Id, Id, reaction);
+        }
 
         /// <summary>
         /// Adds a reaction to the message
         /// </summary>
         public void AddReaction(string reaction)
         {
-            Client.AddMessageReaction(Channel.Id, Id, reaction);
+            AddReactionAsync(reaction).GetAwaiter().GetResult();
         }
 
+
+        public async Task RemoveReactionAsync(string reaction, ulong userId = 0)
+        {
+            await Client.RemoveMessageReactionAsync(Channel.Id, Id, reaction, userId);
+        }
 
         /// <summary>
         /// Removes a user's reaction from the message
@@ -204,7 +235,7 @@ namespace Discord
         /// </summary>
         public void RemoveReaction(string reaction, ulong userId = 0)
         {
-            Client.RemoveMessageReaction(Channel.Id, Id, reaction, userId);
+            RemoveReactionAsync(reaction, userId).GetAwaiter().GetResult();
         }
 
 

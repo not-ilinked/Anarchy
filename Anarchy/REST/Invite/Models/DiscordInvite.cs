@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Threading.Tasks;
 
 namespace Discord
 {
@@ -42,22 +43,32 @@ namespace Discord
         }
 
 
+        public async Task DeleteAsync()
+        {
+            Inviter = (await Client.DeleteInviteAsync(Code)).Inviter;
+        }
+
         /// <summary>
         /// Deletes the invite
         /// </summary>
         /// <returns></returns>
         public void Delete()
         {
-            Inviter = Client.DeleteInvite(Code).Inviter;
+            DeleteAsync().GetAwaiter().GetResult();
         }
 
 
-        public void Join()
+        public async Task JoinAsync()
         {
             if (Type == InviteType.Guild)
-                Client.JoinGuild(Code);
+                await Client.JoinGuildAsync(Code);
             else
-                Client.JoinGroup(Code);
+                await Client.JoinGroupAsync(Code);
+        }
+
+        public void Join()
+        {
+            JoinAsync().GetAwaiter().GetResult();
         }
         
 

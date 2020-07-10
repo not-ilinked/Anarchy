@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Discord
 {
@@ -27,15 +28,30 @@ namespace Discord
         /// <summary>
         /// Updates the member's information
         /// </summary>
-        public void Update()
+        protected void Update(GuildMember member)
         {
-            GuildMember member = Client.GetGuildMember(GuildId, User.Id);
             User = member.User;
             Nickname = member.Nickname;
             Roles = member.Roles;
             BoostingSince = member.BoostingSince;
         }
 
+        public async Task UpdateAsync()
+        {
+            Update(await Client.GetGuildMemberAsync(GuildId, User.Id));
+        }
+
+
+        public async Task ModifyAsync(GuildMemberProperties properties)
+        {
+            await Client.ModifyGuildMemberAsync(GuildId, User.Id, properties);
+
+            if (properties.NickProperty.Set)
+                Nickname = properties.Nickname;
+
+            if (properties.RoleProperty.Set)
+                Roles = properties.Roles;
+        }
 
         /// <summary>
         /// Modifies the specified guild member
@@ -43,39 +59,14 @@ namespace Discord
         /// <param name="properties">Things to change</param>
         public void Modify(GuildMemberProperties properties)
         {
-            Client.ModifyGuildMember(GuildId, User.Id, properties);
+            ModifyAsync(properties).GetAwaiter().GetResult();
         }
 
-        /// <summary>
-        /// Mutes the user in the specified guild
-        /// </summary>
-        /// <param name="unmute">Unmute the user instead of muting them</param>
-        public void Mute(bool unmute = false)
+
+        public async Task AddRoleAsync(ulong roleId)
         {
-            Client.ModifyGuildMember(GuildId, User.Id, new GuildMemberProperties() { Muted = !unmute });
+            await Client.AddRoleToUserAsync(GuildId, roleId, User.Id);
         }
-
-
-        /// <summary>
-        /// Deafenes the user in the specified guild
-        /// </summary>
-        /// <param name="guildId">ID of the guild</param>
-        /// <param name="userId">ID of the user</param>
-        /// <param name="undeafen">Undeafen the user instead of deafening them</param>
-        public void Deafen(bool undeafen = false)
-        {
-            Client.ModifyGuildMember(GuildId, User.Id, new GuildMemberProperties() { Deafened = !undeafen });
-        }
-
-
-        /// <summary>
-        /// Sets the member's roles
-        /// </summary>
-        public void SetRoles(List<ulong> roles)
-        {
-            Client.SetGuildMemberRoles(GuildId, User.Id, roles);
-        }
-
 
         /// <summary>
         /// Adds a role to the guild member
@@ -83,18 +74,14 @@ namespace Discord
         /// <param name="roleId">ID of the role</param>
         public void AddRole(ulong roleId)
         {
-            Client.AddRoleToUser(GuildId, roleId, User.Id);
+            AddRoleAsync(roleId).GetAwaiter().GetResult();
         }
 
 
-        /// <summary>
-        /// Adds a role to the guild member
-        /// </summary>
-        public void AddRole(DiscordRole role)
+        public async Task RemoveRoleAsync(ulong roleId)
         {
-            AddRole(role.Id);
+            await Client.RemoveRoleFromUserAsync(GuildId, roleId, User.Id);
         }
-
 
         /// <summary>
         /// Removes a role from the guild member
@@ -102,24 +89,11 @@ namespace Discord
         /// <param name="roleId">ID of the role</param>
         public void RemoveRole(ulong roleId)
         {
-            Client.RemoveRoleFromUser(GuildId, roleId, User.Id);
+            RemoveRoleAsync(roleId).GetAwaiter().GetResult();
         }
 
 
-        /// <summary>
-        /// Removes a role from the guild member
-        /// </summary>
-        public void RemoveRole(DiscordRole role)
-        {
-            RemoveRole(role.Id);
-        }
-
-
-        /// <summary>
-        /// Gets the user's permissions in the guild
-        /// </summary>
-        /// <returns></returns>
-        public DiscordPermission GetPermissions()
+        public async Task<DiscordPermission> GetPermissionsAsync()
         {
             DiscordGuild guild = null;
 
@@ -132,7 +106,7 @@ namespace Discord
             }
 
             if (guild == null)
-                guild = Client.GetGuild(GuildId);
+                guild = await Client.GetGuildAsync(GuildId);
 
             DiscordPermission permissions = DiscordPermission.None;
 
@@ -149,16 +123,35 @@ namespace Discord
 
             return permissions;
         }
-        
+
+        /// <summary>
+        /// Gets the user's permissions in the guild
+        /// </summary>
+        /// <returns></returns>
+        public DiscordPermission GetPermissions()
+        {
+            return GetPermissionsAsync().Result;
+        }
+
+
+        public async Task KickAsync()
+        {
+            await Client.KickGuildMemberAsync(GuildId, User.Id);
+        }
 
         /// <summary>
         /// Kicks the member from the guild
         /// </summary>
         public void Kick()
         {
-            Client.KickGuildMember(GuildId, User.Id);
+            KickAsync().GetAwaiter().GetResult();
         }
 
+
+        public async Task BanAsync(string reason = null, uint deleteMessageDays = 0)
+        {
+            await Client.BanGuildMemberAsync(GuildId, User.Id, reason, deleteMessageDays);
+        }
 
         /// <summary>
         /// Bans the member from the guild
@@ -167,16 +160,21 @@ namespace Discord
         /// <param name="deleteMessageDays">Amount of days to purge messages (max is 7)</param>
         public void Ban(string reason = null, uint deleteMessageDays = 0)
         {
-            Client.BanGuildMember(GuildId, User.Id, reason, deleteMessageDays);
+            BanAsync(reason, deleteMessageDays).GetAwaiter().GetResult();
         }
 
+
+        public async Task UnbanAsync()
+        {
+            await Client.UnbanGuildMemberAsync(GuildId, User.Id);
+        }
 
         /// <summary>
         /// Unbans the user from the guild
         /// </summary>
         public void Unban()
         {
-            Client.UnbanGuildMember(GuildId, User.Id);
+            UnbanAsync().GetAwaiter().GetResult();
         }
 
 

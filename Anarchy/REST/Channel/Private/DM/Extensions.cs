@@ -1,22 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Discord
 {
     public static class DMChannelExtensions
     {
+        public static async Task<IReadOnlyList<PrivateChannel>> GetPrivateChannelsAsync(this DiscordClient client)
+        {
+            return (await client.HttpClient.GetAsync($"/users/@me/channels"))
+                                .DeserializeExArray<PrivateChannel>().SetClientsInList(client);
+        }
+
         /// <summary>
         /// Gets the account's private channels
         /// </summary>
         public static IReadOnlyList<PrivateChannel> GetPrivateChannels(this DiscordClient client)
         {
-            return client.HttpClient.Get($"/users/@me/channels")
-                                .DeserializeExArray<PrivateChannel>().SetClientsInList(client);
+            return client.GetPrivateChannelsAsync().Result;
         }
 
+
+        public static async Task<PrivateChannel> CreateDMAsync(this DiscordClient client, ulong recipientId)
+        {
+            return (await client.HttpClient.PostAsync($"/users/@me/channels", $"{{\"recipient_id\":\"{recipientId}\"}}"))
+                    .DeserializeEx<PrivateChannel>().SetClient(client);
+        }
 
         /// <summary>
         /// Creates a direct messaging channel
@@ -25,10 +33,14 @@ namespace Discord
         /// <returns>The created <see cref="PrivateChannel"/></returns>
         public static PrivateChannel CreateDM(this DiscordClient client, ulong recipientId)
         {
-            return client.HttpClient.Post($"/users/@me/channels", $"{{\"recipient_id\":\"{recipientId}\"}}")
-                    .DeserializeEx<PrivateChannel>().SetClient(client);
+            return client.CreateDMAsync(recipientId).Result;
         }
 
+
+        public static async Task ChangePrivateCallRegionAsync(this DiscordClient client, ulong channelId, string regionId)
+        {
+            await client.HttpClient.PatchAsync($"/channels/{channelId}/call", $"{{\"region\":\"{regionId}\"}}");
+        }
 
         /// <summary>
         /// Changes the call region (fx. hongkong) for the private channel
@@ -37,7 +49,7 @@ namespace Discord
         /// <param name="regionId">The region ID (fx. hongkong)</param>
         public static void ChangePrivateCallRegion(this DiscordClient client, ulong channelId, string regionId)
         {
-            client.HttpClient.Patch($"/channels/{channelId}/call", $"{{\"region\":\"{regionId}\"}}");
+            client.ChangePrivateCallRegionAsync(channelId, regionId).GetAwaiter().GetResult();
         }
     }
 }
