@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
+using System.Threading.Tasks;
 using Discord.Voice;
 
 namespace Discord.Gateway
@@ -17,6 +17,47 @@ namespace Discord.Gateway
         }
 
 
+        public static Task<DiscordVoiceSession> JoinVoiceChannelAsync(this DiscordSocketClient client, ulong? guildId, ulong channelId, bool muted = false, bool deafened = false)
+        {
+            if (client.Config.ConnectToVoiceChannels)
+            {
+                // issue with the current code is that it doesn't remove unused sessions
+                foreach (var session in client.VoiceSessions)
+                {
+                    if (session.State == DiscordVoiceClientState.Connected)
+                    {
+                        if (client.User.Type == DiscordUserType.User || (guildId.HasValue && session.Server.Guild.Id == guildId.Value))
+                            session.Disconnect();
+                    }
+                }
+
+                TaskCompletionSource<DiscordVoiceSession> task = new TaskCompletionSource<DiscordVoiceSession>();
+
+                void handler(DiscordSocketClient c, DiscordVoiceServer server)
+                {
+                    DiscordVoiceSession session = new DiscordVoiceSession(client, server, channelId);
+
+                    client.VoiceSessions.Add(session);
+
+                    client.OnVoiceServer -= handler;
+
+                    task.SetResult(session);
+                }
+
+                client.OnVoiceServer += handler;
+
+                client.ChangeVoiceState(new VoiceStateChange() { GuildId = guildId, ChannelId = channelId, Muted = muted, Deafened = deafened });
+
+                return task.Task;
+            }
+            else
+            {
+                client.ChangeVoiceState(new VoiceStateChange() { GuildId = guildId, ChannelId = channelId, Muted = muted, Deafened = deafened });
+
+                return null;
+            }
+        }
+
         /// <summary>
         /// Joins a voice channel.
         /// </summary>
@@ -26,65 +67,7 @@ namespace Discord.Gateway
         /// <param name="deafened">Whether the client will be deafened or not</param>
         public static DiscordVoiceSession JoinVoiceChannel(this DiscordSocketClient client, ulong? guildId, ulong channelId, bool muted = false, bool deafened = false)
         {
-            if (client.Config.ConnectToVoiceChannels)
-            {
-                VoiceSessionInfo info = null;
-
-                if (client.User.Type == DiscordUserType.User)
-                {
-                    foreach (var voiceSession in client.VoiceSessions)
-                        voiceSession.Session.Disconnect();
-                }
-                else
-                {
-                    try
-                    {
-                        info = client.VoiceSessions.First(s => guildId.HasValue && s.Id == guildId.Value || s.Id == channelId);
-
-                        info.Session.Disconnect();
-                    }
-                    catch { }
-                }
-
-                DiscordVoiceServer server = null;
-
-                client.OnVoiceServer += (c, result) =>
-                {
-                    server = result;
-                };
-
-                client.ChangeVoiceState(new VoiceStateChange() { GuildId = guildId, ChannelId = channelId, Muted = muted, Deafened = deafened });
-
-                int attempts = 0;
-
-                while (server == null)
-                {
-                    if (attempts >= 300)
-                        throw new TimeoutException("Gateway did not respond with a server");
-
-                    Thread.Sleep(10);
-
-                    attempts++;
-                }
-
-                DiscordVoiceSession session = new DiscordVoiceSession(client, server, channelId);
-
-                if (info == null)
-                    client.VoiceSessions.Add(new VoiceSessionInfo(session, guildId ?? channelId));
-                else
-                {
-                    info.Session = session;
-                    info.Id = guildId ?? channelId;
-                }
-
-                return session;
-            }
-            else
-            {
-                client.ChangeVoiceState(new VoiceStateChange() { GuildId = guildId, ChannelId = channelId, Muted = muted, Deafened = deafened });
-
-                return null;
-            }
+            return client.JoinVoiceChannelAsync(guildId, channelId, muted, deafened).GetAwaiter().GetResult();
         }
 
 

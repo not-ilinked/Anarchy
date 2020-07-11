@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
+using System.Threading.Tasks;
 
 namespace Discord.Gateway
 {
@@ -69,10 +69,10 @@ namespace Discord.Gateway
         }
 
 
-        public static IReadOnlyList<GuildMember> GetGuildMembers(this DiscordSocketClient client, ulong guildId, uint limit = 0)
+        public static Task<IReadOnlyList<GuildMember>> GetGuildMembersAsync(this DiscordSocketClient client, ulong guildId, uint limit = 0)
         {
             List<GuildMember> members = new List<GuildMember>();
-            bool done = false;
+            TaskCompletionSource<IReadOnlyList<GuildMember>> task = new TaskCompletionSource<IReadOnlyList<GuildMember>>();
 
             void handler(DiscordSocketClient c, GuildMembersEventArgs args)
             {
@@ -81,7 +81,11 @@ namespace Discord.Gateway
                     members.AddRange(args.Members);
 
                     if (args.Index + 1 == args.Total)
-                        done = true;
+                    {
+                        client.OnGuildMembersReceived -= handler;
+
+                        task.SetResult(members);
+                    }
                 }
             };
 
@@ -89,11 +93,12 @@ namespace Discord.Gateway
 
             client.Send(GatewayOpcode.RequestGuildMembers, new GuildMemberQuery() { GuildId = guildId, Limit = limit });
 
-            while (!done && client.LoggedIn) { Thread.Sleep(10); }
+            return task.Task;
+        }
 
-            client.OnGuildMembersReceived -= handler;
-
-            return members;
+        public static IReadOnlyList<GuildMember> GetGuildMembers(this DiscordSocketClient client, ulong guildId, uint limit = 0)
+        {
+            return client.GetGuildMembersAsync(guildId, limit).GetAwaiter().GetResult();
         }
 
 
@@ -120,16 +125,13 @@ namespace Discord.Gateway
         }
 
 
-        /// <summary>
-        /// Warning: this does not work for official guilds
-        /// </summary>
-        public static IReadOnlyList<GuildMember> GetGuildChannelMembers(this DiscordSocketClient client, ulong guildId, ulong channelId, MemberListQueryOptions options = null)
+        public static Task<IReadOnlyList<GuildMember>> GetGuildChannelMembersAsync(this DiscordSocketClient client, ulong guildId, ulong channelId, MemberListQueryOptions options = null)
         {
             if (options == null)
                 options = new MemberListQueryOptions();
 
             Dictionary<int, GuildMember> memberDict = new Dictionary<int, GuildMember>(); // might as well be a List right now, but this makes it easier to add more operations later
-            bool done = false;
+            TaskCompletionSource<IReadOnlyList<GuildMember>> task = new TaskCompletionSource<IReadOnlyList<GuildMember>>();
             int pendingRequests = 0;
 
             void handler(DiscordSocketClient c, GuildMemberListEventArgs args)
@@ -164,7 +166,16 @@ namespace Discord.Gateway
                                 pendingRequests--;
 
                                 if ((memberDict.Count >= options.Count && options.Count > 0) || memberDict.OrderBy(i => i.Key).Last().Key + 1 >= combined)
-                                    done = true;
+                                {
+                                    client.OnMemberListUpdate -= handler;
+
+                                    IEnumerable<GuildMember> result = memberDict.Select(i => i.Value);
+
+                                    if (options.Count > 0)
+                                        result = result.Take(options.Count);
+
+                                    task.SetResult(result.ToList());
+                                }
                                 else if (pendingRequests == 0)
                                     pendingRequests = RequestMembers(client, guildId, channelId, memberDict.OrderBy(i => i.Key).Last().Key);
                             }
@@ -177,17 +188,16 @@ namespace Discord.Gateway
 
             pendingRequests = RequestMembers(client, guildId, channelId, options.Index);
 
-            while (!done && client.LoggedIn)
-                Thread.Sleep(10);
+            return task.Task;
+        }
 
-            client.OnMemberListUpdate -= handler;
 
-            IEnumerable<GuildMember> members = memberDict.Select(i => i.Value);
-
-            if (options.Count > 0)
-                members = members.Take(options.Count);
-
-            return members.ToList();
+        /// <summary>
+        /// Warning: this does not work for official guilds
+        /// </summary>
+        public static IReadOnlyList<GuildMember> GetGuildChannelMembers(this DiscordSocketClient client, ulong guildId, ulong channelId, MemberListQueryOptions options = null)
+        {
+            return client.GetGuildChannelMembersAsync(guildId, channelId, options).GetAwaiter().GetResult();
         }
     }
 }

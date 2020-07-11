@@ -14,18 +14,6 @@ using System.IO;
 
 namespace Discord.Gateway
 {
-    internal class VoiceSessionInfo
-    {
-        public VoiceSessionInfo(DiscordVoiceSession session, ulong id)
-        {
-            Session = session;
-            Id = id;
-        }
-
-        public DiscordVoiceSession Session { get; set; }
-        public ulong Id { get; set; }
-    }
-
     /// <summary>
     /// <see cref="DiscordClient"/> with Gateway support
     /// </summary>
@@ -148,11 +136,9 @@ namespace Discord.Gateway
 
         public CommandHandler CommandHandler { get; private set; }
         public new DiscordSocketConfig Config { get; private set; }
-        internal List<VoiceSessionInfo> VoiceSessions { get; private set; }
+        internal List<DiscordVoiceSession> VoiceSessions { get; private set; }
 
         public DiscordUserSettings UserSettings { get; private set; }
-
-        internal ulong? Lurking { get; set; }
 
         // websocket connection
         internal WebSocket Socket { get; private set; }
@@ -162,8 +148,8 @@ namespace Discord.Gateway
 
         internal DateTime Cooldown { get; set; }
         internal object RequestLock { get; private set; } = new object();
+        internal ulong? Lurking { get; set; }
 
-        
 
         public DiscordSocketClient(DiscordSocketConfig config = null) : base(config)
         {
@@ -181,7 +167,7 @@ namespace Discord.Gateway
                 PrivateChannelSettings = new List<DiscordChannelSettings>();
             }
 
-            VoiceSessions = new List<VoiceSessionInfo>();
+            VoiceSessions = new List<DiscordVoiceSession>();
         }
 
         ~DiscordSocketClient()
@@ -264,7 +250,7 @@ namespace Discord.Gateway
             SessionId = null;
 
             foreach (var voiceSession in VoiceSessions)
-                voiceSession.Session.Disconnect();
+                voiceSession.Disconnect();
 
             VoiceSessions.Clear();
 
