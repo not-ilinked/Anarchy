@@ -6,16 +6,7 @@ namespace Discord.Gateway
     public class PresenceChange
     {
         [JsonProperty("status")]
-        private string _status;
-        [JsonIgnore]
-        public UserStatus Status
-        {
-            get
-            {
-                return UserStatusConverter.FromString(_status);
-            }
-            set { _status = UserStatusConverter.ToString(value); }
-        }
+        public UserStatus Status { get; set; }
 
 
         [JsonProperty("game")]

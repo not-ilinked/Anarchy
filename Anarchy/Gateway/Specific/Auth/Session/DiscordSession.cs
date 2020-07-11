@@ -7,16 +7,7 @@ namespace Discord.Gateway
     public class DiscordSession
     {
         [JsonProperty("status")]
-        private string _status;
-        [JsonIgnore]
-        public UserStatus Status
-        {
-            get
-            {
-                return UserStatusConverter.FromString(_status);
-            }
-            private set { _status = UserStatusConverter.ToString(value); }
-        }
+        public UserStatus Status { get; private set; }
 
         [JsonProperty("session_id")]
         public string SessionId { get; private set; }

@@ -33,12 +33,7 @@ namespace Discord
 
 
         [JsonProperty("locale")]
-        private readonly string _locale;
-
-        public DiscordLanguage Language
-        {
-            get { return LanguageConverter.FromString(_locale); }
-        }
+        public DiscordLanguage Language { get; private set; }
 
 
         [JsonProperty("enable_tts_playback")]

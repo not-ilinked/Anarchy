@@ -239,6 +239,17 @@ namespace Discord
         }
 
 
+        public async Task PinAsync()
+        {
+            await Channel.PinMessageAsync(Id);
+        }
+
+        public void Pin()
+        {
+            PinAsync().GetAwaiter().GetResult();
+        }
+
+
         public static implicit operator ulong(DiscordMessage instance)
         {
             return instance.Id;

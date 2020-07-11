@@ -1,6 +1,7 @@
 ﻿using Discord.Webhook;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 namespace Discord
@@ -313,6 +314,7 @@ namespace Discord
             return GetBansAsync().GetAwaiter().GetResult();
         }
 
+
         public async Task<DiscordBan> GetBanAsync(ulong userId)
         {
             return await Client.GetGuildBanAsync(Id, userId);
@@ -325,6 +327,17 @@ namespace Discord
         public DiscordBan GetBan(ulong userId)
         {
             return GetBanAsync(userId).GetAwaiter().GetResult();
+        }
+
+
+        public async Task BanMemberAsync(ulong userId, string reason = null, uint deleteMessageDays = 0)
+        {
+            await Client.BanGuildMemberAsync(Id, userId, reason, deleteMessageDays);
+        }
+
+        public void BanMember(ulong userId, string reason = null, uint deleteMessageDays = 0)
+        {
+            BanMemberAsync(userId, reason, deleteMessageDays).GetAwaiter().GetResult();
         }
 
 

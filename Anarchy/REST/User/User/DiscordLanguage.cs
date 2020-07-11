@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
 
 namespace Discord
 {
-    class LanguageConverter
+    internal class LanguageConverter : JsonConverter
     {
         private static readonly Dictionary<DiscordLanguage, string> Languages = new Dictionary<DiscordLanguage, string>()
         {
@@ -35,12 +37,12 @@ namespace Discord
             { DiscordLanguage.Korean, "ko" }
         };
 
-        public static string ToString(DiscordLanguage lang)
+        private string ToString(DiscordLanguage lang)
         {
             return Languages[lang];
         }
 
-        public static DiscordLanguage FromString(string langStr)
+        private DiscordLanguage FromString(string langStr)
         {
             foreach (var language in Languages)
             {
@@ -48,7 +50,56 @@ namespace Discord
                     return language.Key;
             }
 
-            return DiscordLanguage.EnglishUS;
+            throw new InvalidOperationException("Invalid language string");
         }
+
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        {
+            writer.WriteValue(ToString((DiscordLanguage)value));
+        }
+
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        {
+            return FromString(reader.Value.ToString());
+        }
+
+        public override bool CanConvert(Type objectType)
+        {
+            return true;
+        }
+    }
+
+    [JsonConverter(typeof(LanguageConverter))]
+    public enum DiscordLanguage
+    {
+        Danish,
+        German,
+        EnglishUK,
+        EnglishUS,
+        Spanish,
+        French,
+        Croatian,
+        Italian,
+        Lithuanian,
+        Hungarian,
+        Dutch,
+        Norwegian,
+        Polish,
+        Portuguese,
+        Romanian,
+        Finnish,
+        Swedish,
+        Viatnamese,
+        Turkish,
+        Czech,
+        Greek,
+        Bulgarian,
+        Russian,
+        Ukranian,
+        Thai,
+        Chinese,
+        Japanese,
+        ChineseThai,
+        Korean
     }
 }

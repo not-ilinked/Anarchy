@@ -73,11 +73,6 @@ namespace Discord
 
         private readonly DiscordParameter<DiscordLanguage> LocaleProperty = new DiscordParameter<DiscordLanguage>();
         [JsonProperty("locale")]
-        private string _locale
-        {
-            get { return LanguageConverter.ToString(LocaleProperty); }
-        }
-
         public DiscordLanguage Language
         {
             get { return LocaleProperty.Value; }

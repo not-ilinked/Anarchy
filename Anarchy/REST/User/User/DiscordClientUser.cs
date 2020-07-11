@@ -29,12 +29,7 @@ namespace Discord
 
 
         [JsonProperty("locale")]
-        private string _locale;
-
-        public DiscordLanguage Language
-        {
-            get { return LanguageConverter.FromString(_locale); }
-        }
+        public DiscordLanguage RegistrationLanguage { get; private set; }
 
         [JsonProperty("premium_type")]
         private DiscordNitroType? _nitro;
@@ -52,7 +47,7 @@ namespace Discord
             EmailVerified = user.EmailVerified;
             TwoFactorAuth = user.TwoFactorAuth;
             ExplicitContentFilter = user.ExplicitContentFilter;
-            _locale = user._locale;
+            RegistrationLanguage = user.RegistrationLanguage;
             _nitro = user._nitro;
         }
 

@@ -47,19 +47,7 @@ namespace Discord.Gateway
 
 
         [JsonProperty("status")]
-        private string _status;
-
-        public UserStatus Status
-        {
-            get
-            {
-                return UserStatusConverter.FromString(_status);
-            }
-            set
-            {
-                _status = UserStatusConverter.ToString(value);
-            }
-        }
+        public UserStatus Status { get; private set; }
 
 
         [JsonProperty("client_status")]

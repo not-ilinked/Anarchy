@@ -5,38 +5,14 @@ namespace Discord.Gateway
     public class ActiveSessionPlatforms
     {
         [JsonProperty("desktop")]
-        private readonly string _desktop;
-
-        public UserStatus Desktop
-        {
-            get
-            {
-                return UserStatusConverter.FromString(_desktop);
-            }
-        }
+        public UserStatus Desktop { get; private set; }
 
 
         [JsonProperty("web")]
-        private readonly string _web;
-
-        public UserStatus Website
-        {
-            get
-            {
-                return UserStatusConverter.FromString(_web);
-            }
-        }
+        public UserStatus Website { get; private set; }
 
 
         [JsonProperty("mobile")]
-        private readonly string _mobile;
-
-        public UserStatus Mobile
-        {
-            get
-            {
-                return UserStatusConverter.FromString(_mobile);
-            }
-        }
+        public UserStatus Mobile { get; private set; }
     }
 }

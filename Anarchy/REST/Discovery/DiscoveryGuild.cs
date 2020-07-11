@@ -23,15 +23,7 @@ namespace Discord
 
 
         [JsonProperty("preferred_locale")]
-        private readonly string _locale;
-
-        public DiscordLanguage PreferredLanguage
-        {
-            get
-            {
-                return LanguageConverter.FromString(_locale);
-            }
-        }
+        public DiscordLanguage PreferredLanguage { get; private set; }
 
 
         public async Task<DiscordGuild> LurkAsync()

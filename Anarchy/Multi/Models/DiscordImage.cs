@@ -7,9 +7,11 @@ namespace Discord
 {
     class ImageJsonConverter : JsonConverter
     {
+        public override bool CanRead => false;
+
         public override bool CanConvert(Type objectType)
         {
-            return objectType == typeof(DiscordImage);
+            return true;
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
