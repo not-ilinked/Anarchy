@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using WebSocketSharp;
 using System.Reflection;
 using System.IO;
+using Discord.Streaming;
 
 namespace Discord.Gateway
 {
@@ -22,7 +23,6 @@ namespace Discord.Gateway
         #region events
         public delegate void UserHandler(DiscordSocketClient client, UserEventArgs args);
         public delegate void ChannelHandler(DiscordSocketClient client, ChannelEventArgs args);
-        public delegate void VoiceStateHandler(DiscordSocketClient client, VoiceStateEventArgs args);
         public delegate void MessageHandler(DiscordSocketClient client, MessageEventArgs args);
         public delegate void ReactionHandler(DiscordSocketClient client, ReactionEventArgs args);
         public delegate void RoleHandler(DiscordSocketClient client, RoleEventArgs args);
@@ -101,10 +101,14 @@ namespace Discord.Gateway
         public delegate void InviteDeleteHandler(DiscordSocketClient client, InviteDeletedEventArgs args);
         public event InviteDeleteHandler OnInviteDeleted;
 
+        public delegate void VoiceStateHandler(DiscordSocketClient client, VoiceStateEventArgs args);
         public event VoiceStateHandler OnVoiceStateUpdated;
 
-        internal delegate void VoiceServerHandler(DiscordSocketClient client, DiscordVoiceServer server);
-        internal event VoiceServerHandler OnVoiceServer;
+        internal delegate void MediaServerHandler(DiscordSocketClient client, DiscordMediaServer server);
+        internal event MediaServerHandler OnMediaServer;
+
+        internal delegate void StreamHandler(DiscordSocketClient client, GoLiveCreate stream);
+        internal event StreamHandler OnStreamCreated;
 
         public delegate void EmojisUpdatedHandler(DiscordSocketClient client, EmojisUpdatedEventArgs args);
         public event EmojisUpdatedHandler OnEmojisUpdated;
@@ -147,12 +151,14 @@ namespace Discord.Gateway
         public string SessionId { get; set; }
 
         internal DateTime Cooldown { get; set; }
-        internal object RequestLock { get; private set; } = new object();
+        internal object RequestLock { get; private set; }
         internal ulong? Lurking { get; set; }
 
 
         public DiscordSocketClient(DiscordSocketConfig config = null) : base(config)
         {
+            RequestLock = new object();
+
             if (config == null)
                 config = new DiscordSocketConfig();
 
@@ -189,37 +195,17 @@ namespace Discord.Gateway
             {
                 Reset();
 
-                if (e.Code >= (ushort)GatewayCloseError.UnknownError)
-                {
-                    GatewayCloseError err = (GatewayCloseError)e.Code;
+                if (e.Code == 1006) // the user's internet connection is fucked. might wanna wait a bit
+                    Thread.Sleep(200);
 
-                    if (err != GatewayCloseError.RateLimited && err != GatewayCloseError.SessionTimedOut && err != GatewayCloseError.UnknownError)
-                    {
-                        if (LoggedIn)
-                        {
-                            LoggedIn = false;
+                GatewayCloseError discordErr = (GatewayCloseError)e.Code;
 
-                            OnLoggedOut?.Invoke(this, new LogoutEventArgs(err));
-                        }
-                    }
-                }
-
-                if (LoggedIn)
-                {
-                    while (true)
-                    {
-                        try
-                        {
-                            Login(Token);
-
-                            return;
-                        }
-                        catch
-                        {
-                            Thread.Sleep(100);
-                        }
-                    }
-                }
+                if (e.Code == 1000)
+                    OnLoggedOut?.Invoke(this, new LogoutEventArgs());
+                else if (LoggedIn && (e.Code == 1006 || e.Code == 1013 || discordErr == GatewayCloseError.RateLimited || discordErr == GatewayCloseError.SessionTimedOut || discordErr == GatewayCloseError.UnknownError))
+                    Login(Token);
+                else
+                    OnLoggedOut?.Invoke(this, new LogoutEventArgs(discordErr));
             };
 
             Socket.Connect();
@@ -233,8 +219,6 @@ namespace Discord.Gateway
                 LoggedIn = false;
 
                 Socket.Close();
-
-                OnLoggedOut?.Invoke(this, new LogoutEventArgs());
             }
         }
 
@@ -293,7 +277,7 @@ namespace Discord.Gateway
                                 {
                                     if (this.User.Type == DiscordUserType.User)
                                     {
-                                        PrivateChannels = login.PrivateChannels;
+                                        PrivateChannels = new List<PrivateChannel>(login.PrivateChannels);
 
                                         foreach (var guild in login.Guilds)
                                         {
@@ -378,22 +362,16 @@ namespace Discord.Gateway
                                 {
                                     foreach (var dm in PrivateChannels)
                                     {
-                                        bool updated = false;
-
                                         foreach (var recipient in dm.Recipients)
                                         {
                                             if (recipient.Id == user.Id)
                                             {
                                                 recipient.Update(user);
-
-                                                updated = true;
+                                                dm.Json["recipients"] = JArray.FromObject(dm.Recipients);
 
                                                 break;
                                             }
                                         }
-
-                                        if (updated) // this is somewhat resource intensive, so let's reduce the uses as much as possible
-                                            dm.UpdateSelfJson();
                                     }
                                 }
 
@@ -407,11 +385,7 @@ namespace Discord.Gateway
                                     SocketGuild guild = payload.DeserializeEx<SocketGuild>().SetClient(this);
 
                                     if (Config.Cache)
-                                    {
-                                        GuildCache.Remove(guild.Id);
-
-                                        GuildCache.Add(guild.Id, guild);
-                                    }
+                                        GuildCache[guild.Id] = guild;
 
                                     Task.Run(() => OnJoinedGuild?.Invoke(this, new SocketGuildEventArgs(guild, Lurking.HasValue && Lurking.Value == guild.Id)));
                                 }
@@ -436,37 +410,53 @@ namespace Discord.Gateway
                                     if (Config.Cache)
                                     {
                                         if (guild.Unavailable)
+                                        {
                                             GuildCache[guild.Id].Unavailable = true;
+
+                                            GuildSettings.Remove(guild.Id);
+                                        }
                                         else
                                             GuildCache.Remove(guild.Id);
-
-                                        GuildSettings.Remove(guild.Id);
                                     }
 
                                     Task.Run(() => OnLeftGuild?.Invoke(this, new GuildUnavailableEventArgs(guild)));
                                 }
                                 break;
                             case "GUILD_MEMBER_ADD":
-                                Task.Run(() => OnUserJoinedGuild?.Invoke(this, new GuildMemberEventArgs(payload.Deserialize<GuildMember>().SetClient(this))));
+                                {
+                                    var member = payload.Deserialize<GuildMember>().SetClient(this);
+
+                                    GuildCache[member.GuildId].MemberCount++;
+
+                                    Task.Run(() => OnUserJoinedGuild?.Invoke(this, new GuildMemberEventArgs(member)));
+                                }
                                 break;
                             case "GUILD_MEMBER_REMOVE":
-                                Task.Run(() => OnUserLeftGuild?.Invoke(this, new MemberRemovedEventArgs(payload.Deserialize<PartialGuildMember>().SetClient(this))));
+                                {
+                                    var member = payload.Deserialize<PartialGuildMember>().SetClient(this);
+
+                                    GuildCache[member.GuildId].MemberCount--;
+
+                                    Task.Run(() => OnUserLeftGuild?.Invoke(this, new MemberRemovedEventArgs(member)));
+                                }
                                 break;
                             case "GUILD_MEMBER_UPDATE":
-                                GuildMember member = payload.Deserialize<GuildMember>().SetClient(this);
-
-                                if (Config.Cache && member.User.Id == User.Id)
                                 {
-                                    SocketGuild guild = this.GetCachedGuild(member.GuildId);
+                                    GuildMember member = payload.Deserialize<GuildMember>().SetClient(this);
 
-                                    // Discord doesn't send us the user's JoinedAt on updates
-                                    member.JoinedAt = guild.Member.JoinedAt;
-                                    guild.Member = member;
+                                    if (Config.Cache && member.User.Id == User.Id)
+                                    {
+                                        SocketGuild guild = this.GetCachedGuild(member.GuildId);
 
-                                    break;
+                                        // Discord doesn't send us the user's JoinedAt on updates
+                                        member.JoinedAt = guild.Member.JoinedAt;
+                                        guild.Member = member;
+
+                                        break;
+                                    }
+
+                                    Task.Run(() => OnGuildMemberUpdated?.Invoke(this, new GuildMemberEventArgs(member)));
                                 }
-
-                                Task.Run(() => OnGuildMemberUpdated?.Invoke(this, new GuildMemberEventArgs(member)));
                                 break;
                             case "GUILD_MEMBERS_CHUNK":
                                 Task.Run(() => OnGuildMembersReceived?.Invoke(this, new GuildMembersEventArgs(payload.Deserialize<GuildMemberList>().SetClient(this))));
@@ -505,7 +495,7 @@ namespace Discord.Gateway
                                 Task.Run(() => OnVoiceStateUpdated?.Invoke(this, new VoiceStateEventArgs(newState)));
                                 break;
                             case "VOICE_SERVER_UPDATE":
-                                Task.Run(() => OnVoiceServer?.Invoke(this, payload.Deserialize<DiscordVoiceServer>().SetClient(this)));
+                                Task.Run(() => OnMediaServer?.Invoke(this, payload.Deserialize<DiscordMediaServer>().SetClient(this)));
                                 break;
                             case "GUILD_ROLE_CREATE":
                                 {
@@ -580,7 +570,6 @@ namespace Discord.Gateway
                                             GuildChannel guildChannel = channel.ToGuildChannel();
 
                                             var channels = GuildCache[guildChannel.GuildId]._channels;
-
                                             channels[channels.FindIndex(c => c.Id == guildChannel.Id)] = guildChannel;
                                         }
                                     }
@@ -660,7 +649,7 @@ namespace Discord.Gateway
                                             {
                                                 channel._recipients.Add(recipUpdate.User);
 
-                                                channel.UpdateSelfJson();
+                                                channel.Json["recipients"] = JArray.FromObject(channel._recipients);
 
                                                 break;
                                             }
@@ -680,7 +669,7 @@ namespace Discord.Gateway
                                             {
                                                 channel._recipients.RemoveAll(u => u.Id == recipUpdate.User.Id);
 
-                                                channel.UpdateSelfJson();
+                                                channel.Json["recipients"] = JArray.FromObject(channel._recipients);
 
                                                 break;
                                             }
@@ -722,6 +711,12 @@ namespace Discord.Gateway
                                 break;
                             case "USER_PREMIUM_GUILD_SUBSCRIPTION_SLOT_UPDATE":
                                 Task.Run(() => OnBoostUpdated?.Invoke(this, new NitroBoostUpdatedEventArgs(payload.Deserialize<DiscordNitroBoost>().SetClient(this))));
+                                break;
+                            case "STREAM_SERVER_UPDATE":
+                                Task.Run(() => OnMediaServer?.Invoke(this, payload.Deserialize<DiscordMediaServer>().SetClient(this)));
+                                break;
+                            case "STREAM_CREATE":
+                                Task.Run(() => OnStreamCreated?.Invoke(this, payload.Deserialize<GoLiveCreate>()));
                                 break;
                         }
                         break;

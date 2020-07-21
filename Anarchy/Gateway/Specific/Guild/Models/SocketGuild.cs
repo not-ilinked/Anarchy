@@ -14,7 +14,7 @@ namespace Discord.Gateway
             JsonUpdated += (sender, json) =>
             {
                 if (!Unavailable)
-                    _channels = json.Value<JArray>("channels").PopulateListJson<GuildChannel>();
+                    _channels = json.Value<JArray>("channels").DeserializeWithJson<GuildChannel>();
             };
         }
 
@@ -24,7 +24,7 @@ namespace Discord.Gateway
 
 
         [JsonProperty("member_count")]
-        public uint MemberCount { get; private set; }
+        public uint MemberCount { get; internal set; }
 
 
         // i'm not 100% sure of how this functions yet. All i have so far is https://discord.com/developers/docs/topics/gateway#request-guild-members, but it doesn't seem like that applies to users.
@@ -56,10 +56,7 @@ namespace Discord.Gateway
                 if (!Unavailable)
                 {
                     foreach (var channel in _channels)
-                    {
                         channel.GuildId = Id;
-                        channel.Json["guild_id"] = Id;
-                    }
                 }
 
                 return _channels;

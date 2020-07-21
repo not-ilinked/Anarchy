@@ -32,12 +32,28 @@ namespace Discord
         }
 
 
+        // understanding what public flags are is difficult because of the lack of documentation
         [JsonProperty("public_flags")]
-        public DiscordBadge PublicBadges { get; private set; }
+        private DiscordBadge _publicFlags;
 
 
         [JsonProperty("flags")]
-        public DiscordBadge Badges { get; private set; }
+        private DiscordBadge _flags;
+
+        public DiscordBadge Badges
+        {
+            get
+            {
+                if (_flags == DiscordBadge.None)
+                    return _publicFlags;
+                else
+                    return _flags;
+            }
+            private set
+            {
+                _flags = value;
+            }
+        }
 
 
         [JsonProperty("bot")]
@@ -62,7 +78,7 @@ namespace Discord
             get
             {
                 return (Hypesquad)Enum.Parse(typeof(Hypesquad), 
-                                        (PublicBadges & (DiscordBadge.HypeBravery | DiscordBadge.HypeBrilliance | DiscordBadge.HypeBalance))
+                                        (Badges & (DiscordBadge.HypeBravery | DiscordBadge.HypeBrilliance | DiscordBadge.HypeBalance))
                                          .ToString().Replace("Hype", ""));
             }
         }
@@ -80,7 +96,7 @@ namespace Discord
             Discriminator = user.Discriminator;
             _avatarHash = user._avatarHash;
             Badges = user.Badges;
-            PublicBadges = user.PublicBadges;
+            _publicFlags = user._publicFlags;
         }
 
 

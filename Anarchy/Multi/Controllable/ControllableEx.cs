@@ -25,21 +25,6 @@ namespace Discord
         }
 
 
-        internal void UpdateSelfJson()
-        {
-            JObject updated = JObject.FromObject(this);
-
-            foreach (var property in updated.Properties())
-            {
-                if (!property.Name.Any(char.IsUpper)) // json.net has a habit of serializing properties without JsonProperty attributes
-                    Json[property.Name] = property.Value;
-            }
-
-            JsonUpdated?.Invoke(this, Json);
-            //SignalClientUpdate(); // currently we completely overwrite lists when JsonUpdated is fired, causing ControllableEx Client references to dissapear. this is a temporary fix for that issue
-        }
-
-
         public new void Dispose()
         {
             base.Dispose();

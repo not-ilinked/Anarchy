@@ -8,37 +8,39 @@ namespace Discord.Gateway
         public ulong? GuildId { get; set; }
 
 
+        internal readonly DiscordParameter<ulong?> ChannelProperty = new DiscordParameter<ulong?>();
         [JsonProperty("channel_id")]
-        public ulong? ChannelId { get; set; }
+        public ulong? ChannelId 
+        {
+            get { return ChannelProperty; }
+            set { ChannelProperty.Value = value; }
+        }
 
 
-        private DiscordParameter<bool> _mutedProperty = new DiscordParameter<bool>();
+        internal readonly DiscordParameter<bool> MutedProperty = new DiscordParameter<bool>();
         [JsonProperty("self_mute")]
         public bool Muted
         {
-            get { return _mutedProperty; }
-            set { _mutedProperty.Value = value; }
+            get { return MutedProperty; }
+            set { MutedProperty.Value = value; }
         }
 
 
-        public bool ShouldSerializeMuted()
-        {
-            return _mutedProperty.Set;
-        }
-
-
-        private DiscordParameter<bool> _deafProperty = new DiscordParameter<bool>();
+        internal readonly DiscordParameter<bool> DeafProperty = new DiscordParameter<bool>();
         [JsonProperty("self_deaf")]
         public bool Deafened
         {
-            get { return _deafProperty; }
-            set { _deafProperty.Value = value; }
+            get { return DeafProperty; }
+            set { DeafProperty.Value = value; }
         }
 
 
-        public bool ShouldSerializeDeafened()
+        internal readonly DiscordParameter<bool> VideoProperty = new DiscordParameter<bool>();
+        [JsonProperty("self_video")]
+        internal bool Screensharing
         {
-            return _deafProperty.Set;
+            get { return VideoProperty; }
+            set { VideoProperty.Value = value; }
         }
     }
 }

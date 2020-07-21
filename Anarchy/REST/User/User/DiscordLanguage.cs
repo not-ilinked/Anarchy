@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Discord
 {
-    internal class LanguageConverter : JsonConverter
+    public class LanguageConverter : JsonConverter
     {
         private static readonly Dictionary<DiscordLanguage, string> Languages = new Dictionary<DiscordLanguage, string>()
         {
@@ -28,13 +28,15 @@ namespace Discord
             { DiscordLanguage.Turkish, "tr" },
             { DiscordLanguage.Czech, "cs" },
             { DiscordLanguage.Greek, "el" },
-            { DiscordLanguage.Bulgarian, "bl" },
             { DiscordLanguage.Russian, "ru" },
             { DiscordLanguage.Ukranian, "uk" },
             { DiscordLanguage.Thai, "th" },
             { DiscordLanguage.Chinese, "zh-CN" },
             { DiscordLanguage.Japanese, "ja" },
-            { DiscordLanguage.Korean, "ko" }
+            { DiscordLanguage.Korean, "ko" },
+            { DiscordLanguage.Bulgarian, "bg" },
+            { DiscordLanguage.Taiwanese, "zh-TW" },
+            { DiscordLanguage.Lithuanian, "lt" }
         };
 
         private string ToString(DiscordLanguage lang)
@@ -99,7 +101,7 @@ namespace Discord
         Thai,
         Chinese,
         Japanese,
-        ChineseThai,
+        Taiwanese,
         Korean
     }
 }

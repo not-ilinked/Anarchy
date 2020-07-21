@@ -1,13 +1,12 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace Discord.Gateway
 {
-    internal static class GatewayExtensions
+    public static class GatewayExtensions
     {
-        internal static void Send<T>(this DiscordSocketClient client, GatewayOpcode op, T requestData) where T : new()
+        public static void Send<T>(this DiscordSocketClient client, GatewayOpcode op, T requestData) where T : new()
         {
             lock (client.RequestLock)
             {

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Discord
@@ -63,6 +61,21 @@ namespace Discord
         public static void DeleteRole(this DiscordClient client, ulong guildId, ulong roleId)
         {
             client.DeleteRoleAsync(guildId, roleId).GetAwaiter().GetResult();
+        }
+
+
+        public static async Task<IReadOnlyList<DiscordRole>> SetRolePositionsAsync(this DiscordClient client, ulong guildId, List<RolePositionUpdate> roles)
+        {
+            var result = (await client.HttpClient.PatchAsync($"/guilds/{guildId}/roles", roles))
+                                    .Deserialize<List<DiscordRole>>().SetClientsInList(client);
+            foreach (var role in result)
+                role.GuildId = guildId;
+            return result;
+        }
+
+        public static IReadOnlyList<DiscordRole> SetRolePositions(this DiscordClient client, ulong guildId, List<RolePositionUpdate> roles)
+        {
+            return client.SetRolePositionsAsync(guildId, roles).GetAwaiter().GetResult();
         }
         #endregion
 

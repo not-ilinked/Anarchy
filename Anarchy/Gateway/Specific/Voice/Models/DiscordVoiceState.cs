@@ -80,7 +80,7 @@ namespace Discord.Gateway
         public bool SelfMuted { get; private set; }
 
 
-        [JsonProperty("self_stream")]
-        public bool Streaming { get; private set; }
+        [JsonProperty("self_video")]
+        public bool Screensharing { get; private set; }
     }
 }

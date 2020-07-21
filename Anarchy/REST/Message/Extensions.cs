@@ -15,7 +15,7 @@ namespace Discord
         #region management
         public static async Task<DiscordMessage> SendMessageAsync(this DiscordClient client, ulong channelId, string message, bool tts = false, DiscordEmbed embed = null)
         {
-            return (await client.HttpClient.PostAsync($"/channels/{channelId}/messages", new MessageProperties() { Content = message, Tts = tts, Embed = embed }))
+            return (await client.HttpClient.PostAsync($"/channels/{channelId}/messages", new MessageCreateProperties() { Content = message, Tts = tts, Embed = embed }))
                                  .Deserialize<DiscordMessage>().SetClient(client);
         }
 
@@ -40,7 +40,7 @@ namespace Discord
             MultipartFormDataContent content = new MultipartFormDataContent
             {
                 {
-                    new StringContent(JsonConvert.SerializeObject(new MessageProperties()
+                    new StringContent(JsonConvert.SerializeObject(new MessageCreateProperties()
                     {
                         Content = message,
                         Tts = tts
@@ -86,9 +86,9 @@ namespace Discord
         }
 
 
-        public static async Task<DiscordMessage> EditMessageAsync(this DiscordClient client, ulong channelId, ulong messageId, string message)
+        public static async Task<DiscordMessage> EditMessageAsync(this DiscordClient client, ulong channelId, ulong messageId, MessageEditProperties properties)
         {
-            return (await client.HttpClient.PatchAsync($"/channels/{channelId}/messages/{messageId}", $"{{\"content\":\"{message}\"}}"))
+            return (await client.HttpClient.PatchAsync($"/channels/{channelId}/messages/{messageId}", properties))
                                 .Deserialize<DiscordMessage>().SetClient(client);
         }
 
@@ -99,9 +99,9 @@ namespace Discord
         /// <param name="messageId">ID of the channel</param>
         /// <param name="message">New content of the message</param>
         /// <returns>The edited message</returns>
-        public static DiscordMessage EditMessage(this DiscordClient client, ulong channelId, ulong messageId, string message)
+        public static DiscordMessage EditMessage(this DiscordClient client, ulong channelId, ulong messageId, MessageEditProperties properties)
         {
-            return client.EditMessageAsync(channelId, messageId, message).GetAwaiter().GetResult();
+            return client.EditMessageAsync(channelId, messageId, properties).GetAwaiter().GetResult();
         }
 
 
@@ -175,7 +175,9 @@ namespace Discord
             {
                 string parameters = "";
                 if (filters.Limit.HasValue)
-                    parameters += $"limit={(uint)Math.Min(messagesPerRequest, filters.Limit.Value - messages.Count)}";
+                    parameters += $"limit={(uint)Math.Min(messagesPerRequest, filters.Limit.Value - messages.Count)}&";
+                else
+                    parameters += $"limit={messagesPerRequest}&";
                 if (filters.BeforeId.HasValue)
                     parameters += $"before={filters.BeforeId.Value}&";
                 if (filters.AfterId.HasValue)

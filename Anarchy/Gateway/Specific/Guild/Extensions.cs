@@ -164,23 +164,26 @@ namespace Discord.Gateway
                                     memberDict[i + range[0]] = newMembers[i];
 
                                 pendingRequests--;
-
-                                if ((memberDict.Count >= options.Count && options.Count > 0) || memberDict.OrderBy(i => i.Key).Last().Key + 1 >= combined)
-                                {
-                                    client.OnMemberListUpdate -= handler;
-
-                                    IEnumerable<GuildMember> result = memberDict.Select(i => i.Value);
-
-                                    if (options.Count > 0)
-                                        result = result.Take(options.Count);
-
-                                    task.SetResult(result.ToList());
-                                }
-                                else if (pendingRequests == 0)
-                                    pendingRequests = RequestMembers(client, guildId, channelId, memberDict.OrderBy(i => i.Key).Last().Key);
                             }
                         }
                     }
+
+                    if ((memberDict.Count >= options.Count && options.Count > 0) || memberDict.OrderBy(i => i.Key).Last().Key + 1 >= combined)
+                    {
+                        client.OnMemberListUpdate -= handler;
+
+                        IEnumerable<GuildMember> result = memberDict.Select(i => i.Value);
+
+                        if (options.Count > 0)
+                            result = result.Take(options.Count);
+
+                        foreach (var member in result)
+                            member.GuildId = guildId;
+
+                        task.SetResult(result.ToList().SetClientsInList(client));
+                    }
+                    else if (pendingRequests == 0)
+                        pendingRequests = RequestMembers(client, guildId, channelId, memberDict.OrderBy(i => i.Key).Last().Key);
                 }
             }
 

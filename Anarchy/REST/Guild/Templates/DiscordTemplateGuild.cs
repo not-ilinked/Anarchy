@@ -15,7 +15,7 @@ namespace Discord
             };
             JsonUpdated += (sender, json) =>
             {
-                Channels = json.Value<JArray>("channels").PopulateListJson<GuildChannel>();
+                Channels = json.Value<JArray>("channels").DeserializeWithJson<GuildChannel>();
             };
         }
 

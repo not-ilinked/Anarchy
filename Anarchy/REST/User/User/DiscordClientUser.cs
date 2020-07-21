@@ -24,12 +24,17 @@ namespace Discord
         public bool TwoFactorAuth { get; private set; }
 
 
+        [JsonProperty("phone")]
+        public string PhoneNumber { get; private set; }
+
+
         [JsonProperty("explicit_content_filter")]
         public ExplicitContentFilter ExplicitContentFilter { get; private set; }
 
 
         [JsonProperty("locale")]
         public DiscordLanguage RegistrationLanguage { get; private set; }
+
 
         [JsonProperty("premium_type")]
         private DiscordNitroType? _nitro;

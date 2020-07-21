@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Discord
 {
-    public class MinimalGuild : ControllableEx // the only reason this has Ex is bcuz of LoginGuild, lol
+    public class MinimalGuild : ControllableEx // Json is only populated on Login and Socket guild objects
     {
         [JsonProperty("id")]
         public ulong Id { get; private set; }
@@ -239,6 +239,17 @@ namespace Discord
         public DiscordRole CreateRole(RoleProperties properties = null)
         {
             return CreateRoleAsync(properties).GetAwaiter().GetResult();
+        }
+
+
+        public virtual async Task<IReadOnlyList<DiscordRole>> SetRolePositionsAsync(List<RolePositionUpdate> roles)
+        {
+            return await Client.SetRolePositionsAsync(Id, roles);
+        }
+
+        public virtual IReadOnlyList<DiscordRole> SetRolePositions(List<RolePositionUpdate> roles)
+        {
+            return SetRolePositionsAsync(roles).GetAwaiter().GetResult();
         }
 
 

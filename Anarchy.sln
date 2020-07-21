@@ -11,6 +11,8 @@ Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|x64 = Debug|x64
+		DebugToConsole|Any CPU = DebugToConsole|Any CPU
+		DebugToConsole|x64 = DebugToConsole|x64
 		Release Examples|Any CPU = Release Examples|Any CPU
 		Release Examples|x64 = Release Examples|x64
 		Release|Any CPU = Release|Any CPU
@@ -23,6 +25,10 @@ Global
 		{7F6F1AAC-E4DC-4FE7-8166-5B7AEC6FEB4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7F6F1AAC-E4DC-4FE7-8166-5B7AEC6FEB4C}.Debug|x64.ActiveCfg = Debug|Any CPU
 		{7F6F1AAC-E4DC-4FE7-8166-5B7AEC6FEB4C}.Debug|x64.Build.0 = Debug|Any CPU
+		{7F6F1AAC-E4DC-4FE7-8166-5B7AEC6FEB4C}.DebugToConsole|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F6F1AAC-E4DC-4FE7-8166-5B7AEC6FEB4C}.DebugToConsole|Any CPU.Build.0 = Debug|Any CPU
+		{7F6F1AAC-E4DC-4FE7-8166-5B7AEC6FEB4C}.DebugToConsole|x64.ActiveCfg = Debug|Any CPU
+		{7F6F1AAC-E4DC-4FE7-8166-5B7AEC6FEB4C}.DebugToConsole|x64.Build.0 = Debug|Any CPU
 		{7F6F1AAC-E4DC-4FE7-8166-5B7AEC6FEB4C}.Release Examples|Any CPU.ActiveCfg = Debug|Any CPU
 		{7F6F1AAC-E4DC-4FE7-8166-5B7AEC6FEB4C}.Release Examples|x64.ActiveCfg = Debug|Any CPU
 		{7F6F1AAC-E4DC-4FE7-8166-5B7AEC6FEB4C}.Release Examples|x64.Build.0 = Debug|Any CPU
@@ -37,6 +43,10 @@ Global
 		{63C6E908-2D28-4625-95B5-DE80338D6E5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{63C6E908-2D28-4625-95B5-DE80338D6E5B}.Debug|x64.ActiveCfg = Debug|Any CPU
 		{63C6E908-2D28-4625-95B5-DE80338D6E5B}.Debug|x64.Build.0 = Debug|Any CPU
+		{63C6E908-2D28-4625-95B5-DE80338D6E5B}.DebugToConsole|Any CPU.ActiveCfg = Debug|Any CPU
+		{63C6E908-2D28-4625-95B5-DE80338D6E5B}.DebugToConsole|Any CPU.Build.0 = Debug|Any CPU
+		{63C6E908-2D28-4625-95B5-DE80338D6E5B}.DebugToConsole|x64.ActiveCfg = Debug|Any CPU
+		{63C6E908-2D28-4625-95B5-DE80338D6E5B}.DebugToConsole|x64.Build.0 = Debug|Any CPU
 		{63C6E908-2D28-4625-95B5-DE80338D6E5B}.Release Examples|Any CPU.ActiveCfg = Release|Any CPU
 		{63C6E908-2D28-4625-95B5-DE80338D6E5B}.Release Examples|Any CPU.Build.0 = Release|Any CPU
 		{63C6E908-2D28-4625-95B5-DE80338D6E5B}.Release Examples|x64.ActiveCfg = Release|Any CPU

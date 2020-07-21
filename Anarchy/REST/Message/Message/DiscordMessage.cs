@@ -144,27 +144,32 @@ namespace Discord
         public MessageType Type { get; private set; }
 
 
-        public async Task EditAsync(string message)
+        [JsonProperty("flags")]
+        public MessageFlags Flags { get; private set; }
+
+
+        public async Task EditAsync(MessageEditProperties properties)
         {
             if (Type != MessageType.Default)
                 throw new InvalidOperationException("Can only edit messages with a Type of 'Default'");
 
-            DiscordMessage msg = await Client.EditMessageAsync(Channel.Id, Id, message);
+            DiscordMessage msg = await Client.EditMessageAsync(Channel.Id, Id, properties);
             Content = msg.Content;
             Pinned = msg.Pinned;
             Mentions = msg.Mentions;
             MentionedRoles = msg.MentionedRoles;
             MentionedEveryone = msg.MentionedEveryone;
             Embed = msg.Embed;
+            msg.Flags = properties.Flags;
         }
 
         /// <summary>
         /// Edits the message
         /// </summary>
         /// <param name="message">The new contents of the message</param>
-        public void Edit(string message)
+        public void Edit(MessageEditProperties properties)
         {
-            EditAsync(message).GetAwaiter().GetResult();
+            EditAsync(properties).GetAwaiter().GetResult();
         }
 
 

@@ -4,16 +4,14 @@ namespace Discord.Gateway
 {
     public class LogoutEventArgs : EventArgs
     {
-        public bool Clean { get; private set; }
+        public bool HasError { get; private set; }
         public GatewayCloseError Error { get; private set; }
 
-        public LogoutEventArgs()
-        {
-            Clean = true;
-        }
+        public LogoutEventArgs() { }
 
         public LogoutEventArgs(GatewayCloseError error)
         {
+            HasError = true;
             Error = error;
         }
     }

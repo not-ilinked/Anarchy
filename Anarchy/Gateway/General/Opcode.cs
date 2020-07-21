@@ -1,6 +1,6 @@
 ﻿namespace Discord.Gateway
 {
-    internal enum GatewayOpcode
+    public enum GatewayOpcode
     {
         Event,
         Heartbeat,
@@ -14,9 +14,8 @@
         Connected,
         HeartbeatAck,
         RequestGuildMembersUser = 14,
-        /*
         GoLive = 18,
         EndGoLive = 19,
-        GoLiveUpdate = 22*/
+        GoLiveUpdate = 22
     }
 }

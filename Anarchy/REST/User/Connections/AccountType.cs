@@ -12,6 +12,7 @@
         Reddit,
         XBox,
         Spotify,
-        Facebook
+        Facebook,
+        Github
     }
 }

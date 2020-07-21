@@ -169,6 +169,17 @@ namespace Discord
         }
 
 
+        public override async Task<IReadOnlyList<DiscordRole>> SetRolePositionsAsync(List<RolePositionUpdate> roles)
+        {
+            return _roles = (await base.SetRolePositionsAsync(roles)).ToList();
+        }
+
+        public override IReadOnlyList<DiscordRole> SetRolePositions(List<RolePositionUpdate> roles)
+        {
+            return SetRolePositionsAsync(roles).GetAwaiter().GetResult();
+        }
+
+
         public override async Task<IReadOnlyList<DiscordEmoji>> GetEmojisAsync()
         {
             return _emojis = (await base.GetEmojisAsync()).ToList();

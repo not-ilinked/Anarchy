@@ -57,18 +57,18 @@ namespace Discord
 
 
         private DiscordTemplateGuild _guild;
-        [JsonProperty("serialized_source_guild")]
+        [JsonIgnore]
         public DiscordTemplateGuild Template
         {
             get
             {
+                _guild.SetGuildId(_guildId);
+
                 return _guild;
             }
             private set
             {
                 _guild = value;
-
-                _guild.SetGuildId(_guildId);
             }
         }
 
@@ -76,11 +76,11 @@ namespace Discord
         public async Task UpdateAsync()
         {
             var template = await Client.GetGuildTemplateAsync(Code);
+            Json = template.Json;
             Name = template.Name;
             Usages = template.Usages;
             Creator = template.Creator;
             _guildId = template._guildId;
-            Template = template.Template;
         }
 
         public void Update()

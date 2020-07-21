@@ -1,4 +1,4 @@
-﻿namespace Discord
+﻿namespace Discord.Gateway
 {
     public class UserEventArgs
     {

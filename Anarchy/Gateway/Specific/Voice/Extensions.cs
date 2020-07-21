@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Discord.Media;
 using Discord.Voice;
 
 namespace Discord.Gateway
@@ -13,49 +14,70 @@ namespace Discord.Gateway
         /// </summary>
         public static void ChangeVoiceState(this DiscordSocketClient client, VoiceStateChange state)
         {
+            // temporary fix for discord expecting all parameters to be set
+            if (client.User.Type == DiscordUserType.User && client.Config.Cache)
+            {
+                try
+                {
+                    var voiceState = client.GetVoiceState(client.User.Id);
+
+                    if (!state.ChannelProperty.Set && voiceState.Channel != null)
+                    {
+                        if (voiceState.Guild != null)
+                            state.GuildId = voiceState.Guild.Id;
+
+                        state.ChannelId = voiceState.Channel.Id;
+                    }
+
+                    if (!state.MutedProperty.Set)
+                        state.Muted = voiceState.SelfMuted;
+
+                    if (!state.DeafProperty.Set)
+                        state.Deafened = voiceState.SelfDeafened;
+
+                    if (!state.VideoProperty.Set)
+                        state.Screensharing = voiceState.Screensharing;
+                }
+                catch { }
+            }
+
             client.Send(GatewayOpcode.VoiceStateUpdate, state);
         }
 
 
         public static Task<DiscordVoiceSession> JoinVoiceChannelAsync(this DiscordSocketClient client, ulong? guildId, ulong channelId, bool muted = false, bool deafened = false)
         {
-            if (client.Config.ConnectToVoiceChannels)
+            // issue with the current code is that it doesn't remove unused sessions
+            foreach (var session in client.VoiceSessions)
             {
-                // issue with the current code is that it doesn't remove unused sessions
-                foreach (var session in client.VoiceSessions)
+                if (session.State == DiscordMediaClientState.Connected)
                 {
-                    if (session.State == DiscordVoiceClientState.Connected)
-                    {
-                        if (client.User.Type == DiscordUserType.User || (guildId.HasValue && session.Server.Guild.Id == guildId.Value))
-                            session.Disconnect();
-                    }
+                    if (client.User.Type == DiscordUserType.User || (guildId.HasValue && session.Server.Guild.Id == guildId.Value))
+                        session.Disconnect();
                 }
+            }
 
-                TaskCompletionSource<DiscordVoiceSession> task = new TaskCompletionSource<DiscordVoiceSession>();
+            TaskCompletionSource<DiscordVoiceSession> task = new TaskCompletionSource<DiscordVoiceSession>();
 
-                void handler(DiscordSocketClient c, DiscordVoiceServer server)
+            void handler(DiscordSocketClient c, DiscordMediaServer server)
+            {
+                if (client.User.Type == DiscordUserType.User || (server.Guild != null && guildId.HasValue && server.Guild.Id == guildId.Value))
                 {
                     DiscordVoiceSession session = new DiscordVoiceSession(client, server, channelId);
 
                     client.VoiceSessions.Add(session);
 
-                    client.OnVoiceServer -= handler;
+                    client.OnMediaServer -= handler;
 
                     task.SetResult(session);
                 }
-
-                client.OnVoiceServer += handler;
-
-                client.ChangeVoiceState(new VoiceStateChange() { GuildId = guildId, ChannelId = channelId, Muted = muted, Deafened = deafened });
-
-                return task.Task;
             }
-            else
-            {
-                client.ChangeVoiceState(new VoiceStateChange() { GuildId = guildId, ChannelId = channelId, Muted = muted, Deafened = deafened });
 
-                return null;
-            }
+            client.OnMediaServer += handler;
+
+            client.ChangeVoiceState(new VoiceStateChange() { GuildId = guildId, ChannelId = channelId, Muted = muted, Deafened = deafened });
+
+            return task.Task;
         }
 
         /// <summary>

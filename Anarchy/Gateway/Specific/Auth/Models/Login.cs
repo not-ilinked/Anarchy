@@ -25,9 +25,9 @@ namespace Discord.Gateway
             };
             JsonUpdated += (sender, json) =>
             {
-                Guilds = json.Value<JArray>("guilds").PopulateListJson<LoginGuild>();
-                PrivateChannels = json.Value<JArray>("private_channels").PopulateListJson<PrivateChannel>();
-                Presences = json.Value<JArray>("presences").PopulateListJson<DiscordPresence>();
+                Guilds = json.Value<JArray>("guilds").DeserializeWithJson<LoginGuild>();
+                PrivateChannels = json.Value<JArray>("private_channels").DeserializeWithJson<PrivateChannel>();
+                Presences = json.Value<JArray>("presences").DeserializeWithJson<DiscordPresence>();
             };
         }
 
@@ -40,11 +40,11 @@ namespace Discord.Gateway
         public DiscordClientUser User { get; private set; }
 
 
-        [JsonProperty("guilds")]
+        [JsonIgnore]
         public IReadOnlyList<LoginGuild> Guilds { get; private set; }
 
 
-        [JsonProperty("private_channels")]
+        [JsonIgnore]
         public List<PrivateChannel> PrivateChannels { get; private set; }
 
 
@@ -64,7 +64,7 @@ namespace Discord.Gateway
         public DiscordUserSettings Settings { get; private set; }
 
 
-        [JsonProperty("presences")]
+        [JsonIgnore]
         public IReadOnlyList<DiscordPresence> Presences { get; private set; }
 
 

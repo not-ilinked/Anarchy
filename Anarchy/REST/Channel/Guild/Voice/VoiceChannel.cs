@@ -1,4 +1,7 @@
-﻿using Newtonsoft.Json;
+﻿using Discord.Gateway;
+using Discord.Voice;
+using Newtonsoft.Json;
+using System;
 using System.Threading.Tasks;
 
 namespace Discord
@@ -66,6 +69,20 @@ namespace Discord
         public DiscordInvite CreateInvite(InviteProperties properties = null)
         {
             return CreateInviteAsync(properties).GetAwaiter().GetResult();
+        }
+
+
+        public async Task<DiscordVoiceSession> JoinAsync(bool muted = false, bool deafened = false)
+        {
+            if (Client.GetType() == typeof(DiscordSocketClient))
+                return await ((DiscordSocketClient)Client).JoinVoiceChannelAsync(Guild.Id, Id, muted, deafened);
+            else
+                throw new NotSupportedException("Only DiscordSocketClients can join voice channels");
+        }
+
+        public DiscordVoiceSession Join(bool muted = false, bool deafened = false)
+        {
+            return JoinAsync(muted, deafened).GetAwaiter().GetResult();
         }
     }
 }

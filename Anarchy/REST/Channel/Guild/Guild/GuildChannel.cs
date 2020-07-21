@@ -11,12 +11,22 @@ namespace Discord
     public class GuildChannel : DiscordChannel
     {
         [JsonProperty("guild_id")]
-        internal ulong GuildId { get; set; }
-
-        public MinimalGuild Guild
+        internal ulong GuildId
         {
-            get { return new MinimalGuild(GuildId).SetClient(Client); }
+            get
+            {
+                return Guild.Id;
+            }
+            set
+            {
+                Guild = new MinimalGuild(value).SetClient(Client);
+
+                if (Json != null) // when guild_id is already in the JSON, it'll trigger the setter before it sets Json.
+                    Json["guild_id"] = GuildId;
+            }
         }
+
+        public MinimalGuild Guild { get; private set; }
 
 
         [JsonProperty("position")]

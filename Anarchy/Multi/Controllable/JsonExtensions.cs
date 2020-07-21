@@ -2,7 +2,7 @@
 using Discord.Gateway;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
-using Discord.Voice;
+using Discord.Media;
 
 namespace Discord
 {
@@ -23,7 +23,7 @@ namespace Discord
             return response.Data.ToString().Deserialize<T>();
         }
 
-        internal static T Deserialize<T>(this DiscordVoiceResponse response)
+        internal static T Deserialize<T>(this DiscordMediaResponse response)
         {
             return response.Data.ToString().Deserialize<T>();
         }
@@ -32,7 +32,7 @@ namespace Discord
         public static T DeserializeEx<T>(this string json) where T : ControllableEx
         {
             JObject obj = JObject.Parse(json);
-            return ((T)obj.ToObject(typeof(T))).SetJson(obj);
+            return obj.ToObject<T>().SetJson(obj);
         }
 
         public static T DeserializeEx<T>(this Response response) where T : ControllableEx
@@ -46,22 +46,17 @@ namespace Discord
         }
 
 
-        public static List<T> DeserializeExArray<T>(this Response response) where T : ControllableEx, new()
+        public static List<T> DeserializeExArray<T>(this Response response) where T : ControllableEx
         {
-            return JArray.Parse(response.ToString()).PopulateListJson<T>();
+            return JArray.Parse(response.ToString()).DeserializeWithJson<T>();
         }
 
-        public static List<T> PopulateListJson<T>(this JArray jArray) where T : ControllableEx
+        public static List<T> DeserializeWithJson<T>(this JArray jArray) where T : ControllableEx
         {
             List<T> results = new List<T>();
 
-            foreach (var channel in jArray.Children<JObject>())
-            {
-                T obj = channel.ToObject<T>();
-                obj.Json = channel;
-
-                results.Add(obj);
-            }
+            foreach (var child in jArray.Children<JObject>())
+                results.Add(child.ToObject<T>().SetJson(child));
 
             return results;
         }

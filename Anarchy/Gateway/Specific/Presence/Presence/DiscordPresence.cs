@@ -15,7 +15,7 @@ namespace Discord.Gateway
             };
             JsonUpdated += (sender, json) =>
             {
-                Activities = json.Value<JArray>("activities").PopulateListJson<UserActivity>();
+                Activities = json.Value<JArray>("activities").DeserializeWithJson<UserActivity>();
             };
         }
 

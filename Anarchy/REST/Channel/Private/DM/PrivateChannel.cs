@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using Discord.Gateway;
+using Discord.Voice;
 using Newtonsoft.Json;
 
 namespace Discord
@@ -74,6 +77,20 @@ namespace Discord
         public void ChangeCallRegion(string regionId)
         {
             ChangeCallRegionAsync(regionId).GetAwaiter().GetResult();
+        }
+
+
+        public async Task<DiscordVoiceSession> JoinAsync(bool muted = false, bool deafened = false)
+        {
+            if (Client.GetType() == typeof(DiscordSocketClient))
+                return await ((DiscordSocketClient)Client).JoinVoiceChannelAsync(null, Id, muted, deafened);
+            else
+                throw new NotSupportedException("Only DiscordSocketClients can join voice channels");
+        }
+
+        public DiscordVoiceSession Join(bool muted = false, bool deafened = false)
+        {
+            return JoinAsync(muted, deafened).GetAwaiter().GetResult();
         }
 
 

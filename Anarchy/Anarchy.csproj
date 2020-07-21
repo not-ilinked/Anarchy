@@ -86,11 +86,27 @@
     <Compile Include="Gateway\Specific\Presence\Activity\User\UserListeningActivity.cs" />
     <Compile Include="Gateway\Specific\Presence\Presence\ActiveSessionPlatforms.cs" />
     <Compile Include="Gateway\Specific\Presence\Presence\DiscordGuildPresence.cs" />
-    <Compile Include="Gateway\Specific\Research\GoLiveStreamKey.cs" />
+    <Compile Include="Gateway\Specific\Go Live\GoLiveStreamKey.cs" />
     <Compile Include="Gateway\Specific\Role\DeletedRole.cs" />
     <Compile Include="Gateway\Specific\Role\GatewayRoleExtensions.cs" />
     <Compile Include="Gateway\Specific\Role\RoleDeletedEventArgs.cs" />
+    <Compile Include="Gateway\Specific\Go Live\StreamExtensions.cs" />
     <Compile Include="Gateway\Specific\Subscriptions\NitroBoostUpdatedEventArgs.cs" />
+    <Compile Include="Media\Codecs\CodecType.cs" />
+    <Compile Include="Media\Codecs\H264\H264Packager.cs" />
+    <Compile Include="Media\Codecs\H264\NALUnitType.cs" />
+    <Compile Include="Media\Codecs\MediaCodec.cs" />
+    <Compile Include="Media\Codecs\Opus\OpusConverter.cs" />
+    <Compile Include="Media\Codecs\Opus\OpusDecoder.cs" />
+    <Compile Include="Media\Codecs\Opus\OpusException.cs" />
+    <Compile Include="Media\Codecs\VideoMediaCodec.cs" />
+    <Compile Include="Media\Livestreaming\DiscordLiveStream.cs" />
+    <Compile Include="Media\Livestreaming\DiscordGoLiveSession.cs" />
+    <Compile Include="Gateway\Specific\Go Live\GoLiveCreate.cs" />
+    <Compile Include="Media\Media\DiscordSSRC.cs" />
+    <Compile Include="Media\RTP\RTPPacketHeader.cs" />
+    <Compile Include="Media\Voice\Speaking\DiscordVoicePacket.cs" />
+    <Compile Include="Media\Voice\Speaking\DiscordVoiceReceiver.cs" />
     <Compile Include="Multi\Models\DiscordImage.cs" />
     <Compile Include="Gateway\Specific\Invite\InviteCreatedEventArgs.cs" />
     <Compile Include="REST\Billing\BillingAddress.cs" />
@@ -118,10 +134,13 @@
     <Compile Include="REST\Guild\Settings\DiscordChannelSettings.cs" />
     <Compile Include="REST\Guild\Settings\GuildMuteConfig.cs" />
     <Compile Include="REST\Message\Message\MessageAuthor.cs" />
+    <Compile Include="REST\Message\Message\MessageEditProperties.cs" />
+    <Compile Include="REST\Message\Message\MessageFlags.cs" />
     <Compile Include="REST\Permissions\DiscordPermission.cs" />
     <Compile Include="REST\Permissions\DiscordPermissionOverwrite.cs" />
     <Compile Include="REST\Permissions\OverwrittenPermissionState.cs" />
     <Compile Include="REST\Permissions\PermissionOverwriteType.cs" />
+    <Compile Include="REST\Role\Models\RolePositionUpdate.cs" />
     <Compile Include="REST\Subscriptions\Nitro\DiscordNitroBoost.cs" />
     <Compile Include="REST\Subscriptions\Nitro\DiscordNitroSubType.cs" />
     <Compile Include="REST\Subscriptions\Nitro\DiscordNitroSubTypes.cs" />
@@ -138,7 +157,8 @@
     <Compile Include="REST\User\Settings\DiscordSettingsEventArgs.cs" />
     <Compile Include="REST\User\Settings\DiscordUserSettings.cs" />
     <Compile Include="REST\User\Settings\DiscordGuildFolderUpdate.cs" />
-    <Compile Include="Voice\DiscordVoiceClientState.cs" />
+    <Compile Include="Media\Media\DiscordMediaSession.cs" />
+    <Compile Include="Media\Media\DiscordMediaClientState.cs" />
     <Compile Include="Gateway\Specific\Auth\Extensions.cs" />
     <Compile Include="Gateway\Specific\Auth\Models\Identification.cs" />
     <Compile Include="Gateway\Specific\Auth\Models\Login.cs" />
@@ -163,7 +183,7 @@
     <Compile Include="Gateway\Specific\Presence\Presence\DiscordPresence.cs" />
     <Compile Include="Gateway\Specific\Presence\Presence\UpdatedEventArgs.cs" />
     <Compile Include="Gateway\Specific\Voice\Extensions.cs" />
-    <Compile Include="Gateway\Specific\Voice\Models\DiscordVoiceServer.cs" />
+    <Compile Include="Gateway\Specific\Voice\Models\DiscordMediaServer.cs" />
     <Compile Include="Gateway\Specific\Voice\Models\DiscordVoiceState.cs" />
     <Compile Include="Gateway\Specific\Voice\Models\VoiceStateChange.cs" />
     <Compile Include="Gateway\Specific\Voice\Models\VoiceStateEventARgs.cs" />
@@ -272,7 +292,7 @@
     <Compile Include="REST\Message\Message\DiscordMessage.cs" />
     <Compile Include="REST\Message\Message\MessageEventArgs.cs" />
     <Compile Include="REST\Message\Message\MessageFilters.cs" />
-    <Compile Include="REST\Message\Message\MessageProperties.cs" />
+    <Compile Include="REST\Message\Message\MessageCreateProperties.cs" />
     <Compile Include="REST\Message\Message\MessageType.cs" />
     <Compile Include="REST\Message\Reaction\MessageReaction.cs" />
     <Compile Include="REST\Message\Reaction\ReactionEventArgs.cs" />
@@ -286,8 +306,7 @@
     <Compile Include="REST\OAuth2\Models\AuthorizedApp.cs" />
     <Compile Include="REST\OAuth2\Models\DiscordBotAuthProperties.cs" />
     <Compile Include="REST\OAuth2\Models\OAuth2Application.cs" />
-    <Compile Include="REST\RateLimit\RateLimit.cs" />
-    <Compile Include="REST\RateLimit\RateLimitException.cs" />
+    <Compile Include="REST\HTTP\RateLimitException.cs" />
     <Compile Include="REST\Relationships\Extensions.cs" />
     <Compile Include="REST\Relationships\Models\Relationship.cs" />
     <Compile Include="REST\Relationships\Models\RelationshipEventArgs.cs" />
@@ -318,35 +337,35 @@
     <Compile Include="REST\User\User\UserEventArgs.cs" />
     <Compile Include="REST\Voice\Extensions.cs" />
     <Compile Include="REST\Voice\VoiceRegion.cs" />
-    <Compile Include="Voice\DiscordVoiceStream.cs" />
-    <Compile Include="Voice\DiscordVoiceUtils.cs" />
-    <Compile Include="Voice\Payloads\DiscordVoiceSpeakingState.cs" />
-    <Compile Include="Voice\Research\SSRCUpdate.cs" />
-    <Compile Include="Gateway\Specific\Research\StartStream.cs" />
-    <Compile Include="Gateway\Specific\Research\StreamUpdate.cs" />
+    <Compile Include="Media\Voice\DiscordVoiceStream.cs" />
+    <Compile Include="Media\Voice\DiscordVoiceUtils.cs" />
+    <Compile Include="Media\Voice\Speaking\DiscordVoiceSpeakingState.cs" />
+    <Compile Include="Media\Media\SSRCUpdate.cs" />
+    <Compile Include="Gateway\Specific\Go Live\StartStream.cs" />
+    <Compile Include="Gateway\Specific\Go Live\StreamUpdate.cs" />
     <Compile Include="Webhook\DiscordWebhookType.cs" />
     <Compile Include="Webhook\WebhookMessageProperties.cs" />
     <Compile Include="Webhook\DiscordWebhookProfile.cs" />
     <Compile Include="Webhook\DiscordWebhookProperties.cs" />
-    <Compile Include="Voice\Base\DiscordVoiceCloseError.cs" />
-    <Compile Include="Voice\Base\DiscordVoiceOpcode.cs" />
-    <Compile Include="Voice\Base\DiscordVoiceRequest.cs" />
-    <Compile Include="Voice\Base\DiscordVoiceResponse.cs" />
-    <Compile Include="Voice\DiscordVoiceSession.cs" />
-    <Compile Include="Voice\DiscordVoiceCloseEventArgs.cs" />
-    <Compile Include="Voice\Payloads\DiscordVoiceIdentify.cs" />
-    <Compile Include="Voice\Payloads\DiscordVoiceProtocolData.cs" />
-    <Compile Include="Voice\Payloads\DiscordVoiceProtocolSelection.cs" />
-    <Compile Include="Voice\Payloads\DiscordVoiceReady.cs" />
-    <Compile Include="Voice\Payloads\DiscordSpeakingRequest.cs" />
-    <Compile Include="Voice\Payloads\DiscordVoiceSpeaking.cs" />
-    <Compile Include="Voice\Wrappers\Opus\AudioApplication.cs" />
-    <Compile Include="Voice\Wrappers\Opus\OpusApplication.cs" />
-    <Compile Include="Voice\Wrappers\Opus\OpusCtl.cs" />
-    <Compile Include="Voice\Wrappers\Opus\OpusEncoder.cs" />
-    <Compile Include="Voice\Wrappers\Opus\OpusError.cs" />
-    <Compile Include="Voice\Wrappers\Opus\OpusSignal.cs" />
-    <Compile Include="Voice\Wrappers\Sodium.cs" />
+    <Compile Include="Media\Media\DiscordMediaCloseError.cs" />
+    <Compile Include="Media\Media\Payloads\DiscordMediaOpcode.cs" />
+    <Compile Include="Media\Media\Payloads\DiscordMediaRequest.cs" />
+    <Compile Include="Media\Media\Payloads\DiscordMediaResponse.cs" />
+    <Compile Include="Media\Voice\DiscordVoiceSession.cs" />
+    <Compile Include="Media\Media\DiscordMediaCloseEventArgs.cs" />
+    <Compile Include="Media\Media\Payloads\DiscordMediaIdentify.cs" />
+    <Compile Include="Media\Media\Payloads\MediaProtocolData.cs" />
+    <Compile Include="Media\Media\Payloads\MediaProtocolSelection.cs" />
+    <Compile Include="Media\Media\Payloads\DiscordMediaReady.cs" />
+    <Compile Include="Media\Voice\Speaking\DiscordSpeakingRequest.cs" />
+    <Compile Include="Media\Voice\Speaking\DiscordSpeakingStateEventArgs.cs" />
+    <Compile Include="Media\Codecs\Opus\AudioApplication.cs" />
+    <Compile Include="Media\Codecs\Opus\OpusApplication.cs" />
+    <Compile Include="Media\Codecs\Opus\OpusCtl.cs" />
+    <Compile Include="Media\Codecs\Opus\OpusEncoder.cs" />
+    <Compile Include="Media\Codecs\Opus\OpusError.cs" />
+    <Compile Include="Media\Codecs\Opus\OpusSignal.cs" />
+    <Compile Include="Media\RTP\Sodium.cs" />
     <Compile Include="Webhook\DiscordWebhook.cs" />
     <Compile Include="Webhook\Extensions.cs" />
     <Compile Include="Config\SuperProperties.cs" />
@@ -360,4 +379,9 @@
     <PreBuildEvent>
     </PreBuildEvent>
   </PropertyGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+  </Target>
 </Project>
