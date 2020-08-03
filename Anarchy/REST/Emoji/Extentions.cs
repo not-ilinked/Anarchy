@@ -97,47 +97,5 @@ namespace Discord
         {
             return client.GetGuildEmojiAsync(guildId, emojiId).GetAwaiter().GetResult();
         }
-
-
-        public static async Task AddMessageReactionAsync(this DiscordClient client, ulong channelId, ulong messageId, string reaction)
-        {
-            await client.HttpClient.PutAsync($"/channels/{channelId}/messages/{messageId}/reactions/{reaction}/@me");
-        }
-
-
-        /// <summary>
-        /// Adds a reaction to a message
-        /// </summary>
-        /// <param name="channelId">ID of the channel</param>
-        /// <param name="messageId">ID of the message</param>
-        /// <param name="reaction">The reaction to add</param>
-        public static void AddMessageReaction(this DiscordClient client, ulong channelId, ulong messageId, string reaction)
-        {
-            client.AddMessageReactionAsync(channelId, messageId, reaction).GetAwaiter().GetResult();
-        }
-
-
-        public static async Task RemoveMessageReactionAsync(this DiscordClient client, ulong channelId, ulong messageId, string reaction, ulong userId = 0)
-        {
-            string user = "@me";
-
-            if (userId != 0)
-                user = userId.ToString();
-
-            await client.HttpClient.DeleteAsync($"/channels/{channelId}/messages/{messageId}/reactions/{reaction}/{user}");
-        }
-
-        /// <summary>
-        /// Removes a reaction from a message.
-        /// If userId is not set, the client's own reaction is removed
-        /// </summary>
-        /// <param name="channelId">ID of the channel</param>
-        /// <param name="messageId">ID of the message</param>
-        /// <param name="userId">User who's reaction should be removed</param>
-        /// <param name="reaction">The reaction to remove</param>
-        public static void RemoveMessageReaction(this DiscordClient client, ulong channelId, ulong messageId, string reaction, ulong userId = 0)
-        {
-            client.RemoveMessageReaction(channelId, messageId, reaction, userId);
-        }
     }
 }

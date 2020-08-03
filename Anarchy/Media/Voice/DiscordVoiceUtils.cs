@@ -1,4 +1,6 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 
 namespace Discord.Voice
@@ -23,26 +25,51 @@ namespace Discord.Voice
             }
         }
 
-        /*
-        public static void WriteToFile(byte[] data, string path)
+        private static List<int> FindNALUnitIndexes(byte[] byteStream)
         {
-            var process = Process.Start(new ProcessStartInfo()
+            List<int> indexes = new List<int>();
+
+            byte[] startCode = new byte[] { 0, 0, 0, 1 };
+            int currentStartCodeChar = 0;
+
+            for (int i = 0; i < byteStream.Length; i++)
             {
-                FileName = "ffmpeg.exe",
-                Arguments = "-y -f s16le -r 48000 -ac 2 -i pipe:0 -vn -acodec libfdk_aac test.mp3",
-                UseShellExecute = false,
-                RedirectStandardInput = true
-            });
-            
-            new MemoryStream(data).CopyTo(process.StandardInput.BaseStream);
-            
-            FileStream file = File.Open(path, FileMode.OpenOrCreate, FileAccess.Write);
+                if (byteStream[i] == startCode[currentStartCodeChar])
+                {
+                    currentStartCodeChar++;
 
-            process.StandardOutput.BaseStream.CopyTo(file);
+                    if (currentStartCodeChar == startCode.Length)
+                        indexes.Add(i + 1);
+                    else
+                        continue; // don't wanna reset till we're done lel
+                }
+                
+                currentStartCodeChar = 0;
+            }
 
-            file.Close();
+            return indexes;
+        }
 
-            process.Close();
-        }*/
+        public static byte[][] NALBytestreamToPackets(byte[] byteStream)
+        {
+            List<int> startIndexes = FindNALUnitIndexes(byteStream);
+
+            byte[][] nalUnits = new byte[startIndexes.Count][];
+
+            for (int i = 0; i < startIndexes.Count; i++)
+            {
+                int count;
+
+                if (i == startIndexes.Count - 1)
+                    count = byteStream.Length - startIndexes[i];
+                else
+                    count = startIndexes[i + 1] - startIndexes[i] - 4;
+                
+                nalUnits[i] = new byte[count];
+                Buffer.BlockCopy(byteStream, startIndexes[i], nalUnits[i], 0, count);
+            }
+
+            return nalUnits;
+        }
     }
 }

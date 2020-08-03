@@ -16,11 +16,8 @@ namespace Discord.Streaming
         }
 
 
-        // WIP
-        protected void Write(byte nalHeader, byte[] buffer, int offset, int count)
+        public void Write(byte[] nalUnit)
         {
-            byte[] nalUnit = H264Packager.CreateNALUnit(nalHeader, buffer, offset, count);
-
             int length = new RTPPacketHeader() 
             { 
                 // Version = 0x80, 

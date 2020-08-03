@@ -239,6 +239,51 @@ namespace Discord
         }
 
 
+        public static async Task AddMessageReactionAsync(this DiscordClient client, ulong channelId, ulong messageId, string reaction)
+        {
+            await client.HttpClient.PutAsync($"/channels/{channelId}/messages/{messageId}/reactions/{reaction}/@me");
+        }
+
+        /// <summary>
+        /// Adds a reaction to a message
+        /// </summary>
+        /// <param name="channelId">ID of the channel</param>
+        /// <param name="messageId">ID of the message</param>
+        /// <param name="reaction">The reaction to add</param>
+        public static void AddMessageReaction(this DiscordClient client, ulong channelId, ulong messageId, string reaction)
+        {
+            client.AddMessageReactionAsync(channelId, messageId, reaction).GetAwaiter().GetResult();
+        }
+
+
+        private static async Task removeReactionAsync(this DiscordClient client, ulong channelId, ulong messageId, string reaction, string user)
+        {
+            await client.HttpClient.DeleteAsync($"/channels/{channelId}/messages/{messageId}/reactions/{reaction}/{user}");
+        }
+
+
+        public static async Task RemoveClientMessageReactionAsync(this DiscordClient client, ulong channelId, ulong messageId, string reaction)
+        {
+            await client.removeReactionAsync(channelId, messageId, reaction, "@me");
+        }
+
+        public static void RemoveClientMessageReaction(this DiscordClient client, ulong channelId, ulong messageId, string reaction)
+        {
+            client.removeReactionAsync(channelId, messageId, reaction, "@me").GetAwaiter().GetResult();
+        }
+
+
+        public static async Task RemoveMessageReactionAsync(this DiscordClient client, ulong channelId, ulong messageId, string reaction, ulong userId)
+        {
+            await client.removeReactionAsync(channelId, messageId, reaction, userId.ToString());
+        }
+
+        public static void RemoveMessageReaction(this DiscordClient client, ulong channelId, ulong messageId, string reaction, ulong userId = 0)
+        {
+            client.RemoveMessageReactionAsync(channelId, messageId, reaction, userId).GetAwaiter().GetResult();
+        }
+
+
         #region pins
         [Obsolete("GetChannelPinnedMessagesAsync is depricated. Call GetPinnedMessagesAsync instead", true)]
         public static Task<IReadOnlyList<DiscordMessage>> GetChannelPinnedMessagesAsync(this DiscordClient client, ulong channelId)

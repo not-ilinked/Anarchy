@@ -229,16 +229,23 @@ namespace Discord
         }
 
 
-        public async Task RemoveReactionAsync(string reaction, ulong userId = 0)
+        public async Task RemoveClientReactionAsync(string reaction)
+        {
+            await Client.RemoveClientMessageReactionAsync(Channel.Id, Id, reaction);
+        }
+
+        public void RemoveClientReaction(string reaction)
+        {
+            RemoveClientReactionAsync(reaction).GetAwaiter().GetResult();
+        }
+
+
+        public async Task RemoveReactionAsync(string reaction, ulong userId)
         {
             await Client.RemoveMessageReactionAsync(Channel.Id, Id, reaction, userId);
         }
 
-        /// <summary>
-        /// Removes a user's reaction from the message
-        /// If userId is not set, the client's own reaction is removed
-        /// </summary>
-        public void RemoveReaction(string reaction, ulong userId = 0)
+        public void RemoveReaction(string reaction, ulong userId)
         {
             RemoveReactionAsync(reaction, userId).GetAwaiter().GetResult();
         }
