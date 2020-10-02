@@ -37,6 +37,7 @@
         UserIsBanned = 40007,
         AccountOwnsGuilds = 40011,
         NotConnectedToVoice = 40032,
+        MessageAlreadyCrossposted,
         MissingAccess = 50001,
         InvalidAccountType,
         CannotExecuteInDM,

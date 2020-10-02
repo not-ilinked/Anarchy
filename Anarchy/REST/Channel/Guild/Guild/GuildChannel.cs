@@ -20,9 +20,6 @@ namespace Discord
             set
             {
                 Guild = new MinimalGuild(value).SetClient(Client);
-
-                if (Json != null) // when guild_id is already in the JSON, it'll trigger the setter before it sets Json.
-                    Json["guild_id"] = GuildId;
             }
         }
 
@@ -52,7 +49,7 @@ namespace Discord
 
         public new async Task UpdateAsync()
         {
-            Update((await Client.GetChannelAsync(Id)).ToGuildChannel());
+            Update((GuildChannel)await Client.GetChannelAsync(Id));
         }
 
         /// <summary>

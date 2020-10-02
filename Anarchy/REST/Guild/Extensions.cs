@@ -76,22 +76,6 @@ namespace Discord
         }
 
 
-        public static async Task KickGuildMemberAsync(this DiscordClient client, ulong guildId, ulong userId)
-        {
-            await client.HttpClient.DeleteAsync($"/guilds/{guildId}/members/{userId}");
-        }
-
-        /// <summary>
-        /// Kicks a member from a guild
-        /// </summary>
-        /// <param name="guildId">ID of the guild</param>
-        /// <param name="userId">ID of the member</param>
-        public static void KickGuildMember(this DiscordClient client, ulong guildId, ulong userId)
-        {
-            client.KickGuildMemberAsync(guildId, userId).GetAwaiter().GetResult();
-        }
-
-
         public static async Task<IReadOnlyList<DiscordBan>> GetGuildBansAsync(this DiscordClient client, ulong guildId)
         {
             IReadOnlyList<DiscordBan> bans = (await client.HttpClient.GetAsync($"/guilds/{guildId}/bans"))
@@ -128,24 +112,6 @@ namespace Discord
         public static DiscordBan GetGuildBan(this DiscordClient client, ulong guildId, ulong userId)
         {
             return client.GetGuildBanAsync(guildId, userId).GetAwaiter().GetResult();
-        }
-
-
-        public static async Task BanGuildMemberAsync(this DiscordClient client, ulong guildId, ulong userId, string reason = null, uint deleteMessageDays = 0)
-        {
-            await client.HttpClient.PutAsync($"/guilds/{guildId}/bans/{userId}?delete-message-days={deleteMessageDays}&reason={reason}");
-        }
-
-        /// <summary>
-        /// Bans a member from a guild
-        /// </summary>
-        /// <param name="guildId">ID of the guild</param>
-        /// <param name="userId">ID of the member</param>
-        /// <param name="reason">Reason for banning the member</param>
-        /// <param name="deleteMessageDays">Amount of days to purge messages for</param>
-        public static void BanGuildMember(this DiscordClient client, ulong guildId, ulong userId, string reason = null, uint deleteMessageDays = 0)
-        {
-            client.BanGuildMemberAsync(guildId, userId, reason, deleteMessageDays).GetAwaiter().GetResult();
         }
 
 
@@ -254,22 +220,6 @@ namespace Discord
         public static void LeaveGuild(this DiscordClient client, ulong guildId, bool lurking = false)
         {
             client.LeaveGuildAsync(guildId, lurking).GetAwaiter().GetResult();
-        }
-
-
-        public static async Task ChangeClientNicknameAsync(this DiscordClient client, ulong guildId, string nickname)
-        {
-            await client.HttpClient.PatchAsync($"/guilds/{guildId}/members/@me/nick", $"{{\"nick\":\"{nickname}\"}}");
-        }
-
-        /// <summary>
-        /// Changes the client's nickname in a guild
-        /// </summary>
-        /// <param name="guildId">ID of the guild</param>
-        /// <param name="nickname">New nickname</param>
-        public static void ChangeClientNickname(this DiscordClient client, ulong guildId, string nickname)
-        {
-            client.ChangeClientNicknameAsync(guildId, nickname).GetAwaiter().GetResult();
         }
 
 

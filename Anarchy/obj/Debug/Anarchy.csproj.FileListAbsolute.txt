@@ -21,3 +21,5 @@ C:\Users\ilink\source\repos\Anarchy\Anarchy\obj\Debug\Anarchy.csprojAssemblyRefe
 C:\Users\ilink\source\repos\Anarchy\Anarchy\obj\Debug\Anarchy.csproj.CopyComplete
 C:\Users\ilink\source\repos\Anarchy\Anarchy\obj\Debug\Anarchy.dll
 C:\Users\ilink\source\repos\Anarchy\Anarchy\obj\Debug\Anarchy.pdb
+C:\Users\edhbu\source\repos\Anarchy\Anarchy\bin\Debug\websocket-sharp.pdb
+C:\Users\edhbu\source\repos\Anarchy\Anarchy\bin\Debug\System.Collections.Immutable.dll

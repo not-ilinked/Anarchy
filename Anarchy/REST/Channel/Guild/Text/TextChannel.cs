@@ -34,6 +34,7 @@ namespace Discord
         protected void Update(TextChannel channel)
         {
             base.Update(channel);
+            Type = channel.Type;
             Topic = channel.Topic;
             Nsfw = channel.Nsfw;
             SlowMode = channel.SlowMode;
@@ -42,7 +43,7 @@ namespace Discord
 
         public new async Task UpdateAsync()
         {
-            Update((await Client.GetChannelAsync(Id)).ToTextChannel());
+            Update((TextChannel)await Client.GetChannelAsync(Id));
         }
 
         /// <summary>
@@ -57,6 +58,9 @@ namespace Discord
         public async Task ModifyAsync(TextChannelProperties properties)
         {
             Update(await Client.ModifyGuildChannelAsync(Id, properties));
+
+            if (properties.TypeProperty.Set)
+                Type = properties.TypeProperty;
         }
 
         /// <summary>
@@ -229,7 +233,7 @@ namespace Discord
         }
 
 
-        public async Task<DiscordWebhook> CreateWebhookAsync(DiscordWebhookProperties properties)
+        public async Task<DiscordDefaultWebhook> CreateWebhookAsync(DiscordWebhookProperties properties)
         {
             return await Client.CreateWebhookAsync(Id, properties);
         }
@@ -239,9 +243,15 @@ namespace Discord
         /// </summary>
         /// <param name="properties">Options for creating/modifying the webhook</param>
         /// <returns>The created webhook</returns>
-        public DiscordWebhook CreateWebhook(DiscordWebhookProperties properties)
+        public DiscordDefaultWebhook CreateWebhook(DiscordWebhookProperties properties)
         {
             return CreateWebhookAsync(properties).Result;
+        }
+
+
+        internal override void SetLastMessageId(ulong id)
+        {
+            LastMessageId = id;
         }
     }
 }

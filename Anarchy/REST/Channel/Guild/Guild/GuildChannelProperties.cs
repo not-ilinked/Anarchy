@@ -15,11 +15,11 @@ namespace Discord
             set { NameProperty.Value = value; }
         }
 
-
         public bool ShouldSerializeName()
         {
             return NameProperty.Set;
         }
+
 
         private readonly DiscordParameter<ulong?> ParentProperty = new DiscordParameter<ulong?>();
         [JsonProperty("parent_id")]
@@ -28,7 +28,6 @@ namespace Discord
             get { return ParentProperty; }
             set { ParentProperty.Value = value; }
         }
-
 
         public bool ShouldSerializeParentId()
         {

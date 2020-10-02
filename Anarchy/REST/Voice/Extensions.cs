@@ -39,7 +39,7 @@ namespace Discord
 
         public static async Task StopRingingAsync(this DiscordClient client, ulong channelId, List<ulong> recipients)
         {
-            await client.HttpClient.PostAsync($"https://discordapp.com/api/v6/channels/{channelId}/call/stop-ringing", new JObject
+            await client.HttpClient.PostAsync($"/channels/{channelId}/call/stop-ringing", new JObject
             {
                 ["recipients"] = recipients == null ? null : JArray.FromObject(recipients)
             });

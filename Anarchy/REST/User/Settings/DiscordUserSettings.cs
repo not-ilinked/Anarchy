@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 
@@ -12,7 +13,7 @@ namespace Discord
         }
 
         [JsonProperty("theme")]
-        private readonly string _theme;
+        private string _theme;
 
         public DiscordTheme Theme
         {
@@ -54,5 +55,27 @@ namespace Discord
 
         [JsonProperty("guild_folders")]
         public IReadOnlyList<DiscordGuildFolder> GuildFolders { get; private set; }
+
+        internal void Update(JObject jObj)
+        {
+            foreach (var property in this.GetType().GetProperties())
+            {
+                foreach (var attr in property.GetCustomAttributes(false))
+                {
+                    if (attr.GetType() == typeof(JsonPropertyAttribute))
+                    {
+                        var jsonAttr = (JsonPropertyAttribute)attr;
+
+                        if (jObj.TryGetValue(jsonAttr.PropertyName, out JToken value))
+                            property.SetValue(this, value.ToObject(property.PropertyType));
+
+                        break;
+                    }
+                }
+            }
+
+            if (jObj.TryGetValue("theme", out JToken theme))
+                _theme = theme.ToObject<string>();
+        }
     }
 }

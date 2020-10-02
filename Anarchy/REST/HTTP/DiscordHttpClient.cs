@@ -8,30 +8,18 @@ using Leaf.xNet;
 using System.Net;
 using Discord.Gateway;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace Discord
 {
-    public class Response
-    {
-        private readonly string _content;
-
-        public Response(string content)
-        {
-            _content = content;
-        }
-
-
-        public override string ToString()
-        {
-            return _content;
-        }
-    }
-
     public class DiscordHttpClient
     {
         private readonly DiscordClient _discordClient;
 
-        public string Fingerprint { get; private set; }
+        public string BaseUrl
+        {
+            get { return $"https://{_discordClient.Config.RestDomain}/api/v{_discordClient.Config.ApiVersion}"; }
+        }
 
 
         public DiscordHttpClient(DiscordClient discordClient)
@@ -40,27 +28,16 @@ namespace Discord
         }
 
 
-        public void UpdateFingerprint()
+        private void CheckResponse(DiscordHttpResponse response)
         {
-            Fingerprint = GetAsync("/experiments").Result.Deserialize<JObject>().Value<string>("fingerprint");
-        }
-
-
-        private void CheckResponse(string resp, int statusCode)
-        {
-            if (statusCode >= 400)
+            if (response.StatusCode >= 400)
             {
-                if (statusCode == 429)
-                    throw new RateLimitException(_discordClient, resp.Deserialize<JObject>().Value<int>("retry_after"));
-                else if (statusCode == 400)
-                {
-                    var obj = resp.Deserialize<JObject>();
-
-                    if (!obj.ContainsKey("code") || !obj.ContainsKey("message"))
-                        throw new InvalidParametersException(_discordClient, resp.ToString());
-                }
-
-                throw new DiscordHttpException(_discordClient, resp.Deserialize<DiscordHttpError>());
+                if (response.StatusCode == 429)
+                    throw new RateLimitException(_discordClient, response.Deserialize<JObject>().Value<int>("retry_after"));
+                else if (response.StatusCode == 400)
+                    throw new InvalidParametersException(response.Deserialize<Dictionary<string, List<string>>>());
+                else
+                    throw new DiscordHttpException(_discordClient, response.Deserialize<DiscordHttpError>());
             }
         }
 
@@ -71,10 +48,11 @@ namespace Discord
         /// <param name="method">HTTP method to use</param>
         /// <param name="endpoint">API endpoint (fx. /users/@me)</param>
         /// <param name="payload">JSON content</param>
-        private async Task<Response> SendAsync(Leaf.xNet.HttpMethod method, string endpoint, object payload = null)
+        private async Task<DiscordHttpResponse> SendAsync(Leaf.xNet.HttpMethod method, string endpoint, object payload = null)
         {
-            string json = "{}";
+            endpoint = BaseUrl + endpoint;
 
+            string json = "{}";
             if (payload != null)
             {
                 if (payload.GetType() == typeof(string))
@@ -83,19 +61,13 @@ namespace Discord
                     json = JsonConvert.SerializeObject(payload);
             }
 
-            bool isEndpoint = !endpoint.StartsWith("http");
-
-            if (isEndpoint)
-                endpoint = _discordClient.Config.ApiBaseUrl + endpoint;
-
             bool hasData = method == Leaf.xNet.HttpMethod.POST || method == Leaf.xNet.HttpMethod.PATCH || method == Leaf.xNet.HttpMethod.PUT || method == Leaf.xNet.HttpMethod.DELETE;
 
             while (true)
             {
                 try
                 {
-                    string resp;
-                    int statusCode;
+                    DiscordHttpResponse resp;
 
                     // C# is retarded as shit
                     ProxyClient proxy = null;
@@ -115,15 +87,16 @@ namespace Discord
                         HttpClient client = new HttpClient(new HttpClientHandler() { Proxy = proxy == null ? null : new WebProxy(proxy.Host, proxy.Port) });
                         if (_discordClient.Token != null)
                             client.DefaultRequestHeaders.Add("Authorization", _discordClient.Token);
-                        if (Fingerprint != null)
-                            client.DefaultRequestHeaders.Add("X-Fingerprint", Fingerprint);
 
                         client.DefaultRequestHeaders.Add("X-Super-Properties", _discordClient.Config.SuperProperties.Base64);
 
-                        var response = await client.SendAsync(new HttpRequestMessage() { Content = hasData ? new System.Net.Http.StringContent(json, Encoding.UTF8, "application/json") : null, Method = new System.Net.Http.HttpMethod(method.ToString()), RequestUri = new Uri(endpoint) });
+                        var response = await client.SendAsync(new HttpRequestMessage() 
+                        { 
+                            Content = hasData ? new System.Net.Http.StringContent(json, Encoding.UTF8, "application/json") : null, 
+                            Method = new System.Net.Http.HttpMethod(method.ToString()), RequestUri = new Uri(endpoint) 
+                        });
 
-                        resp = response.Content.ReadAsStringAsync().Result;
-                        statusCode = (int)response.StatusCode;
+                        resp = new DiscordHttpResponse((int)response.StatusCode, response.Content.ReadAsStringAsync().Result);
                     }
                     else
                     {
@@ -133,22 +106,21 @@ namespace Discord
                             UserAgent = _discordClient.Config.UserAgent,
                             Authorization = _discordClient.Token
                         };
+
                         if (hasData)
                             msg.AddHeader(HttpHeader.ContentType, "application/json");
-                        if (Fingerprint != null)
-                            msg.AddHeader("X-Fingerprint", Fingerprint);
 
                         msg.AddHeader("X-Super-Properties", _discordClient.Config.SuperProperties.Base64);
                         if (proxy != null)
                             msg.Proxy = proxy;
 
                         var response = msg.Raw(method, endpoint, hasData ? new Leaf.xNet.StringContent(json) : null);
-                        resp = response.ToString();
-                        statusCode = (int)response.StatusCode;
+
+                        resp = new DiscordHttpResponse((int)response.StatusCode, response.ToString());
                     }
 
-                    CheckResponse(resp, statusCode);
-                    return new Response(resp);
+                    CheckResponse(resp);
+                    return resp;
                 }
                 catch (RateLimitException ex)
                 {
@@ -161,31 +133,31 @@ namespace Discord
         }
 
 
-        public async Task<Response> GetAsync(string endpoint)
+        public async Task<DiscordHttpResponse> GetAsync(string endpoint)
         {
             return await SendAsync(Leaf.xNet.HttpMethod.GET, endpoint);
         }
 
 
-        public async Task<Response> PostAsync(string endpoint, object payload = null)
+        public async Task<DiscordHttpResponse> PostAsync(string endpoint, object payload = null)
         {
             return await SendAsync(Leaf.xNet.HttpMethod.POST, endpoint, payload);
         }
 
 
-        public async Task<Response> DeleteAsync(string endpoint, object payload = null)
+        public async Task<DiscordHttpResponse> DeleteAsync(string endpoint, object payload = null)
         {
             return await SendAsync(Leaf.xNet.HttpMethod.DELETE, endpoint, payload);
         }
 
 
-        public async Task<Response> PutAsync(string endpoint, object payload = null)
+        public async Task<DiscordHttpResponse> PutAsync(string endpoint, object payload = null)
         {
             return await SendAsync(Leaf.xNet.HttpMethod.PUT, endpoint, payload);
         }
 
 
-        public async Task<Response> PatchAsync(string endpoint, object payload = null)
+        public async Task<DiscordHttpResponse> PatchAsync(string endpoint, object payload = null)
         {
             return await SendAsync(Leaf.xNet.HttpMethod.PATCH, endpoint, payload);
         }

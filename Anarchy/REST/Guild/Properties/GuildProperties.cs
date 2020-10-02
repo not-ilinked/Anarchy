@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.Drawing;
 
 namespace Discord
@@ -95,6 +96,62 @@ namespace Discord
         public bool ShouldSerializeDefaultNotifications()
         {
             return NotificationsProperty.Set;
+        }
+
+
+        private readonly DiscordParameter<List<string>> FeatureProperty = new DiscordParameter<List<string>>();
+        [JsonProperty("features")]
+        public List<string> Features
+        {
+            get { return FeatureProperty; }
+            set { FeatureProperty.Value = value; }
+        }
+
+        public bool ShouldSerializeFeatures()
+        {
+            return FeatureProperty.Set;
+        }
+
+
+        private readonly DiscordParameter<ulong?> _updatesChannel = new DiscordParameter<ulong?>();
+        [JsonProperty("public_updates_channel_id")]
+        public ulong? PublicUpdatesChannelId
+        {
+            get { return _updatesChannel; }
+            set { _updatesChannel.Value = value; }
+        }
+
+        public bool ShouldSerializePublicUpdatesChannelId()
+        {
+            return _updatesChannel.Set;
+        }
+
+
+        private readonly DiscordParameter<ulong?> _rulesChannel = new DiscordParameter<ulong?>();
+        [JsonProperty("rules_channel_id")]
+        public ulong? RulesChannelId
+        {
+            get { return _rulesChannel; }
+            set { _rulesChannel.Value = value; }
+        }
+
+        public bool ShouldSerializeRulesChannelId()
+        {
+            return _rulesChannel.Set;
+        }
+
+
+        private readonly DiscordParameter<DiscordLanguage?> _preferredLocale = new DiscordParameter<DiscordLanguage?>();
+        [JsonProperty("preferred_locale")]
+        public DiscordLanguage? PreferredLanguage
+        {
+            get { return _preferredLocale; }
+            set { _preferredLocale.Value = value; }
+        }
+
+        public bool ShouldSerializePreferredLanguage()
+        {
+            return _preferredLocale.Set;
         }
 
 

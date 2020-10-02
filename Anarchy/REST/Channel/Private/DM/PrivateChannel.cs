@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Anarchy;
 using Discord.Gateway;
-using Discord.Voice;
+using Discord.Media;
 using Newtonsoft.Json;
 
 namespace Discord
@@ -18,15 +19,12 @@ namespace Discord
         }
 
         [JsonProperty("recipients")]
-        internal List<DiscordUser> _recipients;
+        internal ConcurrentList<DiscordUser> _recipients;
 
 
         public IReadOnlyList<DiscordUser> Recipients
         {
-            get
-            {
-                return _recipients;
-            }
+            get { return _recipients; }
         }
 
 
@@ -34,7 +32,7 @@ namespace Discord
         public ulong? LastMessageId { get; internal set; }
 
 
-        protected void Update(PrivateChannel channel)
+        internal void Update(PrivateChannel channel)
         {
             base.Update(channel);
             _recipients = channel._recipients;
@@ -43,7 +41,7 @@ namespace Discord
 
         public new async Task UpdateAsync()
         {
-            Update((await Client.GetChannelAsync(Id)).ToDMChannel());
+            Update((PrivateChannel)await Client.GetChannelAsync(Id));
         }
 
         /// <summary>
@@ -77,20 +75,6 @@ namespace Discord
         public void ChangeCallRegion(string regionId)
         {
             ChangeCallRegionAsync(regionId).GetAwaiter().GetResult();
-        }
-
-
-        public async Task<DiscordVoiceSession> JoinAsync(bool muted = false, bool deafened = false)
-        {
-            if (Client.GetType() == typeof(DiscordSocketClient))
-                return await ((DiscordSocketClient)Client).JoinVoiceChannelAsync(null, Id, muted, deafened);
-            else
-                throw new NotSupportedException("Only DiscordSocketClients can join voice channels");
-        }
-
-        public DiscordVoiceSession Join(bool muted = false, bool deafened = false)
-        {
-            return JoinAsync(muted, deafened).GetAwaiter().GetResult();
         }
 
 
@@ -222,5 +206,10 @@ namespace Discord
             UnpinMessageAsync(messageId).GetAwaiter().GetResult();
         }
         #endregion
+
+        internal override void SetLastMessageId(ulong id)
+        {
+            LastMessageId = id;
+        }
     }
 }

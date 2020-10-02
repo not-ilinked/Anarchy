@@ -23,11 +23,14 @@ namespace Discord
         protected string _avatarHash;
 
 
-        public DiscordUserAvatar Avatar
+        public DiscordCDNMedia Avatar
         {
             get
             {
-                return new DiscordUserAvatar(Id, _avatarHash);
+                if (_avatarHash == null)
+                    return null;
+                else
+                    return new DiscordCDNMedia(CDNEndpoints.Avatar, Id, _avatarHash);
             }
         }
 

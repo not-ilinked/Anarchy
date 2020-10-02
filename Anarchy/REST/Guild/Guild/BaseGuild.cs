@@ -2,21 +2,24 @@
 
 namespace Discord
 {
-    public abstract class BaseGuild : MinimalGuild
+    public class BaseGuild : MinimalGuild
     {
         [JsonProperty("name")]
         public string Name { get; protected set; }
 
 
         [JsonProperty("icon")]
-        protected string _iconId;
+        protected string _iconHash;
 
 
-        public DiscordGuildIcon Icon
+        public DiscordCDNMedia Icon
         {
-            get
+            get 
             {
-                return new DiscordGuildIcon(Id, _iconId);
+                if (_iconHash == null)
+                    return null;
+                else
+                    return new DiscordCDNMedia(CDNEndpoints.GuildIcon, Id, _iconHash); 
             }
         }
 

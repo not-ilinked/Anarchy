@@ -54,7 +54,7 @@ namespace Discord
 
         public static async Task<string> AuthorizeAppAsync(this DiscordClient client, ulong appId, string scope)
         {
-            return (await client.HttpClient.PostAsync($"/oauth2/authori ze?client_id={appId}&response_type=code&scope={scope}")).Deserialize<JObject>().Value<string>("location");
+            return (await client.HttpClient.PostAsync($"/oauth2/authorize?client_id={appId}&response_type=code&scope={scope}")).Deserialize<JObject>().Value<string>("location");
         }
 
         /// <summary>

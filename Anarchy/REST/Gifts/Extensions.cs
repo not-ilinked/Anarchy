@@ -8,7 +8,7 @@ namespace Discord
     {
         public static async Task<string> PurchaseGiftAsync(this DiscordClient client, ulong paymentMethodId, ulong skuId, ulong subPlanId, int expectedAmount)
         {
-            return (await client.HttpClient.PostAsync($"https://discordapp.com/api/v6/store/skus/{skuId}/purchase", new PurchaseOptions()
+            return (await client.HttpClient.PostAsync($"/store/skus/{skuId}/purchase", new PurchaseOptions()
             {
                 PaymentMethodId = paymentMethodId,
                 SkuPlanId = subPlanId,

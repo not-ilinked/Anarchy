@@ -5,7 +5,7 @@ using Newtonsoft.Json.Linq;
 
 namespace Discord
 {
-    public class DiscordGuildTemplate : ControllableEx
+    public class DiscordGuildTemplate : Controllable
     {
         public DiscordGuildTemplate()
         {
@@ -13,10 +13,6 @@ namespace Discord
             {
                 SourceGuild.SetClient(Client);
                 Template.SetClient(Client);
-            };
-            JsonUpdated += (sender, json) =>
-            {
-                Template.SetJson(json.Value<JObject>("serialized_source_guild"));
             };
         }
 
@@ -76,7 +72,6 @@ namespace Discord
         public async Task UpdateAsync()
         {
             var template = await Client.GetGuildTemplateAsync(Code);
-            Json = template.Json;
             Name = template.Name;
             Usages = template.Usages;
             Creator = template.Creator;

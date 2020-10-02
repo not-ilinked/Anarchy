@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Anarchy;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,14 +13,96 @@ namespace Discord
         {
             OnClientUpdated += (sender, e) =>
             {
-                Roles.SetClientsInList(Client);
-                Emojis.SetClientsInList(Client);
+                if (!Unavailable)
+                {
+                    lock (_roles.Lock)
+                    {
+                        _roles.SetClientsInList(Client);
+
+                        foreach (var role in _roles)
+                            role.GuildId = Id;
+                    }
+
+                    Emojis.SetClientsInList(Client);
+                }
             };
         }
 
 
         [JsonProperty("description")]
         public string Description { get; protected set; }
+
+
+        [JsonProperty("splash")]
+        private string _splashHash;
+
+        public DiscordCDNMedia Splash
+        {
+            get 
+            {
+                if (_splashHash == null)
+                    return null;
+                else
+                    return new DiscordCDNMedia(CDNEndpoints.Splash, Id, _splashHash); 
+            }
+        }
+
+
+        [JsonProperty("discovery_splash")]
+        private string _discoverySplashHash;
+
+        public DiscordCDNMedia DiscoverySplash
+        {
+            get 
+            {
+                if (_discoverySplashHash == null)
+                    return null;
+                else
+                    return new DiscordCDNMedia(CDNEndpoints.DiscoverySplash, Id, _discoverySplashHash); 
+            }
+        }
+
+
+        [JsonProperty("max_members")]
+        public uint MaxMembers { get; private set; }
+
+
+        [JsonProperty("max_video_channel_users")]
+        public uint MaxLivestreams { get; private set; }
+
+
+        [JsonProperty("preferred_locale")]
+        public DiscordLanguage? PreferredLanguage { get; private set; }
+
+
+        [JsonProperty("rules_channels_id")]
+        private ulong? _rulesChannelId;
+
+        public MinimalTextChannel RulesChannel
+        {
+            get
+            {
+                if (_rulesChannelId.HasValue)
+                    return new MinimalTextChannel(_rulesChannelId.Value).SetClient(Client);
+                else
+                    return null;
+            }
+        }
+
+
+        [JsonProperty("public_updates_channel_id")]
+        private ulong? _updateChannelId;
+
+        public MinimalTextChannel PublicUpdatesChannel
+        {
+            get
+            {
+                if (_updateChannelId.HasValue)
+                    return new MinimalTextChannel(_updateChannelId.Value).SetClient(Client);
+                else
+                    return null;
+            }
+        }
 
 
         [JsonProperty("unavailable")]
@@ -55,19 +138,18 @@ namespace Discord
 
 
         [JsonProperty("roles")]
-        internal List<DiscordRole> _roles;
+        internal ConcurrentList<DiscordRole> _roles;
         
         public IReadOnlyList<DiscordRole> Roles
         {
+            get { return _roles; }
+        }
+
+        public DiscordRole EveryoneRole
+        {
             get
             {
-                if (!Unavailable)
-                {
-                    foreach (var role in _roles)
-                        role.GuildId = Id;
-                }
-                
-                return _roles;
+                return Unavailable ? null : Roles.First(r => r.Name == "@everyone");
             }
         }
 
@@ -99,11 +181,11 @@ namespace Discord
 
 
         [JsonProperty("system_channel_id")]
-        private readonly ulong? _sysChannelId; 
+        private ulong? _sysChannelId; 
 
 
         [JsonProperty("system_channel_flags")]
-        private readonly int _sysChannelFlags;
+        private int _sysChannelFlags;
 
 
         public SystemChannelInformation SystemChannel
@@ -114,15 +196,26 @@ namespace Discord
 
         internal void Update(DiscordGuild guild)
         {
+            Unavailable = guild.Unavailable;
             Name = guild.Name;
-            _iconId = guild.Icon.Hash;
+            _iconHash = guild._iconHash;
+            _splashHash = guild._splashHash;
+            _discoverySplashHash = guild._discoverySplashHash;
             Region = guild.Region;
-            _roles = guild.Roles.ToList();
-            _emojis = guild.Emojis.ToList();
+            _roles = guild._roles;
+            _emojis = guild._emojis;
             VerificationLevel = guild.VerificationLevel;
             DefaultNotifications = guild.DefaultNotifications;
+            PremiumTier = guild.PremiumTier;
+            Features = guild.Features;
             OwnerId = guild.OwnerId;
+            MfaRequired = guild.MfaRequired;
+            NitroBoosts = guild.NitroBoosts;
             VanityInvite = guild.VanityInvite;
+            _rulesChannelId = guild._rulesChannelId;
+            _updateChannelId = guild._updateChannelId;
+            _sysChannelId = guild._sysChannelId;
+            _sysChannelFlags = guild._sysChannelFlags;
         }
 
 
@@ -157,7 +250,10 @@ namespace Discord
 
         public override async Task<IReadOnlyList<DiscordRole>> GetRolesAsync()
         {
-            return _roles = (await base.GetRolesAsync()).ToList();
+            var roles = await base.GetRolesAsync();
+            _roles = new ConcurrentList<DiscordRole>(roles);
+
+            return roles;
         }
 
         /// <summary>
@@ -169,9 +265,12 @@ namespace Discord
         }
 
 
-        public override async Task<IReadOnlyList<DiscordRole>> SetRolePositionsAsync(List<RolePositionUpdate> roles)
+        public override async Task<IReadOnlyList<DiscordRole>> SetRolePositionsAsync(List<RolePositionUpdate> positions)
         {
-            return _roles = (await base.SetRolePositionsAsync(roles)).ToList();
+            var roles = await base.SetRolePositionsAsync(positions);
+            _roles = new ConcurrentList<DiscordRole>(roles);
+
+            return roles;
         }
 
         public override IReadOnlyList<DiscordRole> SetRolePositions(List<RolePositionUpdate> roles)

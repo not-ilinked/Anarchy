@@ -5,6 +5,8 @@ namespace Discord
 {
     public class GuildMemberProperties
     {
+
+
         internal readonly DiscordParameter<string> NickProperty = new DiscordParameter<string>();
         [JsonProperty("nick")]
         public string Nickname
@@ -32,6 +34,15 @@ namespace Discord
         public bool ShouldSerializeRoles()
         {
             return RoleProperty.Set;
+        }
+
+
+        private readonly DiscordParameter<ulong> ChannelProperty = new DiscordParameter<ulong>();
+        [JsonProperty("channel_id")]
+        public ulong ChannelId
+        {
+            get { return ChannelProperty; }
+            set { ChannelProperty.Value = value; }
         }
 
 

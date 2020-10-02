@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Discord
@@ -8,8 +10,7 @@ namespace Discord
 #pragma warning disable IDE1006
         public static async Task<IReadOnlyList<GuildChannel>> GetGuildChannelsAsync(this DiscordClient client, ulong guildId)
         {
-            var channels = (await client.HttpClient.GetAsync($"/guilds/{guildId}/channels"))
-                                        .DeserializeExArray<GuildChannel>().SetClientsInList(client);
+            var channels = (await client.HttpClient.GetAsync($"/guilds/{guildId}/channels")).ToChannels<GuildChannel>().SetClientsInList(client);
 
             foreach (var channel in channels)
                 channel.GuildId = guildId;
@@ -30,7 +31,7 @@ namespace Discord
         public static async Task<GuildChannel> CreateGuildChannelAsync(this DiscordClient client, ulong guildId, string name, ChannelType type, ulong? parentId = null)
         {
             var channel = (await client.HttpClient.PostAsync($"/guilds/{guildId}/channels", new GuildChannelCreationProperties() { Name = name, Type = type, ParentId = parentId }))
-                                .DeserializeEx<GuildChannel>().SetClient(client);
+                                .Deserialize<GuildChannel>().SetClient(client);
 
             channel.GuildId = guildId;
 
@@ -83,5 +84,15 @@ namespace Discord
             client.RemovePermissionOverwriteAsync(channelId, affectedId).GetAwaiter().GetResult();
         }
 #pragma warning restore IDE1006
+
+        public static async Task<ulong> FollowChannelAsync(this DiscordClient client, ulong channelToFollowId, ulong crosspostChannelId)
+        {
+            return (await client.HttpClient.PostAsync($"/channels/{channelToFollowId}/followers", $"{{\"webhook_channel_id\":{crosspostChannelId}}}")).Deserialize<JObject>().Value<ulong>("webhook_id");
+        }
+
+        public static ulong FollowChannel(this DiscordClient client, ulong channelToFollowId, ulong crosspostChannelId)
+        {
+            return client.FollowChannelAsync(channelToFollowId, crosspostChannelId).GetAwaiter().GetResult();
+        }
     }
 }

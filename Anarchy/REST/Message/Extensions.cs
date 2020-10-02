@@ -50,7 +50,7 @@ namespace Discord
                 { new ByteArrayContent(fileData), "file", fileName }
             };
 
-            return (await httpClient.PostAsync(client.Config.ApiBaseUrl + $"/channels/{channelId}/messages", content).GetAwaiter().GetResult()
+            return (await httpClient.PostAsync(client.HttpClient.BaseUrl + $"/channels/{channelId}/messages", content).GetAwaiter().GetResult()
                                     .Content.ReadAsStringAsync()).Deserialize<DiscordMessage>().SetClient(client);
         }
 
@@ -262,25 +262,25 @@ namespace Discord
         }
 
 
-        public static async Task RemoveClientMessageReactionAsync(this DiscordClient client, ulong channelId, ulong messageId, string reaction)
+        public static async Task RemoveMessageReactionAsync(this DiscordClient client, ulong channelId, ulong messageId, string reaction)
         {
             await client.removeReactionAsync(channelId, messageId, reaction, "@me");
         }
 
-        public static void RemoveClientMessageReaction(this DiscordClient client, ulong channelId, ulong messageId, string reaction)
+        public static void RemoveMessageReaction(this DiscordClient client, ulong channelId, ulong messageId, string reaction)
         {
-            client.removeReactionAsync(channelId, messageId, reaction, "@me").GetAwaiter().GetResult();
+            client.RemoveMessageReactionAsync(channelId, messageId, reaction).GetAwaiter().GetResult();
         }
 
 
-        public static async Task RemoveMessageReactionAsync(this DiscordClient client, ulong channelId, ulong messageId, string reaction, ulong userId)
+        public static async Task RemoveMessageReactionAsync(this DiscordClient client, ulong channelId, ulong messageId, ulong userId, string reaction)
         {
             await client.removeReactionAsync(channelId, messageId, reaction, userId.ToString());
         }
 
-        public static void RemoveMessageReaction(this DiscordClient client, ulong channelId, ulong messageId, string reaction, ulong userId = 0)
+        public static void RemoveMessageReaction(this DiscordClient client, ulong channelId, ulong messageId, ulong userId, string reaction)
         {
-            client.RemoveMessageReactionAsync(channelId, messageId, reaction, userId).GetAwaiter().GetResult();
+            client.RemoveMessageReactionAsync(channelId, messageId, userId, reaction).GetAwaiter().GetResult();
         }
 
 
@@ -356,6 +356,17 @@ namespace Discord
             client.UnpinChannelMessageAsync(channelId, messageId).GetAwaiter().GetResult();
         }
         #endregion
+
+
+        public static async Task<DiscordMessage> CrosspostMessageAsync(this DiscordClient client, ulong channelId, ulong messageId)
+        {
+            return (await client.HttpClient.PostAsync($"/channels/{channelId}/messages/{messageId}/crosspost")).Deserialize<DiscordMessage>().SetClient(client);
+        }
+
+        public static DiscordMessage CrosspostMessage(this DiscordClient client, ulong channelId, ulong messageId)
+        {
+            return client.CrosspostMessageAsync(channelId, messageId).GetAwaiter().GetResult();
+        }
 
 
         public static async Task AcknowledgeMessageAsync(this DiscordClient client, ulong channelId, ulong messageId)

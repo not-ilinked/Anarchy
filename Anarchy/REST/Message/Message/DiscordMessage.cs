@@ -49,7 +49,7 @@ namespace Discord
 
 
         [JsonProperty("member")]
-        private readonly GuildMember _authorMember;
+        private GuildMember _authorMember;
 
         
         public MessageAuthor Author
@@ -148,19 +148,28 @@ namespace Discord
         public MessageFlags Flags { get; private set; }
 
 
+        private void Update(DiscordMessage updated)
+        {
+            Content = updated.Content;
+            Pinned = updated.Pinned;
+            Mentions = updated.Mentions;
+            MentionedRoles = updated.MentionedRoles;
+            MentionedEveryone = updated.MentionedEveryone;
+            Embed = updated.Embed;
+            Flags = updated.Flags;
+            EditedAt = updated.EditedAt;
+            Reactions = updated.Reactions;
+            _authorMember = updated.Author.Member;
+            _authorUser = updated.Author.User;
+        }
+
+
         public async Task EditAsync(MessageEditProperties properties)
         {
             if (Type != MessageType.Default)
                 throw new InvalidOperationException("Can only edit messages with a Type of 'Default'");
 
-            DiscordMessage msg = await Client.EditMessageAsync(Channel.Id, Id, properties);
-            Content = msg.Content;
-            Pinned = msg.Pinned;
-            Mentions = msg.Mentions;
-            MentionedRoles = msg.MentionedRoles;
-            MentionedEveryone = msg.MentionedEveryone;
-            Embed = msg.Embed;
-            msg.Flags = properties.Flags;
+            Update(await Client.EditMessageAsync(Channel.Id, Id, properties));
         }
 
         /// <summary>
@@ -231,7 +240,7 @@ namespace Discord
 
         public async Task RemoveClientReactionAsync(string reaction)
         {
-            await Client.RemoveClientMessageReactionAsync(Channel.Id, Id, reaction);
+            await Client.RemoveMessageReactionAsync(Channel.Id, Id, reaction);
         }
 
         public void RemoveClientReaction(string reaction)
@@ -240,14 +249,14 @@ namespace Discord
         }
 
 
-        public async Task RemoveReactionAsync(string reaction, ulong userId)
+        public async Task RemoveReactionAsync(ulong userId, string reaction)
         {
-            await Client.RemoveMessageReactionAsync(Channel.Id, Id, reaction, userId);
+            await Client.RemoveMessageReactionAsync(Channel.Id, Id, userId, reaction);
         }
 
-        public void RemoveReaction(string reaction, ulong userId)
+        public void RemoveReaction(ulong userId, string reaction)
         {
-            RemoveReactionAsync(reaction, userId).GetAwaiter().GetResult();
+            RemoveReactionAsync(userId, reaction).GetAwaiter().GetResult();
         }
 
 
@@ -259,6 +268,17 @@ namespace Discord
         public void Pin()
         {
             PinAsync().GetAwaiter().GetResult();
+        }
+
+
+        public async Task CrosspostAsync()
+        {
+            Update(await Client.CrosspostMessageAsync(Channel.Id, Id));
+        }
+
+        public void Crosspost()
+        {
+            CrosspostAsync().GetAwaiter().GetResult();
         }
 
 

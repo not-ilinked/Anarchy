@@ -17,12 +17,12 @@ namespace Discord
         public bool Animated { get; private set; }
 
 
-        public DiscordEmojiCDNImage Icon
+        public DiscordCDNMedia Icon
         {
             get
             {
                 if (Id.HasValue)
-                    return new DiscordEmojiCDNImage(Id.Value);
+                    return new DiscordCDNMedia(CDNEndpoints.Emoji, Id.Value);
                 else
                     return null;
             }

@@ -29,7 +29,7 @@ namespace Discord
             return (await client.HttpClient.PostAsync($"/users/@me/channels", new JObject()
             {
                 ["recipients"] = JArray.FromObject(recipients)
-            })).DeserializeEx<DiscordGroup>().SetClient(client);
+            })).Deserialize<DiscordGroup>().SetClient(client);
         }
 
         /// <summary>
@@ -43,18 +43,12 @@ namespace Discord
         }
 
 
-        public static async Task<DiscordChannel> LeaveGroupAsync(this DiscordClient client, ulong groupId)
+        public static async Task<DiscordGroup> LeaveGroupAsync(this DiscordClient client, ulong groupId)
         {
-            return await client.DeleteChannelAsync(groupId);
+            return (DiscordGroup)await client.DeleteChannelAsync(groupId);
         }
 
-        // This does the same as DeleteChannel(), i just decided to leave it be because DeleteChannel() is a weird name for a function for leaving groups
-        /// <summary>
-        /// Leaves a group.
-        /// </summary>
-        /// <param name="groupId">ID of the group</param>
-        /// <returns>The leaved <see cref="DiscordGroup"/></returns>
-        public static DiscordChannel LeaveGroup(this DiscordClient client, ulong groupId)
+        public static DiscordGroup LeaveGroup(this DiscordClient client, ulong groupId)
         {
             return client.LeaveGroupAsync(groupId).GetAwaiter().GetResult();
         }

@@ -7,6 +7,24 @@ namespace Discord
     /// </summary>
     public class TextChannelProperties : GuildChannelProperties
     {
+        internal readonly DiscordParameter<ChannelType> TypeProperty = new DiscordParameter<ChannelType>();
+        [JsonProperty("type")]
+        private ChannelType _type
+        {
+            get { return TypeProperty; }
+        }
+
+        public bool News
+        {
+            get { return TypeProperty == ChannelType.News; }
+            set { TypeProperty.Value = value ? ChannelType.News : ChannelType.Text; }
+        }
+
+        public bool ShouldSerialize_type()
+        {
+            return TypeProperty.Set;
+        }
+
         private readonly DiscordParameter<string> TopicProperty = new DiscordParameter<string>();
         [JsonProperty("topic")]
         public string Topic

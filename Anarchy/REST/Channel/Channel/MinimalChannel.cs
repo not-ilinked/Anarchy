@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace Discord
 {
-    public class MinimalChannel : ControllableEx
+    public class MinimalChannel : Controllable
     {
         [JsonProperty("id")]
         public ulong Id { get; private set; }

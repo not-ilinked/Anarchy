@@ -27,11 +27,17 @@ namespace Discord
 
 
         [JsonProperty("icon")]
-        private string _icon;
+        private string _iconHash;
 
-        public DiscordAppIcon Icon
+        public DiscordCDNMedia Icon
         {
-            get { return new DiscordAppIcon(Id, _icon); }
+            get
+            {
+                if (_iconHash == null)
+                    return null;
+                else
+                    return new DiscordCDNMedia(CDNEndpoints.AppIcon, Id, _iconHash); 
+            }
         }
 
 
@@ -70,7 +76,7 @@ namespace Discord
         private void Update(OAuth2Application app)
         {
             Name = app.Name;
-            _icon = app.Icon.Hash;
+            _iconHash = app._iconHash;
             Description = app.Description;
             Summary = app.Summary;
             VerifyKey = app.VerifyKey;

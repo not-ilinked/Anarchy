@@ -8,7 +8,7 @@ namespace Discord
         public static async Task<IReadOnlyList<PrivateChannel>> GetPrivateChannelsAsync(this DiscordClient client)
         {
             return (await client.HttpClient.GetAsync($"/users/@me/channels"))
-                                .DeserializeExArray<PrivateChannel>().SetClientsInList(client);
+                                .Deserialize<List<PrivateChannel>>().SetClientsInList(client);
         }
 
         /// <summary>
@@ -23,7 +23,7 @@ namespace Discord
         public static async Task<PrivateChannel> CreateDMAsync(this DiscordClient client, ulong recipientId)
         {
             return (await client.HttpClient.PostAsync($"/users/@me/channels", $"{{\"recipient_id\":\"{recipientId}\"}}"))
-                    .DeserializeEx<PrivateChannel>().SetClient(client);
+                    .Deserialize<PrivateChannel>().SetClient(client);
         }
 
         /// <summary>

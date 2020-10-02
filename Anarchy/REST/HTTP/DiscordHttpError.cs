@@ -1,4 +1,6 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
 
 namespace Discord
 {
@@ -7,6 +9,12 @@ namespace Discord
         [JsonProperty("code")]
         public DiscordError Code { get; private set; }
 
+
+        // API v8
+        /*
+        [JsonProperty("errors")]
+        public Dictionary<string, InvalidParameter.Container> Fields { get; private set; }
+        */
 
         [JsonProperty("message")]
         public string Message { get; private set; }

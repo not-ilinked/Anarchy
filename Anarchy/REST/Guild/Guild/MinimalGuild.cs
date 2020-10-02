@@ -48,6 +48,17 @@ namespace Discord
         }
 
 
+        public async Task SetNicknameAsync(string nickname)
+        {
+            await Client.SetClientNicknameAsync(Id, nickname);
+        }
+
+        public void SetNickname(string nickname)
+        {
+            SetNicknameAsync(nickname).GetAwaiter().GetResult();
+        }
+
+
         public async Task AcknowledgeMessagesAsync()
         {
             await Client.AcknowledgeGuildMessagesAsync(Id);
@@ -59,21 +70,6 @@ namespace Discord
         public void AcknowledgeMessages()
         {
             AcknowledgeMessagesAsync().GetAwaiter().GetResult();
-        }
-
-
-        public async Task ChangeClientNicknameAsync(string nickname)
-        {
-            await Client.ChangeClientNicknameAsync(Id, nickname);
-        }
-
-        /// <summary>
-        /// Changes the client's nickname for this guild
-        /// </summary>
-        /// <param name="nickname">New nickname</param>
-        public void ChangeClientNickname(string nickname)
-        {
-            ChangeClientNicknameAsync(nickname).GetAwaiter().GetResult();
         }
 
 

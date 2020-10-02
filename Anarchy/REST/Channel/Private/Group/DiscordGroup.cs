@@ -11,11 +11,14 @@ namespace Discord
         [JsonProperty("icon")]
         private string _iconHash;
 
-        public DiscordChannelIcon Icon
+        public DiscordCDNMedia Icon
         {
             get
             {
-                return new DiscordChannelIcon(Id, _iconHash);
+                if (_iconHash == null)
+                    return null;
+                else
+                    return new DiscordCDNMedia(CDNEndpoints.ChannelIcon, Id, _iconHash);
             }
         }
 
@@ -34,7 +37,7 @@ namespace Discord
 
         public new async Task UpdateAsync()
         {
-            Update((await Client.GetChannelAsync(Id)).ToGroup());
+            Update((DiscordGroup)await Client.GetChannelAsync(Id));
         }
 
         /// <summary>

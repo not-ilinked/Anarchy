@@ -4,7 +4,7 @@ using Newtonsoft.Json.Linq;
 
 namespace Discord
 {
-    public class DiscordTemplateGuild : ControllableEx
+    public class DiscordTemplateGuild : Controllable
     {
         public DiscordTemplateGuild()
         {
@@ -12,10 +12,6 @@ namespace Discord
             {
                 Roles.SetClientsInList(Client);
                 Channels.SetClientsInList(Client);
-            };
-            JsonUpdated += (sender, json) =>
-            {
-                Channels = json.Value<JArray>("channels").DeserializeWithJson<GuildChannel>();
             };
         }
 

@@ -5,6 +5,8 @@ namespace Discord
 {
     public class MinimalTextChannel : MinimalChannel, IMessageChannel
     {
+        internal MinimalTextChannel() { }
+
         internal MinimalTextChannel(ulong channelId) : base(channelId)
         { }
 

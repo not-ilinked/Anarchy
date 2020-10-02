@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System;
 using System.Threading.Tasks;
 
 namespace Discord
@@ -13,11 +14,13 @@ namespace Discord
                 Inviter.SetClient(Client);
 
                 if (Guild != null)
+                {
+                    ((GuildChannel)Channel).GuildId = Guild.Id;
                     Guild.SetClient(Client);
+                }
 
                 Channel.SetClient(Client);
             };
-            JsonUpdated += (sender, json) => Channel.SetJson(json.Value<JObject>("channel"));
         }
 
 
@@ -26,6 +29,7 @@ namespace Discord
 
 
         [JsonProperty("channel")]
+        [JsonConverter(typeof(ChannelConverter))]
         public DiscordChannel Channel { get; private set; }
 
 
@@ -87,7 +91,7 @@ namespace Discord
         public GuildInvite ToGuildInvite()
         {
             if (Type != InviteType.Guild)
-                throw new InvalidConvertionException(Client, "Invite is not of a guild");
+                throw new InvalidOperationException("Invite is not of a guild");
 
             return Json.ToObject<GuildInvite>().SetClient(Client).SetJson(Json);
         }
