@@ -28,13 +28,12 @@ namespace Discord.Media
         public event UserDisconnectHandler OnUserDisconnected;
 
 
-        internal DiscordGoLiveSession(DiscordVoiceSession parentSession, ulong? guildId, ulong channelId, GoLiveCreate goLive) : base(parentSession.Client, guildId, channelId)
+        internal DiscordGoLiveSession(DiscordVoiceSession parentSession, ulong? guildId, ulong channelId, GoLiveCreate goLive) : base(parentSession.Client, guildId, channelId, goLive.SessionId)
         {
             ReceivePackets = false; // we don't have any parsers yet so we might as well not get the packets
             _rtcServerId = goLive.RtcServerId;
             StreamKey = goLive.StreamKey;
-            Viewers = goLive.ViewerIds;
-            Paused = goLive.Paused;
+            Update(goLive);
             ParentSession = parentSession;
         }
 

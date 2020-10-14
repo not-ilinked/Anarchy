@@ -1,21 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace Discord.Gateway
 {
-    public class DiscordPresence : ControllableEx
+    public class DiscordPresence : Controllable
     {
         public DiscordPresence()
         {
             OnClientUpdated += (sender, e) =>
             {
                 Activities.SetClientsInList(Client);
-            };
-            JsonUpdated += (sender, json) =>
-            {
-                Activities = json.Value<JArray>("activities").DeserializeWithJson<UserActivity>();
             };
         }
 
@@ -26,10 +21,7 @@ namespace Discord.Gateway
 
         public bool IsGuild
         {
-            get
-            {
-                return _guildId.HasValue;
-            }
+            get { return _guildId.HasValue; }
         }
 
 
@@ -43,7 +35,13 @@ namespace Discord.Gateway
 
 
         [JsonProperty("activities")]
-        public IReadOnlyList<UserActivity> Activities { get; private set; }
+        [JsonConverter(typeof(DeepJsonConverter<DiscordActivity>))]
+        private readonly List<DiscordActivity> _activities;
+
+        public IReadOnlyList<DiscordActivity> Activities
+        {
+            get { return _activities; }
+        }
 
 
         [JsonProperty("status")]
@@ -52,15 +50,6 @@ namespace Discord.Gateway
 
         [JsonProperty("client_status")]
         public ActiveSessionPlatforms ActivePlatforms { get; private set; }
-
-        
-        public DiscordGuildPresence ToGuildPresence()
-        {
-            if (IsGuild)
-                return Json.ToObject<DiscordGuildPresence>().SetJson(Json).SetClient(Client);
-            else
-                throw new InvalidOperationException("This presence is not of a guild member");
-        }
 
 
         public override string ToString()

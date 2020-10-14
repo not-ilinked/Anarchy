@@ -38,6 +38,12 @@ namespace Anarchy
             }
         }
 
+        public Dictionary<TKey, TValue> CreateCopy()
+        {
+            lock (Lock)
+                return new Dictionary<TKey, TValue>(this);
+        }
+
         public new bool TryGetValue(TKey key, out TValue value)
         {
             lock (Lock)

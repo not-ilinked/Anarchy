@@ -29,12 +29,12 @@ namespace Discord
         }
 
 
-        public static async Task<IReadOnlyList<DiscordNitroBoost>> GetNitroBoostsAsync(this DiscordClient client)
+        public static async Task<IReadOnlyList<DiscordGuildBoost>> GetNitroBoostsAsync(this DiscordClient client)
         {
-            return (await client.HttpClient.GetAsync("/users/@me/guilds/premium/subscription-slots")).Deserialize<List<DiscordNitroBoost>>().SetClientsInList(client);
+            return (await client.HttpClient.GetAsync("/users/@me/guilds/premium/subscription-slots")).Deserialize<List<DiscordGuildBoost>>().SetClientsInList(client);
         }
 
-        public static IReadOnlyList<DiscordNitroBoost> GetNitroBoosts(this DiscordClient client)
+        public static IReadOnlyList<DiscordGuildBoost> GetNitroBoosts(this DiscordClient client)
         {
             return client.GetNitroBoostsAsync().GetAwaiter().GetResult();
         }

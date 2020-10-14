@@ -52,8 +52,9 @@ namespace Discord
         }
 
 
+        [JsonProperty("serialized_source_guild")]
         private DiscordTemplateGuild _guild;
-        [JsonIgnore]
+        
         public DiscordTemplateGuild Template
         {
             get

@@ -13,3 +13,4 @@ C:\Users\edhbu\source\repos\Anarchy\Example projects\CommandListener\CommandList
 C:\Users\edhbu\source\repos\Anarchy\Example projects\CommandListener\CommandListener\bin\Debug\Anarchy.pdb
 C:\Users\edhbu\source\repos\Anarchy\Example projects\CommandListener\CommandListener\bin\Debug\Leaf.xNet.xml
 C:\Users\edhbu\source\repos\Anarchy\Example projects\CommandListener\CommandListener\bin\Debug\Newtonsoft.Json.xml
+C:\Users\edhbu\source\repos\Anarchy\Example projects\CommandListener\CommandListener\bin\Debug\websocket-sharp.pdb

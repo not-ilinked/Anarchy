@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
+using WebSocketSharp;
 
 namespace Discord.Media
 {
@@ -26,7 +27,8 @@ namespace Discord.Media
         internal UdpClient UdpClient { get; set; }
         internal DiscordSSRC SSRC { get; set; }
         internal byte[] SecretKey { get; private set; }
-        internal static Dictionary<string, MediaCodec> SupportedCodecs = new Dictionary<string, MediaCodec>()
+        public string SessionId { get; private set; }
+        internal static readonly Dictionary<string, MediaCodec> SupportedCodecs = new Dictionary<string, MediaCodec>()
         {
             { "opus", new MediaCodec() { Name = "opus", Type = CodecType.Audio, PayloadType = 120, Priority = 1000 } },
             { "H264", new VideoMediaCodec() { Name = "H264", Type = CodecType.Video, PayloadType = 101, Priority = 1000, RtxPayloadType = 102 } }
@@ -35,61 +37,74 @@ namespace Discord.Media
         public DiscordMediaServer Server { get; internal set; }
         public bool ReceivePackets { get; set; } = true;
 
-        private readonly ulong? _guildId;
+        internal ulong? GuildId { get; private set; }
         public MinimalGuild Guild
         {
             get
             {
-                if (_guildId.HasValue)
-                    return new MinimalGuild(_guildId.Value).SetClient(Client);
+                if (GuildId.HasValue)
+                    return new MinimalGuild(GuildId.Value).SetClient(Client);
                 else
                     return null;
             }
         }
 
-        private readonly ulong _channelId;
+        internal ulong ChannelId { get; set; }
         public MinimalChannel Channel
         {
-            get { return new MinimalTextChannel(_channelId).SetClient(Client); }
+            get { return new MinimalTextChannel(ChannelId).SetClient(Client); }
         }
 
         public MediaSessionState State { get; protected set; }
 
-        internal DiscordMediaSession(DiscordSocketClient client, ulong? guildId, ulong channelId)
+        internal DiscordMediaSession(DiscordSocketClient client, ulong? guildId, ulong channelId, string sessionId)
         {
             Client = client;
-            _guildId = guildId;
-            _channelId = channelId;
+            GuildId = guildId;
+            ChannelId = channelId;
+            SessionId = sessionId;
             _heldBackMessages = new List<KeyValuePair<DiscordMediaOpcode, object>>();
+        }
+
+        // If u connect to a vc in the same server as ur previous, ur connection won't die
+        // It makes no sense to then manually kill it bcuz that's extra time
+        // A few things i want to note for my future self who feels too lazy to improve it:
+        // - There's a chance that the client will miss events. A low one, but quite possible
+        internal DiscordMediaSession(DiscordMediaSession other) : this(other.Client, other.GuildId, other.ChannelId, other.SessionId)
+        {
+            other.State = MediaSessionState.NotConnected;
+            other.OnServerUpdated = null;
+            other.WebSocket.OnMessageReceived -= OnMessageReceived;
+            other.WebSocket.OnClosed -= OnClosed;
+
+            WebSocket = other.WebSocket;
+            _serverEndpoint = other._serverEndpoint;
+            _localEndpoint = other._localEndpoint;
+            UdpClient = other.UdpClient;
+            SSRC = other.SSRC;
+            SecretKey = other.SecretKey;
+            SessionId = other.SessionId;
+            Server = other.Server;
+            ReceivePackets = other.ReceivePackets;
+            State = MediaSessionState.Connected;
         }
 
 
         public void Connect()
         {
-            WebSocket = new DiscordWebSocket<DiscordMediaOpcode>("wss://" + Server.Endpoint + "?v=4");
-
-            State = MediaSessionState.Connecting;
-
-            WebSocket.OnClosed += (s, args) =>
+            if (State == MediaSessionState.Connected)
+                Task.Run(() => HandleConnect());
+            else
             {
-                if (State == MediaSessionState.Connected)
-                    UdpClient.Close();
+                WebSocket = new DiscordWebSocket<DiscordMediaOpcode>("wss://" + Server.Endpoint + "?v=4");
+                WebSocket.OnClosed += OnClosed;
+                WebSocket.OnMessageReceived += OnMessageReceived;
 
-                bool lostConnection = args.Code == 1006;
+                State = MediaSessionState.Connecting;
 
-                if (lostConnection)
-                    Thread.Sleep(200);
-
-                if (lostConnection || args.Code == (ushort)UnorthodoxCloseCode.SwitchingServer)
-                    Connect();
-                else if (args.Code != (ushort)UnorthodoxCloseCode.KeepQuiet)
-                    HandleDisconnect(new DiscordMediaCloseEventArgs((DiscordMediaCloseCode)args.Code, args.Reason));
-            };
-
-            WebSocket.OnMessageReceived += OnMessageReceived;
-
-            WebSocket.SetProxy(Client.Config.Proxy);
-            WebSocket.Connect();
+                WebSocket.SetProxy(Client.Proxy);
+                WebSocket.Connect();
+            }
         }
 
 
@@ -116,10 +131,29 @@ namespace Discord.Media
         }
 
 
+        private void OnClosed(object sender, CloseEventArgs args)
+        {
+            if (State == MediaSessionState.Connected)
+                UdpClient.Close();
+
+            bool lostConnection = args.Code == 1006;
+
+            if (lostConnection)
+                Thread.Sleep(200);
+
+            if (lostConnection || args.Code == (ushort)UnorthodoxCloseCode.SwitchingServer)
+                Task.Run(() => Connect());
+            else if (args.Code != (ushort)UnorthodoxCloseCode.KeepQuiet)
+                Task.Run(() => HandleDisconnect(new DiscordMediaCloseEventArgs((DiscordMediaCloseCode)args.Code, args.Reason)));
+        }
+
+
         private void OnMessageReceived(object sender, DiscordWebSocketMessage<DiscordMediaOpcode> message)
         {
             try
             {
+                Console.WriteLine(message.Opcode);
+
                 switch (message.Opcode)
                 {
                     case DiscordMediaOpcode.Ready:
@@ -152,18 +186,23 @@ namespace Discord.Media
 
                                 Task.Run(() => HandleConnect());
 
-                                Task.Run(() =>
+                                if (_heldBackMessages.Count > 0)
                                 {
-                                    foreach (var msg in _heldBackMessages)
-                                        WebSocket.Send(msg.Key, msg.Value);
+                                    Task.Run(() =>
+                                    {
+                                        foreach (var msg in _heldBackMessages)
+                                            WebSocket.Send(msg.Key, msg.Value);
 
-                                    _heldBackMessages.Clear();
-                                });
+                                        _heldBackMessages.Clear();
+                                    });
+                                }
                             }
                         }
                         break;
                     case DiscordMediaOpcode.ChangeCodecs:
-                        ValidateCodecs(message.Data.ToObject<MediaCodecSelection>());
+                        // apparently this triggers whenever u switch channel
+                        // im confused
+                        //var codecs = message.Data.ToObject<MediaCodecSelection>();
                         break;
                     case DiscordMediaOpcode.Hello:
                         WebSocket.Send(DiscordMediaOpcode.Identify, new DiscordMediaIdentify()
@@ -213,7 +252,7 @@ namespace Discord.Media
 
         internal void Disconnect(ushort error, string reason)
         {
-            if (WebSocket != null)
+            if (WebSocket != null && State > MediaSessionState.NotConnected)
                 WebSocket.Close(error, reason);
         }
 

@@ -29,14 +29,14 @@ namespace Discord
         [JsonProperty("icon")]
         private string _iconHash;
 
-        public DiscordCDNMedia Icon
+        public DiscordCDNImage Icon
         {
             get
             {
                 if (_iconHash == null)
                     return null;
                 else
-                    return new DiscordCDNMedia(CDNEndpoints.AppIcon, Id, _iconHash); 
+                    return new DiscordCDNImage(CDNEndpoints.AppIcon, Id, _iconHash); 
             }
         }
 

@@ -1,12 +1,10 @@
-﻿using Discord.Webhook;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 namespace Discord
 {
-    public class MinimalGuild : ControllableEx // Json is only populated on Login and Socket guild objects
+    public class MinimalGuild : Controllable
     {
         [JsonProperty("id")]
         public ulong Id { get; private set; }
@@ -17,6 +15,21 @@ namespace Discord
         public MinimalGuild(ulong guildId)
         {
             Id = guildId;
+        }
+
+
+        public async Task ModifyAsync(GuildProperties properties)
+        {
+            await Client.ModifyGuildAsync(Id, properties);
+        }
+
+        /// <summary>
+        /// Modifies the guild
+        /// </summary>
+        /// <param name="properties">Options for modifying the guild</param>
+        public void Modify(GuildProperties properties)
+        {
+            ModifyAsync(properties).GetAwaiter().GetResult();
         }
 
 
@@ -131,6 +144,28 @@ namespace Discord
         public void SetVanityUrl(string vanityCode)
         {
             SetVanityUrlAsync(vanityCode).GetAwaiter().GetResult();
+        }
+
+
+        public Task<WelcomeScreen> GetWelcomeScreenAsync()
+        {
+            return Client.GetWelcomeScreenAsync(Id);
+        }
+
+        public WelcomeScreen GetWelcomeScreen()
+        {
+            return GetWelcomeScreenAsync().GetAwaiter().GetResult();
+        }
+
+
+        public Task<WelcomeScreen> ModifyWelcomeScreenAsync(WelcomeScreenProperties properties)
+        {
+            return Client.ModifyWelcomeScreenAsync(Id, properties);
+        }
+
+        public WelcomeScreen ModifyWelcomeScreen(WelcomeScreenProperties properties)
+        {
+            return ModifyWelcomeScreenAsync(properties).GetAwaiter().GetResult();
         }
 
 
@@ -254,9 +289,6 @@ namespace Discord
             return await Client.GetGuildInvitesAsync(Id);
         }
 
-        /// <summary>
-        /// Gets an invite
-        /// </summary>
         public IReadOnlyList<GuildInvite> GetInvites()
         {
             return GetInvitesAsync().GetAwaiter().GetResult();
@@ -268,9 +300,6 @@ namespace Discord
             return await Client.GetGuildWebhooksAsync(Id);
         }
 
-        /// <summary>
-        /// Gets the guild's webhooks
-        /// </summary>
         public IReadOnlyList<DiscordWebhook> GetWebhooks()
         {
             return GetWebhooksAsync().GetAwaiter().GetResult();

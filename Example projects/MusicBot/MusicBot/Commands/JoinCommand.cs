@@ -1,63 +1,39 @@
-﻿using Discord;
-using Discord.Commands;
+﻿using Discord.Commands;
 using Discord.Gateway;
-using Discord.Voice;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Discord.Media;
+using System;
 
 namespace MusicBot
 {
-    [Command("join", "Makes the bot join the voice channel you're currently in")]
-    public class JoinCommand : ICommand
+    [Command("join", "Joins the voice channel you're in")]
+    public class JoinCommand : CommandBase
     {
-        public void Execute(DiscordSocketClient client, DiscordMessage message)
+        public override void Execute()
         {
-            VoiceChannel channel;
-
-            try
+            if (Message.Guild != null)
             {
-                channel = client.GetChannel(client.GetGuildVoiceStates(message.Guild).First(s => s.UserId == message.Author.User.Id).Channel.Id).ToVoiceChannel();
-            }
-            catch
-            {
-                message.Channel.SendMessage("You must be connected to a voice channel to play music");
-
-                return;
-            }
-
-            if (!Program.Sessions.ContainsKey(message.Guild.Id))
-            {
-                DiscordVoiceSession voiceSession = client.JoinVoiceChannel(message.Guild, channel, false, true);
-
-                voiceSession.OnConnected += (c, e) =>
+                if (Client.GetVoiceStates(Message.Author.User.Id).GuildVoiceStates.TryGetValue(Message.Guild.Id, out DiscordVoiceState state) && state.Channel != null)
                 {
-                    var session = new MusicSession(message.Guild)
-                    {
-                        Session = voiceSession,
-                        Channel = channel,
-                        Queue = new Queue<Track>(),
-                    };
-
-                    Program.Sessions.Add(message.Guild.Id, session);
-
-                    message.Channel.SendMessage("Connected to voice channel.");
-
-                    Task.Run(() => session.StartQueue());
-                };
+                    var session = Client.JoinVoiceChannel(new VoiceStateProperties() { GuildId = Message.Guild.Id, ChannelId = state.Channel.Id });
+                    session.ReceivePackets = false;
+                    session.OnConnected += Session_OnConnected;
+                    session.Connect();
+                }
+                else
+                    Message.Channel.SendMessage("You must be connected to a voice channel to use this command");
             }
-            else if (Program.Sessions[message.Guild.Id].Channel.Id != channel.Id)
+        }
+
+        private async void Session_OnConnected(DiscordVoiceSession session, EventArgs e)
+        {
+            Message.Channel.SendMessage("Connected");
+
+            if (Program.Players.TryGetValue(Message.Guild.Id, out MusicPlayer player))
+                player.SetSession(session);
+            else
             {
-                var session = Program.Sessions[message.Guild.Id];
-
-                session.SwitchingChannels = true;
-                session.Channel = channel;
-
-                session.Session = client.JoinVoiceChannel(message.Guild, channel, false, true);
-                session.Session.OnConnected += (sender, e) =>
-                {
-                    Program.Sessions[message.Guild.Id].SwitchingChannels = false;
-                };
+                player = Program.Players[Message.Guild.Id] = new MusicPlayer(session);
+                await player.StartAsync();
             }
         }
     }

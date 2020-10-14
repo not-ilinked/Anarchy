@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Threading.Tasks;
 
-namespace Discord.Webhook
+namespace Discord
 {
     public class DiscordDefaultWebhook : DiscordWebhook
     {
@@ -14,7 +14,7 @@ namespace Discord.Webhook
         public DiscordDefaultWebhook(ulong webhookId, string token) : this()
         {
             Client = new DiscordClient();
-            Update(Client.GetWebhook(webhookId, token).ToDefault());
+            Update((DiscordDefaultWebhook)Client.GetWebhook(webhookId, token));
         }
 
 
@@ -67,18 +67,6 @@ namespace Discord.Webhook
         public void SendMessage(string content, DiscordEmbed embed = null, DiscordWebhookProfile profile = null)
         {
             SendMessageAsync(content, embed, profile).GetAwaiter().GetResult();
-        }
-
-
-        public override string ToString()
-        {
-            return Name;
-        }
-
-
-        public static implicit operator ulong(DiscordDefaultWebhook instance)
-        {
-            return instance.Id;
         }
     }
 }

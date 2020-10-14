@@ -3,8 +3,7 @@ using System.Collections.Generic;
 
 namespace Discord
 {
-    // API v8
-    internal class InvalidParameter
+    public class InvalidParameter
     {
         internal class Container
         {

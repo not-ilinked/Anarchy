@@ -5,12 +5,12 @@ namespace Discord.Commands
     [AttributeUsage(AttributeTargets.Class)]
     public class CommandAttribute : Attribute
     {
-        public string Command { get; private set; }
+        public string Name { get; private set; }
         public string Description { get; private set; }
 
-        public CommandAttribute(string cmd, string description = null)
+        public CommandAttribute(string name, string description = null)
         {
-            Command = cmd;
+            Name = name;
             Description = description;
         }
     }

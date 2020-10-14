@@ -31,10 +31,20 @@ namespace Discord
             return client.SendMessageAsync(channelId, message, tts, embed).GetAwaiter().GetResult();
         }
 
+        public static async Task<DiscordMessage> SendMessageAsync(this DiscordClient client, ulong channelId, EmbedMaker embed)
+        {
+            return await client.SendMessageAsync(channelId, null, false, embed);
+        }
+
+        public static DiscordMessage SendMessage(this DiscordClient client, ulong channelId, EmbedMaker embed)
+        {
+            return client.SendMessageAsync(channelId, embed).GetAwaiter().GetResult();
+        }
+
 
         public static async Task<DiscordMessage> SendFileAsync(this DiscordClient client, ulong channelId, string fileName, byte[] fileData, string message = null, bool tts = false)
         {
-            HttpClient httpClient = new HttpClient(new HttpClientHandler() { Proxy = client.Config.Proxy != null && client.Config.Proxy.Type == Leaf.xNet.ProxyType.HTTP ? new WebProxy(client.Config.Proxy.Host + client.Config.Proxy.Port, false, new string[] { }, new NetworkCredential() { UserName = client.Config.Proxy.Username, Password = client.Config.Proxy.Password }) : null });
+            HttpClient httpClient = new HttpClient(new HttpClientHandler() { Proxy = client.Config.Proxy != null && client.Config.Proxy.Type == AnarchyProxyType.HTTP ? new WebProxy(client.Config.Proxy.Host + client.Config.Proxy.Port, false, new string[] { }, new NetworkCredential() { UserName = client.Config.Proxy.Username, Password = client.Config.Proxy.Password }) : null });
             httpClient.DefaultRequestHeaders.Add("Authorization", client.Token);
 
             MultipartFormDataContent content = new MultipartFormDataContent
@@ -50,8 +60,8 @@ namespace Discord
                 { new ByteArrayContent(fileData), "file", fileName }
             };
 
-            return (await httpClient.PostAsync(client.HttpClient.BaseUrl + $"/channels/{channelId}/messages", content).GetAwaiter().GetResult()
-                                    .Content.ReadAsStringAsync()).Deserialize<DiscordMessage>().SetClient(client);
+            return JsonConvert.DeserializeObject<DiscordMessage>(await httpClient.PostAsync(client.HttpClient.BaseUrl + $"/channels/{channelId}/messages", content)
+                                                                            .GetAwaiter().GetResult().Content.ReadAsStringAsync()).SetClient(client);
         }
 
         /// <summary>

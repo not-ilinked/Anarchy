@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Drawing;
 
-namespace Discord.Webhook
+namespace Discord
 {
     /// <summary>
     /// Options for creating/modifying a webhook
@@ -40,7 +40,7 @@ namespace Discord.Webhook
 
         private readonly DiscordParameter<ulong> ChannelProperty = new DiscordParameter<ulong>();
         [JsonProperty("channel_id")]
-        internal ulong ChannelId
+        public ulong ChannelId
         {
             get { return ChannelProperty; }
             set { ChannelProperty.Value = value; }

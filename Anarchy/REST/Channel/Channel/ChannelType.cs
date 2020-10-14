@@ -1,6 +1,6 @@
 ﻿namespace Discord
 {
-    public enum ChannelType
+    public enum ChannelType : int
     {
         Text,
         DM,

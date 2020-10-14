@@ -51,9 +51,9 @@ namespace Discord.WebSockets
             OnClosed?.Invoke(this, e);
         }
 
-        private void OnMessage(object sender, WebSocketSharp.MessageEventArgs e)
+        private void OnMessage(object sender, MessageEventArgs e)
         {
-            OnMessageReceived?.Invoke(this, e.Data.Deserialize<DiscordWebSocketMessage<TOpcode>>());
+            OnMessageReceived?.Invoke(this, JsonConvert.DeserializeObject<DiscordWebSocketMessage<TOpcode>>(e.Data));
         }
 
         public void Dispose()

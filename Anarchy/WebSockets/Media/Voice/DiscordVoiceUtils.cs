@@ -1,15 +1,13 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 
 namespace Discord.Media
 {
     public static class DiscordVoiceUtils
     {
-        public static byte[] ReadFromFile(string path)
+        public static Stream GetAudioStream(string path)
         {
             var process = Process.Start(new ProcessStartInfo
             {
@@ -19,12 +17,13 @@ namespace Discord.Media
                 RedirectStandardOutput = true
             });
 
-            using (MemoryStream memStream = new MemoryStream())
-            {
-                process.StandardOutput.BaseStream.CopyTo(memStream);
+            return process.StandardOutput.BaseStream;
+        }
 
-                return memStream.ToArray();
-            }
+        [Obsolete("This method is obsolete. Please use GetAudioStream instead", true)]
+        public static byte[] ReadFromFile(string path)
+        {
+            return null;
         }
 
         private static List<int> FindNALUnitIndexes(byte[] byteStream)

@@ -36,14 +36,14 @@ namespace Discord
         [JsonProperty("splash")]
         private string _splashHash;
 
-        public DiscordCDNMedia Splash
+        public DiscordCDNImage Splash
         {
             get 
             {
                 if (_splashHash == null)
                     return null;
                 else
-                    return new DiscordCDNMedia(CDNEndpoints.Splash, Id, _splashHash); 
+                    return new DiscordCDNImage(CDNEndpoints.Splash, Id, _splashHash); 
             }
         }
 
@@ -51,14 +51,14 @@ namespace Discord
         [JsonProperty("discovery_splash")]
         private string _discoverySplashHash;
 
-        public DiscordCDNMedia DiscoverySplash
+        public DiscordCDNImage DiscoverySplash
         {
             get 
             {
                 if (_discoverySplashHash == null)
                     return null;
                 else
-                    return new DiscordCDNMedia(CDNEndpoints.DiscoverySplash, Id, _discoverySplashHash); 
+                    return new DiscordCDNImage(CDNEndpoints.DiscoverySplash, Id, _discoverySplashHash); 
             }
         }
 
@@ -233,7 +233,7 @@ namespace Discord
         }
 
 
-        public async Task ModifyAsync(GuildProperties properties)
+        public new async Task ModifyAsync(GuildProperties properties)
         {
             Update(await Client.ModifyGuildAsync(Id, properties));
         }
@@ -242,7 +242,7 @@ namespace Discord
         /// Modifies the guild
         /// </summary>
         /// <param name="properties">Options for modifying the guild</param>
-        public void Modify(GuildProperties properties)
+        public new void Modify(GuildProperties properties)
         {
             ModifyAsync(properties).GetAwaiter().GetResult();
         }

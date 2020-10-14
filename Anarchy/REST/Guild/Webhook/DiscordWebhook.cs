@@ -2,9 +2,9 @@
 using System;
 using System.Threading.Tasks;
 
-namespace Discord.Webhook
+namespace Discord
 {
-    public class DiscordWebhook : ControllableEx
+    public class DiscordWebhook : Controllable
     {
         [JsonProperty("id")]
         public ulong Id { get; private set; }
@@ -21,14 +21,14 @@ namespace Discord.Webhook
         [JsonProperty("avatar")]
         private string _avatarHash;
 
-        public DiscordCDNMedia Avatar
+        public DiscordCDNImage Avatar
         {
             get 
             {
                 if (_avatarHash == null)
                     return null;
                 else
-                    return new DiscordCDNMedia(CDNEndpoints.Avatar, Id, _avatarHash); 
+                    return new DiscordCDNImage(CDNEndpoints.Avatar, Id, _avatarHash); 
             }
         }
 
@@ -53,7 +53,6 @@ namespace Discord.Webhook
         
         protected void Update(DiscordWebhook hook)
         {
-            Json = hook.Json;
             Id = hook.Id;
             Type = hook.Type;
             Name = hook.Name;
@@ -106,20 +105,9 @@ namespace Discord.Webhook
         }
 
 
-        public DiscordDefaultWebhook ToDefault()
+        public override string ToString()
         {
-            if (Type != DiscordWebhookType.Default)
-                throw new InvalidOperationException("Webhook is not of type Default");
-
-            return Json.ToObjectEx<DiscordDefaultWebhook>().SetClient(Client);
-        }
-
-        public DiscordCrosspostWebhook ToCrossposter()
-        {
-            if (Type != DiscordWebhookType.ChannelFollower)
-                throw new InvalidOperationException("Webhook is not of type ChannelFollower");
-
-            return Json.ToObjectEx<DiscordCrosspostWebhook>().SetClient(Client);
+            return Name;
         }
     }
 }

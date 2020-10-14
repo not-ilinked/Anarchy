@@ -93,35 +93,40 @@ namespace Discord
         }
 
 
-        public async Task<DiscordPermission> GetPermissionsAsync()
+        private async Task<DiscordGuild> SeekGuildAsync()
         {
-            DiscordGuild guild = null;
-
             if (Client.GetType() == typeof(DiscordSocketClient))
             {
                 var socketClient = (DiscordSocketClient)Client;
 
                 if (socketClient.Config.Cache)
-                    guild = socketClient.GetCachedGuild(GuildId);
+                    return socketClient.GetCachedGuild(GuildId);
             }
 
-            if (guild == null)
-                guild = await Client.GetGuildAsync(GuildId);
+            return await Client.GetGuildAsync(GuildId);
+        }
 
+        private DiscordPermission ComputePermissions(DiscordGuild guild)
+        {
             DiscordPermission permissions = DiscordPermission.None;
 
             if (guild.OwnerId == User.Id)
-            {
-                foreach (DiscordPermission permission in Enum.GetValues(typeof(DiscordPermission)))
-                    permissions |= permission;
-            }
+                permissions = PermissionUtils.GetAllPermissions();
             else
             {
                 foreach (var role in guild.Roles.Where(r => Roles.Contains(r.Id) || r.Name == "@everyone"))
-                    permissions |= role.Permissions;
+                    permissions = permissions.Add(role.Permissions);
+
+                if (permissions.Has(DiscordPermission.Administrator))
+                    permissions = PermissionUtils.GetAllPermissions();
             }
 
             return permissions;
+        }
+
+        public async Task<DiscordPermission> GetPermissionsAsync()
+        {
+            return ComputePermissions(await SeekGuildAsync());
         }
 
         /// <summary>
@@ -131,6 +136,31 @@ namespace Discord
         public DiscordPermission GetPermissions()
         {
             return GetPermissionsAsync().GetAwaiter().GetResult();
+        }
+
+
+
+        public async Task<DiscordPermission> GetPermissionsAsync(IEnumerable<DiscordPermissionOverwrite> affectedBy)
+        {
+            var guild = await SeekGuildAsync();
+
+            var perms = ComputePermissions(guild);
+
+            if (guild.OwnerId != User.Id && !perms.Has(DiscordPermission.Administrator))
+            {
+                foreach (var overwrite in affectedBy)
+                {
+                    if (overwrite.Type == PermissionOverwriteType.Role && overwrite.AffectedId == guild.EveryoneRole.Id || Roles.Contains(overwrite.AffectedId) || (overwrite.Type == PermissionOverwriteType.Member && overwrite.AffectedId == User.Id))
+                        perms = perms.Remove(overwrite.Deny).Add(overwrite.Allow);
+                }
+            }
+
+            return perms;
+        }
+
+        public DiscordPermission GetPermissions(IEnumerable<DiscordPermissionOverwrite> affectedBy)
+        {
+            return GetPermissionsAsync(affectedBy).GetAwaiter().GetResult();
         }
 
 

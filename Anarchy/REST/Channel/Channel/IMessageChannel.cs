@@ -11,6 +11,9 @@ namespace Discord
         Task<DiscordMessage> SendMessageAsync(string message, bool tts = false, DiscordEmbed embed = null);
         DiscordMessage SendMessage(string message, bool tts = false, DiscordEmbed embed = null);
 
+        Task<DiscordMessage> SendMessageAsync(EmbedMaker embed);
+        DiscordMessage SendMessage(EmbedMaker embed);
+
         Task<DiscordMessage> SendFileAsync(string fileName, byte[] fileData, string message = null, bool tts = false);
         DiscordMessage SendFile(string fileName, byte[] fileData, string message = null, bool tts = false);
 

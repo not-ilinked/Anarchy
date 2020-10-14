@@ -2,10 +2,10 @@
 {
     public class RelationshipEventArgs
     {
-        public Relationship Relationship { get; private set; }
+        public DiscordRelationship Relationship { get; private set; }
 
 
-        public RelationshipEventArgs(Relationship relationship)
+        public RelationshipEventArgs(DiscordRelationship relationship)
         {
             Relationship = relationship;
         }

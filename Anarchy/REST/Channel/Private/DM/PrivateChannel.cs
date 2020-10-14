@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Anarchy;
-using Discord.Gateway;
-using Discord.Media;
 using Newtonsoft.Json;
 
 namespace Discord
@@ -107,6 +104,16 @@ namespace Discord
         public DiscordMessage SendMessage(string message, bool tts = false, DiscordEmbed embed = null)
         {
             return SendMessageAsync(message, tts, embed).GetAwaiter().GetResult();
+        }
+
+        public Task<DiscordMessage> SendMessageAsync(EmbedMaker embed)
+        {
+            return Client.SendMessageAsync(Id, embed);
+        }
+
+        public DiscordMessage SendMessage(EmbedMaker embed)
+        {
+            return SendMessageAsync(embed).GetAwaiter().GetResult();
         }
 
 

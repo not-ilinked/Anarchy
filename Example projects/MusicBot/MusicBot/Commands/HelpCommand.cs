@@ -1,24 +1,32 @@
 ﻿using Discord;
 using Discord.Commands;
-using Discord.Gateway;
+using System.Text;
 
 namespace MusicBot
 {
-    [Command("help", "Shows a help menu")]
-    public class HelpCommand : ICommand
+    [Command("help", "Shows this help menu")]
+    public class HelpCommand : CommandBase
     {
-        public void Execute(DiscordSocketClient client, DiscordMessage message)
+        public override void Execute()
         {
-            EmbedMaker embed = new EmbedMaker();
-            embed.Title = "Music Bot Commands";
-            embed.Color = Program.EmbedColor;
-            embed.Footer.Text = Program.EmbedFooter.Text;
-            embed.Footer.IconUrl = Program.EmbedFooter.IconUrl;
-            
-            foreach (var command in client.CommandHandler.Commands)
-                embed.AddField(client.CommandHandler.Prefix + command.ToString(), command.Description);
+            EmbedMaker embed = new EmbedMaker()
+            {
+                Title = "Commands",
+                Description = "A list of commands. Duh...",
+                Color = Program.EmbedColor
+            };
 
-            message.Channel.SendMessage("", false, embed);
+            foreach (var cmd in Client.CommandHandler.Commands.Values)
+            {
+                StringBuilder args = new StringBuilder();
+
+                foreach (var arg in cmd.Parameters)
+                    args.Append($" [{arg.Name}]");
+
+                embed.AddField($"{Client.CommandHandler.Prefix + cmd.Name}{args}", cmd.Description);
+            }
+
+            Message.Channel.SendMessage("", false, embed);
         }
     }
 }

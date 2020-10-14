@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Discord
@@ -20,7 +21,7 @@ namespace Discord
         public static async Task<IReadOnlyList<PaymentMethod>> GetPaymentMethodsAsync(this DiscordClient client)
         {
             return (await client.HttpClient.GetAsync("/users/@me/billing/payment-sources"))
-                                .DeserializeExArray<PaymentMethod>().SetClientsInList(client);
+                                      .MultipleDeterministic<PaymentMethod>().SetClientsInList(client);
         }
 
         public static IReadOnlyList<PaymentMethod> GetPaymentMethods(this DiscordClient client)

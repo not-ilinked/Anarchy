@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace Discord
 {
-    public class PaymentMethod : ControllableEx
+    public class PaymentMethod : Controllable
     {
         [JsonProperty("id")]
         public ulong Id { get; private set; }
@@ -48,12 +48,6 @@ namespace Discord
         public string PurchaseNitroGift(DiscordNitroSubType nitroType)
         {
             return PurchaseNitroGiftAsync(nitroType).GetAwaiter().GetResult();
-        }
-            
-
-        public static implicit operator ulong(PaymentMethod instance)
-        {
-            return instance.Id;
         }
     }
 }

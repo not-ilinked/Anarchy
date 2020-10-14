@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.Threading.Tasks;
 
 namespace Discord
@@ -22,6 +23,10 @@ namespace Discord
 
         [JsonProperty("mfa_enabled")]
         public bool TwoFactorAuth { get; private set; }
+
+
+        [JsonProperty("nsfw_allowed")]
+        public bool NsfwAllowed { get; private set; }
 
 
         [JsonProperty("phone")]

@@ -33,7 +33,7 @@ namespace Discord.Gateway
                     }
                 }
 
-                throw new DiscordHttpException(client, new DiscordHttpError(DiscordError.UnknownChannel, "Channel was not found in cache"));
+                throw new DiscordHttpException(new DiscordHttpError(DiscordError.UnknownChannel, "Channel was not found in cache"));
             }
             else
                 return await ((DiscordClient)client).GetChannelAsync(channelId);

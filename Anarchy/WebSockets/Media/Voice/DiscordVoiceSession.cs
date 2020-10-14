@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using WebSocketSharp;
 
 namespace Discord.Media
 {
@@ -53,11 +52,27 @@ namespace Discord.Media
         public delegate void UserDisconnectHandler(DiscordVoiceSession session, ulong userId);
         public event UserDisconnectHandler OnUserDisconnected;
 
-        private readonly ConcurrentDictionary<uint, ulong> _ssrcToUserDictionary;
-        private readonly ConcurrentDictionary<ulong, IncomingVoiceStream> _receivers;
-        private readonly OpusDecoder _decoder;
+        public delegate void ChannelHandler(DiscordVoiceSession session, ChannelChangedEventArgs args);
+        public event ChannelHandler OnChannelChanged;
 
-        internal DiscordVoiceSession(DiscordSocketClient client, ulong? guildId, ulong channelId) : base(client, guildId, channelId)
+        internal new ulong ChannelId
+        {
+            get { return base.ChannelId; }
+            set
+            {
+                ulong old = ChannelId;
+                base.ChannelId = value;
+
+                if (OnChannelChanged != null)
+                    Task.Run(() => OnChannelChanged?.Invoke(this, new ChannelChangedEventArgs(old, value)));
+            }
+        }
+
+        private ConcurrentDictionary<uint, ulong> _ssrcToUserDictionary;
+        private ConcurrentDictionary<ulong, IncomingVoiceStream> _receivers;
+        private OpusDecoder _decoder;
+
+        private void Initialize()
         {
             _decoder = new OpusDecoder();
             _ssrcToUserDictionary = new ConcurrentDictionary<uint, ulong>();
@@ -66,31 +81,53 @@ namespace Discord.Media
             WatchingDictionary = new Dictionary<string, DiscordGoLiveSession>();
         }
 
+        internal DiscordVoiceSession(DiscordSocketClient client, ulong? guildId, ulong channelId, string sessionId) : base(client, guildId, channelId, sessionId)
+        {
+            Initialize();
+        }
+
+        internal DiscordVoiceSession(DiscordVoiceSession other) : base(other)
+        {
+            other.OnConnected = null;
+            other.OnDisconnected = null;
+            other.OnUserConnected = null;
+            other.OnUserSpeaking = null;
+            other.OnUserDisconnected = null;
+            other.OnChannelChanged = null;
+
+            Initialize();
+        }
+
         protected override ulong GetServerId()
         {
             return Server.Guild == null ? Channel.Id : Server.Guild.Id;
         }
 
 
-        public void SetSpeakingState(DiscordSpeakingFlags state)
+        public void SetSpeakingState(DiscordSpeakingFlags flags)
         {
             if (State != MediaSessionState.Connected)
                 throw new InvalidOperationException("Connection has been closed.");
 
             SafeSend(DiscordMediaOpcode.Speaking, new DiscordSpeakingRequest()
             {
-                State = state,
+                State = flags,
                 Delay = 0,
                 SSRC = SSRC.Audio
             });
 
-            Speaking = state != DiscordSpeakingFlags.NotSpeaking;
+            Speaking = flags != DiscordSpeakingFlags.NotSpeaking;
         }
 
 
         public Task<DiscordGoLiveSession> GoLiveAsync()
         {
-            return JoinGoLiveAsync(Guild.Id, Channel.Id, () => Client.Send(GatewayOpcode.GoLive, new StartStream() { Type = "guild", GuildId = Guild.Id, ChannelId = Channel.Id }));
+            return JoinGoLiveAsync(Guild.Id, Channel.Id, () => Client.Send(GatewayOpcode.GoLive, new StartStream() 
+            { 
+                Type = "guild", 
+                GuildId = Guild.Id, 
+                ChannelId = Channel.Id 
+            }));
         }
 
         public DiscordGoLiveSession GoLive()
@@ -116,7 +153,7 @@ namespace Discord.Media
         {
             return WatchGoLiveAsync(userId).GetAwaiter().GetResult();
         }
-
+    
 
         public override void Disconnect()
         {
@@ -133,20 +170,6 @@ namespace Discord.Media
                 throw new InvalidOperationException("Connection has been closed.");
 
             return new DiscordVoiceStream(this, (int)bitrate, application);
-        }
-
-
-        public IncomingVoiceStream GetReceiver(ulong userId)
-        {
-            if (_receivers.TryGetValue(userId, out IncomingVoiceStream stream))
-                return stream;
-            else
-                throw new InvalidOperationException("This user is currently not speaking.");
-        }
-
-        public bool TryGetReceiver(ulong userId, out IncomingVoiceStream stream)
-        {
-            return _receivers.TryGetValue(userId, out stream);
         }
 
 

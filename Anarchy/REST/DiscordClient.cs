@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Leaf.xNet;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Text;
@@ -43,24 +44,36 @@ namespace Discord
         }
 
 
-        public DiscordConfig Config { get; private set; }
+        public LockedDiscordConfig Config { get; protected set; }
+        public ProxyClient Proxy { get; private set; }
 
 
-        public DiscordClient(DiscordConfig config = null)
+        protected DiscordClient()
+        {
+            HttpClient = new DiscordHttpClient(this);
+        }
+
+
+        public DiscordClient(DiscordConfig config = null) : this()
         {
             if (config == null)
                 config = new DiscordConfig();
 
-            config.SuperProperties.Base64 = Convert.ToBase64String(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(config.SuperProperties)));
-
-            Config = config;
-
-            HttpClient = new DiscordHttpClient(this);
+            Config = new LockedDiscordConfig(config);
+            FinishConfig();
         }
 
         public DiscordClient(string token, DiscordConfig config = null) : this(config)
         {
             Token = token;
+        }
+
+        protected void FinishConfig()
+        {
+            Config.SuperProperties.Base64 = Convert.ToBase64String(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(Config.SuperProperties)));
+
+            if (Config.Proxy != null)
+                Proxy = Config.Proxy.CreateProxyClient();
         }
 
 

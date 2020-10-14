@@ -10,11 +10,9 @@ namespace Discord
         public DiscordError Code { get; private set; }
 
 
-        // API v8
-        /*
         [JsonProperty("errors")]
         public Dictionary<string, InvalidParameter.Container> Fields { get; private set; }
-        */
+        
 
         [JsonProperty("message")]
         public string Message { get; private set; }
@@ -27,6 +25,7 @@ namespace Discord
         public DiscordHttpError(DiscordError code, string message)
         {
             Code = code;
+            Fields = new Dictionary<string, InvalidParameter.Container>();
             Message = message;
         }
     }

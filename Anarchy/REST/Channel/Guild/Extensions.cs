@@ -10,7 +10,7 @@ namespace Discord
 #pragma warning disable IDE1006
         public static async Task<IReadOnlyList<GuildChannel>> GetGuildChannelsAsync(this DiscordClient client, ulong guildId)
         {
-            var channels = (await client.HttpClient.GetAsync($"/guilds/{guildId}/channels")).ToChannels<GuildChannel>().SetClientsInList(client);
+            var channels = (await client.HttpClient.GetAsync($"/guilds/{guildId}/channels")).MultipleDeterministic<GuildChannel>().SetClientsInList(client);
 
             foreach (var channel in channels)
                 channel.GuildId = guildId;
@@ -31,7 +31,7 @@ namespace Discord
         public static async Task<GuildChannel> CreateGuildChannelAsync(this DiscordClient client, ulong guildId, string name, ChannelType type, ulong? parentId = null)
         {
             var channel = (await client.HttpClient.PostAsync($"/guilds/{guildId}/channels", new GuildChannelCreationProperties() { Name = name, Type = type, ParentId = parentId }))
-                                .Deserialize<GuildChannel>().SetClient(client);
+                                            .ParseDeterministic<GuildChannel>().SetClient(client);
 
             channel.GuildId = guildId;
 

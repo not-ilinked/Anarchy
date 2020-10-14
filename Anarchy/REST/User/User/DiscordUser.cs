@@ -1,12 +1,13 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Drawing;
 using System.Threading.Tasks;
 
 namespace Discord
 {
     public class DiscordUser : Controllable
     {
+        protected static DiscordBadge HypeBadges = DiscordBadge.HypeBravery | DiscordBadge.HypeBrilliance | DiscordBadge.HypeBalance;
+
         [JsonProperty("id")]
         public ulong Id { get; private set; }
 
@@ -23,14 +24,14 @@ namespace Discord
         protected string _avatarHash;
 
 
-        public DiscordCDNMedia Avatar
+        public DiscordCDNImage Avatar
         {
             get
             {
                 if (_avatarHash == null)
                     return null;
                 else
-                    return new DiscordCDNMedia(CDNEndpoints.Avatar, Id, _avatarHash);
+                    return new DiscordCDNImage(CDNEndpoints.Avatar, Id, _avatarHash);
             }
         }
 
@@ -52,7 +53,7 @@ namespace Discord
                 else
                     return _flags;
             }
-            private set
+            protected set
             {
                 _flags = value;
             }
@@ -80,9 +81,17 @@ namespace Discord
         {
             get
             {
-                return (Hypesquad)Enum.Parse(typeof(Hypesquad), 
-                                        (Badges & (DiscordBadge.HypeBravery | DiscordBadge.HypeBrilliance | DiscordBadge.HypeBalance))
-                                         .ToString().Replace("Hype", ""));
+                switch (Badges & HypeBadges)
+                {
+                    case DiscordBadge.HypeBrilliance:
+                        return Hypesquad.Brilliance;
+                    case DiscordBadge.HypeBravery:
+                        return Hypesquad.Bravery;
+                    case DiscordBadge.HypeBalance:
+                        return Hypesquad.Balance;
+                    default:
+                        return Hypesquad.None;
+                }
             }
         }
 

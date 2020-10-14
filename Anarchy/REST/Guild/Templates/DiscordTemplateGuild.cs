@@ -32,7 +32,13 @@ namespace Discord
 
 
         [JsonProperty("channels")]
-        public IReadOnlyList<GuildChannel> Channels { get; private set; }
+        [JsonConverter(typeof(DeepJsonConverter<GuildChannel>))]
+        private List<GuildChannel> _channels;
+
+        public IReadOnlyList<GuildChannel> Channels
+        {
+            get { return _channels; }
+        }
 
 
         internal void SetGuildId(ulong guildId)

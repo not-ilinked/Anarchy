@@ -2,12 +2,8 @@
 
 namespace Discord
 {
-    public class MutualGuild
+    public class MutualGuild : MinimalGuild
     {
-        [JsonProperty("id")]
-        public ulong Id { get; private set; }
-
-
         [JsonProperty("nick")]
         public string Nickname { get; private set; }
 

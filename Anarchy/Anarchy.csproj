@@ -36,7 +36,6 @@
       <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Collections.Immutable, Version=1.2.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
@@ -47,37 +46,45 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="websocket-sharp, Version=1.0.2.36182, Culture=neutral, PublicKeyToken=5660b08a1845a91e, processorArchitecture=MSIL">
+      <HintPath>..\packages\better-websocket-sharp.1.0.2.1\lib\net35\websocket-sharp.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\Command\CommandAttribute.cs" />
+    <Compile Include="Commands\Parameter\CommandParameter.cs" />
     <Compile Include="Commands\Command\DiscordCommand.cs" />
-    <Compile Include="Commands\Command\ParameterAttribute.cs" />
-    <Compile Include="Commands\Handler\CommandHandler.cs" />
-    <Compile Include="Commands\Command\ICommand.cs" />
-    <Compile Include="Commands\Handler\InvalidParameterEventArgs.cs" />
-    <Compile Include="Commands\Handler\MissingParameterEventArgs.cs" />
+    <Compile Include="Commands\Parameter\ParameterAttribute.cs" />
+    <Compile Include="Commands\CommandHandler.cs" />
+    <Compile Include="Commands\Command\CommandBase.cs" />
     <Compile Include="Local\Collections\AutoConcurrentDictionary.cs" />
     <Compile Include="Local\Collections\ConcurrentDictionary.cs" />
     <Compile Include="Local\Collections\ConcurrentList.cs" />
+    <Compile Include="Local\Controllable\DeepJsonConverter.cs" />
+    <Compile Include="Local\Proxies\AnarchyProxy.cs" />
+    <Compile Include="Local\Proxies\AnarchyProxyType.cs" />
     <Compile Include="REST\CDN\CDNEndpoint.cs" />
     <Compile Include="REST\CDN\CDNEndpoints.cs" />
-    <Compile Include="REST\CDN\DiscordCDNMedia.cs" />
-    <Compile Include="REST\Channel\Channel\ChannelConverter.cs" />
+    <Compile Include="REST\CDN\DiscordCDNImage.cs" />
     <Compile Include="REST\DiscordClient.cs" />
     <Compile Include="REST\DiscordConfig.cs" />
-    <Compile Include="REST\HTTP\Exceptions\InvalidParametersException.cs" />
-    <Compile Include="WebSockets\Gateway\DiscordShard.cs" />
+    <Compile Include="REST\Guild\Permissions\PermissionUtils.cs" />
+    <Compile Include="REST\LockedDiscordConfig.cs" />
+    <Compile Include="REST\User\Connections\ConnectionProperties.cs" />
+    <Compile Include="WebSockets\Gateway\Session\DiscordShard.cs" />
     <Compile Include="WebSockets\Gateway\DiscordSocketClient.cs" />
     <Compile Include="WebSockets\Gateway\DiscordSocketConfig.cs" />
     <Compile Include="REST\HTTP\Exceptions\InvalidParameter.cs" />
+    <Compile Include="WebSockets\Gateway\General\GatewayConnectionState.cs" />
+    <Compile Include="WebSockets\Gateway\LockedSocketConfig.cs" />
     <Compile Include="WebSockets\Gateway\Media\Voice\DiscordVoiceStateContainer.cs" />
+    <Compile Include="WebSockets\Gateway\Session\GatewayIntentBundle.cs" />
     <Compile Include="WebSockets\Media\Livestreaming\DiscordGoLiveCloseEventArgs.cs" />
     <Compile Include="WebSockets\Media\Livestreaming\DiscordGoLiveError.cs" />
     <Compile Include="WebSockets\Media\Livestreaming\DiscordGoLiveException.cs" />
     <Compile Include="WebSockets\Media\Livestreaming\StreamKey.cs" />
     <Compile Include="WebSockets\Media\Media\UnorthodoxCloseCode.cs" />
-    <Compile Include="WebSockets\Media\Voice\DiscordVoiceSessionManager.cs" />
-    <Compile Include="WebSockets\Gateway\Auth\Models\Resume.cs" />
+    <Compile Include="WebSockets\Gateway\Session\Auth\Resume.cs" />
     <Compile Include="WebSockets\Gateway\Channel\Private\ChannelRecipientEventArgs.cs" />
     <Compile Include="WebSockets\Gateway\Channel\GatewayChannelExtensions.cs" />
     <Compile Include="WebSockets\Gateway\Channel\Private\CallUpdateEventArgs.cs" />
@@ -89,23 +96,21 @@
     <Compile Include="WebSockets\Gateway\Channel\Unread\UnreadMessagesEventArgs.cs" />
     <Compile Include="WebSockets\Gateway\Emojis\GatewayEmojiExtensions.cs" />
     <Compile Include="WebSockets\Gateway\General\GatewayCloseCode.cs" />
-    <Compile Include="WebSockets\Gateway\General\GatewayConnectionState.cs" />
     <Compile Include="WebSockets\Gateway\General\LogoutEventArgs.cs" />
     <Compile Include="WebSockets\Gateway\Gifts\GiftCodeCreatedEventArgs.cs" />
     <Compile Include="WebSockets\Gateway\Guild\Member\List\GuildMemberListEventArgs.cs" />
     <Compile Include="WebSockets\Gateway\Guild\Member\List\MemberListGroup.cs" />
     <Compile Include="WebSockets\Gateway\Guild\Member\List\MemberListQueryOptions.cs" />
-    <Compile Include="WebSockets\Gateway\Guild\Models\LoginGuild.cs" />
     <Compile Include="WebSockets\Gateway\Guild\Models\UnavailableGuild.cs" />
     <Compile Include="WebSockets\Gateway\Guild\Models\GuildUnavailableEventArgs.cs" />
-    <Compile Include="WebSockets\Gateway\Auth\Session\DiscordGatewayIntent.cs" />
+    <Compile Include="WebSockets\Gateway\Session\DiscordGatewayIntent.cs" />
     <Compile Include="WebSockets\Gateway\Invite\InviteDeletedEventArgs.cs" />
     <Compile Include="WebSockets\Gateway\Media\Go Live\GoLiveCreate.cs" />
     <Compile Include="WebSockets\Gateway\Media\Go Live\GoLiveDelete.cs" />
-    <Compile Include="WebSockets\Gateway\Presence\Activity\User\UserActivity.cs" />
-    <Compile Include="WebSockets\Gateway\Presence\Activity\User\UserCustomStatusActivity.cs" />
-    <Compile Include="WebSockets\Gateway\Presence\Activity\User\UserGameActivity.cs" />
-    <Compile Include="WebSockets\Gateway\Presence\Activity\User\UserListeningActivity.cs" />
+    <Compile Include="WebSockets\Gateway\Presence\Activity\User\DiscordActivity.cs" />
+    <Compile Include="WebSockets\Gateway\Presence\Activity\User\CustomStatusActivity.cs" />
+    <Compile Include="WebSockets\Gateway\Presence\Activity\User\DiscordGameActivity.cs" />
+    <Compile Include="WebSockets\Gateway\Presence\Activity\User\DiscordListeningActivity.cs" />
     <Compile Include="WebSockets\Gateway\Presence\Presence\ActiveSessionPlatforms.cs" />
     <Compile Include="WebSockets\Gateway\Presence\Presence\DiscordGuildPresence.cs" />
     <Compile Include="WebSockets\Gateway\Media\Go Live\GoLiveStreamKey.cs" />
@@ -127,9 +132,10 @@
     <Compile Include="WebSockets\Media\Media\Payloads\MediaCodecSelection.cs" />
     <Compile Include="WebSockets\Media\RTP\RTPPacketHeader.cs" />
     <Compile Include="WebSockets\Media\RTP\SodiumException.cs" />
+    <Compile Include="WebSockets\Media\Voice\ChannelChangedEventArgs.cs" />
     <Compile Include="WebSockets\Media\Voice\Speaking\DiscordVoicePacket.cs" />
     <Compile Include="WebSockets\Media\Voice\Speaking\IncomingVoiceStream.cs" />
-    <Compile Include="Local\Models\DiscordImage.cs" />
+    <Compile Include="Local\DiscordImage.cs" />
     <Compile Include="WebSockets\Gateway\Invite\InviteCreatedEventArgs.cs" />
     <Compile Include="REST\Billing\BillingAddress.cs" />
     <Compile Include="REST\Billing\CardPaymentMethod.cs" />
@@ -169,7 +175,7 @@
     <Compile Include="REST\Guild\Permissions\OverwrittenPermissionState.cs" />
     <Compile Include="REST\Guild\Permissions\PermissionOverwriteType.cs" />
     <Compile Include="REST\Guild\Role\Models\RolePositionUpdate.cs" />
-    <Compile Include="REST\Subscriptions\Nitro\DiscordNitroBoost.cs" />
+    <Compile Include="REST\Subscriptions\Nitro\DiscordGuildBoost.cs" />
     <Compile Include="REST\Subscriptions\Nitro\DiscordNitroSubType.cs" />
     <Compile Include="REST\Subscriptions\Nitro\DiscordNitroSubTypes.cs" />
     <Compile Include="REST\Subscriptions\Nitro\Extensions.cs" />
@@ -187,36 +193,35 @@
     <Compile Include="REST\User\Settings\DiscordGuildFolderUpdate.cs" />
     <Compile Include="WebSockets\Media\Media\DiscordMediaSession.cs" />
     <Compile Include="WebSockets\Media\Media\MediaSessionState.cs" />
-    <Compile Include="WebSockets\Gateway\Auth\Extensions.cs" />
-    <Compile Include="WebSockets\Gateway\Auth\Models\Identification.cs" />
-    <Compile Include="WebSockets\Gateway\Auth\Models\Login.cs" />
-    <Compile Include="WebSockets\Gateway\Auth\Models\LoginEventArgs.cs" />
-    <Compile Include="WebSockets\Gateway\Auth\Session\DiscordSession.cs" />
-    <Compile Include="WebSockets\Gateway\Auth\Session\DiscordSessionClientInfo.cs" />
-    <Compile Include="WebSockets\Gateway\Auth\Session\DiscordSessionsEventArgs.cs" />
+    <Compile Include="WebSockets\Gateway\Session\Extensions.cs" />
+    <Compile Include="WebSockets\Gateway\Session\Auth\Identification.cs" />
+    <Compile Include="WebSockets\Gateway\Session\Auth\Login.cs" />
+    <Compile Include="WebSockets\Gateway\Session\Auth\LoginEventArgs.cs" />
+    <Compile Include="WebSockets\Gateway\Session\DiscordSession.cs" />
+    <Compile Include="WebSockets\Gateway\Session\DiscordSessionClientInfo.cs" />
+    <Compile Include="WebSockets\Gateway\Session\DiscordSessionsEventArgs.cs" />
     <Compile Include="WebSockets\Gateway\General\Opcode.cs" />
     <Compile Include="WebSockets\Gateway\Guild\Extensions.cs" />
     <Compile Include="WebSockets\Gateway\Guild\Member\List\MemberListQuery.cs" />
     <Compile Include="WebSockets\Gateway\Guild\Member\Query\GuildMemberQuery.cs" />
-    <Compile Include="WebSockets\Gateway\Presence\Activity\Activity.cs" />
-    <Compile Include="WebSockets\Gateway\Presence\Activity\GameActivity.cs" />
-    <Compile Include="WebSockets\Gateway\Presence\Activity\StreamActivity.cs" />
-    <Compile Include="WebSockets\Gateway\Presence\Activity\Timestamps.cs" />
-    <Compile Include="WebSockets\Gateway\Presence\Activity\Type.cs" />
+    <Compile Include="WebSockets\Gateway\Presence\Activity\Properties\ActivityProperties.cs" />
+    <Compile Include="WebSockets\Gateway\Presence\Activity\Properties\GameActivityProperties.cs" />
+    <Compile Include="WebSockets\Gateway\Presence\Activity\Properties\StreamActivityProperties.cs" />
+    <Compile Include="WebSockets\Gateway\Presence\Activity\TimestampProperties.cs" />
+    <Compile Include="WebSockets\Gateway\Presence\Activity\ActivityType.cs" />
     <Compile Include="WebSockets\Gateway\Presence\Extensions.cs" />
-    <Compile Include="WebSockets\Gateway\Presence\Presence\PresenceChange.cs" />
+    <Compile Include="WebSockets\Gateway\Presence\Presence\PresenceProperties.cs" />
     <Compile Include="WebSockets\Gateway\Presence\Presence\DiscordPresence.cs" />
     <Compile Include="WebSockets\Gateway\Presence\Presence\UpdatedEventArgs.cs" />
     <Compile Include="WebSockets\Gateway\Media\Extensions.cs" />
     <Compile Include="WebSockets\Gateway\Media\DiscordMediaServer.cs" />
     <Compile Include="WebSockets\Gateway\Media\Voice\DiscordVoiceState.cs" />
-    <Compile Include="WebSockets\Gateway\Media\Voice\VoiceStateChange.cs" />
+    <Compile Include="WebSockets\Gateway\Media\Voice\VoiceStateProperties.cs" />
     <Compile Include="WebSockets\Gateway\Media\Voice\VoiceStateEventARgs.cs" />
     <Compile Include="Local\Controllable\Controllable.cs" />
-    <Compile Include="Local\Controllable\ControllableEx.cs" />
     <Compile Include="Local\Controllable\Extensions.cs" />
-    <Compile Include="Local\Controllable\JsonUtils.cs" />
-    <Compile Include="Local\Models\DiscordParameter.cs" />
+    <Compile Include="Local\Controllable\JsonExtensions.cs" />
+    <Compile Include="Local\DiscordParameter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="REST\Guild\AuditLog\Extensions.cs" />
     <Compile Include="REST\Guild\AuditLog\Models\ActionType.cs" />
@@ -230,7 +235,7 @@
     <Compile Include="REST\Channel\Channel\Extensions.cs" />
     <Compile Include="REST\Channel\Channel\IMessageChannel.cs" />
     <Compile Include="REST\Channel\Channel\MinimalChannel.cs" />
-    <Compile Include="REST\Channel\Guild\Text\MinimalTextChannel.cs" />
+    <Compile Include="REST\Channel\Channel\MinimalTextChannel.cs" />
     <Compile Include="REST\Channel\Channel\CreationProperties.cs" />
     <Compile Include="REST\Channel\Guild\Extensions.cs" />
     <Compile Include="REST\Channel\Guild\Guild\CreationProperties.cs" />
@@ -256,11 +261,11 @@
     <Compile Include="REST\Embed\Footer.cs" />
     <Compile Include="REST\Embed\Image.cs" />
     <Compile Include="REST\Embed\Video.cs" />
-    <Compile Include="REST\Emoji\Emoji\DiscordEmoji.cs" />
-    <Compile Include="REST\Emoji\Emoji\EmojiContainer.cs" />
-    <Compile Include="REST\Emoji\Emoji\EmojiProperties.cs" />
-    <Compile Include="REST\Emoji\Emoji\PartialEmoji.cs" />
-    <Compile Include="REST\Emoji\Emoji\UpdatedEventArgs.cs" />
+    <Compile Include="REST\Emoji\Models\DiscordEmoji.cs" />
+    <Compile Include="REST\Emoji\Models\EmojiContainer.cs" />
+    <Compile Include="REST\Emoji\Models\EmojiProperties.cs" />
+    <Compile Include="REST\Emoji\Models\PartialEmoji.cs" />
+    <Compile Include="REST\Emoji\Models\UpdatedEventArgs.cs" />
     <Compile Include="REST\Emoji\Extentions.cs" />
     <Compile Include="WebSockets\Gateway\Guild\Member\MemberEventArgs.cs" />
     <Compile Include="WebSockets\Gateway\Guild\Member\Query\GuildMembersEventArgs.cs" />
@@ -319,7 +324,7 @@
     <Compile Include="REST\OAuth2\Models\OAuth2Application.cs" />
     <Compile Include="REST\HTTP\Exceptions\RateLimitException.cs" />
     <Compile Include="REST\Relationships\Extensions.cs" />
-    <Compile Include="REST\Relationships\Models\Relationship.cs" />
+    <Compile Include="REST\Relationships\Models\DiscordRelationship.cs" />
     <Compile Include="WebSockets\Gateway\User\RelationshipEventArgs.cs" />
     <Compile Include="REST\Relationships\Models\RelationshipType.cs" />
     <Compile Include="REST\Guild\Role\Extensions.cs" />
@@ -327,7 +332,7 @@
     <Compile Include="WebSockets\Gateway\Role\RoleUpdate.cs" />
     <Compile Include="WebSockets\Gateway\Role\RoleEventArgs.cs" />
     <Compile Include="REST\Guild\Role\Models\RoleProperties.cs" />
-    <Compile Include="REST\User\Connections\AccountType.cs" />
+    <Compile Include="REST\User\Connections\ConnectedAccountType.cs" />
     <Compile Include="REST\User\Connections\ConnectedAccount.cs" />
     <Compile Include="REST\User\Connections\Extensions.cs" />
     <Compile Include="REST\User\Extensions.cs" />
@@ -335,7 +340,7 @@
     <Compile Include="REST\User\Profile\DiscordProfile.cs" />
     <Compile Include="REST\User\Profile\Hypesquad.cs" />
     <Compile Include="REST\User\Profile\MutualGuild.cs" />
-    <Compile Include="REST\User\User\UserStatus.cs" />
+    <Compile Include="WebSockets\Gateway\User\UserStatus.cs" />
     <Compile Include="REST\User\Settings\CustomStatus.cs" />
     <Compile Include="REST\User\Settings\ExplicitContentFilter.cs" />
     <Compile Include="REST\User\User\DiscordLanguage.cs" />
@@ -387,12 +392,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\websocket-sharp\websocket-sharp\websocket-sharp.csproj">
-      <Project>{b357bac7-529e-4d81-a0d2-71041b19c8de}</Project>
-      <Name>websocket-sharp</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

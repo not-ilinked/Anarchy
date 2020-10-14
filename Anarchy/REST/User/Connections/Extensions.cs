@@ -17,12 +17,24 @@ namespace Discord
         }
 
 
-        public static async Task RemoveConnectedAccountAsync(this DiscordClient client, AccountType type, string id)
+        public static async Task<ClientConnectedAccount> ModifyConnectedAccountAsync(this DiscordClient client, ConnectedAccountType type, string connectionId, ConnectionProperties properties)
         {
-            await client.HttpClient.DeleteAsync($"/users/@me/connections/{type}/{id}");
+            return (await client.HttpClient.PatchAsync($"/users/@me/connections/{type.ToString().ToLower()}/{connectionId}", properties))
+                                                .Deserialize<ClientConnectedAccount>();
         }
 
-        public static void RemoveConnectedAccount(this DiscordClient client, AccountType type, string id)
+        public static ClientConnectedAccount ModifyConnectedAccount(this DiscordClient client, ConnectedAccountType type, string connectionId, ConnectionProperties properties)
+        {
+            return client.ModifyConnectedAccountAsync(type, connectionId, properties).GetAwaiter().GetResult();
+        }
+
+
+        public static async Task RemoveConnectedAccountAsync(this DiscordClient client, ConnectedAccountType type, string id)
+        {
+            await client.HttpClient.DeleteAsync($"/users/@me/connections/{type.ToString().ToLower()}/{id}");
+        }
+
+        public static void RemoveConnectedAccount(this DiscordClient client, ConnectedAccountType type, string id)
         {
             client.RemoveConnectedAccountAsync(type, id).GetAwaiter().GetResult();
         }

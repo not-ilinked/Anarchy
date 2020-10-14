@@ -22,13 +22,5 @@ namespace Discord
             }
             return classes;
         }
-
-
-        internal static T SetJson<T>(this T @class, JToken obj) where T : ControllableEx
-        {
-            if (@class != null)
-                @class.Json = (JObject)obj;
-            return @class;
-        }
     }
 }

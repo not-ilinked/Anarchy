@@ -54,11 +54,11 @@ namespace Discord
 
 
         [JsonProperty("footer")]
-        public EmbedFooter Footer { get; private set; }
+        public EmbedFooter Footer { get; internal set; }
 
 
         [JsonProperty("author")]
-        public EmbedAuthor Author { get; private set; }
+        public EmbedAuthor Author { get; internal set; }
 
 
         public override string ToString()

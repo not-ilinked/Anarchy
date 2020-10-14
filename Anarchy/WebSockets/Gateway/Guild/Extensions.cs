@@ -13,7 +13,8 @@ namespace Discord.Gateway
             if (!client.Config.Cache)
                 throw new NotSupportedException("Caching is disabled for this client.");
 
-            return client.GuildCache.Values.ToList();
+            lock (client.GuildCache.Lock)
+                return client.GuildCache.Values.ToList();
         }
 
 
@@ -28,7 +29,7 @@ namespace Discord.Gateway
             }
             catch (KeyNotFoundException)
             {
-                throw new DiscordHttpException(client, new DiscordHttpError(DiscordError.UnknownGuild, "Guild was not found in the cache"));
+                throw new DiscordHttpException(new DiscordHttpError(DiscordError.UnknownGuild, "Guild was not found in the cache"));
             }
         }
 
@@ -189,7 +190,7 @@ namespace Discord.Gateway
 
             client.OnMemberListUpdate += handler;
 
-            pendingRequests = RequestMembers(client, guildId, channelId, options.Index);
+            pendingRequests = RequestMembers(client, guildId, channelId, options.Offset);
 
             return task.Task;
         }

@@ -1,19 +1,23 @@
-# 0.8.0.0 - WIP
+# 0.8.0.0
 ### Additions
 - Added async methods (with the same name as their sync methods but the suffix 'Async').
 - Livestreaming (i.e. Screenshare and Go Live) support. Currently sending or receiving video data is not possible.
 - Added support for receiving voice data from other users.
 - Added support for [Guild Communities](https://support.discord.com/hc/en-us/articles/360047132851).
-- Added support for sharding (see DiscordSocketConfig).
+- Added support for [sharding](https://discord.com/developers/docs/topics/gateway#sharding) (see DiscordSocketConfig).
 
 
 ### Improvements
+- Anarchy now uses API v8.
+- Changed the way different types of channels and such are dealt with, lowering memory and CPU usage. Instead of calling .ToX() methods, you now just cast the object.
 - Rewrote Anarchy's Webhook implementation, adding support for Channel Followers.
+- Rewrote Anarchy's command handler.
+- DiscordVoiceStream.CopyFrom() now takes in a Stream. DiscordVoiceUtils.ReadFromFile() is now GetAudioStream and GetAudio to compensate.
 - Improved the way Anarchy deals with purchasing subscriptions.
 - Removed various useless/bloaty methods (GetGuildRole, Mute/DeafenGuildMember and so on).
 - Changed the structure of the custom exceptions.
 - Rewrote the CDN implementation.
-- In progress: Removed redundant info from method names such as: CreateChannelWebhook -> CreateWebhook.
+- Removed redundant info from method names such as: CreateChannelWebhook -> CreateWebhook.
 - A few bug fixes.
 
 

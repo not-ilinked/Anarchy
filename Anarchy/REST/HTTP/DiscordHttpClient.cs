@@ -34,10 +34,8 @@ namespace Discord
             {
                 if (response.StatusCode == 429)
                     throw new RateLimitException(_discordClient, response.Deserialize<JObject>().Value<int>("retry_after"));
-                else if (response.StatusCode == 400)
-                    throw new InvalidParametersException(response.Deserialize<Dictionary<string, List<string>>>());
                 else
-                    throw new DiscordHttpException(_discordClient, response.Deserialize<DiscordHttpError>());
+                    throw new DiscordHttpException(response.Deserialize<DiscordHttpError>());
             }
         }
 
@@ -69,22 +67,9 @@ namespace Discord
                 {
                     DiscordHttpResponse resp;
 
-                    // C# is retarded as shit
-                    ProxyClient proxy = null;
-
-                    if (_discordClient.GetType() == typeof(DiscordSocketClient))
+                    if (_discordClient.Proxy == null || _discordClient.Proxy.Type == ProxyType.HTTP)
                     {
-                        var client = (DiscordSocketClient)_discordClient;
-
-                        if (client.Config != null)
-                            proxy = client.Config.Proxy;
-                    }
-                    else
-                        proxy = _discordClient.Config.Proxy;
-
-                    if (proxy == null || proxy.Type == ProxyType.HTTP)
-                    {
-                        HttpClient client = new HttpClient(new HttpClientHandler() { Proxy = proxy == null ? null : new WebProxy(proxy.Host, proxy.Port) });
+                        HttpClient client = new HttpClient(new HttpClientHandler() { Proxy = _discordClient.Proxy == null ? null : new WebProxy(_discordClient.Proxy.Host, _discordClient.Proxy.Port) });
                         if (_discordClient.Token != null)
                             client.DefaultRequestHeaders.Add("Authorization", _discordClient.Token);
 
@@ -103,7 +88,7 @@ namespace Discord
                         HttpRequest msg = new HttpRequest
                         {
                             IgnoreProtocolErrors = true,
-                            UserAgent = _discordClient.Config.UserAgent,
+                            UserAgent = _discordClient.Config.SuperProperties.UserAgent,
                             Authorization = _discordClient.Token
                         };
 
@@ -111,8 +96,8 @@ namespace Discord
                             msg.AddHeader(HttpHeader.ContentType, "application/json");
 
                         msg.AddHeader("X-Super-Properties", _discordClient.Config.SuperProperties.Base64);
-                        if (proxy != null)
-                            msg.Proxy = proxy;
+                        if (_discordClient.Proxy != null)
+                            msg.Proxy = _discordClient.Proxy;
 
                         var response = msg.Raw(method, endpoint, hasData ? new Leaf.xNet.StringContent(json) : null);
 

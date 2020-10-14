@@ -1,10 +1,5 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
+﻿using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Discord
 {
@@ -16,7 +11,8 @@ namespace Discord
         public DiscordHttpResponse(int statusCode, string content)
         {
             StatusCode = statusCode;
-            Object = JToken.Parse(content);
+            if (content != null && content.Length != 0)
+                Object = JToken.Parse(content);
         }
 
 
@@ -25,35 +21,15 @@ namespace Discord
             return Object.ToObject<T>();
         }
 
-        public T DeserializeEx<T>() where T : ControllableEx
+
+        public T ParseDeterministic<T>()
         {
-            return Object.ToObjectEx<T>();
+            return ((JObject)Object).ParseDeterministic<T>();
         }
 
-        public List<T> DeserializeExArray<T>() where T : ControllableEx
+        public List<T> MultipleDeterministic<T>()
         {
-            return Deserialize<JArray>().DeserializeWithJson<T>();
-        }
-
-        public T ToChannel<T>() where T : DiscordChannel
-        {
-            return ((JObject)Object).ToChannel<T>();
-        }
-
-        public DiscordChannel ToChannel()
-        {
-            return ToChannel<DiscordChannel>();
-        }
-
-
-        public List<T> ToChannels<T>() where T : DiscordChannel
-        {
-            return ((JArray)Object).ToChannels<T>();
-        }
-
-        public List<DiscordChannel> ToChannels()
-        {
-            return ToChannels<DiscordChannel>();
+            return ((JArray)Object).MultipleDeterministic<T>();
         }
     }
 }

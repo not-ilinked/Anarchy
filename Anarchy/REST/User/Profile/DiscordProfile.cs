@@ -11,6 +11,7 @@ namespace Discord
             OnClientUpdated += (sender, e) => 
             {
                 User.SetClient(Client);
+                MutualGuilds.SetClientsInList(Client);
                 ConnectedAccounts.SetClientsInList(Client);
             };
         }
@@ -46,12 +47,6 @@ namespace Discord
         public override string ToString()
         {
             return User.ToString();
-        }
-
-
-        public static implicit operator ulong(DiscordProfile instance)
-        {
-            return instance.User.Id;
         }
     }
 }

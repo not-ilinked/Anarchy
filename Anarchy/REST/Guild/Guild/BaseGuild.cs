@@ -12,14 +12,14 @@ namespace Discord
         protected string _iconHash;
 
 
-        public DiscordCDNMedia Icon
+        public DiscordCDNImage Icon
         {
             get 
             {
                 if (_iconHash == null)
                     return null;
                 else
-                    return new DiscordCDNMedia(CDNEndpoints.GuildIcon, Id, _iconHash); 
+                    return new DiscordCDNImage(CDNEndpoints.GuildIcon, Id, _iconHash); 
             }
         }
 

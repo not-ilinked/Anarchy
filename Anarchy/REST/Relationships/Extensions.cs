@@ -5,16 +5,16 @@ namespace Discord
 {
     public static class RelationshipsExtensions
     {
-        public static async Task<IReadOnlyList<Relationship>> GetRelationshipsAsync(this DiscordClient client)
+        public static async Task<IReadOnlyList<DiscordRelationship>> GetRelationshipsAsync(this DiscordClient client)
         {
             return (await client.HttpClient.GetAsync($"/users/@me/relationships"))
-                                .Deserialize<IReadOnlyList<Relationship>>().SetClientsInList(client);
+                                .Deserialize<IReadOnlyList<DiscordRelationship>>().SetClientsInList(client);
         }
 
         /// <summary>
         /// Gets the account's relationships (friends, blocked etc.)
         /// </summary>
-        public static IReadOnlyList<Relationship> GetRelationships(this DiscordClient client)
+        public static IReadOnlyList<DiscordRelationship> GetRelationships(this DiscordClient client)
         {
             return client.GetRelationshipsAsync().GetAwaiter().GetResult();
         }
@@ -47,7 +47,7 @@ namespace Discord
 
         public static async Task BlockUserAsync(this DiscordClient client, ulong userId)
         {
-            await client.HttpClient.PutAsync($"/users/@me/relationships/{userId}", new Relationship() { Type = RelationshipType.Blocked });
+            await client.HttpClient.PutAsync($"/users/@me/relationships/{userId}", new DiscordRelationship() { Type = RelationshipType.Blocked });
         }
 
         /// <summary>

@@ -23,12 +23,17 @@ namespace Anarchy
             set { base[key] = value; }
         }
 
-        public TValue this[TKey key, bool doNotCreate]
+        public TValue this[TKey key, bool doNotSave]
         {
             get
             {
-                if (doNotCreate)
-                    return base[key];
+                if (doNotSave)
+                {
+                    if (TryGetValue(key, out TValue value))
+                        return value;
+                    else
+                        return _valueCreate(key);
+                }
                 else
                     return this[key];
             }

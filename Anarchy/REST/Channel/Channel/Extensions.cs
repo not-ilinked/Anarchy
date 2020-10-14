@@ -8,7 +8,8 @@ namespace Discord
     {
         public static async Task<DiscordChannel> GetChannelAsync(this DiscordClient client, ulong channelId)
         {
-            return (await client.HttpClient.GetAsync($"/channels/{channelId}")).ToChannel().SetClient(client);
+            return (await client.HttpClient.GetAsync($"/channels/{channelId}"))
+                                    .ParseDeterministic<DiscordChannel>().SetClient(client);
         }
 
         /// <summary>
@@ -23,7 +24,8 @@ namespace Discord
 
         public static async Task<DiscordGroup> ModifyGroupAsync(this DiscordClient client, ulong groupId, GroupProperties properties)
         {
-            return (await client.HttpClient.PatchAsync($"/channels/{groupId}", properties)).ToChannel<DiscordGroup>().SetClient(client);
+            return (await client.HttpClient.PatchAsync($"/channels/{groupId}", properties))
+                                      .ParseDeterministic<DiscordGroup>().SetClient(client);
         }
 
         public static DiscordGroup ModifyGroup(this DiscordClient client, ulong groupId, GroupProperties properties)
@@ -34,7 +36,8 @@ namespace Discord
 
         public static async Task<GuildChannel> ModifyGuildChannelAsync(this DiscordClient client, ulong channelId, GuildChannelProperties properties)
         {
-            return (await client.HttpClient.PatchAsync($"/channels/{channelId}", properties)).ToChannel<GuildChannel>().SetClient(client);
+            return (await client.HttpClient.PatchAsync($"/channels/{channelId}", properties))
+                                    .ParseDeterministic<GuildChannel>().SetClient(client);
         }
 
         public static GuildChannel ModifyGuildChannel(this DiscordClient client, ulong channelId, GuildChannelProperties properties)
@@ -45,7 +48,8 @@ namespace Discord
 
         public static async Task<DiscordChannel> DeleteChannelAsync(this DiscordClient client, ulong channelId)
         {
-            return (await client.HttpClient.DeleteAsync($"/channels/{channelId}")).ToChannel().SetClient(client);
+            return (await client.HttpClient.DeleteAsync($"/channels/{channelId}"))
+                                        .ParseDeterministic<DiscordChannel>().SetClient(client);
         }
 
         /// <summary>

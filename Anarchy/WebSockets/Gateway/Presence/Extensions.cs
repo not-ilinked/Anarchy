@@ -5,7 +5,7 @@
         /// <summary>
         /// Updates the client's presence
         /// </summary>
-        public static void UpdatePresence(this DiscordSocketClient client, PresenceChange presence)
+        public static void UpdatePresence(this DiscordSocketClient client, PresenceProperties presence)
         {
             client.Send(GatewayOpcode.PresenceChange, presence);
         }
@@ -17,16 +17,16 @@
         /// <param name="status">The new status</param>
         public static void SetStatus(this DiscordSocketClient client, UserStatus status)
         {
-            client.UpdatePresence(new PresenceChange() { Status = status });
+            client.UpdatePresence(new PresenceProperties() { Status = status });
         }
 
 
         /// <summary>
         /// Sets the client's activity
         /// </summary>
-        public static void SetActivity(this DiscordSocketClient client, Activity activity)
+        public static void SetActivity(this DiscordSocketClient client, ActivityProperties activity)
         {
-            client.UpdatePresence(new PresenceChange() { Activity = activity });
+            client.UpdatePresence(new PresenceProperties() { Activity = activity });
         }
     }
 }

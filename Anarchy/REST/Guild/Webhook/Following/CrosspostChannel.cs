@@ -1,8 +1,8 @@
 ﻿using Newtonsoft.Json;
 
-namespace Discord.Webhook
+namespace Discord
 {
-    public class CrosspostChannel : MinimalChannel
+    public class CrosspostChannel : MinimalTextChannel
     {
         [JsonProperty("name")]
         public string Name { get; private set; }

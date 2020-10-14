@@ -167,7 +167,7 @@ namespace Discord
         public async Task EditAsync(MessageEditProperties properties)
         {
             if (Type != MessageType.Default)
-                throw new InvalidOperationException("Can only edit messages with a Type of 'Default'");
+                throw new InvalidOperationException("Can only edit messages of type Default");
 
             Update(await Client.EditMessageAsync(Channel.Id, Id, properties));
         }

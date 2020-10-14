@@ -1,5 +1,5 @@
-﻿using Discord.Webhook;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -104,6 +104,16 @@ namespace Discord
             return SendMessageAsync(message, tts, embed).Result;
         }
 
+        public Task<DiscordMessage> SendMessageAsync(EmbedMaker embed)
+        {
+            return Client.SendMessageAsync(Id, embed);
+        }
+
+        public DiscordMessage SendMessage(EmbedMaker embed)
+        {
+            return SendMessageAsync(embed).GetAwaiter().GetResult();
+        }
+
 
         public async Task<DiscordMessage> SendFileAsync(string fileName, byte[] fileData, string message = null, bool tts = false)
         {
@@ -201,6 +211,20 @@ namespace Discord
             UnpinMessageAsync(messageId).GetAwaiter().GetResult();
         }
         #endregion
+
+        
+        public async Task<ulong> FollowAsync(ulong crosspostChannelId)
+        {
+            return await Client.FollowChannelAsync(Id, crosspostChannelId);
+        }
+
+        public ulong Follow(ulong crosspostChannelId)
+        {
+            if (Type != ChannelType.News)
+                throw new InvalidOperationException("Channel must be of type News");
+
+            return FollowAsync(crosspostChannelId).GetAwaiter().GetResult();
+        }
 
 
         public async Task<DiscordInvite> CreateInviteAsync(InviteProperties properties = null)

@@ -38,7 +38,7 @@ namespace Discord.Media
         }
 
 
-        public void Close()
+        internal void Close()
         {
             if (!Closed)
             {

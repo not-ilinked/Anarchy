@@ -87,12 +87,14 @@ namespace Discord
         public EmbedFooter Footer
         {
             get { return _embed.Footer; }
+            set { _embed.Footer = value; }
         }
 
 
         public EmbedAuthor Author
         {
             get { return _embed.Author; }
+            set { _embed.Author = value; }
         }
 
 

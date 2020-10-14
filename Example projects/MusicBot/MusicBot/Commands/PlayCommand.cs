@@ -2,67 +2,59 @@
 using Discord.Commands;
 using Discord.Gateway;
 using System;
-using DotNetTools.SharpGrabber.Internal.Grabbers;
-using System.IO;
-using System.Net.Http;
 
 namespace MusicBot
 {
-    [Command("play", "Adds a track to the queue")]
-    public class PlayCommand : ICommand
+    [Command("play", "Plays a song")]
+    public class PlayCommand : CommandBase
     {
-        [Parameter("YouTube song url")]
-        public string Url { get; private set; }
+        // i'll add support for things like the bot looking up songs by the query later
+        [Parameter("query")]
+        public string Query { get; private set; }
 
-        public void Execute(DiscordSocketClient client, DiscordMessage message)
+        private ulong? GetStateChannelId(ulong userId)
         {
-            if (!Program.Sessions.ContainsKey(message.Guild))
-                message.Channel.SendMessage("Not connected to a voice channel. Use the join command to play music.");
+            if (Client.GetVoiceStates(userId).GuildVoiceStates.TryGetValue(Message.Guild.Id, out DiscordVoiceState state))
+                return state.Channel == null ? null : (ulong?)state.Channel.Id;
             else
+                return null;
+        }
+
+        public override void Execute()
+        {
+            if (Message.Guild != null)
             {
-                if (Url.IndexOf("?v=") > -1)
+                var us = GetStateChannelId(Client.User.Id);
+
+                if (us != null)
                 {
-                    string videoId = Url.Substring(Url.IndexOf("?v=") + 3, 11);
-
-                    string basePath = $"Cache/{videoId}";
-                    string path = basePath + ".webm";
-
-                    string videoName = null;
-
-                    if (!File.Exists(path))
+                    // this would return true if both are null, but we've already checked for that
+                    if (us == GetStateChannelId(Message.Author.User.Id))
                     {
-                        try
+                        var track = new MusicTrack(Query);
+                        track.StartDownload();
+                        Program.Players[Message.Guild.Id].Tracks.Add(track);
+
+                        Message.Channel.SendMessage("", false, new EmbedMaker()
                         {
-                            var result = new YouTubeGrabber().GrabAsync(new Uri(Url)).Result;
-
-                            foreach (var resource in result.Resources)
-                            {
-                                if (resource.ResourceUri.Host.Contains("googlevideo.com") && resource.ResourceUri.Query.Contains("mime=audio"))
-                                {
-                                    File.WriteAllBytes(path, new HttpClient().GetAsync(resource.ResourceUri.ToString()).Result.Content.ReadAsByteArrayAsync().Result);
-                                    File.WriteAllText(basePath + ".txt", result.Title);
-
-                                    videoName = result.Title;
-
-                                    break;
-                                }
-                            }
-                        }
-                        catch
-                        {
-                            return;
-                        }
+                            Title = "Added track",
+                            TitleUrl = track.Video.Url,
+                            Description = $"Added \"{track.Video.Title}\" to the queue",
+                            Color = Program.EmbedColor
+                        });
                     }
                     else
-                        videoName = File.ReadAllText(basePath + ".txt");
-
-                    message.Channel.SendMessage($"Added \"{videoName}\" to queue.");
-
-                    Program.Sessions[message.Guild].Queue.Enqueue(new Track(videoName, Url, path));
+                        Message.Channel.SendMessage("You must be in the same voice channel as me");
                 }
                 else
-                    message.Channel.SendMessage($"That appears to not be a valid YouTube video url, <@{message.Author.User.Id}>");
+                    Message.Channel.SendMessage("I'm not connected to a voice channel in this server. Please use the join command");
             }
+        }
+
+        public override void HandleError(string parameterName, string providedValue, Exception exception)
+        {
+            if (providedValue == null)
+                Message.Channel.SendMessage("No value provided for " + parameterName);
         }
     }
 }

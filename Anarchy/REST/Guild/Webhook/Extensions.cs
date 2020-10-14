@@ -2,16 +2,10 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Discord.Webhook
+namespace Discord
 {
     public static class WebhookExtensions
     {
-        [Obsolete("CreateChannelWebhookAsync is depricated. Call CreateWebhookAsync instead", true)]
-        public static Task<DiscordDefaultWebhook> CreateChannelWebhookAsync(this DiscordClient client, ulong channelId, DiscordWebhookProperties properties)
-        {
-            return null;
-        }
-
         public static async Task<DiscordDefaultWebhook> CreateWebhookAsync(this DiscordClient client, ulong channelId, DiscordWebhookProperties properties)
         {
             properties.ChannelId = channelId;
@@ -20,12 +14,6 @@ namespace Discord.Webhook
             return hook;
         }
 
-
-        [Obsolete("CreateChannelWebhook is depricated. Call CreateWebhook instead", true)]
-        public static DiscordDefaultWebhook CreateChannelWebhook(this DiscordClient client, ulong channelId, DiscordWebhookProperties properties)
-        {
-            return null;
-        }
 
         /// <summary>
         /// Creates a webhook
@@ -41,16 +29,9 @@ namespace Discord.Webhook
 
         public static async Task<DiscordWebhook> ModifyWebhookAsync(this DiscordClient client, ulong webhookId, DiscordWebhookProperties properties)
         {
-            return (await client.HttpClient.PatchAsync($"/webhooks/{webhookId}", properties))
-                                    .DeserializeEx<DiscordWebhook>().SetClient(client);
+            return (await client.HttpClient.PatchAsync($"/webhooks/{webhookId}", properties)).ParseDeterministic<DiscordWebhook>().SetClient(client);
         }
 
-        /// <summary>
-        /// Modifies a webhook
-        /// </summary>
-        /// <param name="webhookId">ID of the webhook</param>
-        /// <param name="properties">Options for modifyiing a webhook</param>
-        /// <returns>The modified webhook</returns>
         public static DiscordWebhook ModifyWebhook(this DiscordClient client, ulong webhookId, DiscordWebhookProperties properties)
         {
             return client.ModifyWebhookAsync(webhookId, properties).Result;
@@ -86,21 +67,9 @@ namespace Discord.Webhook
         }
 
 
-        [Obsolete("DeleteChannelWebhookAsync is depricated. Call DeleteWebhookAsync instead", true)]
-        public static Task DeleteChannelWebhookAsync(this DiscordClient client, ulong webhookId, string token = null)
-        {
-            return null;
-        }
-
         public static async Task DeleteWebhookAsync(this DiscordClient client, ulong webhookId, string token = null)
         {
             await client.HttpClient.DeleteAsync($"/webhooks/{webhookId}/{token}");
-        }
-
-        [Obsolete("DeleteChannelWebhookAsync is depricated. Call DeleteWebhookAsync instead", true)]
-        public static void DeleteChannelWebhook(this DiscordClient client, ulong webhookId, string token = null)
-        {
-
         }
 
         /// <summary>
@@ -120,7 +89,7 @@ namespace Discord.Webhook
             if (token != null)
                 url += "/" + token;
 
-            return (await client.HttpClient.GetAsync(url)).DeserializeEx<DiscordWebhook>().SetClient(client);
+            return (await client.HttpClient.GetAsync(url)).ParseDeterministic<DiscordWebhook>().SetClient(client);
         }
 
         /// <summary>
@@ -137,7 +106,7 @@ namespace Discord.Webhook
         public static async Task<IReadOnlyList<DiscordWebhook>> GetGuildWebhooksAsync(this DiscordClient client, ulong guildId)
         {
             return (await client.HttpClient.GetAsync($"/guilds/{guildId}/webhooks"))
-                                .DeserializeExArray<DiscordWebhook>().SetClientsInList(client);
+                                    .MultipleDeterministic<DiscordWebhook>().SetClientsInList(client);
         }
 
         /// <summary>
@@ -153,7 +122,7 @@ namespace Discord.Webhook
         public static async Task<IReadOnlyList<DiscordWebhook>> GetChannelWebhooksAsync(this DiscordClient client, ulong channelId)
         {
             return (await client.HttpClient.GetAsync($"/channels/{channelId}/webhooks"))
-                                .DeserializeExArray<DiscordWebhook>().SetClientsInList(client);
+                                    .MultipleDeterministic<DiscordWebhook>().SetClientsInList(client);
         }
 
         /// <summary>

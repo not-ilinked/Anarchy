@@ -1,52 +1,31 @@
 ﻿using Discord;
 using Discord.Commands;
-using Discord.Gateway;
 
 namespace MusicBot
 {
-    [Command("queue", "Shows all tracks currently in queue")]
-    public class QueueCommand : ICommand
+    [Command("queue", "Shows the queue")]
+    public class QueueCommand : CommandBase
     {
-        [Parameter("clear", true)]
-        public string Clear { get; private set; }
-
-
-        public void Execute(DiscordSocketClient client, DiscordMessage message)
+        public override void Execute()
         {
-            if (!Program.Sessions.ContainsKey(message.Guild))
-                message.Channel.SendMessage("Bot is not connected to a voice channel.");
-            else
+            if (Message.Guild != null)
             {
-                if (Clear != null)
+                if (Program.Players.TryGetValue(Message.Guild.Id, out MusicPlayer player) && player.Tracks.Count > 0)
                 {
-                    Program.Sessions[message.Guild].Queue.Clear();
+                    EmbedMaker embed = new EmbedMaker()
+                    {
+                        Title = "Current queue",
+                        Description = $"Current track: {player.Tracks[0].Video.Title}\n{player.Tracks.Count - 1} song(s) are queued",
+                        Color = Program.EmbedColor
+                    };
 
-                    message.Channel.SendMessage("Cleared the queue");
+                    for (int i = 1; i < player.Tracks.Count; i++)
+                        embed.AddField(player.Tracks[i].Video.Title, player.Tracks[i].Video.Author);
+
+                    Message.Channel.SendMessage("", false, embed);
                 }
                 else
-                {
-                    var embed = new EmbedMaker();
-                    embed.Title = "Current queue";
-                    embed.Description = "Showing max 25 results.";
-                    embed.Color = Program.EmbedColor;
-                    embed.Footer.Text = Program.EmbedFooter.Text;
-                    embed.Footer.IconUrl = Program.EmbedFooter.IconUrl;
-
-                    embed.AddField(Program.Sessions[message.Guild].CurrentTrack.Name + " (currently playing)", 
-                                   Program.Sessions[message.Guild].CurrentTrack.Url);
-
-                    var queue = Program.Sessions[message.Guild].Queue.ToArray();
-
-                    for (int i = 0; i < queue.Length; i++)
-                    {
-                        if (i > 23)
-                            break;
-
-                        embed.AddField(queue[i].Name, queue[i].Url);
-                    }
-
-                    message.Channel.SendMessage("", false, embed);
-                }
+                    Message.Channel.SendMessage("The queue is empty");
             }
         }
     }

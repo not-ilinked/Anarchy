@@ -11,32 +11,26 @@ namespace Discord
 
         [JsonProperty("type")]
         private readonly string _type;
-        public AccountType Type
+        public ConnectedAccountType Type
         {
             get
             {
-                return (AccountType)Enum.Parse(typeof(AccountType), _type, true);
+                return (ConnectedAccountType)Enum.Parse(typeof(ConnectedAccountType), _type, true);
             }
         }
 
 
         [JsonProperty("name")]
-        public string Name { get; private set; }
+        public string Name { get; protected set; }
 
 
         [JsonProperty("verified")]
-        public bool Verified { get; private set; }
+        public bool Verified { get; protected set; }
 
 
         public override string ToString()
         {
             return Name;
-        }
-
-
-        public static implicit operator string(ConnectedAccount instance)
-        {
-            return instance.Id;
         }
     }
 }

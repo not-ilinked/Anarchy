@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Threading.Tasks;
 
-namespace Discord.Webhook
+namespace Discord
 {
     public class DiscordCrosspostWebhook : DiscordWebhook
     {

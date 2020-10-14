@@ -1,11 +1,9 @@
 ﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
 using System.Threading.Tasks;
 
 namespace Discord
 {
-    public class DiscordInvite : ControllableEx
+    public class DiscordInvite : Controllable
     {
         public DiscordInvite()
         {
@@ -29,7 +27,7 @@ namespace Discord
 
 
         [JsonProperty("channel")]
-        [JsonConverter(typeof(ChannelConverter))]
+        [JsonConverter(typeof(DeepJsonConverter<DiscordChannel>))]
         public DiscordChannel Channel { get; private set; }
 
 
@@ -79,21 +77,6 @@ namespace Discord
         public override string ToString()
         {
             return Code;
-        }
-
-
-        public static implicit operator string(DiscordInvite instance)
-        {
-            return instance.Code;
-        }
-
-
-        public GuildInvite ToGuildInvite()
-        {
-            if (Type != InviteType.Guild)
-                throw new InvalidOperationException("Invite is not of a guild");
-
-            return Json.ToObject<GuildInvite>().SetClient(Client).SetJson(Json);
         }
     }
 }

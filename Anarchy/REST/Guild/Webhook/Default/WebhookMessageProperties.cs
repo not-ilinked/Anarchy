@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 
-namespace Discord.Webhook
+namespace Discord
 {
     /// <summary>
     /// Options for sending a message through a webhook

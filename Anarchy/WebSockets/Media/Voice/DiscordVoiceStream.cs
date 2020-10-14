@@ -1,5 +1,6 @@
-﻿using Discord.Media;
-using System;
+﻿using System;
+using System.IO;
+using System.Net.Sockets;
 using System.Threading;
 
 namespace Discord.Media
@@ -13,17 +14,11 @@ namespace Discord.Media
         internal DiscordVoiceStream(DiscordVoiceSession client, int bitrate, AudioApplication application = AudioApplication.Mixed)
         {
             Session = client;
-            _encoder = new OpusEncoder(bitrate, application, 0);
+            _encoder = new OpusEncoder(bitrate, application, 5);
             _nextTick = -1;
         }
 
 
-        /// <summary>
-        /// Sends audio data to the voice channel
-        /// </summary>
-        /// <param name="buffer">Audio data</param>
-        /// <param name="offset">Offset to start from</param>
-        /// <returns>The new offset, which u can use in your next Write call</returns>
         public int Write(byte[] buffer, int offset)
         {
             if (Session.State != MediaSessionState.Connected)
@@ -44,13 +39,13 @@ namespace Discord.Media
                 byte[] opusFrame = new byte[OpusEncoder.FrameBytes];
                 int frameSize = _encoder.EncodeFrame(buffer, offset, opusFrame, 0);
 
-                byte[] packet = new RTPPacketHeader() 
+                byte[] packet = new RTPPacketHeader()
                 {
                     // Version = 0x80,
                     Type = DiscordMediaSession.SupportedCodecs["opus"].PayloadType,
                     Sequence = Session.Sequence,
                     Timestamp = Session.Timestamp,
-                    SSRC = (uint)Session.SSRC.Audio
+                    SSRC = Session.SSRC.Audio
                 }.Write(Session.SecretKey, opusFrame, 0, frameSize);
 
                 Session.UdpClient.Send(packet, packet.Length);
@@ -58,18 +53,12 @@ namespace Discord.Media
                 _nextTick += OpusEncoder.TimeBetweenFrames;
                 Session.Sequence++;
                 Session.Timestamp += OpusEncoder.FrameSamplesPerChannel;
-
-                return offset + OpusEncoder.FrameBytes;
             }
+            
+            return offset + OpusEncoder.FrameBytes;
         }
 
-
-        /// <summary>
-        /// Writes audio data to the voice channel
-        /// </summary>
-        /// <param name="buffer">Your audio data</param>
-        /// <param name="offset">Offset to start from</param>
-        /// <returns>Offset the copying stopped at. This will be less than buffer.Length if an error occured.</returns>
+        [Obsolete("This overload is obsolete. pass a Stream instead")]
         public int CopyFrom(byte[] buffer, int offset = 0)
         {
             while (offset < buffer.Length)
@@ -78,7 +67,7 @@ namespace Discord.Media
                 {
                     offset = Write(buffer, offset);
                 }
-                catch
+                catch (SocketException)
                 {
                     break;
                 }
@@ -87,9 +76,15 @@ namespace Discord.Media
             return offset;
         }
 
-        public int CopyFrom(string filePath, int offset = 0)
+        public void CopyFrom(Stream stream)
         {
-            return CopyFrom(DiscordVoiceUtils.ReadFromFile(filePath), offset);
+            if (!stream.CanRead)
+                throw new ArgumentException("Cannot read from stream");
+
+            byte[] buffer = new byte[OpusEncoder.FrameBytes];
+
+            while (stream.Read(buffer, 0, buffer.Length) != 0)
+                Write(buffer, 0);
         }
     }
 }

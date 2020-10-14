@@ -40,10 +40,6 @@ namespace Discord.Gateway
         }
 
 
-        [JsonProperty("channel")]
-        public DiscordChannel cha { get; private set; }
-
-
         [JsonProperty("large")]
         public bool Large { get; private set; }
 
@@ -71,7 +67,7 @@ namespace Discord.Gateway
 
 
         [JsonProperty("channels")]
-        [JsonConverter(typeof(ChannelConverter<GuildChannel>))]
+        [JsonConverter(typeof(DeepJsonConverter<GuildChannel>))]
         internal ConcurrentList<GuildChannel> ChannelsConcurrent;
 
         public IReadOnlyList<GuildChannel> Channels
@@ -114,17 +110,6 @@ namespace Discord.Gateway
         public IReadOnlyList<GuildMember> GetChannelMembers(ulong channelId, MemberListQueryOptions options = null)
         {
             return ((DiscordSocketClient)Client).GetGuildChannelMembers(Id, channelId, options);
-        }
-
-
-        /// <summary>
-        /// Gets the guild's channels
-        /// </summary>
-        public override IReadOnlyList<GuildChannel> GetChannels()
-        {
-            var channels = base.GetChannels();
-            ChannelsConcurrent = new ConcurrentList<GuildChannel>(channels);
-            return channels;
         }
 
 

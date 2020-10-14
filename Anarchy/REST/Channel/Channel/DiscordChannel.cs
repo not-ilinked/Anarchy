@@ -14,6 +14,22 @@ namespace Discord
         public ChannelType Type { get; protected set; }
 
 
+        public bool InGuild
+        {
+            get { return Type != ChannelType.DM && Type != ChannelType.Group; }
+        }
+
+        public bool IsText
+        {
+            get { return Type != ChannelType.Category && Type != ChannelType.Voice; }
+        }
+
+        public bool IsVoice
+        {
+            get { return Type == ChannelType.Voice || Type == ChannelType.DM || Type == ChannelType.Group; }
+        }
+
+
         protected void Update(DiscordChannel channel)
         {
             Name = channel.Name;

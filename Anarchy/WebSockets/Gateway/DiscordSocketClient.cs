@@ -146,22 +146,22 @@ namespace Discord.Gateway
         #endregion
         
         // caching
-        internal Dictionary<ulong, SocketGuild> GuildCache { get; private set; }
+        internal ConcurrentDictionary<ulong, SocketGuild> GuildCache { get; private set; }
         internal ConcurrentList<PrivateChannel> PrivateChannels { get; private set; }
         internal AutoConcurrentDictionary<ulong, DiscordVoiceStateContainer> VoiceStates { get; private set; }
         internal ConcurrentDictionary<ulong, ClientGuildSettings> GuildSettings { get; private set; }
         internal List<DiscordChannelSettings> PrivateChannelSettings { get; private set; }
 
         public CommandHandler CommandHandler { get; private set; }
-        public new DiscordSocketConfig Config { get; private set; }
-        internal DiscordVoiceSessionManager VoiceSessions { get; private set; }
+        public new LockedSocketConfig Config { get; private set; }
+        internal ConcurrentDictionary<ulong, DiscordVoiceSession> VoiceSessions { get; private set; }
         internal ConcurrentDictionary<string, DiscordGoLiveSession> Livestreams { get; private set; }
 
         public DiscordUserSettings UserSettings { get; private set; }
 
         // websocket connection
         internal DiscordWebSocket<GatewayOpcode> WebSocket { get; private set; }
-        public GatewayConnectionState State { get; private set; } // TODO: Rebrand this to a more universal name
+        public GatewayConnectionState State { get; private set; }
         public bool LoggedIn { get; private set; }
         internal uint? Sequence { get; set; }
         public string SessionId { get; set; }
@@ -171,25 +171,28 @@ namespace Discord.Gateway
         internal ulong? Lurking { get; set; }
 
 
-        public DiscordSocketClient(DiscordSocketConfig config = null) : base(config)
+        public DiscordSocketClient(DiscordSocketConfig config = null) : base()
         {
             RequestLock = new object();
 
             if (config == null)
                 config = new DiscordSocketConfig();
 
-            Config = config;
+            Config = new LockedSocketConfig(config);
+            base.Config = Config;
+
+            FinishConfig();
 
             if (Config.Cache)
             {
-                GuildCache = new Dictionary<ulong, SocketGuild>();
+                GuildCache = new ConcurrentDictionary<ulong, SocketGuild>();
                 PrivateChannels = new ConcurrentList<PrivateChannel>();
                 VoiceStates = new AutoConcurrentDictionary<ulong, DiscordVoiceStateContainer>((userId) => new DiscordVoiceStateContainer(userId));
                 GuildSettings = new ConcurrentDictionary<ulong, ClientGuildSettings>();
                 PrivateChannelSettings = new List<DiscordChannelSettings>();
             }
 
-            VoiceSessions = new DiscordVoiceSessionManager(this);
+            VoiceSessions = new ConcurrentDictionary<ulong, DiscordVoiceSession>();
             Livestreams = new ConcurrentDictionary<string, DiscordGoLiveSession>();
 
             WebSocket = new DiscordWebSocket<GatewayOpcode>($"wss://gateway.discord.gg/?v={Config.ApiVersion}&encoding=json");
@@ -216,18 +219,41 @@ namespace Discord.Gateway
             WebSocket.OnMessageReceived += WebSocket_OnMessageReceived;
 
             #region media event handlers
-            OnConnectionVoiceState += (s, state) =>
+            OnConnectionVoiceState += (c, state) =>
             {
-                if (state.Channel == null && VoiceSessions.TryGetSession(state.Guild == null ? 0 : state.Guild.Id, out DiscordVoiceSession session))
-                    session.Disconnect(DiscordMediaCloseCode.Disconnected, "Disconnected."); // pretty sure this is the 'reason' discord normally sends?
+                lock (VoiceSessions.Lock)
+                {
+                    foreach (var session in VoiceSessions.Values)
+                    {
+                        if (session.SessionId == state.SessionId)
+                        {
+                            if (state.Channel == null)
+                                session.Disconnect(DiscordMediaCloseCode.Disconnected, "Disconnected."); // pretty sure this is the 'reason' discord normally sends?
+                            else
+                                session.ChannelId = state.Channel.Id;
+
+                            break;
+                        }
+                    }
+                }
             };
 
-            OnMediaServer += (s, args) =>
+            OnMediaServer += (c, args) =>
             {
                 if (args.StreamKey == null)
                 {
-                    if (VoiceSessions.TryGetSession(args.Guild == null ? 0 : args.Guild.Id, out DiscordVoiceSession session))
-                        session.UpdateServer(args);
+                    lock (VoiceSessions.Lock)
+                    {
+                        foreach (var session in VoiceSessions.Values)
+                        {
+                            if (args.GuildId == session.GuildId)
+                            {
+                                session.UpdateServer(args);
+
+                                break;
+                            }
+                        }
+                    }
                 }
                 else if (Livestreams.TryGetValue(args.StreamKey, out DiscordGoLiveSession session))
                 {
@@ -275,9 +301,12 @@ namespace Discord.Gateway
             if (Token != token)
                 Token = token;
 
+            if (User.Type == DiscordUserType.Bot && Config.ApiVersion >= 8 && !Config.Intents.HasValue)
+                throw new ArgumentNullException("Intents must be supplied as of API v8");
+
             State = GatewayConnectionState.Connecting;
 
-            WebSocket.SetProxy(Config.Proxy);
+            WebSocket.SetProxy(Proxy);
             WebSocket.Connect();
         }
 
@@ -309,40 +338,38 @@ namespace Discord.Gateway
                         Console.WriteLine(message.EventName);
                         
                         File.AppendAllText("Debug.log", $"{message.EventName}: {message.Data}\n");
-                        */
+                        */     
+                        
                         switch (message.EventName)
                         {
                             case "READY":
-                                Login login = message.Data.ToObjectEx<Login>().SetClient(this);
+                                Login login = message.Data.ToObject<Login>().SetClient(this);
 
                                 this.User = login.User;
                                 this.UserSettings = login.Settings;
                                 this.SessionId = login.SessionId;
 
-                                if (Config.Cache)
+                                if (Config.Cache && this.User.Type == DiscordUserType.User)
                                 {
-                                    if (this.User.Type == DiscordUserType.User)
+                                    PrivateChannels = new ConcurrentList<PrivateChannel>(login.PrivateChannels);
+
+                                    foreach (var guild in login.Guilds)
                                     {
-                                        PrivateChannels = new ConcurrentList<PrivateChannel>(login.PrivateChannels);
+                                        var socketGuild = GuildCache[guild.Id] = (SocketGuild)guild;
 
-                                        foreach (var guild in login.Guilds)
+                                        if (!socketGuild.Unavailable)
                                         {
-                                            GuildCache[guild.Id] = guild.ToSocketGuild();
-
-                                            if (!GuildCache[guild.Id].Unavailable)
-                                            {
-                                                foreach (var state in GuildCache[guild.Id].VoiceStates)
-                                                    VoiceStates[state.UserId].GuildVoiceStates[guild.Id] = state;
-                                            }
+                                            foreach (var state in socketGuild.VoiceStates)
+                                                VoiceStates[state.UserId].GuildStates[guild.Id] = state;
                                         }
+                                    }
 
-                                        foreach (var settings in login.ClientGuildSettings)
-                                        {
-                                            if (settings.GuildId.HasValue)
-                                                GuildSettings.Add(settings.Guild.Id, settings);
-                                            else
-                                                PrivateChannelSettings = settings.ChannelOverrides.ToList();
-                                        }
+                                    foreach (var settings in login.ClientGuildSettings)
+                                    {
+                                        if (settings.GuildId.HasValue)
+                                            GuildSettings.Add(settings.Guild.Id, settings);
+                                        else
+                                            PrivateChannelSettings = settings.ChannelOverrides.ToList();
                                     }
                                 }
 
@@ -382,15 +409,18 @@ namespace Discord.Gateway
 
                                 if (Config.Cache)
                                 {
-                                    foreach (var dm in PrivateChannels)
+                                    lock (PrivateChannels.Lock)
                                     {
-                                        foreach (var recipient in dm.Recipients)
+                                        foreach (var dm in PrivateChannels)
                                         {
-                                            if (recipient.Id == user.Id)
+                                            foreach (var recipient in dm.Recipients)
                                             {
-                                                recipient.Update(user);
+                                                if (recipient.Id == user.Id)
+                                                {
+                                                    recipient.Update(user);
 
-                                                break;
+                                                    break;
+                                                }
                                             }
                                         }
                                     }
@@ -405,10 +435,15 @@ namespace Discord.Gateway
                             case "GUILD_CREATE":
                                 if (Config.Cache || OnJoinedGuild != null)
                                 {
-                                    var guild = message.Data.ToObjectEx<SocketGuild>().SetClient(this);
+                                    var guild = message.Data.ToObject<SocketGuild>().SetClient(this);
 
                                     if (Config.Cache)
+                                    {
                                         GuildCache[guild.Id] = guild;
+
+                                        foreach (var state in guild.VoiceStates)
+                                            VoiceStates[state.UserId].GuildStates[guild.Id] = state;
+                                    }
 
                                     if (OnJoinedGuild != null)
                                         Task.Run(() => OnJoinedGuild.Invoke(this, new SocketGuildEventArgs(guild, Lurking.HasValue && Lurking.Value == guild.Id)));
@@ -496,7 +531,7 @@ namespace Discord.Gateway
                                 break;
                             case "PRESENCE_UPDATE":
                                 if (OnUserPresenceUpdated != null)
-                                    Task.Run(() => OnUserPresenceUpdated.Invoke(this, new PresenceUpdatedEventArgs(message.Data.ToObjectEx<DiscordPresence>().SetClient(this))));
+                                    Task.Run(() => OnUserPresenceUpdated.Invoke(this, new PresenceUpdatedEventArgs(DeepJsonConverter.ParsePresence((JObject)message.Data).SetClient(this))));
                                 break;
                             case "VOICE_STATE_UPDATE":
                                 if (Config.Cache || OnConnectionVoiceState != null || OnVoiceStateUpdated != null)
@@ -508,13 +543,13 @@ namespace Discord.Gateway
                                         if (newState.Guild == null)
                                             VoiceStates[newState.UserId].PrivateChannelVoiceState = newState;
                                         else
-                                            VoiceStates[newState.UserId].GuildVoiceStates[newState.Guild.Id] = newState;
+                                            VoiceStates[newState.UserId].GuildStates[newState.Guild.Id] = newState;
 
                                         // we also store voice states within SocketGuilds, so make sure to update those.
                                         foreach (var guild in this.GetCachedGuilds())
                                         {
                                             if (!guild.Unavailable)
-                                            {
+                                            { 
                                                 if (newState.Guild == null || guild.Id != newState.Guild.Id)
                                                     guild._voiceStates.RemoveFirst(s => s.UserId == newState.UserId);
                                                 else
@@ -541,7 +576,7 @@ namespace Discord.Gateway
                                 OnMediaServer?.Invoke(this, message.Data.ToObject<DiscordMediaServer>().SetClient(this));
                                 break;
                             case "GUILD_ROLE_CREATE":
-                                if (Config.Cache || OnRoleCreated != null) 
+                                if (Config.Cache || OnRoleCreated != null)
                                 {
                                     DiscordRole role = message.Data.ToObject<RoleUpdate>().Role.SetClient(this);
 
@@ -591,7 +626,7 @@ namespace Discord.Gateway
                             case "CHANNEL_CREATE":
                                 if (Config.Cache || OnChannelCreated != null) 
                                 {
-                                    var channel = ParseChannel((JObject)message.Data);
+                                    var channel = ((JObject)message.Data).ParseDeterministic<DiscordChannel>();
 
                                     if (Config.Cache)
                                     {
@@ -612,7 +647,7 @@ namespace Discord.Gateway
                             case "CHANNEL_UPDATE":
                                 if (Config.Cache || OnChannelUpdated != null)
                                 {
-                                    var channel = ParseChannel((JObject)message.Data);
+                                    var channel = ((JObject)message.Data).ParseDeterministic<DiscordChannel>();
 
                                     if (Config.Cache)
                                     {
@@ -630,9 +665,9 @@ namespace Discord.Gateway
                                 }
                                 break;
                             case "CHANNEL_DELETE":
-                                if (Config.Cache || OnChannelDeleted == null) 
+                                if (Config.Cache || OnChannelDeleted != null) 
                                 {
-                                    var channel = ParseChannel((JObject)message.Data);
+                                    var channel = ((JObject)message.Data).ParseDeterministic<DiscordChannel>();
 
                                     if (Config.Cache)
                                     {
@@ -696,11 +731,11 @@ namespace Discord.Gateway
                                 break;
                             case "RELATIONSHIP_ADD":
                                 if (OnRelationshipAdded != null)
-                                    Task.Run(() => OnRelationshipAdded.Invoke(this, new RelationshipEventArgs(message.Data.ToObject<Relationship>().SetClient(this))));
+                                    Task.Run(() => OnRelationshipAdded.Invoke(this, new RelationshipEventArgs(message.Data.ToObject<DiscordRelationship>().SetClient(this))));
                                 break;
                             case "RELATIONSHIP_REMOVE":
                                 if (OnRelationshipRemoved != null)
-                                    Task.Run(() => OnRelationshipRemoved.Invoke(this, new RelationshipEventArgs(message.Data.ToObject<Relationship>().SetClient(this))));
+                                    Task.Run(() => OnRelationshipRemoved.Invoke(this, new RelationshipEventArgs(message.Data.ToObject<DiscordRelationship>().SetClient(this))));
                                 break;
                             case "CHANNEL_RECIPIENT_ADD":
                                 if (Config.Cache || OnChannelRecipientAdded != null) 
@@ -708,17 +743,7 @@ namespace Discord.Gateway
                                     var recipUpdate = message.Data.ToObject<ChannelRecipientEventArgs>().SetClient(this);
 
                                     if (Config.Cache)
-                                    {
-                                        foreach (var channel in PrivateChannels)
-                                        {
-                                            if (channel.Id == recipUpdate.Channel.Id)
-                                            {
-                                                channel._recipients.Add(recipUpdate.User);
-
-                                                break;
-                                            }
-                                        }
-                                    }
+                                        ((PrivateChannel)this.GetChannel(recipUpdate.Channel.Id))._recipients.Add(recipUpdate.User);
 
                                     if (OnChannelRecipientAdded != null)
                                         Task.Run(() => OnChannelRecipientAdded.Invoke(this, recipUpdate));
@@ -730,17 +755,7 @@ namespace Discord.Gateway
                                     var recipUpdate = message.Data.ToObject<ChannelRecipientEventArgs>().SetClient(this);
 
                                     if (Config.Cache)
-                                    {
-                                        foreach (var channel in PrivateChannels)
-                                        {
-                                            if (channel.Id == recipUpdate.Channel.Id)
-                                            {
-                                                channel._recipients.RemoveFirst(u => u.Id == recipUpdate.User.Id);
-
-                                                break;
-                                            }
-                                        }
-                                    }
+                                        ((PrivateChannel)this.GetChannel(recipUpdate.Channel.Id))._recipients.RemoveFirst(u => u.Id == recipUpdate.User.Id);
 
                                     if (OnChannelRecipientRemoved != null)
                                         Task.Run(() => OnChannelRecipientRemoved.Invoke(this, recipUpdate));
@@ -779,15 +794,12 @@ namespace Discord.Gateway
 
                                     if (Config.Cache)
                                     {
-                                        lock (VoiceStates.Lock)
+                                        foreach (var state in VoiceStates.CreateCopy().Values)
                                         {
-                                            foreach (var state in VoiceStates.Values)
-                                            {
-                                                var privState = state.PrivateChannelVoiceState;
+                                            var privState = state.PrivateChannelVoiceState;
 
-                                                if (privState != null && privState.Channel != null && privState.Channel.Id == channelId)
-                                                    state.PrivateChannelVoiceState = null;
-                                            }
+                                            if (privState != null && privState.Channel != null && privState.Channel.Id == channelId)
+                                                state.PrivateChannelVoiceState = null;
                                         }
                                     }
 
@@ -797,7 +809,7 @@ namespace Discord.Gateway
                                 break;
                             case "USER_PREMIUM_GUILD_SUBSCRIPTION_SLOT_UPDATE":
                                 if (OnBoostUpdated != null)
-                                    Task.Run(() => OnBoostUpdated.Invoke(this, new NitroBoostUpdatedEventArgs(message.Data.ToObject<DiscordNitroBoost>().SetClient(this))));
+                                    Task.Run(() => OnBoostUpdated.Invoke(this, new NitroBoostUpdatedEventArgs(message.Data.ToObject<DiscordGuildBoost>().SetClient(this))));
                                 break;
                             case "STREAM_SERVER_UPDATE":
                                 OnMediaServer?.Invoke(this, message.Data.ToObject<DiscordMediaServer>().SetClient(this));
@@ -882,8 +894,6 @@ namespace Discord.Gateway
         {
             SessionId = null;
 
-            VoiceSessions.DisconnectAll();
-
             if (Config.Cache)
             {
                 GuildCache.Clear();
@@ -900,6 +910,14 @@ namespace Discord.Gateway
 
             if (!destructor)
             {
+                foreach (var stream in Livestreams.Values)
+                    stream.Disconnect();
+
+                foreach (var session in VoiceSessions.Values)
+                    session.Disconnect();
+
+                VoiceSessions.Clear();
+                Livestreams.Clear();
                 WebSocket.Dispose();
 
                 Reset();

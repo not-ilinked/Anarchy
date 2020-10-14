@@ -11,7 +11,7 @@ namespace Discord
                 properties = new InviteProperties();
 
             return (await client.HttpClient.PostAsync($"/channels/{channelId}/invites", properties))
-                                .Deserialize<DiscordInvite>().SetClient(client);
+                                    .ParseDeterministic<DiscordInvite>().SetClient(client);
         }
 
         /// <summary>
@@ -29,7 +29,7 @@ namespace Discord
         public static async Task<DiscordInvite> DeleteInviteAsync(this DiscordClient client, string invCode)
         {
             return (await client.HttpClient.DeleteAsync($"/invites/{invCode}"))
-                                .Deserialize<DiscordInvite>().SetClient(client);
+                                    .ParseDeterministic<DiscordInvite>().SetClient(client);
         }
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace Discord
         public static async Task<DiscordInvite> GetInviteAsync(this DiscordClient client, string invCode)
         {
             return (await client.HttpClient.GetAsync($"/invites/{invCode}?with_counts=true"))
-                                .DeserializeEx<DiscordInvite>().SetClient(client);
+                                      .ParseDeterministic<DiscordInvite>().SetClient(client);
         }
 
         /// <summary>
@@ -60,8 +60,7 @@ namespace Discord
 
         public static async Task<IReadOnlyList<GuildInvite>> GetGuildInvitesAsync(this DiscordClient client, ulong guildId)
         {
-            return (await client.HttpClient.GetAsync($"/guilds/{guildId}/invites"))
-                                .DeserializeExArray<GuildInvite>().SetClientsInList(client);
+            return (await client.HttpClient.GetAsync($"/guilds/{guildId}/invites")).Deserialize<List<GuildInvite>>().SetClientsInList(client);
         }
 
         /// <summary>

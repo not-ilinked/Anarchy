@@ -1,4 +1,6 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
 
 namespace Discord
 {
@@ -6,10 +8,7 @@ namespace Discord
     {
         public DiscordPayment()
         {
-            OnClientUpdated += (sender, e) =>
-            {
-                PaymentMethod.SetClient(Client);
-            };
+            OnClientUpdated += (sender, e) => PaymentMethod.SetClient(Client);
         }
 
         [JsonProperty("id")]
@@ -17,7 +16,7 @@ namespace Discord
 
 
         [JsonProperty("created_at")]
-        public string Timestamp { get; private set; }
+        public DateTime Timestamp { get; private set; }
 
 
         [JsonProperty("currency")]
@@ -41,6 +40,7 @@ namespace Discord
 
 
         [JsonProperty("payment_source")]
+        [JsonConverter(typeof(DeepJsonConverter<PaymentMethod>))]
         public PaymentMethod PaymentMethod { get; private set; }
     }
 }

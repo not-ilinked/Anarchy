@@ -10,7 +10,7 @@ namespace Discord
         public static async Task<DiscordInvite> JoinGroupAsync(this DiscordClient client, string inviteCode)
         {
             return (await client.HttpClient.PostAsync($"/invites/{inviteCode}"))
-                                .Deserialize<DiscordInvite>().SetClient(client);
+                                    .ParseDeterministic<DiscordInvite>().SetClient(client);
         }
 
         /// <summary>

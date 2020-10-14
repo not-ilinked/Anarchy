@@ -1,7 +1,4 @@
-﻿using Discord.Gateway;
-using Discord.Media;
-using Newtonsoft.Json;
-using System;
+﻿using Newtonsoft.Json;
 using System.Threading.Tasks;
 
 namespace Discord

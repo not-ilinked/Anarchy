@@ -1,4 +1,4 @@
-﻿namespace Discord.Webhook
+﻿namespace Discord
 {
     public class DiscordWebhookProfile
     {

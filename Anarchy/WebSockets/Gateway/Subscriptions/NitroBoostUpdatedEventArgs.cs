@@ -4,10 +4,10 @@ namespace Discord.Gateway
 {
     public class NitroBoostUpdatedEventArgs : EventArgs
     {
-        public DiscordNitroBoost Boost { get; private set; }
+        public DiscordGuildBoost Boost { get; private set; }
 
 
-        internal NitroBoostUpdatedEventArgs(DiscordNitroBoost boost)
+        internal NitroBoostUpdatedEventArgs(DiscordGuildBoost boost)
         {
             Boost = boost;
         }
