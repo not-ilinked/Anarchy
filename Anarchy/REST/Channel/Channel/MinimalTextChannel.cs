@@ -7,7 +7,7 @@ namespace Discord
     {
         internal MinimalTextChannel() { }
 
-        internal MinimalTextChannel(ulong channelId) : base(channelId)
+        public MinimalTextChannel(ulong channelId) : base(channelId)
         { }
 
         public async Task TriggerTypingAsync()

@@ -95,19 +95,74 @@ namespace Discord.Commands
 
             // Get the object's ID (always last thing in the sequence)
 
-            Match match = Regex.Match(value, @"\d{18,}");
-
-            if (match.Success && match.Index + match.Length == value.Length) 
+            MatchCollection matches = Regex.Matches(value, @"\d{18,}");
+            if (matches.Count > 0) 
             {
-                ulong anyId = ulong.Parse(match.Value);
+                Match match = matches[matches.Count - 1];
 
-                // TODO
+                if (match.Index + match.Length == value.Length)
+                {
+                    ulong anyId = ulong.Parse(match.Value);
+
+                    string forSpecific = value.Substring(0, match.Index);
+
+                    if (expectedType.IsAssignableFrom(typeof(MinimalChannel)))
+                    {
+                        if (forSpecific[0] == '#')
+                        {
+                            if (expectedType.IsAssignableFrom(typeof(DiscordChannel)))
+                            {
+                                if (_client.Config.Cache)
+                                    return _client.GetChannel(anyId);
+                                else
+                                    throw new InvalidOperationException("Caching must be enabled to parse DiscordChannels");
+                            }
+                            else
+                                return new MinimalTextChannel(anyId).SetClient(_client);
+                        }
+                        else
+                            throw new ArgumentException("Invalid reference type");
+                    }
+                    else if (expectedType == typeof(DiscordRole))
+                    {
+                        if (forSpecific.StartsWith("@&"))
+                        {
+                            if (_client.Config.Cache)
+                                return _client.GetGuildRole(anyId);
+                            else
+                                throw new InvalidOperationException("Caching must be enabled to parse DiscordChannels");
+                        }
+                        else
+                            throw new ArgumentException("Invalid reference type");
+                    }
+                    else if (expectedType.IsAssignableFrom(typeof(PartialEmoji)))
+                    {
+                        if (Regex.IsMatch(forSpecific, @"a?:\w+:"))
+                        {
+                            string[] split = forSpecific.Split(':');
+
+                            bool animated = split[0] == "a";
+                            string name = split[1];
+
+                            if (expectedType == typeof(DiscordEmoji))
+                            {
+                                if (_client.Config.Cache)
+                                    return _client.GetGuildEmoji(anyId);
+                                else
+                                    throw new InvalidOperationException("Caching must be enabled to parase DiscordEmojis");
+                            }
+                            else
+                                return new PartialEmoji(anyId, name, animated).SetClient(_client);
+                        }
+                        else
+                            throw new ArgumentException("Invalid reference type");
+                    }
+                    else
+                        return anyId;
+                }
             }
-            else
-            {
-                // invalid
-                throw new Exception("kek");
-            }
+            
+            throw new ArgumentException("Invalid reference");
 
 
 
