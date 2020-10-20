@@ -26,7 +26,7 @@ namespace MusicBot
                 embed.AddField($"{Client.CommandHandler.Prefix + cmd.Name}{args}", cmd.Description);
             }
 
-            Message.Channel.SendMessage("", false, embed);
+            Message.Channel.SendMessage(embed);
         }
     }
 }

@@ -16,7 +16,7 @@ namespace Discord
         HypeBalance = 1 << 8,
         EarlySupporter = 1 << 9,
         TeamUser = 1 << 10,
-        System = 1 << 2,
+        System = 1 << 12,
         BugHunterLevel2 = 1 << 14,
         VerifiedBot = 1 << 16,
         VerifiedBotDeveloper = 1 << 17

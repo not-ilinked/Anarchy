@@ -35,7 +35,7 @@ namespace MusicBot
                         track.StartDownload();
                         Program.Players[Message.Guild.Id].Tracks.Add(track);
 
-                        Message.Channel.SendMessage("", false, new EmbedMaker()
+                        Message.Channel.SendMessage(new EmbedMaker()
                         {
                             Title = "Added track",
                             TitleUrl = track.Video.Url,

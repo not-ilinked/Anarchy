@@ -22,7 +22,7 @@ namespace MusicBot
                     for (int i = 1; i < player.Tracks.Count; i++)
                         embed.AddField(player.Tracks[i].Video.Title, player.Tracks[i].Video.Author);
 
-                    Message.Channel.SendMessage("", false, embed);
+                    Message.Channel.SendMessage(embed);
                 }
                 else
                     Message.Channel.SendMessage("The queue is empty");

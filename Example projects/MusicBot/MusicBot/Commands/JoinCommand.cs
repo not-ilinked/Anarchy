@@ -14,7 +14,7 @@ namespace MusicBot
             {
                 if (Client.GetVoiceStates(Message.Author.User.Id).GuildVoiceStates.TryGetValue(Message.Guild.Id, out DiscordVoiceState state) && state.Channel != null)
                 {
-                    var session = Client.JoinVoiceChannel(new VoiceStateProperties() { GuildId = Message.Guild.Id, ChannelId = state.Channel.Id });
+                    var session = Client.JoinVoiceChannel(new VoiceStateProperties() { ChannelId = state.Channel.Id });
                     session.ReceivePackets = false;
                     session.OnConnected += Session_OnConnected;
                     session.Connect();

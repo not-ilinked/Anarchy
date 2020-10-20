@@ -16,6 +16,6 @@ namespace Discord.Commands
         }
 
         public abstract void Execute();
-        public virtual void HandleError(string parameterName, string providedValue, Exception exception) { }
+        public virtual void HandleError(string parameterName, string providedValue, CommandError error) { }
     }
 }

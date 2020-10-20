@@ -65,6 +65,23 @@ namespace Discord.Commands
 
                                 param.Property.SetValue(inst, value);
                             }
+                            catch (DiscordHttpException ex)
+                            {
+                                // i don't see how we would ever get an unknown HTTP error here
+                                CommandError err = CommandError.InvalidChannel;
+
+                                switch (ex.Code)
+                                {
+                                    case DiscordError.UnknownEmoji:
+                                        err = CommandError.InvalidEmoji;
+                                        break;
+                                    case DiscordError.UnknownRole:
+                                        err = CommandError.InvalidRole;
+                                        break;
+                                }
+
+                                inst.HandleError(param.Name, parts[i], err);
+                            }
                             catch (Exception ex)
                             {
                                 inst.HandleError(param.Name, parts[i], ex);
@@ -107,23 +124,23 @@ namespace Discord.Commands
             {
                 if (type == "#")
                 {
-                    if (_client.Config.Cache)
+                    if (_client.Config.Cache && expectedType.IsAssignableFrom(typeof(DiscordChannel)))
                         return _client.GetChannel(id);
                     else if (expectedType.IsAssignableFrom(typeof(MinimalChannel)))
-                        return new MinimalTextChannel(id);
+                        return new MinimalTextChannel(id).SetClient(_client);
                 }
                 else if (_client.Config.Cache)
                 {
                     if (type == "@&" && expectedType == typeof(DiscordRole))
                         return _client.GetGuildRole(id);
-                    else if (type.StartsWith(":") && expectedType == typeof(DiscordEmoji))
+                    else if ((type.StartsWith(":") || type.StartsWith("a:")) && expectedType == typeof(DiscordEmoji))
                         return _client.GetGuildEmoji(id);
                 }
-
+                
                 return id;
             }
             else
-                throw new ArgumentException("Failed to parse formatted string");
+                return formatted;
         }
 
         internal static bool TryGetAttribute<TAttr>(IEnumerable<object> attributes, out TAttr attr) where TAttr : Attribute

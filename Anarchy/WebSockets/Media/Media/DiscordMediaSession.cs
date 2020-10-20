@@ -112,8 +112,10 @@ namespace Discord.Media
         {
             if (State == MediaSessionState.Connecting)
                 _heldBackMessages.Add(new KeyValuePair<DiscordMediaOpcode, object>(op, data));
-            else
+            else if (State == MediaSessionState.Connected)
                 WebSocket.Send(op, data);
+            else
+                throw new InvalidOperationException("Not connected");
         }
 
 
