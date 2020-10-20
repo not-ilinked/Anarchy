@@ -91,6 +91,51 @@ namespace Discord.Commands
         // https://discord.com/developers/docs/reference#message-formatting
         private object ParseFormatted(Type expectedType, string formatted)
         {
+            string value = formatted.Substring(1, formatted.Length - 2);
+
+            // Get the object's ID (always last thing in the sequence)
+
+            Match match = Regex.Match(value, @"\d{18,}");
+
+            if (match.Success && match.Index + match.Length == value.Length) 
+            {
+                ulong anyId = ulong.Parse(match.Value);
+
+                // TODO
+            }
+            else
+            {
+                // invalid
+                throw new Exception("kek");
+            }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            /*
             Dictionary<string, KeyValuePair<Type, Func<string, object>>> things = new Dictionary<string, KeyValuePair<Type, Func<string, object>>>()
             {
                 {
@@ -224,7 +269,7 @@ namespace Discord.Commands
                 return id;
             }
             else
-                return formatted;
+                return formatted;*/
         }
 
         internal static bool TryGetAttribute<TAttr>(IEnumerable<object> attributes, out TAttr attr) where TAttr : Attribute
