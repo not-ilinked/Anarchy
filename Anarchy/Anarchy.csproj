@@ -51,7 +51,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Commands\CommandError.cs" />
     <Compile Include="Commands\Command\CommandAttribute.cs" />
     <Compile Include="Commands\Parameter\CommandParameter.cs" />
     <Compile Include="Commands\Command\DiscordCommand.cs" />

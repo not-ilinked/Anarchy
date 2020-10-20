@@ -5,6 +5,13 @@ namespace Discord
 {
     public class PartialEmoji : Controllable
     {
+        internal PartialEmoji(ulong? id, string name, bool animated)
+        {
+            Id = id;
+            Name = name;
+            Animated = animated;
+        }
+
         [JsonProperty("id")]
         public ulong? Id { get; private set; }
 

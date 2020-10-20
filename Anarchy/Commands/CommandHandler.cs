@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace Discord.Commands
 {
@@ -65,25 +66,8 @@ namespace Discord.Commands
 
                                 param.Property.SetValue(inst, value);
                             }
-                            catch (DiscordHttpException ex)
-                            {
-                                // i don't see how we would ever get an unknown HTTP error here
-                                CommandError err = CommandError.InvalidChannel;
-
-                                switch (ex.Code)
-                                {
-                                    case DiscordError.UnknownEmoji:
-                                        err = CommandError.InvalidEmoji;
-                                        break;
-                                    case DiscordError.UnknownRole:
-                                        err = CommandError.InvalidRole;
-                                        break;
-                                }
-
-                                inst.HandleError(param.Name, parts[i], err);
-                            }
-                            catch (Exception ex)
-                            {
+                            catch (Exception ex) 
+                            { 
                                 inst.HandleError(param.Name, parts[i], ex);
 
                                 return;
@@ -107,6 +91,106 @@ namespace Discord.Commands
         // https://discord.com/developers/docs/reference#message-formatting
         private object ParseFormatted(Type expectedType, string formatted)
         {
+            Dictionary<string, KeyValuePair<Type, Func<string, object>>> things = new Dictionary<string, KeyValuePair<Type, Func<string, object>>>()
+            {
+                {
+                    "#",
+                    new KeyValuePair<Type, Func<string, object>>(typeof(MinimalChannel), substring =>
+                    {
+                        ulong channelId = ulong.Parse(substring.Substring(1));
+
+                        if (expectedType.IsAssignableFrom(typeof(DiscordChannel)))
+                        {
+                            if (_client.Config.Cache)
+                                return _client.GetChannel(channelId);
+                            else
+                                throw new Exception(); // cache err
+                        }
+                        else
+                            return new MinimalTextChannel(channelId).SetClient(_client);
+                    })
+                },
+                {
+                    @"a?:\w:",
+                    new KeyValuePair<Type, Func<string, object>>(typeof(PartialEmoji), substring => 
+                    {
+                        string[] split = substring.Split(':');
+
+                        bool animated = split[0] == "a";
+                        string name = split[1];
+                        ulong emojiId = ulong.Parse(split[2]);
+
+                        if (expectedType == typeof(DiscordEmoji))
+                        {
+                            if (_client.Config.Cache)
+                                return _client.GetGuildEmoji(emojiId);
+                            else
+                                throw new Exception(); // cache err
+                        }
+                        else
+                            return new PartialEmoji(emojiId, name, animated).SetClient(_client);
+                    })
+                },
+                {
+                    "@&",
+                    new KeyValuePair<Type, Func<string, object>>(typeof(DiscordRole), substring => 
+                    {
+                        if (_client.Config.Cache)
+                            return _client.GetGuildRole(ulong.Parse(substring.Substring(2)));
+                        else
+                            throw new Exception(); // cache err
+                    })
+                }
+            };
+
+            const string idPattern = "\\d{18}";
+
+            string value = formatted.Substring(1, formatted.Length - 2);
+
+            if (Regex.IsMatch(value, "#" + idPattern))
+            {
+                if (expectedType.IsAssignableFrom(typeof(MinimalChannel)))
+                {
+                    ulong channelId = ulong.Parse(value.Substring(1));
+
+                    if (expectedType.IsAssignableFrom(typeof(DiscordChannel)))
+                    {
+                        if (_client.Config.Cache)
+                            return _client.GetChannel(channelId);
+                        else
+                            throw new ArgumentException("Caching must be enabled to parse DiscordChannels");
+                    }
+                    else
+                        return new MinimalTextChannel(channelId).SetClient(_client);
+                }
+            }
+            else if (Regex.IsMatch(value, "@&" + idPattern)) 
+            {
+                if (_client.Config.Cache)
+                    return _client.GetGuildRole(ulong.Parse(value.Substring(2)));
+                else
+                    throw new ArgumentException("Caching must be enabled to parse DiscordRoles");
+            }
+            else if (Regex.IsMatch(value, @"a?:\w:" + idPattern))
+            {
+                string[] split = value.Split(':');
+
+                bool animated = split[0] == "a";
+                string name = split[1];
+                ulong emojiId = ulong.Parse(split[2]);
+
+                if (expectedType == typeof(DiscordEmoji))
+                {
+                    if (_client.Config.Cache)
+                        return _client.GetGuildEmoji(emojiId);
+                    else
+                        throw new Exception(); // cache err
+                }
+                else
+                    return new PartialEmoji(emojiId, name, animated).SetClient(_client);
+            }
+            else
+
             ulong id = 0;
             string type = null;
 
