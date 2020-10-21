@@ -7,21 +7,21 @@ namespace Anarchy
     {
         public object Lock { get; private set; } = new object();
 
-        public new TValue this[TKey i]
+        public new TValue this[TKey key]
         {
             get
             {
                 lock (Lock)
-                    return base[i];
+                    return base[key];
             }
             set
             {
                 lock (Lock)
-                    base[i] = value;
+                    base[key] = value;
             }
         }
 
-        public TKey this[TValue i]
+        public TKey this[TValue value]
         {
             get
             {
@@ -29,7 +29,7 @@ namespace Anarchy
                 {
                     foreach (var item in this)
                     {
-                        if (EqualityComparer<TValue>.Default.Equals(item.Value, i))
+                        if (EqualityComparer<TValue>.Default.Equals(item.Value, value))
                             return item.Key;
                     }
                 }
@@ -37,6 +37,12 @@ namespace Anarchy
                 throw new ArgumentException("No item with the specified value was found");
             }
         }
+
+        public ConcurrentDictionary() : base()
+        { }
+
+        public ConcurrentDictionary(IDictionary<TKey, TValue> dictionary) : base(dictionary)
+        { }
 
         public Dictionary<TKey, TValue> CreateCopy()
         {

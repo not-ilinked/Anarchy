@@ -2,7 +2,7 @@
 
 namespace Discord
 {
-    public class DiscordGift
+    public class DiscordGift : Controllable
     {
         [JsonProperty("id")]
         public ulong Id { get; private set; }
@@ -16,19 +16,8 @@ namespace Discord
         public ulong ApplicationId { get; private set; }
 
 
-        [JsonProperty("user_id")]
-        public ulong GifterId { get; private set; }
-
-
-        // in certain cases this might be filled out instead
         [JsonProperty("user")]
-        private DiscordUser _gifter 
-        { 
-            set
-            {
-                GifterId = value.Id;
-            } 
-        }
+        public DiscordUser Gifter { get; private set; }
 
 
         [JsonProperty("consumed")]

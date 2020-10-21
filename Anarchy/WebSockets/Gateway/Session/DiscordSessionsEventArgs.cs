@@ -9,7 +9,7 @@ namespace Discord.Gateway
 
         internal DiscordSessionsEventArgs(List<DiscordSession> sessions)
         {
-            Sessions = sessions.Where(s => s.SessionId != "all").ToList();
+            Sessions = sessions;
         }
     }
 }

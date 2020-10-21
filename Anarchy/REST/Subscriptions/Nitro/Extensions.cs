@@ -6,9 +6,9 @@ namespace Discord
 {
     public static class NitroSubscriptionExtensions
     {
-        public static async Task<IReadOnlyList<DiscordGuildSubscription>> BoostGuildAsync(this DiscordClient client, ulong guildId, IEnumerable<ulong> boosts)
+        public static async Task<IReadOnlyList<DiscordGuildSubscription>> BoostGuildAsync(this DiscordClient client, ulong guildId, IEnumerable<ulong> boostSlots)
         {
-            return (await client.HttpClient.PutAsync($"/guilds/{guildId}/premium/subscriptions", $"{{\"user_premium_guild_subscription_slot_ids\":{JsonConvert.SerializeObject(boosts)}}}"))
+            return (await client.HttpClient.PutAsync($"/guilds/{guildId}/premium/subscriptions", $"{{\"user_premium_guild_subscription_slot_ids\":{JsonConvert.SerializeObject(boostSlots)}}}"))
                                 .Deserialize<IReadOnlyList<DiscordGuildSubscription>>().SetClientsInList(client);
         }
 
@@ -29,14 +29,14 @@ namespace Discord
         }
 
 
-        public static async Task<IReadOnlyList<DiscordGuildBoost>> GetNitroBoostsAsync(this DiscordClient client)
+        public static async Task<IReadOnlyList<DiscordBoostSlot>> GetBoostSlotsAsync(this DiscordClient client)
         {
-            return (await client.HttpClient.GetAsync("/users/@me/guilds/premium/subscription-slots")).Deserialize<List<DiscordGuildBoost>>().SetClientsInList(client);
+            return (await client.HttpClient.GetAsync("/users/@me/guilds/premium/subscription-slots")).Deserialize<List<DiscordBoostSlot>>().SetClientsInList(client);
         }
 
-        public static IReadOnlyList<DiscordGuildBoost> GetNitroBoosts(this DiscordClient client)
+        public static IReadOnlyList<DiscordBoostSlot> GetBoostSlots(this DiscordClient client)
         {
-            return client.GetNitroBoostsAsync().GetAwaiter().GetResult();
+            return client.GetBoostSlotsAsync().GetAwaiter().GetResult();
         }
 
 

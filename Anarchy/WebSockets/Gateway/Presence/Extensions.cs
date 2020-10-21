@@ -1,7 +1,22 @@
-﻿namespace Discord.Gateway
+﻿using System.Collections.Generic;
+
+namespace Discord.Gateway
 {
     public static class PresenceExtensions
     {
+        public static DiscordPresence GetPresence(this DiscordSocketClient client, ulong userId)
+        {
+            try
+            {
+                return client.Presences[userId];
+            }
+            catch (KeyNotFoundException)
+            {
+                throw new DiscordHttpException(new DiscordHttpError(DiscordError.UnknownUser, "User was not found in cache"));
+            }
+        }
+
+
         /// <summary>
         /// Updates the client's presence
         /// </summary>

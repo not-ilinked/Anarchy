@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 
 namespace Discord.Gateway
@@ -9,8 +8,9 @@ namespace Discord.Gateway
         [JsonProperty("status")]
         public UserStatus Status { get; private set; }
 
+
         [JsonProperty("session_id")]
-        public string SessionId { get; private set; }
+        public string Id { get; private set; }
 
 
         [JsonProperty("client_info")]
@@ -18,6 +18,6 @@ namespace Discord.Gateway
 
 
         [JsonProperty("activities")]
-        public List<ActivityProperties> Activities { get; private set; }
+        public IReadOnlyList<DiscordActivity> Activities { get; private set; }
     }
 }

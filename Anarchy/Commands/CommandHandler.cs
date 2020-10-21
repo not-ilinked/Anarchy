@@ -57,7 +57,7 @@ namespace Discord.Commands
                                 if (param.Property.PropertyType == typeof(string) && i == command.Parameters.Count - 1)
                                     value = string.Join(" ", parts.Skip(i - 1));
                                 else if (args.Message.Guild != null && parts[i].StartsWith("<") && parts[i].EndsWith(">"))
-                                    value = ParseFormatted(param.Property.PropertyType, parts[i]);
+                                    value = ParseReference(param.Property.PropertyType, parts[i]);
                                 else
                                     value = parts[i];
 
@@ -89,9 +89,9 @@ namespace Discord.Commands
         }
 
         // https://discord.com/developers/docs/reference#message-formatting
-        private object ParseFormatted(Type expectedType, string formatted)
+        private object ParseReference(Type expectedType, string reference)
         {
-            string value = formatted.Substring(1, formatted.Length - 2);
+            string value = reference.Substring(1, reference.Length - 2);
 
             // Get the object's ID (always last thing in the sequence)
 
@@ -108,7 +108,7 @@ namespace Discord.Commands
 
                     if (expectedType.IsAssignableFrom(typeof(MinimalChannel)))
                     {
-                        if (forSpecific[0] == '#')
+                        if (forSpecific == "#")
                         {
                             if (expectedType.IsAssignableFrom(typeof(DiscordChannel)))
                             {
@@ -163,168 +163,6 @@ namespace Discord.Commands
             }
             
             throw new ArgumentException("Invalid reference");
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            /*
-            Dictionary<string, KeyValuePair<Type, Func<string, object>>> things = new Dictionary<string, KeyValuePair<Type, Func<string, object>>>()
-            {
-                {
-                    "#",
-                    new KeyValuePair<Type, Func<string, object>>(typeof(MinimalChannel), substring =>
-                    {
-                        ulong channelId = ulong.Parse(substring.Substring(1));
-
-                        if (expectedType.IsAssignableFrom(typeof(DiscordChannel)))
-                        {
-                            if (_client.Config.Cache)
-                                return _client.GetChannel(channelId);
-                            else
-                                throw new Exception(); // cache err
-                        }
-                        else
-                            return new MinimalTextChannel(channelId).SetClient(_client);
-                    })
-                },
-                {
-                    @"a?:\w:",
-                    new KeyValuePair<Type, Func<string, object>>(typeof(PartialEmoji), substring => 
-                    {
-                        string[] split = substring.Split(':');
-
-                        bool animated = split[0] == "a";
-                        string name = split[1];
-                        ulong emojiId = ulong.Parse(split[2]);
-
-                        if (expectedType == typeof(DiscordEmoji))
-                        {
-                            if (_client.Config.Cache)
-                                return _client.GetGuildEmoji(emojiId);
-                            else
-                                throw new Exception(); // cache err
-                        }
-                        else
-                            return new PartialEmoji(emojiId, name, animated).SetClient(_client);
-                    })
-                },
-                {
-                    "@&",
-                    new KeyValuePair<Type, Func<string, object>>(typeof(DiscordRole), substring => 
-                    {
-                        if (_client.Config.Cache)
-                            return _client.GetGuildRole(ulong.Parse(substring.Substring(2)));
-                        else
-                            throw new Exception(); // cache err
-                    })
-                }
-            };
-
-            const string idPattern = "\\d{18}";
-
-            string value = formatted.Substring(1, formatted.Length - 2);
-
-            if (Regex.IsMatch(value, "#" + idPattern))
-            {
-                if (expectedType.IsAssignableFrom(typeof(MinimalChannel)))
-                {
-                    ulong channelId = ulong.Parse(value.Substring(1));
-
-                    if (expectedType.IsAssignableFrom(typeof(DiscordChannel)))
-                    {
-                        if (_client.Config.Cache)
-                            return _client.GetChannel(channelId);
-                        else
-                            throw new ArgumentException("Caching must be enabled to parse DiscordChannels");
-                    }
-                    else
-                        return new MinimalTextChannel(channelId).SetClient(_client);
-                }
-            }
-            else if (Regex.IsMatch(value, "@&" + idPattern)) 
-            {
-                if (_client.Config.Cache)
-                    return _client.GetGuildRole(ulong.Parse(value.Substring(2)));
-                else
-                    throw new ArgumentException("Caching must be enabled to parse DiscordRoles");
-            }
-            else if (Regex.IsMatch(value, @"a?:\w:" + idPattern))
-            {
-                string[] split = value.Split(':');
-
-                bool animated = split[0] == "a";
-                string name = split[1];
-                ulong emojiId = ulong.Parse(split[2]);
-
-                if (expectedType == typeof(DiscordEmoji))
-                {
-                    if (_client.Config.Cache)
-                        return _client.GetGuildEmoji(emojiId);
-                    else
-                        throw new Exception(); // cache err
-                }
-                else
-                    return new PartialEmoji(emojiId, name, animated).SetClient(_client);
-            }
-            else
-
-            ulong id = 0;
-            string type = null;
-
-            for (int i = 0; i < formatted.Length; i++)
-            {
-                if (char.IsDigit(formatted[i]))
-                {
-                    id = ulong.Parse(formatted.Substring(i, formatted.Length - 1 - i));
-                    type = formatted.Substring(1, i - 1);
-                    break;
-                }
-            }
-
-            if (type != null)
-            {
-                if (type == "#")
-                {
-                    if (_client.Config.Cache && expectedType.IsAssignableFrom(typeof(DiscordChannel)))
-                        return _client.GetChannel(id);
-                    else if (expectedType.IsAssignableFrom(typeof(MinimalChannel)))
-                        return new MinimalTextChannel(id).SetClient(_client);
-                }
-                else if (_client.Config.Cache)
-                {
-                    if (type == "@&" && expectedType == typeof(DiscordRole))
-                        return _client.GetGuildRole(id);
-                    else if ((type.StartsWith(":") || type.StartsWith("a:")) && expectedType == typeof(DiscordEmoji))
-                        return _client.GetGuildEmoji(id);
-                }
-                
-                return id;
-            }
-            else
-                return formatted;*/
         }
 
         internal static bool TryGetAttribute<TAttr>(IEnumerable<object> attributes, out TAttr attr) where TAttr : Attribute

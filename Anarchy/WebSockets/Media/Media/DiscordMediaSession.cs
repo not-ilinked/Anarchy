@@ -68,8 +68,7 @@ namespace Discord.Media
 
         // If u connect to a vc in the same server as ur previous, ur connection won't die
         // It makes no sense to then manually kill it bcuz that's extra time
-        // A few things i want to note for my future self who feels too lazy to improve it:
-        // - There's a chance that the client will miss events. A low one, but quite possible
+        // There's a chance that the client will miss events. A low one, but quite possible
         internal DiscordMediaSession(DiscordMediaSession other) : this(other.Client, other.GuildId, other.ChannelId, other.SessionId)
         {
             other.State = MediaSessionState.NotConnected;

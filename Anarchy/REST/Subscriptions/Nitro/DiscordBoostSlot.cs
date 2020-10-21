@@ -3,15 +3,11 @@ using System;
 
 namespace Discord
 {
-    public class DiscordGuildBoost : Controllable
+    public class DiscordBoostSlot : Controllable
     {
-        public DiscordGuildBoost()
+        public DiscordBoostSlot()
         {
-            OnClientUpdated += (sender, e) =>
-            {
-                if (GuildSubscription != null)
-                    GuildSubscription.SetClient(Client);
-            };
+            OnClientUpdated += (sender, e) => GuildSubscription.SetClient(Client);
         }
 
         [JsonProperty("id")]

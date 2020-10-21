@@ -59,11 +59,6 @@ namespace Discord
                 }
             }
         };
-
-        public static DiscordPresence ParsePresence(JObject obj)
-        {
-            return obj.ContainsKey("roles") ? obj.ToObject<DiscordGuildPresence>() : obj.ToObject<DiscordPresence>();
-        }
     }
 
     internal class DeepJsonConverter<T> : JsonConverter

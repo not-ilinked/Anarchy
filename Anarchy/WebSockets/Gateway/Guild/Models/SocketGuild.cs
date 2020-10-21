@@ -86,6 +86,10 @@ namespace Discord.Gateway
         public DateTime CreatedAt { get; private set; }
 
 
+        [JsonProperty("presences")]
+        public IReadOnlyList<DiscordPresence> Presences { get; private set; }
+
+
         [JsonProperty("voice_states")]
         internal ConcurrentList<DiscordVoiceState> _voiceStates;
 

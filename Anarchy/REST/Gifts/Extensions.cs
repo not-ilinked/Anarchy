@@ -4,8 +4,11 @@ using System.Threading.Tasks;
 
 namespace Discord
 {
+    // Anarchy's gift support might be a little shakey right now
+    // Things may have been changed (or i've ignored them for whatever reason), so i'll patch everything up once i have data
     public static class GiftsExtensions
     {
+        
         public static async Task<string> PurchaseGiftAsync(this DiscordClient client, ulong paymentMethodId, ulong skuId, ulong subPlanId, int expectedAmount)
         {
             return (await client.HttpClient.PostAsync($"/store/skus/{skuId}/purchase", new PurchaseOptions()
@@ -33,25 +36,25 @@ namespace Discord
         }
 
 
-        public static async Task<IReadOnlyList<DiscordGiftCode>> QueryGiftCodesAsync(this DiscordClient client, ulong skuId, ulong subPlanId)
+        public static async Task<IReadOnlyList<RedeemableDiscordGift>> QueryGiftCodesAsync(this DiscordClient client, ulong skuId, ulong subPlanId)
         {
             return (await client.HttpClient.GetAsync($"/users/@me/entitlements/gift-codes?sku_id={skuId}&subscription_plan_id={subPlanId}"))
-                                .Deserialize<IReadOnlyList<DiscordGiftCode>>().SetClientsInList(client);
+                                .Deserialize<IReadOnlyList<RedeemableDiscordGift>>().SetClientsInList(client);
         }
 
-        public static IReadOnlyList<DiscordGiftCode> QueryGiftCodes(this DiscordClient client, ulong skuId, ulong subPlanId)
+        public static IReadOnlyList<RedeemableDiscordGift> QueryGiftCodes(this DiscordClient client, ulong skuId, ulong subPlanId)
         {
             return client.QueryGiftCodesAsync(skuId, subPlanId).GetAwaiter().GetResult();
         }
 
 
-        public static async Task<DiscordGiftCode> CreateGiftCodeAsync(this DiscordClient client, ulong skuId, ulong subPlanId)
+        public static async Task<RedeemableDiscordGift> CreateGiftCodeAsync(this DiscordClient client, ulong skuId, ulong subPlanId)
         {
             return (await client.HttpClient.PostAsync("/users/@me/entitlements/gift-codes", $"{{\"sku_id\":{skuId},\"subscription_plan_id\":{subPlanId}}}"))
-                                .Deserialize<DiscordGiftCode>().SetClient(client);
+                                .Deserialize<RedeemableDiscordGift>().SetClient(client);
         }
 
-        public static DiscordGiftCode CreateGiftCode(this DiscordClient client, ulong skuId, ulong subPlanId)
+        public static RedeemableDiscordGift CreateGiftCode(this DiscordClient client, ulong skuId, ulong subPlanId)
         {
             return client.CreateGiftCodeAsync(skuId, subPlanId).GetAwaiter().GetResult();
         }
@@ -79,15 +82,15 @@ namespace Discord
         }
 
 
-        public static async Task<DiscordGift> GetNitroGiftAsync(this DiscordClient client, string code)
+        public static async Task<DiscordGift> GetGiftAsync(this DiscordClient client, string code)
         {
             return (await client.HttpClient.GetAsync($"/entitlements/gift-codes/{code}?with_application=false&with_subscription_plan=true"))
                                 .Deserialize<DiscordGift>();
         }
 
-        public static DiscordGift GetNitroGift(this DiscordClient client, string code)
+        public static DiscordGift GetGift(this DiscordClient client, string code)
         {
-            return client.GetNitroGiftAsync(code).GetAwaiter().GetResult();
+            return client.GetGiftAsync(code).GetAwaiter().GetResult();
         }
 
 

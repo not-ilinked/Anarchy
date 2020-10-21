@@ -20,134 +20,85 @@ namespace Discord.Gateway
     public class DiscordSocketClient : DiscordClient, IDisposable
     {
         #region events
-        public delegate void ChannelHandler(DiscordSocketClient client, ChannelEventArgs args);
-        public delegate void MessageHandler(DiscordSocketClient client, MessageEventArgs args);
-        public delegate void ReactionHandler(DiscordSocketClient client, ReactionEventArgs args);
-        public delegate void RoleHandler(DiscordSocketClient client, RoleEventArgs args);
-        public delegate void BanUpdateHandler(DiscordSocketClient client, BanUpdateEventArgs args);
-        public delegate void RelationshipHandler(DiscordSocketClient client, RelationshipEventArgs args);
-        public delegate void MemberHandler(DiscordSocketClient client, GuildMemberEventArgs args);
-        public delegate void RecipientHandler(DiscordSocketClient client, ChannelRecipientEventArgs args);
+        public delegate void ClientEventHandler<T>(DiscordSocketClient client, T args);
 
-        public delegate void LoginHandler(DiscordSocketClient client, LoginEventArgs args);
-        public event LoginHandler OnLoggedIn;
+        public event ClientEventHandler<LoginEventArgs> OnLoggedIn;
+        public event ClientEventHandler<LogoutEventArgs> OnLoggedOut;
+        public event ClientEventHandler<DiscordSessionsEventArgs> OnSessionsUpdated;
 
-        public delegate void LogoutHandler(DiscordSocketClient client, LogoutEventArgs args);
-        public event LogoutHandler OnLoggedOut;
+        public event ClientEventHandler<UserEventArgs> OnUserUpdated;
+        public event ClientEventHandler<DiscordSettingsEventArgs> OnSettingsUpdated;        
 
-        public delegate void SettingsHandler(DiscordSocketClient client, DiscordSettingsEventArgs args);
-        public event SettingsHandler OnSettingsUpdated;
-        
-        public delegate void SessionsHandler(DiscordSocketClient client, DiscordSessionsEventArgs args);
-        public event SessionsHandler OnSessionsUpdated;
+        public event ClientEventHandler<SocketGuildEventArgs> OnJoinedGuild;
+        public event ClientEventHandler<GuildEventArgs> OnGuildUpdated;
+        public event ClientEventHandler<GuildUnavailableEventArgs> OnLeftGuild;
 
-        public delegate void UserHandler(DiscordSocketClient client, UserEventArgs args);
-        public event UserHandler OnUserUpdated;
+        public event ClientEventHandler<GuildMemberEventArgs> OnUserJoinedGuild;
+        public event ClientEventHandler<MemberRemovedEventArgs> OnUserLeftGuild;
+        public event ClientEventHandler<GuildMemberEventArgs> OnGuildMemberUpdated;
 
-        public delegate void SocketGuildHandler(DiscordSocketClient client, SocketGuildEventArgs args);
-        public event SocketGuildHandler OnJoinedGuild;
+        public event ClientEventHandler<EmojisUpdatedEventArgs> OnEmojisUpdated;
 
-        public delegate void GuildUpdateHandler(DiscordSocketClient client, GuildEventArgs args);
-        public event GuildUpdateHandler OnGuildUpdated;
+        public event ClientEventHandler<InviteCreatedEventArgs> OnInviteCreated;
+        public event ClientEventHandler<InviteDeletedEventArgs> OnInviteDeleted;
 
-        public delegate void GuildUnavailableHandler(DiscordSocketClient client, GuildUnavailableEventArgs args);
-        public event GuildUnavailableHandler OnLeftGuild;
+        internal event ClientEventHandler<GuildMembersEventArgs> OnGuildMembersReceived;
+        internal event ClientEventHandler<GuildMemberListEventArgs> OnMemberListUpdate;
+        public event ClientEventHandler<PresenceUpdatedEventArgs> OnUserPresenceUpdated;
 
-        public event MemberHandler OnUserJoinedGuild;
-        public event MemberHandler OnGuildMemberUpdated;
+        public event ClientEventHandler<BanUpdateEventArgs> OnUserBanned;
+        public event ClientEventHandler<BanUpdateEventArgs> OnUserUnbanned;
 
-        public delegate void MemberRemovedHandler(DiscordSocketClient client, MemberRemovedEventArgs args);
-        public event MemberRemovedHandler OnUserLeftGuild;
+        public event ClientEventHandler<RoleEventArgs> OnRoleCreated;
+        public event ClientEventHandler<RoleEventArgs> OnRoleUpdated;
+        public event ClientEventHandler<RoleDeletedEventArgs> OnRoleDeleted;
 
-        internal delegate void GuildMembersHandler(DiscordSocketClient client, GuildMembersEventArgs args);
-        internal event GuildMembersHandler OnGuildMembersReceived;
+        public event ClientEventHandler<ChannelEventArgs> OnChannelCreated;
+        public event ClientEventHandler<ChannelEventArgs> OnChannelUpdated;
+        public event ClientEventHandler<ChannelEventArgs> OnChannelDeleted;
 
-        internal delegate void MemberListHandler(DiscordSocketClient client, GuildMemberListEventArgs args);
-        internal event MemberListHandler OnMemberListUpdate;
+        public event ClientEventHandler<RingingEventArgs> OnRinging;
+        public event ClientEventHandler<CallUpdateEventArgs> OnCallUpdated;
+        public event ClientEventHandler<MinimalTextChannel> OnCallEnded;
 
-        public delegate void PresenceUpdateHandler(DiscordSocketClient client, PresenceUpdatedEventArgs args);
-        public event PresenceUpdateHandler OnUserPresenceUpdated;
+        public event ClientEventHandler<VoiceStateEventArgs> OnVoiceStateUpdated;
+        internal event ClientEventHandler<DiscordMediaServer> OnMediaServer;
+        internal event ClientEventHandler<DiscordVoiceState> OnConnectionVoiceState;
 
-        public delegate void GiftHandler(DiscordSocketClient client, GiftCodeCreatedEventArgs args);
-        public event GiftHandler OnGiftCodeCreated;
+        internal event ClientEventHandler<GoLiveCreate> OnStreamCreated;
+        internal event ClientEventHandler<GoLiveUpdate> OnStreamUpdated;
+        internal event ClientEventHandler<GoLiveDelete> OnStreamDeleted;
 
-        public delegate void BoostHandler(DiscordSocketClient client, NitroBoostUpdatedEventArgs args);
-        public event BoostHandler OnBoostUpdated;
+        public event ClientEventHandler<UserTypingEventArgs> OnUserTyping;
+        public event ClientEventHandler<MessageEventArgs> OnMessageReceived;
+        public event ClientEventHandler<MessageEventArgs> OnMessageEdited;
+        public event ClientEventHandler<MessageDeletedEventArgs> OnMessageDeleted;
+        public event ClientEventHandler<UnreadMessagesEventArgs> OnGuildUnreadMessagesUpdated;
 
-        public event RoleHandler OnRoleCreated;
-        public event RoleHandler OnRoleUpdated;
+        public event ClientEventHandler<ReactionEventArgs> OnMessageReactionAdded;
+        public event ClientEventHandler<ReactionEventArgs> OnMessageReactionRemoved;
 
-        public delegate void RoleDeleteHandler(DiscordSocketClient client, RoleDeletedEventArgs args);
-        public event RoleDeleteHandler OnRoleDeleted;
+        public event ClientEventHandler<RelationshipEventArgs> OnRelationshipAdded;
+        public event ClientEventHandler<RelationshipEventArgs> OnRelationshipRemoved;
 
-        public event ChannelHandler OnChannelCreated;
-        public event ChannelHandler OnChannelUpdated;
-        public event ChannelHandler OnChannelDeleted;
+        public event ClientEventHandler<ChannelRecipientEventArgs> OnChannelRecipientAdded;
+        public event ClientEventHandler<ChannelRecipientEventArgs> OnChannelRecipientRemoved;
 
-        public delegate void RingingHandler(DiscordSocketClient client, RingingEventArgs args);
-        public event RingingHandler OnRinging;
+        public event ClientEventHandler<GiftCodeCreatedEventArgs> OnGiftCodeCreated;
+        public event ClientEventHandler<GiftCodeUpdatedEventArgs> OnGiftUpdated;
 
-        public delegate void CallUpdateHandler(DiscordSocketClient client, CallUpdateEventArgs args);
-        public event CallUpdateHandler OnCallUpdated;
+        public event ClientEventHandler<NitroBoostEventArgs> OnBoostSlotCreated;
+        public event ClientEventHandler<NitroBoostEventArgs> OnBoostSlotUpdated;
 
-        public delegate void CallEndedHandler(DiscordSocketClient client, ulong channelId);
-        public event CallEndedHandler OnCallEnded;
-
-        public delegate void InviteCreateHandler(DiscordSocketClient client, InviteCreatedEventArgs args);
-        public event InviteCreateHandler OnInviteCreated;
-
-        public delegate void InviteDeleteHandler(DiscordSocketClient client, InviteDeletedEventArgs args);
-        public event InviteDeleteHandler OnInviteDeleted;
-
-        public delegate void VoiceStateHandler(DiscordSocketClient client, VoiceStateEventArgs args);
-        public event VoiceStateHandler OnVoiceStateUpdated;
-
-        internal delegate void MediaServerHandler(DiscordSocketClient client, DiscordMediaServer server);
-        internal event MediaServerHandler OnMediaServer;
-
-        internal delegate void VoiceSessionHandler(DiscordSocketClient client, DiscordVoiceState state);
-        internal event VoiceSessionHandler OnConnectionVoiceState;
-
-        internal delegate void StreamCreateHandler(DiscordSocketClient client, GoLiveCreate stream);
-        internal event StreamCreateHandler OnStreamCreated;
-
-        internal delegate void StreamUpdateHandler(DiscordSocketClient client, GoLiveUpdate goLive);
-        internal event StreamUpdateHandler OnStreamUpdated;
-
-        internal delegate void StreamDeleteHandler(DiscordSocketClient client, GoLiveDelete goLive);
-        internal event StreamDeleteHandler OnStreamDeleted;
-
-        public delegate void EmojisUpdatedHandler(DiscordSocketClient client, EmojisUpdatedEventArgs args);
-        public event EmojisUpdatedHandler OnEmojisUpdated;
-
-        public delegate void UserTypingHandler(DiscordSocketClient client, UserTypingEventArgs args);
-        public event UserTypingHandler OnUserTyping;
-
-        public event MessageHandler OnMessageReceived;
-        public event MessageHandler OnMessageEdited;
-
-        public delegate void MessageDeletedHandler(DiscordSocketClient client, MessageDeletedEventArgs args);
-        public event MessageDeletedHandler OnMessageDeleted;
-
-        public delegate void ChannelUnreadHandler(DiscordSocketClient client, UnreadMessagesEventArgs args);
-        public event ChannelUnreadHandler OnGuildUnreadMessagesUpdated;
-
-        public event ReactionHandler OnMessageReactionAdded;
-        public event ReactionHandler OnMessageReactionRemoved;
-
-        public event BanUpdateHandler OnUserBanned;
-        public event BanUpdateHandler OnUserUnbanned;
-
-        public event RelationshipHandler OnRelationshipAdded;
-        public event RelationshipHandler OnRelationshipRemoved;
-
-        public event RecipientHandler OnChannelRecipientAdded;
-        public event RecipientHandler OnChannelRecipientRemoved;
+        // What entitlements actually are and how the client interacts with them is being researched. DiscordEntitlement.cs for more
+        public event ClientEventHandler<EntitlementEventArgs> OnEntitlementCreated;
+        public event ClientEventHandler<EntitlementEventArgs> OnEntitlementUpdated;
         #endregion
-        
+
         // caching
         internal ConcurrentDictionary<ulong, SocketGuild> GuildCache { get; private set; }
         internal ConcurrentList<PrivateChannel> PrivateChannels { get; private set; }
+        internal ConcurrentDictionary<ulong, DiscordPresence> Presences { get; private set; }
         internal AutoConcurrentDictionary<ulong, DiscordVoiceStateContainer> VoiceStates { get; private set; }
         internal ConcurrentDictionary<ulong, ClientGuildSettings> GuildSettings { get; private set; }
         internal List<DiscordChannelSettings> PrivateChannelSettings { get; private set; }
@@ -302,7 +253,7 @@ namespace Discord.Gateway
                 Token = token;
 
             if (User.Type == DiscordUserType.Bot && Config.ApiVersion >= 8 && !Config.Intents.HasValue)
-                throw new ArgumentNullException("Intents must be supplied as of API v8");
+                throw new ArgumentNullException("Gateway intents must be provided as of API v8");
 
             State = GatewayConnectionState.Connecting;
 
@@ -325,6 +276,19 @@ namespace Discord.Gateway
         }
 
 
+        private void ApplyGuild(SocketGuild guild)
+        {
+            if (!guild.Unavailable)
+            {
+                foreach (var state in guild.VoiceStates)
+                    VoiceStates[state.UserId].GuildStates[guild.Id] = state;
+
+                foreach (var presence in guild.Presences)
+                    Presences[presence.UserId] = presence;
+            }
+        }
+
+
         private void WebSocket_OnMessageReceived(object sender, DiscordWebSocketMessage<GatewayOpcode> message)
         {
             Sequence = message.Sequence;
@@ -338,12 +302,12 @@ namespace Discord.Gateway
                         Console.WriteLine(message.EventName);
                         
                         File.AppendAllText("Debug.log", $"{message.EventName}: {message.Data}\n");
-                        */     
+                        */
                         
                         switch (message.EventName)
                         {
                             case "READY":
-                                Login login = message.Data.ToObject<Login>().SetClient(this);
+                                LoginEventArgs login = message.Data.ToObject<LoginEventArgs>().SetClient(this);
 
                                 this.User = login.User;
                                 this.UserSettings = login.Settings;
@@ -352,17 +316,10 @@ namespace Discord.Gateway
                                 if (Config.Cache && this.User.Type == DiscordUserType.User)
                                 {
                                     PrivateChannels = new ConcurrentList<PrivateChannel>(login.PrivateChannels);
+                                    Presences = new ConcurrentDictionary<ulong, DiscordPresence>(login.Presences.ToDictionary(p => p.UserId));
 
                                     foreach (var guild in login.Guilds)
-                                    {
-                                        var socketGuild = GuildCache[guild.Id] = (SocketGuild)guild;
-
-                                        if (!socketGuild.Unavailable)
-                                        {
-                                            foreach (var state in socketGuild.VoiceStates)
-                                                VoiceStates[state.UserId].GuildStates[guild.Id] = state;
-                                        }
-                                    }
+                                        ApplyGuild(GuildCache[guild.Id] = (SocketGuild)guild);
 
                                     foreach (var settings in login.ClientGuildSettings)
                                     {
@@ -377,7 +334,7 @@ namespace Discord.Gateway
                                 State = GatewayConnectionState.Connected;
 
                                 if (OnLoggedIn != null)
-                                    Task.Run(() => OnLoggedIn.Invoke(this, new LoginEventArgs(login)));
+                                    Task.Run(() => OnLoggedIn.Invoke(this, login));
                                 break;
                             case "USER_SETTINGS_UPDATE":
                                 if (UserSettings == null)
@@ -438,12 +395,7 @@ namespace Discord.Gateway
                                     var guild = message.Data.ToObject<SocketGuild>().SetClient(this);
 
                                     if (Config.Cache)
-                                    {
-                                        GuildCache[guild.Id] = guild;
-
-                                        foreach (var state in guild.VoiceStates)
-                                            VoiceStates[state.UserId].GuildStates[guild.Id] = state;
-                                    }
+                                        ApplyGuild(GuildCache[guild.Id] = guild);
 
                                     if (OnJoinedGuild != null)
                                         Task.Run(() => OnJoinedGuild.Invoke(this, new SocketGuildEventArgs(guild, Lurking.HasValue && Lurking.Value == guild.Id)));
@@ -527,11 +479,37 @@ namespace Discord.Gateway
                                 Task.Run(() => OnGuildMembersReceived?.Invoke(this, new GuildMembersEventArgs(message.Data.ToObject<GuildMemberList>().SetClient(this))));
                                 break;
                             case "GIFT_CODE_CREATE":
-                                Task.Run(() => OnGiftCodeCreated?.Invoke(this, message.Data.ToObject<GiftCodeCreatedEventArgs>()));
+                                if (OnGiftCodeCreated != null)
+                                    Task.Run(() => OnGiftCodeCreated.Invoke(this, message.Data.ToObject<GiftCodeCreatedEventArgs>()));
+                                break;
+                            case "GIFT_CODE_UPDATE":
+                                if (OnGiftUpdated != null)
+                                {
+                                    var gift = message.Data.ToObject<GiftCodeUpdatedEventArgs>().SetClient(this);
+                                    gift.Json = (JObject)message.Data;
+
+                                    Task.Run(() => OnGiftUpdated.Invoke(this, gift));
+                                }
                                 break;
                             case "PRESENCE_UPDATE":
-                                if (OnUserPresenceUpdated != null)
-                                    Task.Run(() => OnUserPresenceUpdated.Invoke(this, new PresenceUpdatedEventArgs(DeepJsonConverter.ParsePresence((JObject)message.Data).SetClient(this))));
+                                if (Config.Cache || OnUserPresenceUpdated != null)
+                                {
+                                    var presence = message.Data.ToObject<DiscordPresence>().SetClient(this);
+
+                                    if (Config.Cache)
+                                    {
+                                        if (Presences.TryGetValue(presence.UserId, out DiscordPresence existingPresence))
+                                        {
+                                            existingPresence.Update(presence);
+                                            presence = existingPresence;
+                                        }
+                                        else
+                                            Presences[presence.UserId] = presence;
+                                    }
+
+                                    if (OnUserPresenceUpdated != null)
+                                        Task.Run(() => OnUserPresenceUpdated.Invoke(this, new PresenceUpdatedEventArgs(presence)));
+                                }
                                 break;
                             case "VOICE_STATE_UPDATE":
                                 if (Config.Cache || OnConnectionVoiceState != null || OnVoiceStateUpdated != null)
@@ -804,12 +782,24 @@ namespace Discord.Gateway
                                     }
 
                                     if (OnCallEnded != null)
-                                        Task.Run(() => OnCallEnded.Invoke(this, channelId));
+                                        Task.Run(() => OnCallEnded.Invoke(this, new MinimalTextChannel(channelId).SetClient(this)));
                                 }
                                 break;
+                            case "ENTITLEMENT_CREATE":
+                                if (OnEntitlementCreated != null)
+                                    Task.Run(() => OnEntitlementCreated.Invoke(this, new EntitlementEventArgs(message.Data.ToObject<DiscordEntitlement>())));
+                                break;
+                            case "ENTITLEMENT_UPDATE":
+                                if (OnEntitlementUpdated != null)
+                                    Task.Run(() => OnEntitlementUpdated.Invoke(this, new EntitlementEventArgs(message.Data.ToObject<DiscordEntitlement>())));
+                                break;
+                            case "USER_PREMIUM_GUILD_SUBSCRIPTION_SLOT_CREATE":
+                                if (OnBoostSlotCreated != null)
+                                    Task.Run(() => OnBoostSlotCreated.Invoke(this, new NitroBoostEventArgs(message.Data.ToObject<DiscordBoostSlot>().SetClient(this))));
+                                break;
                             case "USER_PREMIUM_GUILD_SUBSCRIPTION_SLOT_UPDATE":
-                                if (OnBoostUpdated != null)
-                                    Task.Run(() => OnBoostUpdated.Invoke(this, new NitroBoostUpdatedEventArgs(message.Data.ToObject<DiscordGuildBoost>().SetClient(this))));
+                                if (OnBoostSlotUpdated != null)
+                                    Task.Run(() => OnBoostSlotUpdated.Invoke(this, new NitroBoostEventArgs(message.Data.ToObject<DiscordBoostSlot>().SetClient(this))));
                                 break;
                             case "STREAM_SERVER_UPDATE":
                                 OnMediaServer?.Invoke(this, message.Data.ToObject<DiscordMediaServer>().SetClient(this));

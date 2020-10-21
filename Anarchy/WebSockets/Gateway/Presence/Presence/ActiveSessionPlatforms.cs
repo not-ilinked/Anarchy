@@ -5,14 +5,14 @@ namespace Discord.Gateway
     public class ActiveSessionPlatforms
     {
         [JsonProperty("desktop")]
-        public UserStatus Desktop { get; private set; }
+        public UserStatus Desktop { get; private set; } = UserStatus.Offline;
 
 
         [JsonProperty("web")]
-        public UserStatus Website { get; private set; }
+        public UserStatus Website { get; private set; } = UserStatus.Offline;
 
 
         [JsonProperty("mobile")]
-        public UserStatus Mobile { get; private set; }
+        public UserStatus Mobile { get; private set; } = UserStatus.Offline;
     }
 }

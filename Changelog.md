@@ -6,18 +6,18 @@
 - Added support for [Guild Communities](https://support.discord.com/hc/en-us/articles/360047132851).
 - Added support for [sharding](https://discord.com/developers/docs/topics/gateway#sharding) (see DiscordSocketConfig).
 
-
 ### Improvements
 - Anarchy now uses API v8.
 - Changed the way different types of channels and such are dealt with, lowering memory and CPU usage. Instead of calling .ToX() methods, you now just cast the object.
-- Rewrote Anarchy's Webhook implementation, adding support for Channel Followers.
-- Rewrote Anarchy's command handler.
 - DiscordVoiceStream.CopyFrom() now takes in a Stream. DiscordVoiceUtils.ReadFromFile() is now GetAudioStream and GetAudio to compensate.
-- Improved the way Anarchy deals with purchasing subscriptions.
+- Improved gift/"entitlement" functionality. Research isn't done yet, so some things might not work. Make sure to report issues.
 - Removed various useless/bloaty methods (GetGuildRole, Mute/DeafenGuildMember and so on).
-- Changed the structure of the custom exceptions.
-- Rewrote the CDN implementation.
 - Removed redundant info from method names such as: CreateChannelWebhook -> CreateWebhook.
+- Rewrote Anarchy's Webhook implementation, adding support for Channel Followers.
+- Improved the way Anarchy deals with subscriptions. Working on figuring out what gifts are vs. "entitlements". Some parts of the implementation might not work, so make sure to report issues.
+- Changed the structure of the custom exceptions.
+- Rewrote Anarchy's command handler.
+- Rewrote the CDN implementation.
 - A few bug fixes.
 
 

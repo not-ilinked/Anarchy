@@ -11,8 +11,9 @@ namespace Discord
         {
             OnClientUpdated += (sender, e) =>
             {
+                Creator.SetClient(Client);
                 SourceGuild.SetClient(Client);
-                Template.SetClient(Client);
+                Snapshot.SetClient(Client);
             };
         }
 
@@ -22,6 +23,10 @@ namespace Discord
 
         [JsonProperty("name")]
         public string Name { get; private set; }
+
+
+        [JsonProperty("description")]
+        public string Description { get; private set; }
 
 
         [JsonProperty("usage_count")]
@@ -45,17 +50,14 @@ namespace Discord
 
         public MinimalGuild SourceGuild
         {
-            get
-            {
-                return new MinimalGuild(_guildId).SetClient(Client);
-            }
+            get { return new MinimalGuild(_guildId).SetClient(Client); }
         }
 
 
         [JsonProperty("serialized_source_guild")]
         private DiscordTemplateGuild _guild;
         
-        public DiscordTemplateGuild Template
+        public DiscordTemplateGuild Snapshot
         {
             get
             {
@@ -67,6 +69,15 @@ namespace Discord
             {
                 _guild = value;
             }
+        }
+
+
+        [JsonProperty("is_dirty")]
+        private readonly bool? _dirty;
+
+        public bool HasUnsyncedChanges
+        {
+            get { return _dirty.HasValue; }
         }
 
 

@@ -71,6 +71,9 @@
     <Compile Include="REST\Guild\Permissions\PermissionUtils.cs" />
     <Compile Include="REST\LockedDiscordConfig.cs" />
     <Compile Include="REST\User\Connections\ConnectionProperties.cs" />
+    <Compile Include="WebSockets\Gateway\Gifts\DiscordEntitlement.cs" />
+    <Compile Include="WebSockets\Gateway\Gifts\EntitlementEventArgs.cs" />
+    <Compile Include="WebSockets\Gateway\Gifts\GiftCodeUpdatedEventArgs.cs" />
     <Compile Include="WebSockets\Gateway\Session\DiscordShard.cs" />
     <Compile Include="WebSockets\Gateway\DiscordSocketClient.cs" />
     <Compile Include="WebSockets\Gateway\DiscordSocketConfig.cs" />
@@ -112,12 +115,11 @@
     <Compile Include="WebSockets\Gateway\Presence\Activity\User\DiscordGameActivity.cs" />
     <Compile Include="WebSockets\Gateway\Presence\Activity\User\DiscordListeningActivity.cs" />
     <Compile Include="WebSockets\Gateway\Presence\Presence\ActiveSessionPlatforms.cs" />
-    <Compile Include="WebSockets\Gateway\Presence\Presence\DiscordGuildPresence.cs" />
     <Compile Include="WebSockets\Gateway\Media\Go Live\GoLiveStreamKey.cs" />
     <Compile Include="WebSockets\Gateway\Role\DeletedRole.cs" />
     <Compile Include="WebSockets\Gateway\Role\GatewayRoleExtensions.cs" />
     <Compile Include="WebSockets\Gateway\Role\RoleDeletedEventArgs.cs" />
-    <Compile Include="WebSockets\Gateway\Subscriptions\NitroBoostUpdatedEventArgs.cs" />
+    <Compile Include="WebSockets\Gateway\Subscriptions\NitroBoostEventArgs.cs" />
     <Compile Include="WebSockets\Media\Codecs\CodecType.cs" />
     <Compile Include="WebSockets\Media\Codecs\MediaCodec.cs" />
     <Compile Include="WebSockets\Media\Codecs\Opus\OpusConverter.cs" />
@@ -148,7 +150,7 @@
     <Compile Include="REST\Discovery\GuildQueryOptions.cs" />
     <Compile Include="REST\Discovery\GuildQueryResult.cs" />
     <Compile Include="REST\Gifts\DiscordGift.cs" />
-    <Compile Include="REST\Gifts\DiscordGiftCode.cs" />
+    <Compile Include="REST\Gifts\RedeemableDiscordGift.cs" />
     <Compile Include="REST\Gifts\Extensions.cs" />
     <Compile Include="REST\Gifts\PurchaseOptions.cs" />
     <Compile Include="REST\Guild\Community\CommunityExtensions.cs" />
@@ -175,7 +177,7 @@
     <Compile Include="REST\Guild\Permissions\OverwrittenPermissionState.cs" />
     <Compile Include="REST\Guild\Permissions\PermissionOverwriteType.cs" />
     <Compile Include="REST\Guild\Role\Models\RolePositionUpdate.cs" />
-    <Compile Include="REST\Subscriptions\Nitro\DiscordGuildBoost.cs" />
+    <Compile Include="REST\Subscriptions\Nitro\DiscordBoostSlot.cs" />
     <Compile Include="REST\Subscriptions\Nitro\DiscordNitroSubType.cs" />
     <Compile Include="REST\Subscriptions\Nitro\DiscordNitroSubTypes.cs" />
     <Compile Include="REST\Subscriptions\Nitro\Extensions.cs" />
@@ -195,7 +197,6 @@
     <Compile Include="WebSockets\Media\Media\MediaSessionState.cs" />
     <Compile Include="WebSockets\Gateway\Session\Extensions.cs" />
     <Compile Include="WebSockets\Gateway\Session\Auth\Identification.cs" />
-    <Compile Include="WebSockets\Gateway\Session\Auth\Login.cs" />
     <Compile Include="WebSockets\Gateway\Session\Auth\LoginEventArgs.cs" />
     <Compile Include="WebSockets\Gateway\Session\DiscordSession.cs" />
     <Compile Include="WebSockets\Gateway\Session\DiscordSessionClientInfo.cs" />

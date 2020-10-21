@@ -9,7 +9,7 @@ namespace Discord.Gateway
 
 
         [JsonProperty("os")]
-        public string OperatingSystem { get; private set; }
+        public string OS { get; private set; }
 
 
         [JsonProperty("client")]
