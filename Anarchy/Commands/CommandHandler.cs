@@ -55,7 +55,7 @@ namespace Discord.Commands
                                 object value;
 
                                 if (param.Property.PropertyType == typeof(string) && i == command.Parameters.Count - 1)
-                                    value = string.Join(" ", parts.Skip(i - 1));
+                                    value = string.Join(" ", parts.Skip(i));
                                 else if (args.Message.Guild != null && parts[i].StartsWith("<") && parts[i].EndsWith(">"))
                                     value = ParseReference(param.Property.PropertyType, parts[i]);
                                 else

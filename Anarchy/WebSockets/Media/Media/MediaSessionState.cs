@@ -2,8 +2,9 @@
 {
     public enum MediaSessionState
     {
-        NotConnected,
+        Dead,
+        StandBy,
         Connecting,
-        Connected
+        Authenticated
     }
 }

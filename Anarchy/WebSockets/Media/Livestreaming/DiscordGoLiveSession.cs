@@ -53,7 +53,7 @@ namespace Discord.Media
 
         public override void Disconnect()
         {
-            Client.EndGoLive(Server.StreamKey);
+            Client.EndGoLive(CurrentServer.StreamKey);
 
             base.Disconnect();
         }
@@ -80,6 +80,7 @@ namespace Discord.Media
 
         protected override void HandleDisconnect(DiscordMediaCloseEventArgs args)
         {
+            State = MediaSessionState.Dead;
             OnDisconnected?.Invoke(this, new DiscordGoLiveCloseEventArgs(args.Code, args.Reason));
         }
 

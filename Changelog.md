@@ -1,3 +1,22 @@
+# 0.8.0.1
+### Additions
+- Added .SetChannel() to DiscordVoiceSession to make it easier to change channel without reconnecting.
+
+### Improvements
+Added .SetChannel() to DiscordVoiceSession in order to make switching channel easier. This is done without reconnecting.
+
+### Bug fixes
+- Fixed various bugs related to media sessions.
+- Fixed Theme and Language always being set when changing settings.
+- Other minor fixes.
+
+### To do
+Currently, switching voice channels before the previous connection has been established can cause issues, so try to wait for .State to be Authenticated.
+It seems like Anarchy's approach to media connections (as sessions) is flawed in of itself.
+Solutions will be available in later versions.
+
+
+
 # 0.8.0.0
 ### Additions
 - Added async methods (with the same name as their sync methods but the suffix 'Async').
@@ -10,7 +29,6 @@
 - Anarchy now uses API v8.
 - Changed the way different types of channels and such are dealt with, lowering memory and CPU usage. Instead of calling .ToX() methods, you now just cast the object.
 - DiscordVoiceStream.CopyFrom() now takes in a Stream. DiscordVoiceUtils.ReadFromFile() is now GetAudioStream and GetAudio to compensate.
-- Improved gift/"entitlement" functionality. Research isn't done yet, so some things might not work. Make sure to report issues.
 - Removed various useless/bloaty methods (GetGuildRole, Mute/DeafenGuildMember and so on).
 - Removed redundant info from method names such as: CreateChannelWebhook -> CreateWebhook.
 - Rewrote Anarchy's Webhook implementation, adding support for Channel Followers.

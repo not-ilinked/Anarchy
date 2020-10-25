@@ -21,7 +21,7 @@ namespace Discord.Media
 
         public int Write(byte[] buffer, int offset)
         {
-            if (Session.State != MediaSessionState.Connected)
+            if (Session.State != MediaSessionState.Authenticated)
                 throw new InvalidOperationException("Connection has been closed.");
 
             lock (Session.VoiceLock)

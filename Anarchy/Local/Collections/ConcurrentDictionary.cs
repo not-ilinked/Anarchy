@@ -25,16 +25,10 @@ namespace Anarchy
         {
             get
             {
-                lock (Lock)
-                {
-                    foreach (var item in this)
-                    {
-                        if (EqualityComparer<TValue>.Default.Equals(item.Value, value))
-                            return item.Key;
-                    }
-                }
-
-                throw new ArgumentException("No item with the specified value was found");
+                if (TryGetKey(value, out TKey key))
+                    return key;
+                else
+                    throw new ArgumentException("No item with the specified value was found");
             }
         }
 
@@ -54,6 +48,24 @@ namespace Anarchy
         {
             lock (Lock)
                 return base.TryGetValue(key, out value);
+        }
+
+        public bool TryGetKey(TValue value, out TKey key)
+        {
+            lock (Lock)
+            {
+                foreach (var item in this)
+                {
+                    if (EqualityComparer<TValue>.Default.Equals(item.Value, value))
+                    {
+                        key = item.Key;
+                        return true;
+                    }
+                }
+            }
+
+            key = default;
+            return false;
         }
 
         public new bool Remove(TKey key)

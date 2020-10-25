@@ -52,7 +52,7 @@ namespace Discord.Media
         {
             if (_packets.TryDequeue(out DiscordVoicePacket packet))
                 return Task.FromResult(packet);
-            else if (Session.State == MediaSessionState.Connected && !Closed)
+            else if (Session.State == MediaSessionState.Authenticated && !Closed)
             {
                 TaskCompletionSource<DiscordVoicePacket> task = new TaskCompletionSource<DiscordVoicePacket>();
 

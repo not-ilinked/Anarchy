@@ -63,6 +63,8 @@ namespace Discord.Media
                 ulong old = ChannelId;
                 base.ChannelId = value;
 
+                Log($"Changed channel from {old} to {base.ChannelId}");
+
                 if (OnChannelChanged != null)
                     Task.Run(() => OnChannelChanged?.Invoke(this, new ChannelChangedEventArgs(old, value)));
             }
@@ -100,16 +102,16 @@ namespace Discord.Media
 
         protected override ulong GetServerId()
         {
-            return Server.Guild == null ? Channel.Id : Server.Guild.Id;
+            return CurrentServer.Guild == null ? Channel.Id : CurrentServer.Guild.Id;
         }
 
 
         public void SetSpeakingState(DiscordSpeakingFlags flags)
         {
-            if (State != MediaSessionState.Connected)
+            if (State != MediaSessionState.Authenticated)
                 throw new InvalidOperationException("Connection has been closed.");
 
-            SafeSend(DiscordMediaOpcode.Speaking, new DiscordSpeakingRequest()
+            Send(DiscordMediaOpcode.Speaking, new DiscordSpeakingRequest()
             {
                 State = flags,
                 Delay = 0,
@@ -145,7 +147,7 @@ namespace Discord.Media
                     GuildId = Guild.Id, 
                     ChannelId = Channel.Id, 
                     UserId = userId 
-                }.Serialize() 
+                }.Serialize()
             }));
         }
 
@@ -157,16 +159,28 @@ namespace Discord.Media
 
         public override void Disconnect()
         {
-            if (Client.State == GatewayConnectionState.Connected)
+            try
+            {
+                // discord rlly wants us to do this first for some reason
                 Client.ChangeVoiceState(new VoiceStateProperties() { GuildId = Guild.Id, ChannelId = null });
+            }
+            catch (InvalidOperationException) { }
 
             base.Disconnect();
         }
 
 
+        public void SetChannel(ulong channelId)
+        {
+            Log($"Switching channel from {Channel.Id} to {channelId}");
+
+            Client.ChangeVoiceState(new VoiceStateProperties() { GuildId = GuildId, ChannelId = channelId });
+        }
+
+
         public DiscordVoiceStream CreateStream(uint bitrate, AudioApplication application = AudioApplication.Mixed)
         {
-            if (State != MediaSessionState.Connected)
+            if (State != MediaSessionState.Authenticated)
                 throw new InvalidOperationException("Connection has been closed.");
 
             return new DiscordVoiceStream(this, (int)bitrate, application);
@@ -175,7 +189,7 @@ namespace Discord.Media
 
         protected override void HandlePacket(RTPPacketHeader header, byte[] payload)
         {
-            // for some reason discord sends us voice packets before we get the user's ID. i don't think this impacts the audio tho: it seems like these packets don't have any voice data
+            // for some reason discord sends us voice packets before we get the user's ID. i don't think this impacts the audio tho; it seems like these packets don't have any voice data
             if (header.Type == SupportedCodecs["opus"].PayloadType && _ssrcToUserDictionary.TryGetValue(header.SSRC, out ulong userId))
             {
                 if (!_receivers.TryGetValue(userId, out IncomingVoiceStream receiver))
@@ -225,19 +239,20 @@ namespace Discord.Media
 
                     break;
                 case DiscordMediaOpcode.SSRCUpdate: // this is fired whenever a user connects to the channel or updates their ssrc
-                    SSRCUpdate ssrc = message.Data.ToObject<SSRCUpdate>();
+                    SSRCUpdate update = message.Data.ToObject<SSRCUpdate>();
 
-                    bool newUser = !_ssrcToUserDictionary.Values.Contains(ssrc.UserId);
+                    bool newUser = !_ssrcToUserDictionary.Values.Contains(update.UserId);
 
-                    _ssrcToUserDictionary[ssrc.Audio] = ssrc.UserId;
+                    _ssrcToUserDictionary[update.Audio] = update.UserId;
 
                     if (newUser && OnUserConnected != null)
-                        Task.Run(() => OnUserConnected.Invoke(this, ssrc.UserId));
+                        Task.Run(() => OnUserConnected.Invoke(this, update.UserId));
                     break;
                 case DiscordMediaOpcode.UserDisconnect:
                     ulong userId = message.Data.ToObject<JObject>().Value<ulong>("user_id");
 
-                    _ssrcToUserDictionary.Remove(_ssrcToUserDictionary[userId]);
+                    if (_ssrcToUserDictionary.TryGetKey(userId, out uint ssrc))
+                        _ssrcToUserDictionary.Remove(ssrc);
 
                     if (_receivers.TryGetValue(userId, out IncomingVoiceStream receiver))
                     {
@@ -253,26 +268,27 @@ namespace Discord.Media
 
         protected override void HandleConnect()
         {
-            SetSSRC(SSRC.Audio);
+            try
+            {
+                SetSSRC(SSRC.Audio);
 
-            OnConnected?.Invoke(this, new EventArgs());
+                OnConnected?.Invoke(this, new EventArgs());
+            }
+            catch (InvalidOperationException) { }
         }
 
         protected override void HandleDisconnect(DiscordMediaCloseEventArgs args)
         {
-            if (args.Code == DiscordMediaCloseCode.SessionTimeout || args.Code == DiscordMediaCloseCode.ServerCrashed)
-                Connect();
-            else
-            {
-                if (args.Code == DiscordMediaCloseCode.InvalidSession)
-                    Connect();
-                else
-                {
-                    State = MediaSessionState.NotConnected;
+            if (args.Code != DiscordMediaCloseCode.Disconnected) // Disconnected is used when switching channel in bigger guilds
+                Task.Run(() => OnDisconnected?.Invoke(this, args));
+        }
 
-                    OnDisconnected?.Invoke(this, args);
-                }
-            }
+        internal void Kill()
+        {
+            Log("Killing");
+
+            State = MediaSessionState.Dead;
+            Task.Run(() => OnDisconnected?.Invoke(this, new DiscordMediaCloseEventArgs(DiscordMediaCloseCode.Disconnected, "Disconnected.")));
         }
 
         private Task<DiscordGoLiveSession> JoinGoLiveAsync(ulong guildId, ulong channelId, Action caller)

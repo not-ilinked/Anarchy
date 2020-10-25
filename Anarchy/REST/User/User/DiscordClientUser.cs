@@ -26,7 +26,7 @@ namespace Discord
 
 
         [JsonProperty("nsfw_allowed")]
-        public bool NsfwAllowed { get; private set; }
+        public bool? NsfwAllowed { get; private set; }
 
 
         [JsonProperty("phone")]

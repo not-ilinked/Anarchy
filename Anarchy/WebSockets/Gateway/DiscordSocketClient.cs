@@ -63,7 +63,7 @@ namespace Discord.Gateway
 
         public event ClientEventHandler<VoiceStateEventArgs> OnVoiceStateUpdated;
         internal event ClientEventHandler<DiscordMediaServer> OnMediaServer;
-        internal event ClientEventHandler<DiscordVoiceState> OnConnectionVoiceState;
+        internal event ClientEventHandler<DiscordVoiceState> OnSessionVoiceState;
 
         internal event ClientEventHandler<GoLiveCreate> OnStreamCreated;
         internal event ClientEventHandler<GoLiveUpdate> OnStreamUpdated;
@@ -170,17 +170,17 @@ namespace Discord.Gateway
             WebSocket.OnMessageReceived += WebSocket_OnMessageReceived;
 
             #region media event handlers
-            OnConnectionVoiceState += (c, state) =>
+            OnSessionVoiceState += (c, state) =>
             {
                 lock (VoiceSessions.Lock)
                 {
                     foreach (var session in VoiceSessions.Values)
                     {
-                        if (session.SessionId == state.SessionId)
+                        if (session.GuildId == (state.Guild == null ? null : (ulong?)state.Guild.Id))
                         {
-                            if (state.Channel == null)
-                                session.Disconnect(DiscordMediaCloseCode.Disconnected, "Disconnected."); // pretty sure this is the 'reason' discord normally sends?
-                            else
+                            if (state.Channel == null || session.SessionId != state.SessionId)
+                                session.Kill();
+                            else if (state.SessionId == session.SessionId)
                                 session.ChannelId = state.Channel.Id;
 
                             break;
@@ -211,7 +211,7 @@ namespace Discord.Gateway
                     args.GuildId = session.Guild.Id;
                     session.UpdateServer(args);
 
-                    if (args.StreamKey.Split(':').Last() == User.Id.ToString())
+                    if (StreamKey.Deserialize(args.StreamKey).UserId == User.Id)
                         session.ParentSession.Livestream = session;
                     else
                         session.ParentSession.WatchingDictionary[args.StreamKey] = session;
@@ -512,7 +512,7 @@ namespace Discord.Gateway
                                 }
                                 break;
                             case "VOICE_STATE_UPDATE":
-                                if (Config.Cache || OnConnectionVoiceState != null || OnVoiceStateUpdated != null)
+                                if (Config.Cache || OnSessionVoiceState != null || OnVoiceStateUpdated != null)
                                 {
                                     DiscordVoiceState newState = message.Data.ToObject<DiscordVoiceState>().SetClient(this);
 
@@ -543,8 +543,8 @@ namespace Discord.Gateway
                                         }
                                     }
 
-                                    if (newState.UserId == User.Id && newState.SessionId == SessionId)
-                                        OnConnectionVoiceState?.Invoke(this, newState);
+                                    if (newState.UserId == User.Id)
+                                        OnSessionVoiceState?.Invoke(this, newState);
 
                                     if (OnVoiceStateUpdated != null)
                                         Task.Run(() => OnVoiceStateUpdated.Invoke(this, new VoiceStateEventArgs(newState)));

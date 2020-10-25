@@ -14,63 +14,7 @@ namespace Discord.Gateway
         /// </summary>
         public static void ChangeVoiceState(this DiscordSocketClient client, VoiceStateProperties properties)
         {
-            if (client.Config.Cache)
-            {
-                DiscordVoiceStateContainer states;
-
-                try
-                {
-                    states = client.GetVoiceStates(client.User.Id);
-                }
-                catch (DiscordHttpException ex)
-                {
-                    if (ex.Code == DiscordError.UnknownUser)
-                        states = new DiscordVoiceStateContainer(client.User.Id);
-                    else
-                        throw;
-                }
-
-                DiscordVoiceState state = null;
-
-                if (properties.GuildProperty.Set)
-                {
-                    if (properties.GuildId.HasValue)
-                        states.GuildVoiceStates.TryGetValue(properties.GuildId.Value, out state);
-                    else
-                        state = states.PrivateChannelVoiceState;
-
-                    if (state != null && !properties.ChannelProperty.Set)
-                        properties.ChannelId = state.Channel == null ? null : (ulong?)state.Channel.Id;
-                }
-                else if (properties.ChannelProperty.Set && properties.ChannelId.HasValue)
-                {
-                    var channel = client.GetChannel(properties.ChannelId.Value);
-
-                    if (channel.Type != ChannelType.Group && channel.Type != ChannelType.DM)
-                    {
-                        properties.GuildId = ((GuildChannel)channel).GuildId;
-
-                        if (states.GuildVoiceStates.TryGetValue(properties.GuildId.Value, out DiscordVoiceState oldState))
-                            state = oldState;
-                    }
-                    else if (states.PrivateChannelVoiceState != null && states.PrivateChannelVoiceState.Channel != null && states.PrivateChannelVoiceState.Channel.Id == properties.ChannelId)
-                        state = states.PrivateChannelVoiceState;
-                }
-
-                if (state != null)
-                {
-                    if (!properties.DeafProperty.Set)
-                        properties.Deafened = state.SelfDeafened;
-
-                    if (!properties.MutedProperty.Set)
-                        properties.Muted = state.Muted;
-
-                    if (!properties.VideoProperty.Set)
-                        properties.Video = state.Video;
-                }
-            }
-
-            client.Send(GatewayOpcode.VoiceStateUpdate, properties);
+            client.Send(GatewayOpcode.VoiceStateUpdate, properties.Fill(client));
         }
 
 
@@ -78,6 +22,13 @@ namespace Discord.Gateway
         {
             if (!properties.ChannelProperty.Set || !properties.ChannelId.HasValue)
                 throw new ArgumentNullException("ChannelId can not be null");
+
+            properties.Fill(client);
+
+            ulong guildId = properties.GuildId ?? 0;
+
+            if (client.VoiceSessions.TryGetValue(guildId, out var oldSession))
+                oldSession.Disconnect();
 
             CancellationTokenSource source = new CancellationTokenSource();
             TaskCompletionSource<DiscordVoiceSession> task = new TaskCompletionSource<DiscordVoiceSession>();
@@ -97,27 +48,17 @@ namespace Discord.Gateway
 
             void stateHandler(DiscordSocketClient c, DiscordVoiceState state)
             {
-                if (state.UserId == c.User.Id && state.Channel != null && state.Channel.Id == properties.ChannelId.Value)
+                if (state.Channel != null && state.Channel.Id == properties.ChannelId.Value)
                 {
-                    client.OnConnectionVoiceState -= stateHandler;
+                    client.OnSessionVoiceState -= stateHandler;
 
-                    ulong guildId = properties.GuildId ?? 0;
-
-                    if (client.VoiceSessions.TryGetValue(guildId, out DiscordVoiceSession oldSession))
-                    {
-                        source.Cancel();
-                        task.SetResult(client.VoiceSessions[guildId] = new DiscordVoiceSession(oldSession));
-                    }
-                    else
-                    {
-                        DiscordVoiceSession session = client.VoiceSessions[guildId] = new DiscordVoiceSession(client, properties.GuildId, properties.ChannelId.Value, state.SessionId);
-                        session.OnDisconnected += (s, args) => client.VoiceSessions.Remove(guildId);
-                        session.OnServerUpdated += serverHandler;
-                    }
+                    DiscordVoiceSession session = client.VoiceSessions[guildId] = new DiscordVoiceSession(client, properties.GuildId, properties.ChannelId.Value, state.SessionId);
+                    session.OnDisconnected += (s, args) => client.VoiceSessions.Remove(guildId);
+                    session.OnServerUpdated += serverHandler;
                 }
             }
 
-            client.OnConnectionVoiceState += stateHandler;
+            client.OnSessionVoiceState += stateHandler;
 
             client.ChangeVoiceState(properties);
 
@@ -125,9 +66,10 @@ namespace Discord.Gateway
             {
                 Task.Run(async () =>
                 {
-                     await Task.Delay(client.Config.VoiceChannelConnectTimeout, source.Token);
-                     
-                     task.SetException(new TimeoutException("Gateway did not respond with a server"));
+                    await Task.Delay(client.Config.VoiceChannelConnectTimeout, source.Token);
+
+                    if (!source.IsCancellationRequested)
+                        task.SetException(new TimeoutException("Gateway did not respond with a server"));
                 });
             }
 

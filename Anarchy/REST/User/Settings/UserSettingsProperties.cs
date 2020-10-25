@@ -20,7 +20,7 @@ namespace Discord
         }
 
 
-        public bool ShouldSerializeTheme()
+        public bool ShouldSerialize_theme()
         {
             return ThemeProperty.Set;
         }
@@ -80,7 +80,7 @@ namespace Discord
         }
 
 
-        public bool ShouldSerialize_locale()
+        public bool ShouldSerializeLanguage()
         {
             return LocaleProperty.Set;
         }

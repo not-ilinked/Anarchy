@@ -14,10 +14,15 @@ namespace MusicBot
             {
                 if (Client.GetVoiceStates(Message.Author.User.Id).GuildVoiceStates.TryGetValue(Message.Guild.Id, out DiscordVoiceState state) && state.Channel != null)
                 {
-                    var session = Client.JoinVoiceChannel(new VoiceStateProperties() { ChannelId = state.Channel.Id });
-                    session.ReceivePackets = false;
-                    session.OnConnected += Session_OnConnected;
-                    session.Connect();
+                    if (Program.Players.TryGetValue(Message.Guild.Id, out MusicPlayer player) && player.Session.State > MediaSessionState.Dead)
+                        player.Session.SetChannel(state.Channel.Id);
+                    else
+                    {
+                        var session = Client.JoinVoiceChannel(new VoiceStateProperties() { ChannelId = state.Channel.Id });
+                        session.ReceivePackets = false;
+                        session.OnConnected += Session_OnConnected;
+                        session.Connect();
+                    }                
                 }
                 else
                     Message.Channel.SendMessage("You must be connected to a voice channel to use this command");

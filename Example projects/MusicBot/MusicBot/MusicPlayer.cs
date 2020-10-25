@@ -31,7 +31,7 @@ namespace MusicBot
         {
             while (true)
             {
-                if (Session.State == MediaSessionState.Connected && Tracks.Count > 0)
+                if (Session.State == MediaSessionState.Authenticated && Tracks.Count > 0)
                 {
                     MusicTrack currentTrack = Tracks[0];
 

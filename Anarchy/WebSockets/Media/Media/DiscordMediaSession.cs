@@ -2,7 +2,7 @@
 using Discord.WebSockets;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
@@ -16,25 +16,24 @@ namespace Discord.Media
         public delegate void UpdateHandler(DiscordMediaSession session, DiscordMediaServer server);
         public event UpdateHandler OnServerUpdated;
 
-        internal DiscordWebSocket<DiscordMediaOpcode> WebSocket { get; private set; }
+        internal MediaWebSocket WebSocket { get; private set; }
         public DiscordSocketClient Client { get; private set; }
 
         private IPEndPoint _serverEndpoint;
         private IPEndPoint _localEndpoint;
-
         private List<KeyValuePair<DiscordMediaOpcode, object>> _heldBackMessages;
 
         internal UdpClient UdpClient { get; set; }
         internal DiscordSSRC SSRC { get; set; }
         internal byte[] SecretKey { get; private set; }
-        public string SessionId { get; private set; }
+        internal string SessionId { get; private set; }
         internal static readonly Dictionary<string, MediaCodec> SupportedCodecs = new Dictionary<string, MediaCodec>()
         {
             { "opus", new MediaCodec() { Name = "opus", Type = CodecType.Audio, PayloadType = 120, Priority = 1000 } },
             { "H264", new VideoMediaCodec() { Name = "H264", Type = CodecType.Video, PayloadType = 101, Priority = 1000, RtxPayloadType = 102 } }
         };
 
-        public DiscordMediaServer Server { get; internal set; }
+        public DiscordMediaServer CurrentServer { get; internal set; }
         public bool ReceivePackets { get; set; } = true;
 
         internal ulong? GuildId { get; private set; }
@@ -55,7 +54,14 @@ namespace Discord.Media
             get { return new MinimalTextChannel(ChannelId).SetClient(Client); }
         }
 
-        public MediaSessionState State { get; protected set; }
+        private MediaSessionState _state;
+        public MediaSessionState State
+        {
+            get { return _state; }
+            protected set { _state = value; Log($"State change: {value}"); }
+        }
+
+        internal object _fileLock = new object();
 
         internal DiscordMediaSession(DiscordSocketClient client, ulong? guildId, ulong channelId, string sessionId)
         {
@@ -71,90 +77,102 @@ namespace Discord.Media
         // There's a chance that the client will miss events. A low one, but quite possible
         internal DiscordMediaSession(DiscordMediaSession other) : this(other.Client, other.GuildId, other.ChannelId, other.SessionId)
         {
-            other.State = MediaSessionState.NotConnected;
+            WebSocket = other.WebSocket;
+            WebSocket.OnClosed += OnClosed;
+            WebSocket.OnMessageReceived += OnMessageReceived;
+            other.State = MediaSessionState.Dead;
             other.OnServerUpdated = null;
             other.WebSocket.OnMessageReceived -= OnMessageReceived;
             other.WebSocket.OnClosed -= OnClosed;
-
-            WebSocket = other.WebSocket;
             _serverEndpoint = other._serverEndpoint;
             _localEndpoint = other._localEndpoint;
             UdpClient = other.UdpClient;
             SSRC = other.SSRC;
             SecretKey = other.SecretKey;
             SessionId = other.SessionId;
-            Server = other.Server;
+            CurrentServer = other.CurrentServer;
             ReceivePackets = other.ReceivePackets;
-            State = MediaSessionState.Connected;
+            State = other.State;   
         }
 
 
         public void Connect()
         {
-            if (State == MediaSessionState.Connected)
+            Log($"Connecting to {CurrentServer.Endpoint}");
+
+            if (State == MediaSessionState.Authenticated)
                 Task.Run(() => HandleConnect());
             else
             {
-                WebSocket = new DiscordWebSocket<DiscordMediaOpcode>("wss://" + Server.Endpoint + "?v=4");
-                WebSocket.OnClosed += OnClosed;
-                WebSocket.OnMessageReceived += OnMessageReceived;
-
                 State = MediaSessionState.Connecting;
 
+                WebSocket?.Close((ushort)UnorthodoxCloseCode.KeepQuiet, "Killing old websocket");
+
+                WebSocket = new MediaWebSocket("wss://" + CurrentServer.Endpoint + "?v=4", this);
+                WebSocket.OnClosed += OnClosed;
+                WebSocket.OnMessageReceived += OnMessageReceived;
                 WebSocket.SetProxy(Client.Proxy);
                 WebSocket.Connect();
             }
         }
 
 
-        internal void SafeSend<T>(DiscordMediaOpcode op, T data)
+        internal void Send<T>(DiscordMediaOpcode op, T data)
         {
-            if (State == MediaSessionState.Connecting)
-                _heldBackMessages.Add(new KeyValuePair<DiscordMediaOpcode, object>(op, data));
-            else if (State == MediaSessionState.Connected)
+            if (State == MediaSessionState.Authenticated)
                 WebSocket.Send(op, data);
             else
-                throw new InvalidOperationException("Not connected");
+                throw new InvalidOperationException("Connection state must be Authenticated");
         }
 
 
         internal void UpdateServer(DiscordMediaServer server)
         {
-            Server = server;
+            CurrentServer = server;
+            Log($"Set server to {server.Endpoint}");
+            State = MediaSessionState.StandBy;
 
-            if (server.Endpoint == null)
-                State = MediaSessionState.Connecting;
-            else if (WebSocket != null)
-                Disconnect((ushort)UnorthodoxCloseCode.SwitchingServer, "Changing server");
+            if (server.Endpoint != null && WebSocket != null)
+            {
+                Log("Changing server");
+                Task.Run(() => Connect());
+            }
 
             if (OnServerUpdated != null)
                 Task.Run(() => OnServerUpdated.Invoke(this, server));
         }
 
 
-        private void OnClosed(object sender, CloseEventArgs args)
+        protected bool JustifyThread(int expectedId)
         {
-            if (State == MediaSessionState.Connected)
-                UdpClient.Close();
-
-            bool lostConnection = args.Code == 1006;
-
-            if (lostConnection)
-                Thread.Sleep(200);
-
-            if (lostConnection || args.Code == (ushort)UnorthodoxCloseCode.SwitchingServer)
-                Task.Run(() => Connect());
-            else if (args.Code != (ushort)UnorthodoxCloseCode.KeepQuiet)
-                Task.Run(() => HandleDisconnect(new DiscordMediaCloseEventArgs((DiscordMediaCloseCode)args.Code, args.Reason)));
+            return WebSocket != null && State > MediaSessionState.Dead && WebSocket.Id == expectedId;
         }
 
+
+        private void OnClosed(object sender, CloseEventArgs args)
+        {
+            Log($"Closed. Code: {args.Code}, reason: {args.Reason}");
+
+            State = MediaSessionState.StandBy;
+
+            if (args.Code == 1006)
+                Thread.Sleep(200);
+
+            // so far i've only seen code 1000 being used because of an invalid session but still gonna reconnect to be safe
+            var code = (DiscordMediaCloseCode)args.Code;
+            if (args.Code == 1000 || args.Code == 1006 || code == DiscordMediaCloseCode.SessionTimeout || code == DiscordMediaCloseCode.ServerCrashed)
+                Task.Run(() => Connect());
+            else
+            {
+                if (args.Code != (ushort)UnorthodoxCloseCode.KeepQuiet)
+                    Task.Run(() => HandleDisconnect(new DiscordMediaCloseEventArgs(code, args.Reason)));
+            }
+        }
 
         private void OnMessageReceived(object sender, DiscordWebSocketMessage<DiscordMediaOpcode> message)
         {
             try
             {
-                Console.WriteLine(message.Opcode);
-
                 switch (message.Opcode)
                 {
                     case DiscordMediaOpcode.Ready:
@@ -170,7 +188,6 @@ namespace Discord.Media
                         Task.Run(() => StartListener());
 
                         Holepunch();
-
                         break;
                     case DiscordMediaOpcode.SessionDescription:
                         var description = message.Data.ToObject<DiscordSessionDescription>();
@@ -182,21 +199,11 @@ namespace Discord.Media
                             else
                             {
                                 SecretKey = description.SecretKey;
+                                State = MediaSessionState.Authenticated;
 
-                                State = MediaSessionState.Connected;
+                                Log("Authenticated");
 
                                 Task.Run(() => HandleConnect());
-
-                                if (_heldBackMessages.Count > 0)
-                                {
-                                    Task.Run(() =>
-                                    {
-                                        foreach (var msg in _heldBackMessages)
-                                            WebSocket.Send(msg.Key, msg.Value);
-
-                                        _heldBackMessages.Clear();
-                                    });
-                                }
                             }
                         }
                         break;
@@ -211,23 +218,11 @@ namespace Discord.Media
                             ServerId = GetServerId(),
                             UserId = Client.User.Id,
                             SessionId = Client.SessionId,
-                            Token = Server.Token,
+                            Token = CurrentServer.Token,
                             Video = true
                         });
 
-                        Task.Run(() =>
-                        {
-                            try
-                            {
-                                while (true)
-                                {
-                                    WebSocket.Send(DiscordMediaOpcode.Heartbeat, DateTimeOffset.UtcNow.ToUnixTimeMilliseconds());
-                                    Thread.Sleep(message.Data.Value<int>("heartbeat_interval"));
-                                }
-                            }
-                            catch { }
-                        });
-
+                        WebSocket.StartHeartbeaterAsync(message.Data.Value<int>("heartbeat_interval"));
                         break;
                     default:
                         HandleMessage(message);
@@ -246,14 +241,14 @@ namespace Discord.Media
             Disconnect(DiscordMediaCloseCode.ClosedByClient, "Closed by client");
         }
 
-        internal void Disconnect(DiscordMediaCloseCode error, string reason) 
+        internal void Disconnect(DiscordMediaCloseCode error, string reason)
         {
             Disconnect((ushort)error, reason);
         }
 
         internal void Disconnect(ushort error, string reason)
         {
-            if (WebSocket != null && State > MediaSessionState.NotConnected)
+            if (WebSocket != null && State > MediaSessionState.StandBy)
                 WebSocket.Close(error, reason);
         }
 
@@ -262,7 +257,7 @@ namespace Discord.Media
         {
             SSRC = new DiscordSSRC() { Audio = audioSsrc, Video = audioSsrc + 1, Rtx = audioSsrc + 2 };
 
-            SafeSend(DiscordMediaOpcode.SSRCUpdate, SSRC);
+            Send(DiscordMediaOpcode.SSRCUpdate, SSRC);
         }
 
 
@@ -298,6 +293,8 @@ namespace Discord.Media
 
         private void Holepunch()
         {
+            Log("Holepunching");
+
             byte[] payload = new byte[74];
             payload[0] = 1 >> 8;
             payload[1] = 1 >> 0;
@@ -312,30 +309,16 @@ namespace Discord.Media
         }
 
 
-        private void SelectProtocol()
-        {
-            WebSocket.Send(DiscordMediaOpcode.SelectProtocol, new MediaProtocolSelection()
-            {
-                Protocol = "udp",
-                ProtocolData = new MediaProtocolData()
-                {
-                    Host = _localEndpoint.Address.ToString(),
-                    Port = _localEndpoint.Port,
-                    EncryptionMode = Sodium.EncryptionMode
-                },
-                RtcConnectionId = Guid.NewGuid().ToString(),
-                Codecs = SupportedCodecs.Values.ToList()
-            });
-        }
-
-
         private void StartListener()
         {
+            int id = WebSocket.Id;
+            var client = UdpClient;
+
             try
             {
-                while (true)
+                while (JustifyThread(id))
                 {
-                    byte[] received = UdpClient.Receive(ref _localEndpoint);
+                    byte[] received = client.Receive(ref _localEndpoint);
 
                     if (BitConverter.ToInt16(new byte[] { received[1], received[0] }, 0) == 2)
                     {
@@ -350,9 +333,9 @@ namespace Discord.Media
 
                         _localEndpoint = new IPEndPoint(IPAddress.Parse(ip), BitConverter.ToUInt16(new byte[] { received[received.Length - 1], received[received.Length - 2] }, 0));
 
-                        SelectProtocol();
+                        WebSocket.SelectProtocol(_localEndpoint);
                     }
-                    else if (ReceivePackets && received[0] == 0x80 || received[0] == 0x90)
+                    else if (received[0] == 0x80 || received[0] == 0x90)
                     {
                         while (SecretKey == null) { Thread.Sleep(100); }
 
@@ -366,13 +349,19 @@ namespace Discord.Media
                     }
                 }
             }
-            catch { }
+            catch (Exception ex) 
+            {
+                Log("Listener err: " + ex);
+            }
+
+            client?.Close();
+
+            Log("Killed listener for " + id);
         }
 
         public void Dispose()
         {
-            if (State > MediaSessionState.NotConnected)
-                Disconnect();
+            Disconnect();
 
             if (WebSocket != null)
             {
@@ -390,6 +379,15 @@ namespace Discord.Media
             _heldBackMessages = null;
 
             SecretKey = null;
+        }
+
+
+        internal void Log(string msg)
+        {
+            lock (_fileLock)
+            {
+                File.AppendAllText($"Logs-{Client.User.Username}.txt", $"[{DateTime.Now}] {(WebSocket == null ? "" : $"[{WebSocket.Id}]")} {msg}\n");
+            }
         }
     }
 }

@@ -86,6 +86,7 @@
     <Compile Include="WebSockets\Media\Livestreaming\DiscordGoLiveError.cs" />
     <Compile Include="WebSockets\Media\Livestreaming\DiscordGoLiveException.cs" />
     <Compile Include="WebSockets\Media\Livestreaming\StreamKey.cs" />
+    <Compile Include="WebSockets\Media\Media\MediaWebSocket.cs" />
     <Compile Include="WebSockets\Media\Media\UnorthodoxCloseCode.cs" />
     <Compile Include="WebSockets\Gateway\Session\Auth\Resume.cs" />
     <Compile Include="WebSockets\Gateway\Channel\Private\ChannelRecipientEventArgs.cs" />
