@@ -1,0 +1,12 @@
+C:\Users\Ryzen\source\repos\Anarchy\Anarchy\obj\Debug\net5.0\Anarchy.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Ryzen\source\repos\Anarchy\Anarchy\obj\Debug\net5.0\Anarchy.AssemblyInfoInputs.cache
+C:\Users\Ryzen\source\repos\Anarchy\Anarchy\obj\Debug\net5.0\Anarchy.AssemblyInfo.cs
+C:\Users\Ryzen\source\repos\Anarchy\Anarchy\obj\Debug\net5.0\Anarchy.csproj.CoreCompileInputs.cache
+C:\Users\Ryzen\source\repos\Anarchy\Anarchy\bin\Debug\net5.0\Anarchy.deps.json
+C:\Users\Ryzen\source\repos\Anarchy\Anarchy\bin\Debug\net5.0\Anarchy.dll
+C:\Users\Ryzen\source\repos\Anarchy\Anarchy\bin\Debug\net5.0\ref\Anarchy.dll
+C:\Users\Ryzen\source\repos\Anarchy\Anarchy\bin\Debug\net5.0\Anarchy.pdb
+C:\Users\Ryzen\source\repos\Anarchy\Anarchy\obj\Debug\net5.0\Anarchy.dll
+C:\Users\Ryzen\source\repos\Anarchy\Anarchy\obj\Debug\net5.0\ref\Anarchy.dll
+C:\Users\Ryzen\source\repos\Anarchy\Anarchy\obj\Debug\net5.0\Anarchy.pdb
+C:\Users\Ryzen\source\repos\Anarchy\Anarchy\obj\Debug\net5.0\Anarchy.csprojAssemblyReference.cache

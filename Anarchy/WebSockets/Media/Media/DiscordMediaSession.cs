@@ -8,7 +8,6 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 using WebSocketSharp;
-
 namespace Discord.Media
 {
     public abstract class DiscordMediaSession : IDisposable
