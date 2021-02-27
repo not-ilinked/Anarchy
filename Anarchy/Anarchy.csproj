@@ -2,17 +2,21 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
+	<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="Leaf.xNet" Version="5.2.10" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="System.Drawing.Common" Version="5.0.0" />
-    <PackageReference Include="websocket-sharp-with-proxy-support" Version="1.9.1" />
+    <PackageReference Include="System.Drawing.Common" Version="5.0.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="websocket-sharp">
+      <HintPath>..\..\..\..\Documents\GitHub\websocket-sharp\websocket-sharp\bin\Debug\net5.0\linux-x64\publish\websocket-sharp.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>
