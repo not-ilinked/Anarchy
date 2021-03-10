@@ -229,9 +229,9 @@ namespace Discord
         }
 
 
-        public static async Task<IReadOnlyList<DiscordUser>> GetMessageReactionsAsync(this DiscordClient client, ulong channelId, ulong messageId, string reaction, uint limit = 25, ulong afterId = 0)
+        public static async Task<IReadOnlyList<DiscordUser>> GetMessageReactionsAsync(this DiscordClient client, ulong channelId, ulong messageId, ReactionQuery query)
         {
-            return (await client.HttpClient.GetAsync($"/channels/{channelId}/messages/{messageId}/reactions/{reaction}?limit={limit}&after={afterId}"))
+            return (await client.HttpClient.GetAsync($"/channels/{channelId}/messages/{messageId}/reactions/{query.ReactionName}{(query.ReactionId.HasValue ? ":" + query.ReactionId.Value : "")}?limit={query.Limit}&after={query.AfterId}"))
                                 .Deserialize<IReadOnlyList<DiscordUser>>().SetClientsInList(client);
         }
 
@@ -243,15 +243,15 @@ namespace Discord
         /// <param name="reaction">The reaction</param>
         /// <param name="limit">Max amount of reactions to receive</param>
         /// <param name="afterId">Reaction ID to offset from</param>
-        public static IReadOnlyList<DiscordUser> GetMessageReactions(this DiscordClient client, ulong channelId, ulong messageId, string reaction, uint limit = 25, ulong afterId = 0)
+        public static IReadOnlyList<DiscordUser> GetMessageReactions(this DiscordClient client, ulong channelId, ulong messageId, ReactionQuery query)
         {
-            return client.GetMessageReactionsAsync(channelId, messageId, reaction, limit, afterId).GetAwaiter().GetResult();
+            return client.GetMessageReactionsAsync(channelId, messageId, query).GetAwaiter().GetResult();
         }
 
 
-        public static async Task AddMessageReactionAsync(this DiscordClient client, ulong channelId, ulong messageId, string reaction)
+        public static async Task AddMessageReactionAsync(this DiscordClient client, ulong channelId, ulong messageId, string reactionName, ulong? reactionId = null)
         {
-            await client.HttpClient.PutAsync($"/channels/{channelId}/messages/{messageId}/reactions/{reaction}/@me");
+            await client.HttpClient.PutAsync($"/channels/{channelId}/messages/{messageId}/reactions/{reactionName}{(reactionId.HasValue ? ":" + reactionId.Value : "")}/@me");
         }
 
         /// <summary>
@@ -260,37 +260,37 @@ namespace Discord
         /// <param name="channelId">ID of the channel</param>
         /// <param name="messageId">ID of the message</param>
         /// <param name="reaction">The reaction to add</param>
-        public static void AddMessageReaction(this DiscordClient client, ulong channelId, ulong messageId, string reaction)
+        public static void AddMessageReaction(this DiscordClient client, ulong channelId, ulong messageId, string reactionName, ulong? reactionId = null)
         {
-            client.AddMessageReactionAsync(channelId, messageId, reaction).GetAwaiter().GetResult();
+            client.AddMessageReactionAsync(channelId, messageId, reactionName, reactionId).GetAwaiter().GetResult();
         }
 
 
-        private static async Task removeReactionAsync(this DiscordClient client, ulong channelId, ulong messageId, string reaction, string user)
+        private static async Task removeReactionAsync(this DiscordClient client, ulong channelId, ulong messageId, string user, string reactionName, ulong? reactionId = null)
         {
-            await client.HttpClient.DeleteAsync($"/channels/{channelId}/messages/{messageId}/reactions/{reaction}/{user}");
+            await client.HttpClient.DeleteAsync($"/channels/{channelId}/messages/{messageId}/reactions/{reactionName}{(reactionId.HasValue ? ":" + reactionId.Value : "")}/{user}");
         }
 
 
-        public static async Task RemoveMessageReactionAsync(this DiscordClient client, ulong channelId, ulong messageId, string reaction)
+        public static async Task RemoveMessageReactionAsync(this DiscordClient client, ulong channelId, ulong messageId, string reactionName, ulong? reactionId = null)
         {
-            await client.removeReactionAsync(channelId, messageId, reaction, "@me");
+            await client.removeReactionAsync(channelId, messageId, "@me", reactionName, reactionId);
         }
 
-        public static void RemoveMessageReaction(this DiscordClient client, ulong channelId, ulong messageId, string reaction)
+        public static void RemoveMessageReaction(this DiscordClient client, ulong channelId, ulong messageId, string reactionName, ulong? reactionId)
         {
-            client.RemoveMessageReactionAsync(channelId, messageId, reaction).GetAwaiter().GetResult();
+            client.RemoveMessageReactionAsync(channelId, messageId, reactionName, reactionId).GetAwaiter().GetResult();
         }
 
 
-        public static async Task RemoveMessageReactionAsync(this DiscordClient client, ulong channelId, ulong messageId, ulong userId, string reaction)
+        public static async Task RemoveMessageReactionAsync(this DiscordClient client, ulong channelId, ulong messageId, ulong userId, string reactionName, ulong? reactionId = null)
         {
-            await client.removeReactionAsync(channelId, messageId, reaction, userId.ToString());
+            await client.removeReactionAsync(channelId, messageId, userId.ToString(), reactionName, reactionId);
         }
 
-        public static void RemoveMessageReaction(this DiscordClient client, ulong channelId, ulong messageId, ulong userId, string reaction)
+        public static void RemoveMessageReaction(this DiscordClient client, ulong channelId, ulong messageId, ulong userId, string reactionName, ulong? reactionId = null)
         {
-            client.RemoveMessageReactionAsync(channelId, messageId, userId, reaction).GetAwaiter().GetResult();
+            client.RemoveMessageReactionAsync(channelId, messageId, userId, reactionName, reactionId).GetAwaiter().GetResult();
         }
 
 

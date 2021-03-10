@@ -1,3 +1,16 @@
+# 0.8.1.0
+### Additions
+- Added RestConnectionRetries to DiscordConfig, which allows you to set the amount of times the HTTP client should retry.
+- Added member screening functionality. client.GetGuildVerificationForm() and client.SubmitGuildVerificationForm() can be used to interact with them.
+- Added proper error handling for media binaries.
+
+### Improvements
+- Fixed v8 being unusable with socket clients.
+- Added the 'InviteGuild' object which can be found in GuildInvites.
+- Made payment and gift functionality return more accurate data.
+
+
+
 # 0.8.0.1
 ### Additions
 - Added .SetChannel() to DiscordVoiceSession to make it easier to change channel without reconnecting.

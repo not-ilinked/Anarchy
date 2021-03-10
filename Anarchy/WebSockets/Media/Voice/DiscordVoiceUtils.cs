@@ -9,6 +9,9 @@ namespace Discord.Media
     {
         public static Stream GetAudioStream(string path)
         {
+            if (!File.Exists("ffmpeg.exe"))
+                throw new FileNotFoundException("ffmpeg.exe was not found");
+
             var process = Process.Start(new ProcessStartInfo
             {
                 FileName = "ffmpeg.exe",

@@ -5,11 +5,11 @@ namespace Discord
     public class BaseGuild : MinimalGuild
     {
         [JsonProperty("name")]
-        public string Name { get; protected set; }
+        public string Name { get; private set; }
 
 
         [JsonProperty("icon")]
-        protected string _iconHash;
+        private string _iconHash;
 
 
         public DiscordCDNImage Icon
@@ -21,6 +21,13 @@ namespace Discord
                 else
                     return new DiscordCDNImage(CDNEndpoints.GuildIcon, Id, _iconHash); 
             }
+        }
+
+
+        protected void Update(BaseGuild guild)
+        {
+            Name = guild.Name;
+            _iconHash = guild._iconHash;
         }
 
 

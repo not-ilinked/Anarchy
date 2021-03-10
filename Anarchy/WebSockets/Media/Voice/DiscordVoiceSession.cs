@@ -4,6 +4,7 @@ using Discord.WebSockets;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -63,8 +64,6 @@ namespace Discord.Media
                 ulong old = ChannelId;
                 base.ChannelId = value;
 
-                Log($"Changed channel from {old} to {base.ChannelId}");
-
                 if (OnChannelChanged != null)
                     Task.Run(() => OnChannelChanged?.Invoke(this, new ChannelChangedEventArgs(old, value)));
             }
@@ -73,10 +72,18 @@ namespace Discord.Media
         private ConcurrentDictionary<uint, ulong> _ssrcToUserDictionary;
         private ConcurrentDictionary<ulong, IncomingVoiceStream> _receivers;
         private OpusDecoder _decoder;
+        private bool _sodiumExists;
 
         private void Initialize()
         {
-            _decoder = new OpusDecoder();
+            try
+            {
+                _decoder = new OpusDecoder();
+            }
+            catch (DllNotFoundException) { }
+
+            _sodiumExists =  File.Exists("libsodium.dll");
+
             _ssrcToUserDictionary = new ConcurrentDictionary<uint, ulong>();
             _receivers = new ConcurrentDictionary<ulong, IncomingVoiceStream>();
             VoiceLock = new object();
@@ -172,8 +179,6 @@ namespace Discord.Media
 
         public void SetChannel(ulong channelId)
         {
-            Log($"Switching channel from {Channel.Id} to {channelId}");
-
             Client.ChangeVoiceState(new VoiceStateProperties() { GuildId = GuildId, ChannelId = channelId });
         }
 
@@ -190,7 +195,7 @@ namespace Discord.Media
         protected override void HandlePacket(RTPPacketHeader header, byte[] payload)
         {
             // for some reason discord sends us voice packets before we get the user's ID. i don't think this impacts the audio tho; it seems like these packets don't have any voice data
-            if (header.Type == SupportedCodecs["opus"].PayloadType && _ssrcToUserDictionary.TryGetValue(header.SSRC, out ulong userId))
+            if (_decoder != null && _sodiumExists && header.Type == SupportedCodecs["opus"].PayloadType && _ssrcToUserDictionary.TryGetValue(header.SSRC, out ulong userId))
             {
                 if (!_receivers.TryGetValue(userId, out IncomingVoiceStream receiver))
                 {
@@ -285,8 +290,6 @@ namespace Discord.Media
 
         internal void Kill()
         {
-            Log("Killing");
-
             State = MediaSessionState.Dead;
             Task.Run(() => OnDisconnected?.Invoke(this, new DiscordMediaCloseEventArgs(DiscordMediaCloseCode.Disconnected, "Disconnected.")));
         }

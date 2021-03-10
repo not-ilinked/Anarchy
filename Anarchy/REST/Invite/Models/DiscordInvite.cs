@@ -36,7 +36,7 @@ namespace Discord
 
 
         [JsonProperty("guild")]
-        public MinimalGuild Guild { get; private set; }
+        public InviteGuild Guild { get; private set; }
 
 
         public InviteType Type

@@ -59,6 +59,7 @@ namespace Discord
                     json = JsonConvert.SerializeObject(payload);
             }
 
+            uint retriesLeft = _discordClient.Config.RestConnectionRetries;
             bool hasData = method == Leaf.xNet.HttpMethod.POST || method == Leaf.xNet.HttpMethod.PATCH || method == Leaf.xNet.HttpMethod.PUT || method == Leaf.xNet.HttpMethod.DELETE;
 
             while (true)
@@ -106,6 +107,13 @@ namespace Discord
 
                     CheckResponse(resp);
                     return resp;
+                }
+                catch (Exception ex) when (ex is HttpException || ex is HttpRequestException || ex is TaskCanceledException)
+                {
+                    if (retriesLeft == 0)
+                        throw new DiscordConnectionException();
+
+                    retriesLeft--;
                 }
                 catch (RateLimitException ex)
                 {

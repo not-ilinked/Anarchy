@@ -28,7 +28,7 @@ namespace Discord
 
 
         [JsonProperty("status")]
-        public int Status { get; private set; } // not sure what this is lol
+        public DiscordPaymentStatus Status { get; private set; }
 
 
         [JsonProperty("description")]
@@ -36,7 +36,7 @@ namespace Discord
 
 
         [JsonProperty("flags")]
-        public int Flags { get; private set; } // not sure what this is either
+        public DiscordPaymentFlags Flags { get; private set; }
 
 
         [JsonProperty("payment_source")]

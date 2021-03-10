@@ -82,13 +82,13 @@ namespace Discord
         }
 
 
-        public static async Task<DiscordGift> GetGiftAsync(this DiscordClient client, string code)
+        public static async Task<RedeemableDiscordGift> GetGiftAsync(this DiscordClient client, string code)
         {
             return (await client.HttpClient.GetAsync($"/entitlements/gift-codes/{code}?with_application=false&with_subscription_plan=true"))
-                                .Deserialize<DiscordGift>();
+                                .Deserialize<RedeemableDiscordGift>();
         }
 
-        public static DiscordGift GetGift(this DiscordClient client, string code)
+        public static RedeemableDiscordGift GetGift(this DiscordClient client, string code)
         {
             return client.GetGiftAsync(code).GetAwaiter().GetResult();
         }

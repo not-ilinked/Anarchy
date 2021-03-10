@@ -13,18 +13,23 @@ namespace Discord
         public string Username { get; set; }
         public string Password { get; set; }
 
-        public void Parse(string proxy)
+        public static AnarchyProxy Parse(AnarchyProxyType type, string proxy)
         {
             string[] split = proxy.Split(':');
 
-            Host = split[0];
-            Port = int.Parse(split[1]);
+            var a = new AnarchyProxy()
+            {
+                Host = split[0],
+                Port = int.Parse(split[1])
+            };
 
             if (split.Length == 4)
             {
-                Username = split[2];
-                Password = split[3];
+                a.Username = split[2];
+                a.Password = split[3];
             }
+
+            return a;
         }
 
         public ProxyClient CreateProxyClient()

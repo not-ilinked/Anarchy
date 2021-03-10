@@ -23,8 +23,6 @@ namespace Discord.Media
 
         public void SelectProtocol(IPEndPoint localEndpoint)
         {
-            _parent.Log("Selecting protocol");
-
             Send(DiscordMediaOpcode.SelectProtocol, new MediaProtocolSelection()
             {
                 Protocol = "udp",

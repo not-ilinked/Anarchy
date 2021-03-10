@@ -13,6 +13,11 @@ namespace Discord.Media
 
         internal DiscordVoiceStream(DiscordVoiceSession client, int bitrate, AudioApplication application = AudioApplication.Mixed)
         {
+            if (!File.Exists("opus.dll"))
+                throw new FileNotFoundException("opus.dll was not found");
+            else if (!File.Exists("libsodium.dll"))
+                throw new FileNotFoundException("libsodium.dll was not found");
+
             Session = client;
             _encoder = new OpusEncoder(bitrate, application, 5);
             _nextTick = -1;

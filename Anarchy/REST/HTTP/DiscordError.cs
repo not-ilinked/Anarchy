@@ -2,7 +2,7 @@
 {
     public enum DiscordError
     {
-        GeneralError,
+        MessageOnlyError,
         UnknownAccount = 10001,
         UnknownApp,
         UnknownChannel,
@@ -20,7 +20,7 @@
         UnknownWebhook,
         UnknownSession = 10020,
         UnknownGiftCode = 10038,
-        UnknownGuildSubscriptionCooldown = 10050,
+        UnknownGuildSubscription = 10050,
         UserOnly = 20001,
         BotOnly,
         MaximumGuilds = 30001,

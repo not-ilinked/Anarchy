@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 
 namespace Discord
 {
@@ -10,7 +9,7 @@ namespace Discord
 
         private DiscordClient _client;
         [JsonIgnore]
-        internal DiscordClient Client
+        public DiscordClient Client
         {
             get { return _client; }
             set

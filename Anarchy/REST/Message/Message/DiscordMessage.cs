@@ -207,9 +207,9 @@ namespace Discord
         }
 
 
-        public async Task<IReadOnlyList<DiscordUser>> GetReactionsAsync(string reaction, uint limit = 25, ulong afterId = 0)
+        public async Task<IReadOnlyList<DiscordUser>> GetReactionsAsync(ReactionQuery query)
         {
-            return await Client.GetMessageReactionsAsync(Channel.Id, Id, reaction, limit, afterId);
+            return await Client.GetMessageReactionsAsync(Channel.Id, Id, query);
         }
 
         /// <summary>
@@ -218,45 +218,45 @@ namespace Discord
         /// <param name="reaction">The reaction</param>
         /// <param name="limit">Max amount of reactions to receive</param>
         /// <param name="afterId">The reaction ID to offset from</param>
-        public IReadOnlyList<DiscordUser> GetReactions(string reaction, uint limit = 25, ulong afterId = 0)
+        public IReadOnlyList<DiscordUser> GetReactions(ReactionQuery query)
         {
-            return GetReactionsAsync(reaction, limit, afterId).GetAwaiter().GetResult();
+            return GetReactionsAsync(query).GetAwaiter().GetResult();
         }
 
 
-        public async Task AddReactionAsync(string reaction)
+        public async Task AddReactionAsync(string reactionName, ulong? reactionId = null)
         {
-            await Client.AddMessageReactionAsync(Channel.Id, Id, reaction);
+            await Client.AddMessageReactionAsync(Channel.Id, Id, reactionName, reactionId);
         }
 
         /// <summary>
         /// Adds a reaction to the message
         /// </summary>
-        public void AddReaction(string reaction)
+        public void AddReaction(string reactionName, ulong? reactionId = null)
         {
-            AddReactionAsync(reaction).GetAwaiter().GetResult();
+            AddReactionAsync(reactionName, reactionId).GetAwaiter().GetResult();
         }
 
 
-        public async Task RemoveClientReactionAsync(string reaction)
+        public async Task RemoveClientReactionAsync(string reactionName, ulong? reactionId = null)
         {
-            await Client.RemoveMessageReactionAsync(Channel.Id, Id, reaction);
+            await Client.RemoveMessageReactionAsync(Channel.Id, Id, reactionName, reactionId);
         }
 
-        public void RemoveClientReaction(string reaction)
+        public void RemoveClientReaction(string reactionName, ulong? reactionId = null)
         {
-            RemoveClientReactionAsync(reaction).GetAwaiter().GetResult();
+            RemoveClientReactionAsync(reactionName, reactionId).GetAwaiter().GetResult();
         }
 
 
-        public async Task RemoveReactionAsync(ulong userId, string reaction)
+        public async Task RemoveReactionAsync(ulong userId, string reactionName, ulong? reactionId = null)
         {
-            await Client.RemoveMessageReactionAsync(Channel.Id, Id, userId, reaction);
+            await Client.RemoveMessageReactionAsync(Channel.Id, Id, userId, reactionName, reactionId);
         }
 
-        public void RemoveReaction(ulong userId, string reaction)
+        public void RemoveReaction(ulong userId, string reactionName, ulong? reactionId = null)
         {
-            RemoveReactionAsync(userId, reaction).GetAwaiter().GetResult();
+            RemoveReactionAsync(userId, reactionName, reactionId).GetAwaiter().GetResult();
         }
 
 

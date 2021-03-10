@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Discord
 {
-    public class DiscordGuild : BaseGuild, IDisposable
+    public class DiscordGuild : InviteGuild, IDisposable
     {
         public DiscordGuild()
         {
@@ -26,25 +26,6 @@ namespace Discord
                     Emojis.SetClientsInList(Client);
                 }
             };
-        }
-
-
-        [JsonProperty("description")]
-        public string Description { get; protected set; }
-
-
-        [JsonProperty("splash")]
-        private string _splashHash;
-
-        public DiscordCDNImage Splash
-        {
-            get 
-            {
-                if (_splashHash == null)
-                    return null;
-                else
-                    return new DiscordCDNImage(CDNEndpoints.Splash, Id, _splashHash); 
-            }
         }
 
 
@@ -117,24 +98,12 @@ namespace Discord
         public string Region { get; private set; }
 
 
-        [JsonProperty("vanity_url_code")]
-        public string VanityInvite { get; private set; }
-
-
-        [JsonProperty("verification_level")]
-        public GuildVerificationLevel VerificationLevel { get; private set; }
-
-
         [JsonProperty("default_message_notifications")]
         public GuildDefaultNotifications DefaultNotifications { get; private set; }
 
 
         [JsonProperty("premium_tier")]
         public GuildPremiumTier PremiumTier { get; private set; }
-
-
-        [JsonProperty("features")]
-        public IReadOnlyList<string> Features { get; private set; }
 
 
         [JsonProperty("roles")]
@@ -196,22 +165,18 @@ namespace Discord
 
         internal void Update(DiscordGuild guild)
         {
+            base.Update(guild);
+
             Unavailable = guild.Unavailable;
-            Name = guild.Name;
-            _iconHash = guild._iconHash;
-            _splashHash = guild._splashHash;
             _discoverySplashHash = guild._discoverySplashHash;
             Region = guild.Region;
             _roles = guild._roles;
             _emojis = guild._emojis;
-            VerificationLevel = guild.VerificationLevel;
             DefaultNotifications = guild.DefaultNotifications;
             PremiumTier = guild.PremiumTier;
-            Features = guild.Features;
             OwnerId = guild.OwnerId;
             MfaRequired = guild.MfaRequired;
             NitroBoosts = guild.NitroBoosts;
-            VanityInvite = guild.VanityInvite;
             _rulesChannelId = guild._rulesChannelId;
             _updateChannelId = guild._updateChannelId;
             _sysChannelId = guild._sysChannelId;
@@ -298,8 +263,6 @@ namespace Discord
             base.Dispose();
             Description = null;
             Region = null;
-            VanityInvite = null;
-            Features = null;
             _roles = null;
             _emojis = null;
         }

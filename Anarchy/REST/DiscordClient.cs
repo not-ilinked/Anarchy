@@ -35,7 +35,7 @@ namespace Discord
                 {
                     _token = previousToken;
 
-                    if (ex.Code == DiscordError.GeneralError && ex.ErrorMessage == "401: Unauthorized")
+                    if (ex.Code == DiscordError.MessageOnlyError && ex.ErrorMessage == "401: Unauthorized")
                         throw new InvalidTokenException(value);
                     else
                         throw;

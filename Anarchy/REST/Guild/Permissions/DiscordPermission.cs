@@ -3,7 +3,7 @@
 namespace Discord
 {
     [Flags]
-    public enum DiscordPermission
+    public enum DiscordPermission : ulong
     {
         None = 0,
         CreateInstantInvite = 0x00000001,

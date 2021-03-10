@@ -12,12 +12,14 @@ namespace Discord
     {
         private readonly HttpClient _client;
         public string Url { get; private set; }
+        public object[] Particles { get; private set; }
         public IReadOnlyList<DiscordCDNImageFormat> AllowedFormats { get; private set; }
 
         public DiscordCDNImage(CDNEndpoint endpoint, params object[] assets)
         {
             _client = new HttpClient();
             Url = "https://cdn.discordapp.com/" +  string.Format(endpoint.Template, assets);
+            Particles = assets;
             AllowedFormats = endpoint.AllowedFormats;
         }
 

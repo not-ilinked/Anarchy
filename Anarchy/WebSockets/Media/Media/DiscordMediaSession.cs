@@ -54,12 +54,7 @@ namespace Discord.Media
             get { return new MinimalTextChannel(ChannelId).SetClient(Client); }
         }
 
-        private MediaSessionState _state;
-        public MediaSessionState State
-        {
-            get { return _state; }
-            protected set { _state = value; Log($"State change: {value}"); }
-        }
+        public MediaSessionState State { get; protected set; }
 
         internal object _fileLock = new object();
 
@@ -98,8 +93,6 @@ namespace Discord.Media
 
         public void Connect()
         {
-            Log($"Connecting to {CurrentServer.Endpoint}");
-
             if (State == MediaSessionState.Authenticated)
                 Task.Run(() => HandleConnect());
             else
@@ -129,14 +122,10 @@ namespace Discord.Media
         internal void UpdateServer(DiscordMediaServer server)
         {
             CurrentServer = server;
-            Log($"Set server to {server.Endpoint}");
             State = MediaSessionState.StandBy;
 
             if (server.Endpoint != null && WebSocket != null)
-            {
-                Log("Changing server");
                 Task.Run(() => Connect());
-            }
 
             if (OnServerUpdated != null)
                 Task.Run(() => OnServerUpdated.Invoke(this, server));
@@ -151,8 +140,6 @@ namespace Discord.Media
 
         private void OnClosed(object sender, CloseEventArgs args)
         {
-            Log($"Closed. Code: {args.Code}, reason: {args.Reason}");
-
             State = MediaSessionState.StandBy;
 
             if (args.Code == 1006)
@@ -200,8 +187,6 @@ namespace Discord.Media
                             {
                                 SecretKey = description.SecretKey;
                                 State = MediaSessionState.Authenticated;
-
-                                Log("Authenticated");
 
                                 Task.Run(() => HandleConnect());
                             }
@@ -293,8 +278,6 @@ namespace Discord.Media
 
         private void Holepunch()
         {
-            Log("Holepunching");
-
             byte[] payload = new byte[74];
             payload[0] = 1 >> 8;
             payload[1] = 1 >> 0;
@@ -349,14 +332,9 @@ namespace Discord.Media
                     }
                 }
             }
-            catch (Exception ex) 
-            {
-                Log("Listener err: " + ex);
-            }
+            catch { }
 
             client?.Close();
-
-            Log("Killed listener for " + id);
         }
 
         public void Dispose()
@@ -379,15 +357,6 @@ namespace Discord.Media
             _heldBackMessages = null;
 
             SecretKey = null;
-        }
-
-
-        internal void Log(string msg)
-        {
-            lock (_fileLock)
-            {
-                File.AppendAllText($"Logs-{Client.User.Username}.txt", $"[{DateTime.Now}] {(WebSocket == null ? "" : $"[{WebSocket.Id}]")} {msg}\n");
-            }
         }
     }
 }

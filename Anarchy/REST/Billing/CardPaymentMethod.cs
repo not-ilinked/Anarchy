@@ -8,6 +8,10 @@ namespace Discord
         public string Brand { get; private set; }
 
 
+        [JsonProperty("country")]
+        public string Country { get; private set; }
+
+
         [JsonProperty("last_4")]
         public int Last4 { get; private set; }
 
