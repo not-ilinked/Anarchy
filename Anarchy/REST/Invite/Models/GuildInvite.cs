@@ -4,6 +4,20 @@ namespace Discord
 {
     public class GuildInvite : DiscordInvite
     {
+        public GuildInvite()
+        {
+            OnClientUpdated += (s, e) =>
+            {
+                if (_guild != null)
+                {
+                    ((GuildChannel)Channel).GuildId = _guild.Id;
+                    _guild.SetClient(Client);
+                }
+            };
+        }
+
+        public InviteGuild Guild => _guild;
+
         [JsonProperty("temporary")]
         public bool Temporary { get; private set; }
 

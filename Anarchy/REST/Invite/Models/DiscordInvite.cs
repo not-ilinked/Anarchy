@@ -11,12 +11,6 @@ namespace Discord
             {
                 Inviter.SetClient(Client);
 
-                if (Guild != null)
-                {
-                    ((GuildChannel)Channel).GuildId = Guild.Id;
-                    Guild.SetClient(Client);
-                }
-
                 Channel.SetClient(Client);
             };
         }
@@ -27,7 +21,6 @@ namespace Discord
 
 
         [JsonProperty("channel")]
-        [JsonConverter(typeof(DeepJsonConverter<DiscordChannel>))]
         public DiscordChannel Channel { get; private set; }
 
 
@@ -36,12 +29,12 @@ namespace Discord
 
 
         [JsonProperty("guild")]
-        public InviteGuild Guild { get; private set; }
+        protected InviteGuild _guild;
 
 
         public InviteType Type
         {
-            get { return Guild != null ? InviteType.Guild : InviteType.Group; }
+            get { return _guild != null ? InviteType.Guild : InviteType.Group; }
         }
 
 

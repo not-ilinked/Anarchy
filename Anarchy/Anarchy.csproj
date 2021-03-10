@@ -93,6 +93,7 @@
     <Compile Include="WebSockets\Gateway\LockedSocketConfig.cs" />
     <Compile Include="WebSockets\Gateway\Media\Voice\DiscordVoiceStateContainer.cs" />
     <Compile Include="WebSockets\Gateway\Session\GatewayIntentBundle.cs" />
+    <Compile Include="WebSockets\Gateway\User\RemovedRelationshipEventArgs.cs" />
     <Compile Include="WebSockets\Media\Livestreaming\DiscordGoLiveCloseEventArgs.cs" />
     <Compile Include="WebSockets\Media\Livestreaming\DiscordGoLiveError.cs" />
     <Compile Include="WebSockets\Media\Livestreaming\DiscordGoLiveException.cs" />

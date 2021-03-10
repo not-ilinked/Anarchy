@@ -48,6 +48,12 @@ namespace Anarchy
                 base.Remove(item);
         }
 
+        public new void AddRange(IEnumerable<T> items)
+        {
+            lock (Lock)
+                base.AddRange(items);
+        }
+
         public bool ReplaceFirst(Predicate<T> match, T newItem)
         {
             lock (Lock)
