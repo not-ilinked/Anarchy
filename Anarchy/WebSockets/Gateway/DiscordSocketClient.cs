@@ -670,7 +670,13 @@ namespace Discord.Gateway
                                 var newMessage = message.Data.ToObject<DiscordMessage>().SetClient(this);
 
                                 if (Config.Cache)
-                                    this.GetChannel(newMessage.Channel.Id).SetLastMessageId(newMessage.Id);
+                                {
+                                    try
+                                    {
+                                        this.GetChannel(newMessage.Channel.Id).SetLastMessageId(newMessage.Id);
+                                    }
+                                    catch (DiscordHttpException) { }
+                                }
 
                                 if (OnMessageReceived != null)
                                     Task.Run(() => OnMessageReceived.Invoke(this, new MessageEventArgs(newMessage)));

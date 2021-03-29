@@ -8,6 +8,7 @@
         Group,
         Category,
         News,
-        Store
+        Store,
+        Stages = 13
     }
 }

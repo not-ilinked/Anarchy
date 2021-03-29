@@ -21,6 +21,7 @@ namespace Discord
 
 
         [JsonProperty("channel")]
+        [JsonConverter(typeof(DeepJsonConverter<DiscordChannel>))]
         public DiscordChannel Channel { get; private set; }
 
 

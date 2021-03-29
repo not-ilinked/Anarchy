@@ -20,7 +20,8 @@ namespace Discord
                     { (int)ChannelType.Voice, typeof(VoiceChannel) },
                     { (int)ChannelType.Text, typeof(TextChannel) },
                     { (int)ChannelType.News, typeof(TextChannel) },
-                    { (int)ChannelType.Store, typeof(TextChannel) }
+                    { (int)ChannelType.Store, typeof(TextChannel) },
+                    { (int)ChannelType.Stages, typeof(VoiceChannel) }
                 }
             },
             {
