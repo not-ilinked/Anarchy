@@ -18,6 +18,7 @@ namespace Discord
 
         [JsonProperty("discriminator")]
         public uint Discriminator { get; private set; }
+        
 
 
         [JsonProperty("avatar")]
@@ -106,6 +107,7 @@ namespace Discord
         {
             Username = user.Username;
             Discriminator = user.Discriminator;
+            Tag = user.Username.Tag;
             _avatarHash = user._avatarHash;
             Badges = user.Badges;
             _publicFlags = user._publicFlags;
