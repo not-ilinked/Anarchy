@@ -107,7 +107,7 @@ namespace Discord
         {
             Username = user.Username;
             Discriminator = user.Discriminator;
-            Tag = user.Username.Tag;
+            Tag = user.Username + "#" + user.Discriminator;
             _avatarHash = user._avatarHash;
             Badges = user.Badges;
             _publicFlags = user._publicFlags;
