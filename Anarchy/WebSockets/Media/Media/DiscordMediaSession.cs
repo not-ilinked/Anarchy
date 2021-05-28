@@ -19,12 +19,12 @@ namespace Discord.Media
         internal MediaWebSocket WebSocket { get; private set; }
         public DiscordSocketClient Client { get; private set; }
 
-        private IPEndPoint _serverEndpoint;
+        public IPEndPoint ServerEndpoint { get; private set; }
         private IPEndPoint _localEndpoint;
         private List<KeyValuePair<DiscordMediaOpcode, object>> _heldBackMessages;
 
         internal UdpClient UdpClient { get; set; }
-        internal DiscordSSRC SSRC { get; set; }
+        public DiscordSSRC SSRC { get; set; }
         internal byte[] SecretKey { get; private set; }
         internal string SessionId { get; private set; }
         internal static readonly Dictionary<string, MediaCodec> SupportedCodecs = new Dictionary<string, MediaCodec>()
@@ -79,7 +79,7 @@ namespace Discord.Media
             other.OnServerUpdated = null;
             other.WebSocket.OnMessageReceived -= OnMessageReceived;
             other.WebSocket.OnClosed -= OnClosed;
-            _serverEndpoint = other._serverEndpoint;
+            ServerEndpoint = other.ServerEndpoint;
             _localEndpoint = other._localEndpoint;
             UdpClient = other.UdpClient;
             SSRC = other.SSRC;
@@ -165,12 +165,12 @@ namespace Discord.Media
                     case DiscordMediaOpcode.Ready:
                         DiscordMediaReady ready = message.Data.ToObject<DiscordMediaReady>();
 
-                        SSRC = new DiscordSSRC() { Audio = ready.SSRC };
+                        SSRC = new DiscordSSRC() { Audio = ready.SSRC, Video = ready.Streams != null ? ready.Streams[0].SSRC : 0 };
 
-                        _serverEndpoint = new IPEndPoint(IPAddress.Parse(ready.IP), ready.Port);
+                        ServerEndpoint = new IPEndPoint(IPAddress.Parse(ready.IP), ready.Port);
 
                         UdpClient = new UdpClient();
-                        UdpClient.Connect(_serverEndpoint);
+                        UdpClient.Connect(ServerEndpoint);
 
                         Task.Run(() => StartListener());
 
@@ -350,7 +350,7 @@ namespace Discord.Media
             if (UdpClient != null)
                 UdpClient.Close();
 
-            _serverEndpoint = null;
+            ServerEndpoint = null;
             _localEndpoint = null;
 
             _heldBackMessages.Clear();

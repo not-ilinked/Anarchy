@@ -13,10 +13,22 @@ namespace Discord
     public static class MessageExtensions
     {
         #region management
+        public static async Task<DiscordMessage> SendMessageAsync(this DiscordClient client, ulong channelId, MessageProperties properties)
+        {
+            if (properties.ReplyTo != null) properties.ReplyTo.ChannelId = channelId;
+
+            return (await client.HttpClient.PostAsync($"/channels/{channelId}/messages", properties))
+                                 .Deserialize<DiscordMessage>().SetClient(client);
+        }
+
+        public static DiscordMessage SendMessage(this DiscordClient client, ulong channelId, MessageProperties properties)
+        {
+            return client.SendMessageAsync(channelId, properties).GetAwaiter().GetResult();
+        } 
+
         public static async Task<DiscordMessage> SendMessageAsync(this DiscordClient client, ulong channelId, string message, bool tts = false, DiscordEmbed embed = null)
         {
-            return (await client.HttpClient.PostAsync($"/channels/{channelId}/messages", new MessageCreateProperties() { Content = message, Tts = tts, Embed = embed }))
-                                 .Deserialize<DiscordMessage>().SetClient(client);
+            return await client.SendMessageAsync(channelId, new MessageProperties() { Content = message, Tts = tts, Embed = embed });
         }
 
         /// <summary>
@@ -33,7 +45,7 @@ namespace Discord
 
         public static async Task<DiscordMessage> SendMessageAsync(this DiscordClient client, ulong channelId, EmbedMaker embed)
         {
-            return await client.SendMessageAsync(channelId, null, false, embed);
+            return await client.SendMessageAsync(channelId, new MessageProperties() { Embed = embed });
         }
 
         public static DiscordMessage SendMessage(this DiscordClient client, ulong channelId, EmbedMaker embed)
@@ -50,7 +62,7 @@ namespace Discord
             MultipartFormDataContent content = new MultipartFormDataContent
             {
                 {
-                    new StringContent(JsonConvert.SerializeObject(new MessageCreateProperties()
+                    new StringContent(JsonConvert.SerializeObject(new MessageProperties()
                     {
                         Content = message,
                         Tts = tts
@@ -184,14 +196,13 @@ namespace Discord
             while (true)
             {
                 string parameters = "";
-                if (filters.Limit.HasValue)
-                    parameters += $"limit={(uint)Math.Min(messagesPerRequest, filters.Limit.Value - messages.Count)}&";
-                else
-                    parameters += $"limit={messagesPerRequest}&";
-                if (filters.BeforeId.HasValue)
-                    parameters += $"before={filters.BeforeId.Value}&";
-                if (filters.AfterId.HasValue)
-                    parameters += $"after={filters.AfterId.Value}&";
+                if (filters.Limit.HasValue) parameters += $"limit={(uint)Math.Min(messagesPerRequest, filters.Limit.Value - messages.Count)}&";
+                else parameters += $"limit={messagesPerRequest}&";
+                if (filters.BeforeId.HasValue) parameters += $"before={filters.BeforeId.Value}&";
+                if (filters.AfterId.HasValue) parameters += $"after={filters.AfterId.Value}&";
+                if (filters.AuthorId.HasValue) parameters += $"author_id={filters.AuthorId}&";
+                if (filters.MentioningUserId.HasValue) parameters += $"mentions={filters.MentioningUserId}&";
+                if (filters.Has.HasValue) parameters += $"has={filters.Has.ToString().ToLower()}";
                 
                 var newMessages = (await client.HttpClient.GetAsync($"/channels/{channelId}/messages?{parameters}"))
                                                           .Deserialize<IReadOnlyList<DiscordMessage>>().SetClientsInList(client);

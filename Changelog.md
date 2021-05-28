@@ -1,13 +1,17 @@
 # 0.8.1.0
 ### Additions
-- Added RestConnectionRetries to DiscordConfig, which allows you to set the amount of times the HTTP client should retry.
-- Added member screening functionality. client.GetGuildVerificationForm() and client.SubmitGuildVerificationForm() can be used to interact with them.
+- Added RestConnectionRetries to DiscordConfig, which allows you to set the amount of times the HTTP client should retry a ratelimited request.
+- Added member screening functionality.
+- Added message references / replies.
 - Added proper error handling for media binaries.
+- Added v9 support (threads coming soon).
 
 ### Improvements
 - Fixed v8 being unusable with socket clients.
 - Added the 'InviteGuild' object which can be found in GuildInvites.
-- Made payment and gift functionality return more accurate data.
+- Payment and gift functions now return more accurate data.
+- Added more filters to MessageFilters.
+- Various minor bug fixes.
 
 
 

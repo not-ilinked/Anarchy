@@ -21,12 +21,12 @@ namespace Discord
 
         public bool IsText
         {
-            get { return Type != ChannelType.Category && Type != ChannelType.Voice; }
+            get { return !IsVoice && Type != ChannelType.Category; }
         }
 
         public bool IsVoice
         {
-            get { return Type == ChannelType.Voice || Type == ChannelType.DM || Type == ChannelType.Group; }
+            get { return Type == ChannelType.Voice || Type == ChannelType.DM || Type == ChannelType.Group || Type == ChannelType.Stage; }
         }
 
 

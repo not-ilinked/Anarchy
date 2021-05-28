@@ -87,6 +87,15 @@ namespace Discord
             TriggerTypingAsync().GetAwaiter().GetResult();
         }
 
+        public Task<DiscordMessage> SendMessageAsync(MessageProperties properties)
+        {
+            return Client.SendMessageAsync(Id, properties);
+        }
+
+        public DiscordMessage SendMessage(MessageProperties properties)
+        {
+            return SendMessageAsync(properties).GetAwaiter().GetResult();
+        }
 
         public async Task<DiscordMessage> SendMessageAsync(string message, bool tts = false, DiscordEmbed embed = null)
         {

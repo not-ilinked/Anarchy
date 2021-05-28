@@ -90,6 +90,16 @@ namespace Discord
         }
 
 
+        public Task<DiscordMessage> SendMessageAsync(MessageProperties properties)
+        {
+            return Client.SendMessageAsync(Id, properties);
+        }
+
+        public DiscordMessage SendMessage(MessageProperties properties)
+        {
+            return SendMessageAsync(properties).GetAwaiter().GetResult();
+        }
+
         public async Task<DiscordMessage> SendMessageAsync(string message, bool tts = false, DiscordEmbed embed = null)
         {
             return await Client.SendMessageAsync(Id, message, tts, embed);

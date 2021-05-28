@@ -1,6 +1,6 @@
 ﻿namespace Discord
 {
-    public enum ChannelType : int
+    public enum ChannelType
     {
         Text,
         DM,
@@ -9,6 +9,9 @@
         Category,
         News,
         Store,
-        Stages = 13
+        GuildNewsThread = 10,
+        GuildPublicThread,
+        GuildPrivateThread,
+        Stage
     }
 }

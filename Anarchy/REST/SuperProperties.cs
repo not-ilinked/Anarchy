@@ -18,6 +18,9 @@ namespace Discord
         [JsonProperty("device")]
         public string Device { get; set; }
 
+        [JsonProperty("system_locale")]
+        public string SystemLocale { get; set; }
+
         [JsonProperty("browser_user_agent")]
         public string UserAgent { get; set; }
 

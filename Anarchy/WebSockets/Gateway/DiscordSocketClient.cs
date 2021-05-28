@@ -299,7 +299,7 @@ namespace Discord.Gateway
                 case GatewayOpcode.Event:
                     /*
                     Console.WriteLine(message.EventName);
-
+                    
                     File.AppendAllText("Debug.log", $"{message.EventName}: {message.Data}\n");
                     */
 

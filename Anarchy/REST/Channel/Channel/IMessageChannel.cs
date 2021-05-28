@@ -8,6 +8,9 @@ namespace Discord
         Task TriggerTypingAsync();
         void TriggerTyping();
 
+        Task<DiscordMessage> SendMessageAsync(MessageProperties properties);
+        DiscordMessage SendMessage(MessageProperties properties);
+
         Task<DiscordMessage> SendMessageAsync(string message, bool tts = false, DiscordEmbed embed = null);
         DiscordMessage SendMessage(string message, bool tts = false, DiscordEmbed embed = null);
 

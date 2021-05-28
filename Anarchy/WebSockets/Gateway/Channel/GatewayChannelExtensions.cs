@@ -75,7 +75,7 @@ namespace Discord.Gateway
             {
                 DiscordChannel channel = client.GetChannel(channelId);
 
-                if (channel.Type == ChannelType.Text || channel.Type == ChannelType.Voice || channel.Type == ChannelType.Category)
+                if (channel.InGuild)
                 {
                     GuildChannel guildChannel = (GuildChannel)channel;
 

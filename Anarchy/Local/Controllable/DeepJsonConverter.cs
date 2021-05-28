@@ -21,7 +21,10 @@ namespace Discord
                     { (int)ChannelType.Text, typeof(TextChannel) },
                     { (int)ChannelType.News, typeof(TextChannel) },
                     { (int)ChannelType.Store, typeof(TextChannel) },
-                    { (int)ChannelType.Stages, typeof(VoiceChannel) }
+                    { (int)ChannelType.GuildNewsThread, typeof(TextChannel) },
+                    { (int)ChannelType.GuildPublicThread, typeof(TextChannel) },
+                    { (int)ChannelType.GuildPrivateThread, typeof(TextChannel) },
+                    { (int)ChannelType.Stage, typeof(VoiceChannel) }
                 }
             },
             {

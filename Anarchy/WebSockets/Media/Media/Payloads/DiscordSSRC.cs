@@ -2,7 +2,7 @@
 
 namespace Discord.Media
 {
-    internal class DiscordSSRC
+    public class DiscordSSRC
     {
         [JsonProperty("audio_ssrc")]
         public uint Audio { get; set; }

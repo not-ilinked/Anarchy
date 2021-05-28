@@ -34,6 +34,7 @@
         MaximumGuildSubscriptions = 30026,
         Unauthorized = 40001,
         AccountUnverified,
+        OpeningDirectMessagesTooFast,
         UserIsBanned = 40007,
         AccountOwnsGuilds = 40011,
         NotConnectedToVoice = 40032,

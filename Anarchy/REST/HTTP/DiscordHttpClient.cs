@@ -6,9 +6,8 @@ using System.Text;
 using System.Net.Http;
 using Leaf.xNet;
 using System.Net;
-using Discord.Gateway;
 using System.Threading.Tasks;
-using System.Collections.Generic;
+using System.Linq;
 
 namespace Discord
 {
@@ -62,6 +61,16 @@ namespace Discord
             uint retriesLeft = _discordClient.Config.RestConnectionRetries;
             bool hasData = method == Leaf.xNet.HttpMethod.POST || method == Leaf.xNet.HttpMethod.PATCH || method == Leaf.xNet.HttpMethod.PUT || method == Leaf.xNet.HttpMethod.DELETE;
 
+            string xContextProperties = null;
+
+            if (endpoint.StartsWith("https://discord.com/api/v9/invites/") && method == Leaf.xNet.HttpMethod.POST)
+            {
+                var invite = _discordClient.GetInvite(endpoint.Split('/').Last());
+
+                if (invite.Type == InviteType.Guild)
+                    xContextProperties = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{{\"location\":\"Join Guild\",\"location_guild_id\":\"{((GuildInvite)invite).Guild.Id}\",\"location_channel_id\":\"{invite.Channel.Id}\",\"location_channel_type\":{(int)invite.Channel.Type}}}"));
+            }
+
             while (true)
             {
                 try
@@ -74,6 +83,9 @@ namespace Discord
                         if (_discordClient.Token != null)
                             client.DefaultRequestHeaders.Add("Authorization", _discordClient.Token);
 
+                        if (xContextProperties != null) client.DefaultRequestHeaders.Add("X-Context-Properties", xContextProperties);
+
+                        client.DefaultRequestHeaders.Add("User-Agent", _discordClient.Config.SuperProperties.UserAgent);
                         client.DefaultRequestHeaders.Add("X-Super-Properties", _discordClient.Config.SuperProperties.Base64);
 
                         var response = await client.SendAsync(new HttpRequestMessage() 
@@ -95,6 +107,8 @@ namespace Discord
 
                         if (hasData)
                             msg.AddHeader(HttpHeader.ContentType, "application/json");
+
+                        if (xContextProperties != null) msg.AddHeader("X-Context-Properties", xContextProperties);
 
                         msg.AddHeader("X-Super-Properties", _discordClient.Config.SuperProperties.Base64);
                         if (_discordClient.Proxy != null)

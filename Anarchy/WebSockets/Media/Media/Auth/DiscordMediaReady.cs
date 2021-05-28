@@ -19,5 +19,9 @@ namespace Discord.Media
 
         [JsonProperty("modes")]
         public List<string> EncryptionModes { get; private set; }
+
+
+        [JsonProperty("streams")]
+        public List<StreamSSRC> Streams { get; private set; }
     }
 }

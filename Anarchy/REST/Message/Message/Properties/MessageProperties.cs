@@ -1,15 +1,13 @@
 ﻿using Newtonsoft.Json;
+using System;
 
 namespace Discord
 {
-    /// <summary>
-    /// Options for sending a message
-    /// </summary>
-    internal class MessageCreateProperties
+    public class MessageProperties
     {
-        public MessageCreateProperties()
+        public MessageProperties()
         {
-            _nonce = "";
+            _nonce = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds().ToString();
         }
 
 
@@ -27,9 +25,18 @@ namespace Discord
         public bool Tts { get; set; }
 
 
+        [JsonProperty("message_reference")]
+        public MessageReference ReplyTo { get; set; }
+
+
         [JsonProperty("embed")]
         public DiscordEmbed Embed { get; set; }
 
+
+        public bool ShouldSerializeReplyTo()
+        {
+            return ReplyTo != null;
+        }
 
         public bool ShouldSerializeEmbed()
         {

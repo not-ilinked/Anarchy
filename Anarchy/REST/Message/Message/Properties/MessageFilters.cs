@@ -2,6 +2,15 @@
 {
     public class MessageFilters
     {
+        public MessageAttachmentFilter? Has { get; set; }
+
+
+        public ulong? MentioningUserId { get; set; }
+
+
+        public ulong? AuthorId { get; set; }
+
+
         public ulong? BeforeId { get; set; }
 
 

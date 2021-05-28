@@ -112,13 +112,7 @@ namespace Discord
         [JsonProperty("channel_id")]
         private readonly ulong _channelId;
 
-        public MinimalTextChannel Channel
-        {
-            get
-            {
-                return new MinimalTextChannel(_channelId).SetClient(Client);
-            }
-        }
+        public MinimalTextChannel Channel => new MinimalTextChannel(_channelId).SetClient(Client);
 
 
         [JsonProperty("guild_id")]
@@ -148,6 +142,17 @@ namespace Discord
         public MessageFlags Flags { get; private set; }
 
 
+        [JsonProperty("referenced_message")]
+        public DiscordMessage ReferencedMessage { get; private set; }
+
+        [JsonProperty("message_reference")]
+        public MessageReference MessageReference { get; private set; }
+
+
+        [JsonProperty("stickers")]
+        public IReadOnlyList<DiscordSticker> Stickers { get; private set; }
+
+
         private void Update(DiscordMessage updated)
         {
             Content = updated.Content;
@@ -157,8 +162,11 @@ namespace Discord
             MentionedEveryone = updated.MentionedEveryone;
             Embed = updated.Embed;
             Flags = updated.Flags;
+            ReferencedMessage = updated.ReferencedMessage;
+            MessageReference = updated.MessageReference;
             EditedAt = updated.EditedAt;
             Reactions = updated.Reactions;
+            Stickers = updated.Stickers;
             _authorMember = updated.Author.Member;
             _authorUser = updated.Author.User;
         }
@@ -181,7 +189,7 @@ namespace Discord
             EditAsync(properties).GetAwaiter().GetResult();
         }
 
-
+        
         public async Task DeleteAsync()
         {
             await Client.DeleteMessageAsync(Channel.Id, Id);

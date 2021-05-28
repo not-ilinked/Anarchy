@@ -16,6 +16,7 @@
         GuildBoostedTier3,
         ChannelFollowAdd,
         GuildDiscoveryDisgualified,
-        GuildDiscoveryRequalified
+        GuildDiscoveryRequalified,
+        Reply = 19
     }
 }

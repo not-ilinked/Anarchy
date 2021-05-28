@@ -80,6 +80,10 @@
     <Compile Include="REST\HTTP\Exceptions\DiscordConnectionException.cs" />
     <Compile Include="REST\Invite\Models\InviteGuild.cs" />
     <Compile Include="REST\LockedDiscordConfig.cs" />
+    <Compile Include="REST\Message\Message\MessageReference.cs" />
+    <Compile Include="REST\Message\Message\Properties\MessageAttachmentFilter.cs" />
+    <Compile Include="REST\Message\Message\Stickers\DiscordSticker.cs" />
+    <Compile Include="REST\Message\Message\Stickers\StickerFormatType.cs" />
     <Compile Include="REST\Message\Reaction\ReactionQuery.cs" />
     <Compile Include="REST\User\Connections\ConnectionProperties.cs" />
     <Compile Include="WebSockets\Gateway\Gifts\DiscordEntitlement.cs" />
@@ -98,6 +102,7 @@
     <Compile Include="WebSockets\Media\Livestreaming\DiscordGoLiveError.cs" />
     <Compile Include="WebSockets\Media\Livestreaming\DiscordGoLiveException.cs" />
     <Compile Include="WebSockets\Media\Livestreaming\StreamKey.cs" />
+    <Compile Include="WebSockets\Media\Livestreaming\StreamSSRC.cs" />
     <Compile Include="WebSockets\Media\Media\MediaWebSocket.cs" />
     <Compile Include="WebSockets\Media\Media\UnorthodoxCloseCode.cs" />
     <Compile Include="WebSockets\Gateway\Session\Auth\Resume.cs" />
@@ -183,7 +188,7 @@
     <Compile Include="REST\Guild\Settings\GuildMuteConfig.cs" />
     <Compile Include="REST\HTTP\DiscordHttpResponse.cs" />
     <Compile Include="REST\Message\Message\MessageAuthor.cs" />
-    <Compile Include="REST\Message\Message\MessageEditProperties.cs" />
+    <Compile Include="REST\Message\Message\Properties\MessageEditProperties.cs" />
     <Compile Include="REST\Message\Message\MessageFlags.cs" />
     <Compile Include="REST\Guild\Permissions\DiscordPermission.cs" />
     <Compile Include="REST\Guild\Permissions\DiscordPermissionOverwrite.cs" />
@@ -321,8 +326,8 @@
     <Compile Include="REST\Message\Message\DiscordAttachment.cs" />
     <Compile Include="REST\Message\Message\DiscordMessage.cs" />
     <Compile Include="WebSockets\Gateway\Message\MessageEventArgs.cs" />
-    <Compile Include="REST\Message\Message\MessageFilters.cs" />
-    <Compile Include="REST\Message\Message\MessageCreateProperties.cs" />
+    <Compile Include="REST\Message\Message\Properties\MessageFilters.cs" />
+    <Compile Include="REST\Message\Message\Properties\MessageProperties.cs" />
     <Compile Include="REST\Message\Message\MessageType.cs" />
     <Compile Include="REST\Message\Reaction\MessageReaction.cs" />
     <Compile Include="WebSockets\Gateway\Message\ReactionEventArgs.cs" />
