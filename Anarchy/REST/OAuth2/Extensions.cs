@@ -149,7 +149,7 @@ namespace Discord
 
         public static async Task DeleteApplicationAsync(this DiscordClient client, ulong appId)
         {
-            await client.HttpClient.DeleteAsync($"/oauth2/applications/{appId}");
+            await client.HttpClient.PostAsync($"/applications/{appId}/delete");
         }
 
         /// <summary>
