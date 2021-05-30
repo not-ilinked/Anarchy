@@ -6,7 +6,7 @@ namespace Discord
     {
         public string Token { get; private set; }
 
-        public InvalidTokenException(string token)
+        public InvalidTokenException(string token) : base("An invalid token was encountered")
         {
             Token = token;
         }

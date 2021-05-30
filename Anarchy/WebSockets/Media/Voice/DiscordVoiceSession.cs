@@ -177,12 +177,6 @@ namespace Discord.Media
         }
 
 
-        public void SetChannel(ulong channelId)
-        {
-            Client.ChangeVoiceState(new VoiceStateProperties() { GuildId = GuildId, ChannelId = channelId });
-        }
-
-
         public DiscordVoiceStream CreateStream(uint bitrate, AudioApplication application = AudioApplication.Mixed)
         {
             if (State != MediaSessionState.Authenticated)

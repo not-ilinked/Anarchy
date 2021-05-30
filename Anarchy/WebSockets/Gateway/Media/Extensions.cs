@@ -66,7 +66,7 @@ namespace Discord.Gateway
             {
                 Task.Run(async () =>
                 {
-                    await Task.Delay(client.Config.VoiceChannelConnectTimeout, source.Token);
+                    await Task.Delay((int)client.Config.VoiceChannelConnectTimeout, source.Token);
 
                     if (!source.IsCancellationRequested)
                         task.SetException(new TimeoutException("Gateway did not respond with a server"));

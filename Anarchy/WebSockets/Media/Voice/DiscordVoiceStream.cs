@@ -64,15 +64,15 @@ namespace Discord.Media
         }
 
         [Obsolete("This overload is obsolete. pass a Stream instead")]
-        public int CopyFrom(byte[] buffer, int offset = 0)
+        public int CopyFrom(byte[] buffer, int offset = 0, CancellationToken cancellationToken = default)
         {
-            while (offset < buffer.Length)
+            while (offset < buffer.Length && !cancellationToken.IsCancellationRequested)
             {
                 try
                 {
                     offset = Write(buffer, offset);
                 }
-                catch (SocketException)
+                catch (InvalidOperationException)
                 {
                     break;
                 }
@@ -81,15 +81,22 @@ namespace Discord.Media
             return offset;
         }
 
-        public void CopyFrom(Stream stream)
+        public bool CopyFrom(Stream stream, CancellationToken cancellationToken = default)
         {
             if (!stream.CanRead)
                 throw new ArgumentException("Cannot read from stream");
 
             byte[] buffer = new byte[OpusEncoder.FrameBytes];
+            
+            while (!cancellationToken.IsCancellationRequested && Session.State == MediaSessionState.Authenticated)
+            {
+                int read = stream.Read(buffer, 0, buffer.Length);
+                if (read == 0) return true;
 
-            while (stream.Read(buffer, 0, buffer.Length) != 0)
                 Write(buffer, 0);
+            }
+
+            return false;
         }
     }
 }

@@ -1,0 +1,15 @@
+D:\repos\Anarchy\Example projects\MessageListener\bin\Debug\MessageListener.exe.config
+D:\repos\Anarchy\Example projects\MessageListener\bin\Debug\MessageListener.exe
+D:\repos\Anarchy\Example projects\MessageListener\bin\Debug\MessageListener.pdb
+D:\repos\Anarchy\Example projects\MessageListener\bin\Debug\Anarchy.dll
+D:\repos\Anarchy\Example projects\MessageListener\bin\Debug\Newtonsoft.Json.dll
+D:\repos\Anarchy\Example projects\MessageListener\bin\Debug\Leaf.xNet.dll
+D:\repos\Anarchy\Example projects\MessageListener\bin\Debug\websocket-sharp.dll
+D:\repos\Anarchy\Example projects\MessageListener\bin\Debug\Anarchy.pdb
+D:\repos\Anarchy\Example projects\MessageListener\bin\Debug\Newtonsoft.Json.xml
+D:\repos\Anarchy\Example projects\MessageListener\bin\Debug\Leaf.xNet.xml
+D:\repos\Anarchy\Example projects\MessageListener\obj\Debug\MessageListener.csprojAssemblyReference.cache
+D:\repos\Anarchy\Example projects\MessageListener\obj\Debug\MessageListener.csproj.CoreCompileInputs.cache
+D:\repos\Anarchy\Example projects\MessageListener\obj\Debug\MessageListener.csproj.CopyComplete
+D:\repos\Anarchy\Example projects\MessageListener\obj\Debug\MessageListener.exe
+D:\repos\Anarchy\Example projects\MessageListener\obj\Debug\MessageListener.pdb

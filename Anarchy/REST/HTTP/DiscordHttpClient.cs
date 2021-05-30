@@ -63,12 +63,15 @@ namespace Discord
 
             string xContextProperties = null;
 
-            if (endpoint.StartsWith("https://discord.com/api/v9/invites/") && method == Leaf.xNet.HttpMethod.POST)
+            if (_discordClient.User == null || _discordClient.User.Type != DiscordUserType.Bot)
             {
-                var invite = _discordClient.GetInvite(endpoint.Split('/').Last());
+                if (endpoint.StartsWith("https://discord.com/api/v9/invites/") && method == Leaf.xNet.HttpMethod.POST)
+                {
+                    var invite = _discordClient.GetInvite(endpoint.Split('/').Last());
 
-                if (invite.Type == InviteType.Guild)
-                    xContextProperties = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{{\"location\":\"Join Guild\",\"location_guild_id\":\"{((GuildInvite)invite).Guild.Id}\",\"location_channel_id\":\"{invite.Channel.Id}\",\"location_channel_type\":{(int)invite.Channel.Type}}}"));
+                    if (invite.Type == InviteType.Guild)
+                        xContextProperties = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{{\"location\":\"Join Guild\",\"location_guild_id\":\"{((GuildInvite)invite).Guild.Id}\",\"location_channel_id\":\"{invite.Channel.Id}\",\"location_channel_type\":{(int)invite.Channel.Type}}}"));
+                }
             }
 
             while (true)
@@ -83,10 +86,15 @@ namespace Discord
                         if (_discordClient.Token != null)
                             client.DefaultRequestHeaders.Add("Authorization", _discordClient.Token);
 
-                        if (xContextProperties != null) client.DefaultRequestHeaders.Add("X-Context-Properties", xContextProperties);
+                        if (_discordClient.User != null && _discordClient.User.Type == DiscordUserType.Bot)
+                            client.DefaultRequestHeaders.Add("User-Agent", "Anarchy/0.8.3.2");
+                        else
+                        {
+                            client.DefaultRequestHeaders.Add("User-Agent", _discordClient.Config.SuperProperties.UserAgent);
+                            client.DefaultRequestHeaders.Add("X-Super-Properties", _discordClient.Config.SuperProperties.Base64);
 
-                        client.DefaultRequestHeaders.Add("User-Agent", _discordClient.Config.SuperProperties.UserAgent);
-                        client.DefaultRequestHeaders.Add("X-Super-Properties", _discordClient.Config.SuperProperties.Base64);
+                            if (xContextProperties != null) client.DefaultRequestHeaders.Add("X-Context-Properties", xContextProperties);
+                        }
 
                         var response = await client.SendAsync(new HttpRequestMessage() 
                         { 
