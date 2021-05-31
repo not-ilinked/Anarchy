@@ -91,7 +91,7 @@ namespace Discord
                         else
                         {
                             client.DefaultRequestHeaders.Add("User-Agent", _discordClient.Config.SuperProperties.UserAgent);
-                            client.DefaultRequestHeaders.Add("X-Super-Properties", _discordClient.Config.SuperProperties.Base64);
+                            client.DefaultRequestHeaders.Add("X-Super-Properties", _discordClient.Config.SuperProperties.ToBase64());
 
                             if (xContextProperties != null) client.DefaultRequestHeaders.Add("X-Context-Properties", xContextProperties);
                         }
@@ -118,7 +118,7 @@ namespace Discord
 
                         if (xContextProperties != null) msg.AddHeader("X-Context-Properties", xContextProperties);
 
-                        msg.AddHeader("X-Super-Properties", _discordClient.Config.SuperProperties.Base64);
+                        msg.AddHeader("X-Super-Properties", _discordClient.Config.SuperProperties.ToBase64());
                         if (_discordClient.Proxy != null)
                             msg.Proxy = _discordClient.Proxy;
 

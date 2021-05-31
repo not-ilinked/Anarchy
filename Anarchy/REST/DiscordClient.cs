@@ -70,8 +70,6 @@ namespace Discord
 
         protected void FinishConfig()
         {
-            Config.SuperProperties.Base64 = Convert.ToBase64String(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(Config.SuperProperties)));
-
             if (Config.Proxy != null)
                 Proxy = Config.Proxy.CreateProxyClient();
         }
