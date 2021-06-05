@@ -1,10 +1,12 @@
 # 0.8.1.0
 ### Additions
-- Added RestConnectionRetries to DiscordConfig, which allows you to set the amount of times the HTTP client should retry a ratelimited request.
+- Added RestConnectionRetries to DiscordConfig, which allows you to set the amount of times the HTTP client should retry a failed request.
 - Added member screening functionality.
 - Added message references / replies.
 - Added proper error handling for media binaries.
-- Added v9 support (threads coming soon).
+- Added components.
+- Added slash commands.
+- TODO: Add threads.
 
 ### Improvements
 - Fixed v8 being unusable with socket clients.
@@ -12,6 +14,7 @@
 - Payment and gift functions now return more accurate data.
 - Added more filters to MessageFilters.
 - Various minor bug fixes.
+- Removed trans rights.
 
 
 

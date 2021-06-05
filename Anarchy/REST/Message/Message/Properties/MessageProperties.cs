@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 
 namespace Discord
 {
@@ -33,6 +34,10 @@ namespace Discord
         public DiscordEmbed Embed { get; set; }
 
 
+        [JsonProperty("components")]
+        public List<MessageComponent> Components { get; set; }
+
+
         public bool ShouldSerializeReplyTo()
         {
             return ReplyTo != null;
@@ -41,6 +46,11 @@ namespace Discord
         public bool ShouldSerializeEmbed()
         {
             return Embed != null;
+        }
+
+        public bool ShouldSerializeComponents()
+        {
+            return Components != null;
         }
     }
 }

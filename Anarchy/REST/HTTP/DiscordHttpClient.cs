@@ -7,7 +7,6 @@ using System.Net.Http;
 using Leaf.xNet;
 using System.Net;
 using System.Threading.Tasks;
-using System.Linq;
 
 namespace Discord
 {
@@ -61,19 +60,6 @@ namespace Discord
             uint retriesLeft = _discordClient.Config.RestConnectionRetries;
             bool hasData = method == Leaf.xNet.HttpMethod.POST || method == Leaf.xNet.HttpMethod.PATCH || method == Leaf.xNet.HttpMethod.PUT || method == Leaf.xNet.HttpMethod.DELETE;
 
-            string xContextProperties = null;
-
-            if (_discordClient.User == null || _discordClient.User.Type != DiscordUserType.Bot)
-            {
-                if (endpoint.StartsWith("https://discord.com/api/v9/invites/") && method == Leaf.xNet.HttpMethod.POST)
-                {
-                    var invite = _discordClient.GetInvite(endpoint.Split('/').Last());
-
-                    if (invite.Type == InviteType.Guild)
-                        xContextProperties = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{{\"location\":\"Join Guild\",\"location_guild_id\":\"{((GuildInvite)invite).Guild.Id}\",\"location_channel_id\":\"{invite.Channel.Id}\",\"location_channel_type\":{(int)invite.Channel.Type}}}"));
-                }
-            }
-
             while (true)
             {
                 try
@@ -92,8 +78,6 @@ namespace Discord
                         {
                             client.DefaultRequestHeaders.Add("User-Agent", _discordClient.Config.SuperProperties.UserAgent);
                             client.DefaultRequestHeaders.Add("X-Super-Properties", _discordClient.Config.SuperProperties.ToBase64());
-
-                            if (xContextProperties != null) client.DefaultRequestHeaders.Add("X-Context-Properties", xContextProperties);
                         }
 
                         var response = await client.SendAsync(new HttpRequestMessage() 
@@ -109,18 +93,15 @@ namespace Discord
                         HttpRequest msg = new HttpRequest
                         {
                             IgnoreProtocolErrors = true,
-                            UserAgent = _discordClient.Config.SuperProperties.UserAgent,
+                            UserAgent = _discordClient.User != null && _discordClient.User.Type == DiscordUserType.Bot ? "Anarchy/0.8.3.2" : _discordClient.Config.SuperProperties.UserAgent,
                             Authorization = _discordClient.Token
                         };
 
                         if (hasData)
                             msg.AddHeader(HttpHeader.ContentType, "application/json");
 
-                        if (xContextProperties != null) msg.AddHeader("X-Context-Properties", xContextProperties);
-
-                        msg.AddHeader("X-Super-Properties", _discordClient.Config.SuperProperties.ToBase64());
-                        if (_discordClient.Proxy != null)
-                            msg.Proxy = _discordClient.Proxy;
+                        if (_discordClient.User == null || _discordClient.User.Type == DiscordUserType.User) msg.AddHeader("X-Super-Properties", _discordClient.Config.SuperProperties.ToBase64());
+                        if (_discordClient.Proxy != null) msg.Proxy = _discordClient.Proxy;
 
                         var response = msg.Raw(method, endpoint, hasData ? new Leaf.xNet.StringContent(json) : null);
 

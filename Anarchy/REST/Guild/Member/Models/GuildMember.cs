@@ -1,4 +1,5 @@
-﻿using Discord.Gateway;
+﻿using Discord.Commands;
+using Discord.Gateway;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Discord
 {
-    public class GuildMember : PartialGuildMember, IDisposable
+    public class GuildMember : PartialGuildMember, IDisposable, IMentionable
     {
         [JsonProperty("nick")]
         public string Nickname { get; private set; }

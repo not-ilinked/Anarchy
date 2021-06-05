@@ -90,9 +90,10 @@ namespace Discord.Gateway
         public event ClientEventHandler<NitroBoostEventArgs> OnBoostSlotCreated;
         public event ClientEventHandler<NitroBoostEventArgs> OnBoostSlotUpdated;
 
-        // What entitlements actually are and how the client interacts with them is being researched. DiscordEntitlement.cs for more
         public event ClientEventHandler<EntitlementEventArgs> OnEntitlementCreated;
         public event ClientEventHandler<EntitlementEventArgs> OnEntitlementUpdated;
+
+        public event ClientEventHandler<DiscordInteractionEventArgs> OnInteraction;
         #endregion
 
         // caching
@@ -297,9 +298,9 @@ namespace Discord.Gateway
             switch (message.Opcode)
             {
                 case GatewayOpcode.Event:
-                    /*
-                    Console.WriteLine(message.EventName);
                     
+                    Console.WriteLine(message.EventName);
+                    /*
                     File.AppendAllText("Debug.log", $"{message.EventName}: {message.Data}\n");
                     */
 
@@ -838,6 +839,10 @@ namespace Discord.Gateway
                                 if (OnGuildUnreadMessagesUpdated != null)
                                     Task.Run(() => OnGuildUnreadMessagesUpdated.Invoke(this, new UnreadMessagesEventArgs(unread)));
                             }
+                            break;
+                        case "INTERACTION_CREATE":
+                            if (Config.Cache || OnInteraction != null)
+                                Task.Run(() => OnInteraction.Invoke(this, new DiscordInteractionEventArgs(message.Data.ToObject<DiscordInteraction>().SetClient(this))));
                             break;
                         default:
                             break;

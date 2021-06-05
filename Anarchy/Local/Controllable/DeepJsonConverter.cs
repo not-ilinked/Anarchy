@@ -61,6 +61,14 @@ namespace Discord
                     { (int)ActivityType.Listening, typeof(DiscordListeningActivity) },
                     { (int)ActivityType.CustomStatus, typeof(CustomStatusActivity) }
                 }
+            },
+            {
+                typeof(MessageComponent),
+                new Dictionary<int, Type>()
+                {
+                    { (int)MessageComponentType.Row, typeof(RowComponent) },
+                    { (int)MessageComponentType.Button, typeof(ButtonComponent) }
+                }
             }
         };
     }

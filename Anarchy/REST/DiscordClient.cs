@@ -26,7 +26,7 @@ namespace Discord
                 string previousToken = Token;
 
                 _token = value;
-
+                
                 try
                 {
                     this.GetClientUser();

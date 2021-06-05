@@ -1,10 +1,11 @@
-﻿using Newtonsoft.Json;
+﻿using Discord.Commands;
+using Newtonsoft.Json;
 using System.Drawing;
 using System.Threading.Tasks;
 
 namespace Discord
 {
-    public class DiscordRole : Controllable
+    public class DiscordRole : Controllable, IMentionable
     {
         [JsonProperty("id")]
         public ulong Id { get; private set; }

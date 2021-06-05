@@ -1,10 +1,11 @@
-﻿using Newtonsoft.Json;
+﻿using Discord.Commands;
+using Newtonsoft.Json;
 using System;
 using System.Threading.Tasks;
 
 namespace Discord
 {
-    public class DiscordUser : Controllable
+    public class DiscordUser : Controllable, IMentionable
     {
         protected static DiscordBadge HypeBadges = DiscordBadge.HypeBravery | DiscordBadge.HypeBrilliance | DiscordBadge.HypeBalance;
 

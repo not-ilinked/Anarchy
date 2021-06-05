@@ -61,13 +61,10 @@ namespace GuildDuplicator
                     {
                         if (ex.Code == DiscordError.InvalidFormBody) // This is used whenever discord wants to give us parameter-specific errors
                         {
-                            foreach (var param in ex.InvalidParameters)
+                            if (ex.InvalidParameters.TryGetValue("image", out var errors))
                             {
-                                foreach (var err in param.Value)
-                                {
-                                    if (err.Code != "BINARY_TYPE_MAX_SIZE") // Bigger servers can have emojis with bigger file sizes, so let's just ignore these errors
-                                        Console.WriteLine($"Error in {param.Key}. Reason: {err.Message}");
-                                }
+                                if (!errors.ContainsKey("BINARY_TYPE_MAX_SIZE"))
+                                    foreach (var error in errors) Console.WriteLine($"Error in {error.Key}. Reason: {error.Value}");
                             }
                         }
                         else if (ex.Code == DiscordError.MaximumEmojis)

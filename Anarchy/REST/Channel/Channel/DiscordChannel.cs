@@ -1,10 +1,11 @@
-﻿using Newtonsoft.Json;
+﻿using Discord.Commands;
+using Newtonsoft.Json;
 using System;
 using System.Threading.Tasks;
 
 namespace Discord
 {
-    public class DiscordChannel : MinimalChannel
+    public class DiscordChannel : MinimalChannel, IMentionable
     {
         [JsonProperty("name")]
         public string Name { get; private set; }

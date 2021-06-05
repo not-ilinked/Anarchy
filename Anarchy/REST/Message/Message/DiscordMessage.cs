@@ -149,6 +149,11 @@ namespace Discord
         public MessageReference MessageReference { get; private set; }
 
 
+        [JsonProperty("components")]
+        [JsonConverter(typeof(DeepJsonConverter<MessageComponent>))]
+        public List<MessageComponent> Components { get; private set; }
+
+
         [JsonProperty("stickers")]
         public IReadOnlyList<DiscordSticker> Stickers { get; private set; }
 

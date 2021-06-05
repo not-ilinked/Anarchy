@@ -105,8 +105,6 @@ D:\repos\Anarchy\Example projects\MusicBot\bin\Debug\System.Numerics.Vectors.dll
 D:\repos\Anarchy\Example projects\MusicBot\bin\Debug\System.Runtime.CompilerServices.Unsafe.dll
 D:\repos\Anarchy\Example projects\MusicBot\bin\Debug\System.Text.Encoding.CodePages.dll
 D:\repos\Anarchy\Example projects\MusicBot\bin\Debug\System.Text.Encodings.Web.dll
-D:\repos\Anarchy\Example projects\MusicBot\bin\Debug\System.Text.Json.dll
-D:\repos\Anarchy\Example projects\MusicBot\bin\Debug\System.Threading.Tasks.Extensions.dll
 D:\repos\Anarchy\Example projects\MusicBot\bin\Debug\System.ValueTuple.dll
 D:\repos\Anarchy\Example projects\MusicBot\bin\Debug\YoutubeExplode.dll
 D:\repos\Anarchy\Example projects\MusicBot\bin\Debug\Newtonsoft.Json.dll
@@ -119,9 +117,6 @@ D:\repos\Anarchy\Example projects\MusicBot\bin\Debug\System.Buffers.xml
 D:\repos\Anarchy\Example projects\MusicBot\bin\Debug\System.Memory.xml
 D:\repos\Anarchy\Example projects\MusicBot\bin\Debug\System.Numerics.Vectors.xml
 D:\repos\Anarchy\Example projects\MusicBot\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
-D:\repos\Anarchy\Example projects\MusicBot\bin\Debug\System.Text.Encodings.Web.xml
-D:\repos\Anarchy\Example projects\MusicBot\bin\Debug\System.Text.Json.xml
-D:\repos\Anarchy\Example projects\MusicBot\bin\Debug\System.Threading.Tasks.Extensions.xml
 D:\repos\Anarchy\Example projects\MusicBot\bin\Debug\System.ValueTuple.xml
 D:\repos\Anarchy\Example projects\MusicBot\bin\Debug\YoutubeExplode.xml
 D:\repos\Anarchy\Example projects\MusicBot\bin\Debug\Newtonsoft.Json.xml

@@ -165,19 +165,19 @@ namespace Discord.Commands
             throw new ArgumentException("Invalid reference");
         }
 
-        internal static bool TryGetAttribute<TAttr>(IEnumerable<object> attributes, out TAttr attr) where TAttr : Attribute
-        {
-            foreach (var attribute in attributes)
+            internal static bool TryGetAttribute<TAttr>(IEnumerable<object> attributes, out TAttr attr) where TAttr : Attribute
             {
-                if (attribute.GetType() == typeof(TAttr))
+                foreach (var attribute in attributes)
                 {
-                    attr = (TAttr)attribute;
-                    return true;
+                    if (attribute.GetType() == typeof(TAttr))
+                    {
+                        attr = (TAttr)attribute;
+                        return true;
+                    }
                 }
-            }
 
-            attr = null;
-            return false;
-        }
+                attr = null;
+                return false;
+            }
     }
 }
