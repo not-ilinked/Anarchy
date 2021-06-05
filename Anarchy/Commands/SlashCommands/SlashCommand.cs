@@ -23,6 +23,6 @@ namespace Discord.Commands
             Guild = interaction.Guild;
         }
 
-        public abstract InteractionCallbackProperties Handle();
+        public abstract InteractionResponseProperties Handle();
     }
 }

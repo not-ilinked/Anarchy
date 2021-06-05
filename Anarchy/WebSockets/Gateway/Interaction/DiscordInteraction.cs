@@ -11,6 +11,18 @@ namespace Discord.Gateway
             {
                 Message.SetClient(Client);
                 Data.SetClient(Client);
+
+                if (Data.Resolved.Members != null)
+                {
+                    foreach (var member in Data.Resolved.Members.Values)
+                        member.GuildId = _guildId.Value;
+                }
+
+                if (Data.Resolved.Roles != null)
+                {
+                    foreach (var role in Data.Resolved.Roles.Values)
+                        role.GuildId = _guildId.Value;
+                }
             };
         }
 
@@ -48,10 +60,10 @@ namespace Discord.Gateway
         [JsonProperty("message")]
         public DiscordMessage Message { get; private set; }
 
-        public Task RespondAsync(InteractionCallbackType callbackType, InteractionCallbackProperties properties = null) => Client.RespondToInteractionAsync(Id, Token, callbackType, properties);
-        public void Respond(InteractionCallbackType callbackType, InteractionCallbackProperties properties = null) => RespondAsync(callbackType, properties).GetAwaiter().GetResult();
+        public Task RespondAsync(InteractionCallbackType callbackType, InteractionResponseProperties properties = null) => Client.RespondToInteractionAsync(Id, Token, callbackType, properties);
+        public void Respond(InteractionCallbackType callbackType, InteractionResponseProperties properties = null) => RespondAsync(callbackType, properties).GetAwaiter().GetResult();
 
-        public Task ModifyResponseAsync(InteractionCallbackProperties changes) => Client.ModifyInteractionResponseAsync(ApplicationId, Token, changes);
-        public void ModifyResponse(InteractionCallbackProperties changes) => ModifyResponseAsync(changes).GetAwaiter().GetResult();
+        public Task ModifyResponseAsync(InteractionResponseProperties changes) => Client.ModifyInteractionResponseAsync(ApplicationId, Token, changes);
+        public void ModifyResponse(InteractionResponseProperties changes) => ModifyResponseAsync(changes).GetAwaiter().GetResult();
     }
 }

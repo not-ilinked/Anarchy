@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Discord
 {
-    public class InteractionCallbackProperties
+    public class InteractionResponseProperties
     {
         private readonly DiscordParameter<bool> _ttsParam = new DiscordParameter<bool>();
         [JsonProperty("tts")]

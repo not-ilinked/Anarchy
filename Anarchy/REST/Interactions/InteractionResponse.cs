@@ -8,6 +8,6 @@ namespace Discord
         public InteractionCallbackType Type { get; set; }
 
         [JsonProperty("data")]
-        public InteractionCallbackProperties Data { get; set; }
+        public InteractionResponseProperties Data { get; set; }
     }
 }

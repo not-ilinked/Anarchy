@@ -109,7 +109,7 @@
     <Compile Include="WebSockets\Gateway\Gifts\GiftCodeUpdatedEventArgs.cs" />
     <Compile Include="WebSockets\Gateway\Interaction\DiscordInteraction.cs" />
     <Compile Include="WebSockets\Gateway\Interaction\DiscordInteractionData.cs" />
-    <Compile Include="REST\Interactions\InteractionCallbackProperties.cs" />
+    <Compile Include="REST\Interactions\InteractionResponseProperties.cs" />
     <Compile Include="REST\Interactions\InteractionCallbackType.cs" />
     <Compile Include="REST\Interactions\InteractionResponse.cs" />
     <Compile Include="WebSockets\Gateway\Interaction\DiscordInteractionEventArgs.cs" />

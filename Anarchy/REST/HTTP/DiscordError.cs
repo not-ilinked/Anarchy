@@ -21,6 +21,7 @@
         UnknownSession = 10020,
         UnknownGiftCode = 10038,
         UnknownGuildSubscription = 10050,
+        UnknownInteraction = 10062,
         UserOnly = 20001,
         BotOnly,
         MaximumGuilds = 30001,

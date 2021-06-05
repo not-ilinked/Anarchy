@@ -105,6 +105,8 @@ namespace Discord.Gateway
         internal List<DiscordChannelSettings> PrivateChannelSettings { get; private set; }
 
         public CommandHandler CommandHandler { get; private set; }
+        private SlashCommandHandler SlashCommandHandler { get; set; }
+
         public new LockedSocketConfig Config { get; private set; }
         internal ConcurrentDictionary<ulong, DiscordVoiceSession> VoiceSessions { get; private set; }
         internal ConcurrentDictionary<string, DiscordGoLiveSession> Livestreams { get; private set; }
@@ -889,6 +891,14 @@ namespace Discord.Gateway
         public void CreateCommandHandler(string prefix)
         {
             CommandHandler = new CommandHandler(prefix, this);
+        }
+
+
+        public void RegisterSlashCommands(ulong appId)
+        {
+            if (Token == null) throw new InvalidOperationException("You must be authenticated to register slash commands");
+
+            if (SlashCommandHandler == null || SlashCommandHandler.ApplicationId != appId) SlashCommandHandler = new SlashCommandHandler(this, appId);
         }
 
 
