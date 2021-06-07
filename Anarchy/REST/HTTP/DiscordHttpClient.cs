@@ -73,7 +73,7 @@ namespace Discord
                             client.DefaultRequestHeaders.Add("Authorization", _discordClient.Token);
 
                         if (_discordClient.User != null && _discordClient.User.Type == DiscordUserType.Bot)
-                            client.DefaultRequestHeaders.Add("User-Agent", "Anarchy/0.8.3.2");
+                            client.DefaultRequestHeaders.Add("User-Agent", "Anarchy/0.8.1.0");
                         else
                         {
                             client.DefaultRequestHeaders.Add("User-Agent", _discordClient.Config.SuperProperties.UserAgent);

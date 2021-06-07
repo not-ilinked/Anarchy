@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Discord
 {
-    public class DiscordChannel : MinimalChannel, IMentionable
+    public class DiscordChannel : MinimalChannel
     {
         [JsonProperty("name")]
         public string Name { get; private set; }

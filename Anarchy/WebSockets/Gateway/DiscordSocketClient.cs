@@ -10,7 +10,6 @@ using System.IO;
 using Discord.Media;
 using Discord.WebSockets;
 using Anarchy;
-using Newtonsoft.Json;
 
 namespace Discord.Gateway
 {
@@ -123,6 +122,8 @@ namespace Discord.Gateway
         internal DateTime Cooldown { get; set; }
         internal object RequestLock { get; private set; }
         internal ulong? Lurking { get; set; }
+
+        private ulong _appId;
 
 
         public DiscordSocketClient(DiscordSocketConfig config = null) : base()
@@ -300,9 +301,9 @@ namespace Discord.Gateway
             switch (message.Opcode)
             {
                 case GatewayOpcode.Event:
-                    
-                    Console.WriteLine(message.EventName);
                     /*
+                    Console.WriteLine(message.EventName);
+                    
                     File.AppendAllText("Debug.log", $"{message.EventName}: {message.Data}\n");
                     */
 
@@ -310,6 +311,8 @@ namespace Discord.Gateway
                     {
                         case "READY":
                             LoginEventArgs login = message.Data.ToObject<LoginEventArgs>().SetClient(this);
+
+                            if (login.Application != null) _appId = login.Application.Value<ulong>("id");
 
                             this.User = login.User;
                             this.UserSettings = login.Settings;
@@ -467,15 +470,11 @@ namespace Discord.Gateway
 
                                 if (Config.Cache && member.User.Id == User.Id)
                                 {
-                                    try
-                                    {
-                                        SocketGuild guild = this.GetCachedGuild(member.GuildId);
+                                    SocketGuild guild = this.GetCachedGuild(member.GuildId);
 
-                                        // Discord doesn't send us the user's JoinedAt on updates
-                                        member.JoinedAt = guild.ClientMember.JoinedAt;
-                                        guild.ClientMember = member;
-                                    }
-                                    catch (DiscordHttpException) { }
+                                    // Discord doesn't send us the user's JoinedAt on updates
+                                    member.JoinedAt = guild.ClientMember.JoinedAt;
+                                    guild.ClientMember = member;
 
                                     break;
                                 }
@@ -894,11 +893,10 @@ namespace Discord.Gateway
         }
 
 
-        public void RegisterSlashCommands(ulong appId)
+        public void RegisterSlashCommands()
         {
-            if (Token == null) throw new InvalidOperationException("You must be authenticated to register slash commands");
-
-            if (SlashCommandHandler == null || SlashCommandHandler.ApplicationId != appId) SlashCommandHandler = new SlashCommandHandler(this, appId);
+            if (!LoggedIn) throw new InvalidOperationException("You must be logged in to register slash commands");
+            if (SlashCommandHandler == null || SlashCommandHandler.ApplicationId != _appId) SlashCommandHandler = new SlashCommandHandler(this, _appId);
         }
 
 

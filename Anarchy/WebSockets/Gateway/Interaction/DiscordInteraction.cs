@@ -12,16 +12,19 @@ namespace Discord.Gateway
                 Message.SetClient(Client);
                 Data.SetClient(Client);
 
-                if (Data.Resolved.Members != null)
+                if (Data.Resolved != null)
                 {
-                    foreach (var member in Data.Resolved.Members.Values)
-                        member.GuildId = _guildId.Value;
-                }
+                    if (Data.Resolved.Members != null)
+                    {
+                        foreach (var member in Data.Resolved.Members.Values)
+                            member.GuildId = _guildId.Value;
+                    }
 
-                if (Data.Resolved.Roles != null)
-                {
-                    foreach (var role in Data.Resolved.Roles.Values)
-                        role.GuildId = _guildId.Value;
+                    if (Data.Resolved.Roles != null)
+                    {
+                        foreach (var role in Data.Resolved.Roles.Values)
+                            role.GuildId = _guildId.Value;
+                    }
                 }
             };
         }

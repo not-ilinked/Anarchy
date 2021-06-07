@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Testing", "Testing\Testing.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Anarchy.Puppeteer", "Anarchy.Puppeteer\Anarchy.Puppeteer.csproj", "{4B8F8D78-65C9-4CD2-97E2-880B9BA0B804}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VCSpammer", "Example projects\VCSpammer\VCSpammer.csproj", "{817BA7A4-8CD6-4C3E-9EDE-F20104F9917D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug_Ubuntu|Any CPU = Debug_Ubuntu|Any CPU
@@ -229,6 +231,34 @@ Global
 		{4B8F8D78-65C9-4CD2-97E2-880B9BA0B804}.ReleaseLibs|Any CPU.Build.0 = Release|Any CPU
 		{4B8F8D78-65C9-4CD2-97E2-880B9BA0B804}.ReleaseLibs|x64.ActiveCfg = Release|Any CPU
 		{4B8F8D78-65C9-4CD2-97E2-880B9BA0B804}.ReleaseLibs|x64.Build.0 = Release|Any CPU
+		{817BA7A4-8CD6-4C3E-9EDE-F20104F9917D}.Debug_Ubuntu|Any CPU.ActiveCfg = Debug|Any CPU
+		{817BA7A4-8CD6-4C3E-9EDE-F20104F9917D}.Debug_Ubuntu|Any CPU.Build.0 = Debug|Any CPU
+		{817BA7A4-8CD6-4C3E-9EDE-F20104F9917D}.Debug_Ubuntu|x64.ActiveCfg = Debug|Any CPU
+		{817BA7A4-8CD6-4C3E-9EDE-F20104F9917D}.Debug_Ubuntu|x64.Build.0 = Debug|Any CPU
+		{817BA7A4-8CD6-4C3E-9EDE-F20104F9917D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{817BA7A4-8CD6-4C3E-9EDE-F20104F9917D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{817BA7A4-8CD6-4C3E-9EDE-F20104F9917D}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{817BA7A4-8CD6-4C3E-9EDE-F20104F9917D}.Debug|x64.Build.0 = Debug|Any CPU
+		{817BA7A4-8CD6-4C3E-9EDE-F20104F9917D}.DebugToConsole|Any CPU.ActiveCfg = Debug|Any CPU
+		{817BA7A4-8CD6-4C3E-9EDE-F20104F9917D}.DebugToConsole|Any CPU.Build.0 = Debug|Any CPU
+		{817BA7A4-8CD6-4C3E-9EDE-F20104F9917D}.DebugToConsole|x64.ActiveCfg = Debug|Any CPU
+		{817BA7A4-8CD6-4C3E-9EDE-F20104F9917D}.DebugToConsole|x64.Build.0 = Debug|Any CPU
+		{817BA7A4-8CD6-4C3E-9EDE-F20104F9917D}.Release Examples|Any CPU.ActiveCfg = Release|Any CPU
+		{817BA7A4-8CD6-4C3E-9EDE-F20104F9917D}.Release Examples|Any CPU.Build.0 = Release|Any CPU
+		{817BA7A4-8CD6-4C3E-9EDE-F20104F9917D}.Release Examples|x64.ActiveCfg = Release|Any CPU
+		{817BA7A4-8CD6-4C3E-9EDE-F20104F9917D}.Release Examples|x64.Build.0 = Release|Any CPU
+		{817BA7A4-8CD6-4C3E-9EDE-F20104F9917D}.Release_Ubuntu|Any CPU.ActiveCfg = Release|Any CPU
+		{817BA7A4-8CD6-4C3E-9EDE-F20104F9917D}.Release_Ubuntu|Any CPU.Build.0 = Release|Any CPU
+		{817BA7A4-8CD6-4C3E-9EDE-F20104F9917D}.Release_Ubuntu|x64.ActiveCfg = Release|Any CPU
+		{817BA7A4-8CD6-4C3E-9EDE-F20104F9917D}.Release_Ubuntu|x64.Build.0 = Release|Any CPU
+		{817BA7A4-8CD6-4C3E-9EDE-F20104F9917D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{817BA7A4-8CD6-4C3E-9EDE-F20104F9917D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{817BA7A4-8CD6-4C3E-9EDE-F20104F9917D}.Release|x64.ActiveCfg = Release|Any CPU
+		{817BA7A4-8CD6-4C3E-9EDE-F20104F9917D}.Release|x64.Build.0 = Release|Any CPU
+		{817BA7A4-8CD6-4C3E-9EDE-F20104F9917D}.ReleaseLibs|Any CPU.ActiveCfg = Release|Any CPU
+		{817BA7A4-8CD6-4C3E-9EDE-F20104F9917D}.ReleaseLibs|Any CPU.Build.0 = Release|Any CPU
+		{817BA7A4-8CD6-4C3E-9EDE-F20104F9917D}.ReleaseLibs|x64.ActiveCfg = Release|Any CPU
+		{817BA7A4-8CD6-4C3E-9EDE-F20104F9917D}.ReleaseLibs|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

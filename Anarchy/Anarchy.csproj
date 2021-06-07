@@ -62,7 +62,7 @@
     <Compile Include="Commands\SlashCommands\SlashCommandAttribute.cs" />
     <Compile Include="Commands\SlashCommands\SlashCommandHandler.cs" />
     <Compile Include="Commands\SlashCommands\SlashParameterAttribute.cs" />
-    <Compile Include="Commands\SlashCommands\SlashParameterChoicesAttribute.cs" />
+    <Compile Include="Commands\SlashCommands\SlashParameterChoiceAttribute.cs" />
     <Compile Include="Local\Collections\AutoConcurrentDictionary.cs" />
     <Compile Include="Local\Collections\ConcurrentDictionary.cs" />
     <Compile Include="Local\Collections\ConcurrentList.cs" />

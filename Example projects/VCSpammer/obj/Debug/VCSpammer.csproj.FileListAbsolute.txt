@@ -1,0 +1,15 @@
+D:\repos\Anarchy\Example projects\VCSpammer\bin\Debug\VCSpammer.exe.config
+D:\repos\Anarchy\Example projects\VCSpammer\bin\Debug\VCSpammer.exe
+D:\repos\Anarchy\Example projects\VCSpammer\bin\Debug\VCSpammer.pdb
+D:\repos\Anarchy\Example projects\VCSpammer\bin\Debug\Anarchy.dll
+D:\repos\Anarchy\Example projects\VCSpammer\bin\Debug\Newtonsoft.Json.dll
+D:\repos\Anarchy\Example projects\VCSpammer\bin\Debug\Leaf.xNet.dll
+D:\repos\Anarchy\Example projects\VCSpammer\bin\Debug\websocket-sharp.dll
+D:\repos\Anarchy\Example projects\VCSpammer\bin\Debug\Anarchy.pdb
+D:\repos\Anarchy\Example projects\VCSpammer\bin\Debug\Newtonsoft.Json.xml
+D:\repos\Anarchy\Example projects\VCSpammer\bin\Debug\Leaf.xNet.xml
+D:\repos\Anarchy\Example projects\VCSpammer\obj\Debug\VCSpammer.csprojAssemblyReference.cache
+D:\repos\Anarchy\Example projects\VCSpammer\obj\Debug\VCSpammer.csproj.CoreCompileInputs.cache
+D:\repos\Anarchy\Example projects\VCSpammer\obj\Debug\VCSpammer.csproj.CopyComplete
+D:\repos\Anarchy\Example projects\VCSpammer\obj\Debug\VCSpammer.exe
+D:\repos\Anarchy\Example projects\VCSpammer\obj\Debug\VCSpammer.pdb

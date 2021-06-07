@@ -2,6 +2,7 @@
 
 namespace Discord.Commands
 {
+    [AttributeUsage(AttributeTargets.Class)]
     public class SlashCommandAttribute : Attribute
     {
         public string Name { get; private set; }

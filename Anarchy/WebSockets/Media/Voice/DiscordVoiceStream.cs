@@ -63,7 +63,6 @@ namespace Discord.Media
             return offset + OpusEncoder.FrameBytes;
         }
 
-        [Obsolete("This overload is obsolete. pass a Stream instead")]
         public int CopyFrom(byte[] buffer, int offset = 0, CancellationToken cancellationToken = default)
         {
             while (offset < buffer.Length && !cancellationToken.IsCancellationRequested)

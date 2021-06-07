@@ -46,15 +46,23 @@ namespace Discord.Commands
                             {
                                 List<CommandOptionChoice> choices = null;
 
-                                if (TryGetAttribute<SlashParameterChoicesAttribute>(property.GetCustomAttributes(), out var choicesAttr))
+                                foreach (var ok in property.GetCustomAttributes())
                                 {
-                                    if (property.PropertyType != typeof(string) && !IsInteger(property.PropertyType))
-                                        throw new InvalidOperationException($"[Command: {attr.Name}, parameter: {paramAttr.Name}] Only strings and integers can have choices");
+                                    if (ok.GetType() == typeof(SlashParameterChoiceAttribute))
+                                    {
+                                        if (choices == null) choices = new List<CommandOptionChoice>();
 
-                                    choices = new List<CommandOptionChoice>();
+                                        var choiceAttr = (SlashParameterChoiceAttribute)ok;
 
-                                    foreach (var choice in choicesAttr.Choices)
-                                        choices.Add(new CommandOptionChoice() { Name = choice.Key, Value = choice.Value });
+                                        if (choiceAttr.Value.GetType() != typeof(string) && !IsInteger(choiceAttr.Value.GetType()))
+                                            throw new InvalidOperationException("All choice values must either be strings or integers");
+
+                                        choices.Add(new CommandOptionChoice()
+                                        {
+                                            Name = choiceAttr.Name,
+                                            Value = choiceAttr.Value
+                                        });
+                                    }
                                 }
 
                                 parameters.Add(new ApplicationCommandOption()
@@ -88,9 +96,17 @@ namespace Discord.Commands
                 }
             }
 
-            _client.SetGlobalApplicationCommands(ApplicationId, _commands);
+            _client.SetGlobalApplicationCommands(appId, _commands);
 
             client.OnInteraction += Client_OnInteraction;
+        }
+
+        private object ResolveObject(ResolvedInteractionData data, ulong id)
+        {
+            if (data.Roles != null && data.Roles.TryGetValue(id, out var role)) return role;
+            else if (data.Members != null && data.Members.TryGetValue(id, out var member)) return member;
+            else if (data.Users != null && data.Users.TryGetValue(id, out var user)) return user;
+            else throw new Exception(); // what the fuck
         }
 
         private void Client_OnInteraction(DiscordSocketClient client, DiscordInteractionEventArgs args)
@@ -128,7 +144,7 @@ namespace Discord.Commands
                                             else value = args.Interaction.Data.Resolved.Members[ulong.Parse(suppliedArg.Value)];
                                             break;
                                         case CommandOptionType.Mentionable:
-                                            // TODO
+                                            value = ResolveObject(args.Interaction.Data.Resolved, ulong.Parse(suppliedArg.Value));
                                             break;
                                         default:
                                             value = Convert.ChangeType(value, property.PropertyType);

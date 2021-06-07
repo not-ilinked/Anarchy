@@ -113,6 +113,12 @@ namespace Discord.Media
         }
 
 
+        public void SetChannel(ulong channelId)
+        {
+            Client.ChangeVoiceState(new VoiceStateProperties() { GuildId = GuildId, ChannelId = channelId });
+        }
+
+
         public void SetSpeakingState(DiscordSpeakingFlags flags)
         {
             if (State != MediaSessionState.Authenticated)

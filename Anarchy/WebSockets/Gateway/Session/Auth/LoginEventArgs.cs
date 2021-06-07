@@ -79,6 +79,10 @@ namespace Discord.Gateway
         public IReadOnlyList<DiscordPresence> Presences { get; private set; }
 
 
+        [JsonProperty("application")]
+        internal JObject Application { get; private set; }
+
+
         public override string ToString()
         {
             return User.ToString();

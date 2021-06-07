@@ -46,7 +46,7 @@ namespace MusicBot
                 session.OnDisconnected += Session_OnDisconnected;
                 session.Connect();
 
-                // this should be fixed later
+                // this should be using events, but i'm lazy lol
                 while (session.State != MediaSessionState.Authenticated) Thread.Sleep(10);
 
                 Program.ActiveSessions[Message.Guild.Id] = session.CreateStream(channel.Bitrate, AudioApplication.Music);

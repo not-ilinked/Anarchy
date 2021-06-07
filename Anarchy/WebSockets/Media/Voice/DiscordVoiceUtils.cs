@@ -23,6 +23,15 @@ namespace Discord.Media
             return process.StandardOutput.BaseStream;
         }
 
+        public static byte[] GetAudio(string path)
+        {
+            using (var memStream = new MemoryStream())
+            {
+                GetAudioStream(path).CopyTo(memStream);
+                return memStream.ToArray();
+            }
+        }
+
         [Obsolete("This method is obsolete. Please use GetAudioStream instead", true)]
         public static byte[] ReadFromFile(string path)
         {
