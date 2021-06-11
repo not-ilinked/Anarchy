@@ -17,21 +17,21 @@ namespace MusicBot
                 {
                     var list = Program.TrackLists[Message.Guild.Id];
 
-                    var currentSong = list[0];
-                    list.Clear();
+                    var currentSong = list.Tracks[0];
+                    list.Tracks.Clear();
 
                     currentSong.CancellationTokenSource.Cancel();
 
                     Message.Channel.SendMessage("Queue has been cleared");
                 }
             }
-            else if (!Program.TrackLists.TryGetValue(Message.Guild.Id, out var list) || list.Count == 0)
+            else if (!Program.TrackLists.TryGetValue(Message.Guild.Id, out var list) || list.Tracks.Count == 0)
                 Message.Channel.SendMessage("The music queue is empty");
             else
             {
                 var embed = new EmbedMaker() { Title = "Current queue" };
-                foreach (var song in list)
-                    embed.AddField(song.Title, song.ChannelName + (song == list[0] ? " *(Currently playing)*" : ""));
+                foreach (var song in list.Tracks)
+                    embed.AddField(song.Title, song.ChannelName + (song == list.Tracks[0] ? " *(Currently playing)*" : ""));
 
                 Message.Channel.SendMessage(embed);
             }

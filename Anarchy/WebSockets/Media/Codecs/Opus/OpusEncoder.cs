@@ -16,9 +16,9 @@ namespace Discord.Media
         private static extern OpusError EncoderCtl(IntPtr st, OpusCtl request, int value);
 
         public AudioApplication Application { get; }
-        public int BitRate { get; }
+        public uint BitRate { get; }
 
-        public OpusEncoder(int bitrate, AudioApplication application, int packetLoss)
+        public OpusEncoder(uint bitrate, AudioApplication application, int packetLoss)
         {
             if (bitrate < 5 * 1000 || bitrate > 384 * 1000)
                 throw new ArgumentOutOfRangeException(nameof(bitrate));
@@ -51,7 +51,7 @@ namespace Discord.Media
             CheckError(EncoderCtl(_ptr, OpusCtl.SetSignal, (int)opusSignal));
             CheckError(EncoderCtl(_ptr, OpusCtl.SetPacketLossPercent, packetLoss)); //%
             CheckError(EncoderCtl(_ptr, OpusCtl.SetInbandFEC, 1)); //True
-            CheckError(EncoderCtl(_ptr, OpusCtl.SetBitrate, bitrate));
+            CheckError(EncoderCtl(_ptr, OpusCtl.SetBitrate, (int)bitrate));
         }
 
         public unsafe int EncodeFrame(byte[] input, int inputOffset, byte[] output, int outputOffset)

@@ -93,6 +93,10 @@ namespace Discord.Gateway
         public event ClientEventHandler<EntitlementEventArgs> OnEntitlementUpdated;
 
         public event ClientEventHandler<DiscordInteractionEventArgs> OnInteraction;
+
+        public event ClientEventHandler<VoiceConnectEventArgs> OnJoinedVoiceChannel;
+        public event ClientEventHandler<VoiceDisconnectEventArgs> OnLeftVoiceChannel;
+        public event ClientEventHandler<VoiceChannelSpeakingEventArgs> OnUserSpeaking;
         #endregion
 
         // caching
@@ -105,10 +109,9 @@ namespace Discord.Gateway
 
         public CommandHandler CommandHandler { get; private set; }
         private SlashCommandHandler SlashCommandHandler { get; set; }
-
         public new LockedSocketConfig Config { get; private set; }
-        internal ConcurrentDictionary<ulong, DiscordVoiceSession> VoiceSessions { get; private set; }
-        internal ConcurrentDictionary<string, DiscordGoLiveSession> Livestreams { get; private set; }
+
+        internal VoiceClientDictionary VoiceClients { get; private set; }
 
         public DiscordUserSettings UserSettings { get; private set; }
 
@@ -148,9 +151,6 @@ namespace Discord.Gateway
                 PrivateChannelSettings = new List<DiscordChannelSettings>();
             }
 
-            VoiceSessions = new ConcurrentDictionary<ulong, DiscordVoiceSession>();
-            Livestreams = new ConcurrentDictionary<string, DiscordGoLiveSession>();
-
             WebSocket = new DiscordWebSocket<GatewayOpcode>($"wss://gateway.discord.gg/?v={Config.ApiVersion}&encoding=json");
 
             WebSocket.OnClosed += (s, args) =>
@@ -174,76 +174,19 @@ namespace Discord.Gateway
 
             WebSocket.OnMessageReceived += WebSocket_OnMessageReceived;
 
-            #region media event handlers
-            OnSessionVoiceState += (c, state) =>
-            {
-                lock (VoiceSessions.Lock)
-                {
-                    foreach (var session in VoiceSessions.Values)
-                    {
-                        if (session.GuildId == (state.Guild == null ? null : (ulong?)state.Guild.Id))
-                        {
-                            if (state.Channel == null || session.SessionId != state.SessionId)
-                                session.Kill();
-                            else if (state.SessionId == session.SessionId)
-                                session.ChannelId = state.Channel.Id;
+            VoiceClients = new VoiceClientDictionary(this);
 
-                            break;
-                        }
-                    }
-                }
+            OnSessionVoiceState += (s, e) =>
+            {
+                if (e.Guild == null) VoiceClients.Private.SetSessionId(e.SessionId);
+                else VoiceClients[e.Guild.Id].SetSessionId(e.SessionId);
             };
 
-            OnMediaServer += (c, args) =>
+            OnMediaServer += (s, e) =>
             {
-                if (args.StreamKey == null)
-                {
-                    lock (VoiceSessions.Lock)
-                    {
-                        foreach (var session in VoiceSessions.Values)
-                        {
-                            if (args.GuildId == session.GuildId)
-                            {
-                                session.UpdateServer(args);
-
-                                break;
-                            }
-                        }
-                    }
-                }
-                else if (Livestreams.TryGetValue(args.StreamKey, out DiscordGoLiveSession session))
-                {
-                    args.GuildId = session.Guild.Id;
-                    session.UpdateServer(args);
-
-                    if (StreamKey.Deserialize(args.StreamKey).UserId == User.Id)
-                        session.ParentSession.Livestream = session;
-                    else
-                        session.ParentSession.WatchingDictionary[args.StreamKey] = session;
-                }
+                if (e.Guild == null) VoiceClients.Private.SetServer(e);
+                else VoiceClients[e.Guild.Id].SetServer(e);
             };
-
-            OnStreamUpdated += (c, update) =>
-            {
-                if (Livestreams.TryGetValue(update.StreamKey, out DiscordGoLiveSession session))
-                    session.Update(update);
-            };
-
-            OnStreamDeleted += (c, delete) =>
-            {
-                if (Livestreams.TryGetValue(delete.StreamKey, out DiscordGoLiveSession session))
-                {
-                    Livestreams.Remove(delete.StreamKey);
-
-                    if (delete.StreamKey.Split(':').Last() == User.Id.ToString())
-                        session.ParentSession.Livestream = null;
-                    else
-                        session.ParentSession.WatchingDictionary.Remove(delete.StreamKey);
-
-                    session.Disconnect(delete);
-                }
-            };
-            #endregion
         }
 
         ~DiscordSocketClient()
@@ -294,6 +237,25 @@ namespace Discord.Gateway
         }
 
 
+        internal void TriggerVCConnect(DiscordVoiceClient client)
+        {
+            if (OnJoinedVoiceChannel != null)
+                Task.Run(() => OnJoinedVoiceChannel.Invoke(this, new VoiceConnectEventArgs(client)));
+        }
+
+        internal void TriggerVCDisconnect(ulong? guildId, ulong channelId, CloseEventArgs args)
+        {
+            if (OnLeftVoiceChannel != null)
+                Task.Run(() => OnLeftVoiceChannel.Invoke(this, new VoiceDisconnectEventArgs(guildId, channelId, args)));
+        }
+
+        internal void TriggerVCSpeaking(DiscordVoiceClient client, IncomingVoiceStream stream)
+        {
+            if (OnUserSpeaking != null)
+                Task.Run(() => OnUserSpeaking.Invoke(this, new VoiceChannelSpeakingEventArgs(client, stream)));
+        }
+
+
         private void WebSocket_OnMessageReceived(object sender, DiscordWebSocketMessage<GatewayOpcode> message)
         {
             Sequence = message.Sequence;
@@ -326,7 +288,10 @@ namespace Discord.Gateway
                                     Presences[presence.UserId] = presence;
 
                                 foreach (var guild in login.Guilds)
+                                {
                                     ApplyGuild(GuildCache[guild.Id] = (SocketGuild)guild);
+                                    VoiceClients[guild.Id] = new DiscordVoiceClient(this, guild.Id);
+                                }
 
                                 foreach (var settings in login.ClientGuildSettings)
                                 {
@@ -401,6 +366,8 @@ namespace Discord.Gateway
                             {
                                 var guild = message.Data.ToObject<SocketGuild>().SetClient(this);
 
+                                VoiceClients[guild.Id] = new DiscordVoiceClient(this, guild.Id);
+
                                 if (Config.Cache)
                                     ApplyGuild(GuildCache[guild.Id] = guild);
 
@@ -422,6 +389,8 @@ namespace Discord.Gateway
                         case "GUILD_DELETE":
                             {
                                 UnavailableGuild guild = message.Data.ToObject<UnavailableGuild>();
+
+                                VoiceClients.Remove(guild.Id);
 
                                 if (Lurking.HasValue && Lurking.Value == guild.Id)
                                     Lurking = null;
@@ -900,6 +869,10 @@ namespace Discord.Gateway
         }
 
 
+        public DiscordVoiceClient GetVoiceClient(ulong guildId) => VoiceClients[guildId];
+        public DiscordVoiceClient GetPrivateVoiceClient() => VoiceClients.Private;
+
+
         private void Reset()
         {
             SessionId = null;
@@ -911,6 +884,7 @@ namespace Discord.Gateway
                 VoiceStates.Clear();
                 GuildSettings.Clear();
                 PrivateChannelSettings.Clear();
+                VoiceClients.Clear();
             }
         }
 
@@ -920,16 +894,7 @@ namespace Discord.Gateway
 
             if (!destructor)
             {
-                foreach (var stream in Livestreams.Values)
-                    stream.Disconnect();
-
-                foreach (var session in VoiceSessions.Values)
-                    session.Disconnect();
-
-                VoiceSessions.Clear();
-                Livestreams.Clear();
                 WebSocket.Dispose();
-
                 Reset();
             }
         }

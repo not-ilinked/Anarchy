@@ -12,23 +12,21 @@ namespace MusicBot
     {
         public static YoutubeClient YouTubeClient { get; private set; } = new YoutubeClient();
 
-        public static Dictionary<ulong, List<AudioTrack>> TrackLists = new Dictionary<ulong, List<AudioTrack>>();
-        public static Dictionary<ulong, DiscordVoiceStream> ActiveSessions = new Dictionary<ulong, DiscordVoiceStream>();
+        public static Dictionary<ulong, TrackQueue> TrackLists = new Dictionary<ulong, TrackQueue>();
 
         public static bool CanModifyList(DiscordSocketClient client, DiscordMessage message)
         {
-            if (!client.GetVoiceStates(client.User.Id).GuildVoiceStates.TryGetValue(message.Guild.Id, out var ourState) || ourState.Channel == null || !Program.TrackLists.TryGetValue(message.Guild.Id, out var list) || list.Count == 0)
-            {
-                message.Channel.SendMessage("No song is currently being played");
-                return false;
-            }
-            else if (!client.GetVoiceStates(message.Author.User.Id).GuildVoiceStates.TryGetValue(message.Guild.Id, out var state) || state.Channel == null || state.Channel.Id != ourState.Channel.Id)
-            {
-                message.Channel.SendMessage("You must be connected to the same voice channel as me to skip songs");
-                return false;
-            }
+            var voiceClient = client.GetVoiceClient(message.Guild.Id);
 
-            return true;
+            if (voiceClient.State != MediaConnectionState.Ready)
+                message.Channel.SendMessage("I am not connected to a voice channel");
+            else if (!client.GetVoiceStates(message.Author.User.Id).GuildVoiceStates.TryGetValue(message.Guild.Id, out var state) || state.Channel == null || state.Channel.Id != voiceClient.Channel.Id)
+                message.Channel.SendMessage("You must be connected to the same voice channel as me to skip songs");
+            else if (!TrackLists.TryGetValue(message.Guild.Id, out var queue) || queue.Tracks.Count == 0)
+                message.Channel.SendMessage("The queue is empty");
+            else return true;
+
+            return false;
         }
 
         static void Main(string[] args)
@@ -39,9 +37,16 @@ namespace MusicBot
             DiscordSocketClient client = new DiscordSocketClient(new DiscordSocketConfig() { VoiceChannelConnectTimeout = 5000, Intents = DiscordGatewayIntent.Guilds | DiscordGatewayIntent.GuildMessages | DiscordGatewayIntent.GuildVoiceStates });
             client.CreateCommandHandler(";");
             client.OnLoggedIn += Client_OnLoggedIn;
+            client.OnJoinedVoiceChannel += Client_OnJoinedVoiceChannel;
             client.Login(token);
             
             Thread.Sleep(-1);
+        }
+
+        private static void Client_OnJoinedVoiceChannel(DiscordSocketClient client, VoiceConnectEventArgs args)
+        {
+            if (TrackLists.TryGetValue(args.Client.Guild.Id, out var list) && !list.Running)
+                list.Start();
         }
 
         private static void Client_OnLoggedIn(DiscordSocketClient client, LoginEventArgs args)

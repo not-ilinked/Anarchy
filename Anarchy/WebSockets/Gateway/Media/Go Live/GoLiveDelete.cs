@@ -8,7 +8,7 @@ namespace Discord.Media
         // stream_not_found, stream_ended
         [JsonProperty("reason")]
         public string RawReason { get; private set; }
-
+        /*
         public DiscordGoLiveError Reason
         {
             get
@@ -18,6 +18,6 @@ namespace Discord.Media
                 else
                     return DiscordGoLiveError.Unknown; 
             }
-        }
+        }*/
     }
 }

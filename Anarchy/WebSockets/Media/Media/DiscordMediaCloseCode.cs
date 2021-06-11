@@ -1,13 +1,7 @@
 ﻿namespace Discord.Media
 {
-    public enum DiscordMediaCloseCode : ushort
+    public enum DiscordMediaCloseCode
     {
-        // Anarchy
-        ClosedByClient = 3000,
-        UnknownCodec,
-        InvalidEncryptionMode,
-
-        // Discord
         UnknownOpcode = 4001,
         NotAuthenticated = 4003,
         AuthenticationFailed,

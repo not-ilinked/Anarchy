@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace Discord
+namespace Discord.Media
 {
     public class StreamSSRC
     {
@@ -9,5 +9,8 @@ namespace Discord
 
         [JsonProperty("ssrc")]
         public uint SSRC { get; private set; }
+
+        [JsonProperty("rtx_ssrc")]
+        public uint RtxSsrc { get; private set; }
     }
 }

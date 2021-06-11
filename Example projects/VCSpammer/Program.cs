@@ -17,10 +17,7 @@ namespace VCSpammer
         public static string AudioPath { get; private set; }
 
         public static object ChannelLookupLock = new object();
-        public static List<ulong> BotAccounts = new List<ulong>();
-        public static List<ulong> BottedChannels = new List<ulong>();
-
-        public static readonly int MinimumHumanParticipants = 1;
+        public static List<DiscordSocketClient> BotAccounts = new List<DiscordSocketClient>();
 
         static void Main(string[] args)
         {
@@ -38,34 +35,25 @@ namespace VCSpammer
             {
                 var client = new DiscordSocketClient(new DiscordSocketConfig() { VoiceChannelConnectTimeout = 5000 });
                 client.OnLoggedIn += Client_OnLoggedIn;
+                client.OnJoinedVoiceChannel += Client_OnJoinedVoiceChannel;
+                client.OnLeftVoiceChannel += Client_OnLeftVoiceChannel;
                 client.Login(token);
             }
 
             Thread.Sleep(-1);
         }
 
-        private static void Client_OnLoggedIn(DiscordSocketClient client, LoginEventArgs args)
+        private static void Client_OnLeftVoiceChannel(DiscordSocketClient client, VoiceDisconnectEventArgs args)
         {
-            BotAccounts.Add(client.User.Id);
-
-            Console.WriteLine("Logged into " + client.User.ToString());
-
-            Connect(client);
+            WaitConnect(client);
         }
 
-        private static void Session_OnDisconnected(DiscordVoiceSession session, DiscordMediaCloseEventArgs args)
+        private static void Client_OnJoinedVoiceChannel(DiscordSocketClient client, VoiceConnectEventArgs args)
         {
-            BottedChannels.Remove(session.Channel.Id);
-            Connect(session.Client);
-        }
+            Console.WriteLine(client.User.ToString() + " has joined " + args.Client.Channel.Id);
 
-        private static void Session_OnConnected(DiscordVoiceSession session, EventArgs e)
-        {
-            Console.WriteLine(session.Client.User.ToString() + " has joined " + session.Channel.Id);
-
-            var stream = session.CreateStream(((VoiceChannel)session.Client.GetChannel(session.Channel.Id)).Bitrate);
-
-            session.SetSpeakingState(DiscordSpeakingFlags.Soundshare);
+            args.Client.Microphone.Bitrate = ((VoiceChannel)client.GetChannel(args.Client.Channel.Id)).Bitrate;
+            args.Client.Microphone.SetSpeakingState(DiscordSpeakingFlags.Soundshare);
 
             CancellationTokenSource source = new CancellationTokenSource();
 
@@ -73,12 +61,11 @@ namespace VCSpammer
             {
                 while (true)
                 {
-                    if (GetParticipantCount(session.Client, session.Channel.Id) < MinimumHumanParticipants)
+                    if (GetParticipantCount(client, args.Client.Channel.Id) == 0)
                     {
                         source.Cancel();
-                        Console.WriteLine(session.Client.User.ToString() + " is switching channel, due to there being noone in the current one");
-                        BottedChannels.Remove(session.Channel.Id);
-                        session.SetChannel(FindAvailableChannel(session.Client));
+                        if (Connect(client)) Console.WriteLine(client.User.ToString() + " is switching channel, due to there being noone in the current one");
+                        else args.Client.Disconnect();
 
                         return;
                     }
@@ -87,28 +74,39 @@ namespace VCSpammer
                 }
             });
 
-            while (session.State == MediaSessionState.Authenticated && !source.IsCancellationRequested)
-                stream.CopyFrom(DiscordVoiceUtils.GetAudioStream(AudioPath), source.Token);
+            while (args.Client.State == MediaConnectionState.Ready && !source.IsCancellationRequested)
+                args.Client.Microphone.CopyFrom(DiscordVoiceUtils.GetAudioStream(AudioPath), source.Token);
         }
 
-        private static void Connect(DiscordSocketClient client)
+        private static void Client_OnLoggedIn(DiscordSocketClient client, LoginEventArgs args)
         {
-            var session = client.JoinVoiceChannel(new VoiceStateProperties() { ChannelId = FindAvailableChannel(client), Muted = true });
-            session.OnConnected += Session_OnConnected;
-            session.OnDisconnected += Session_OnDisconnected;
-            session.Connect();
+            BotAccounts.Add(client);
+
+            Console.WriteLine("Logged into " + client.User.ToString());
+
+            WaitConnect(client);
         }
 
         private static int GetParticipantCount(DiscordSocketClient client, ulong channelId) =>
-            client.GetChannelVoiceStates(channelId).Where(s => !BotAccounts.Contains(s.UserId)).Count();
+            client.GetChannelVoiceStates(channelId).Where(s => !BotAccounts.Any(c => c.User.Id == s.UserId)).Count();
 
-        private static ulong FindAvailableChannel(DiscordSocketClient client)
+        private static void WaitConnect(DiscordSocketClient client)
         {
-            while (true)
+            while (!Connect(client))
+                Thread.Sleep(100);
+        }
+
+        private static bool Connect(DiscordSocketClient client)
+        {
+            lock (ChannelLookupLock)
             {
                 var guild = client.GetCachedGuild(TargetGuildId);
 
-                foreach (var ch in guild.Channels.Where(c => c.Type == ChannelType.Voice).OrderBy(c => GetParticipantCount(client, c.Id)).Reverse())
+                foreach (var ch in guild.Channels.Where(c => c.Type == ChannelType.Voice && !BotAccounts.Any(a =>
+                {
+                    var voiceClient = a.GetVoiceClient(TargetGuildId);
+                    return voiceClient.Channel != null && voiceClient.Channel.Id == c.Id;
+                })).OrderBy(c => GetParticipantCount(client, c.Id)).Reverse())
                 {
                     var voiceChannel = (VoiceChannel)ch;
 
@@ -117,24 +115,17 @@ namespace VCSpammer
                     if (perms.Has(DiscordPermission.ViewChannel) && perms.Has(DiscordPermission.ConnectToVC) && perms.Has(DiscordPermission.SpeakInVC))
                     {
                         int voiceStates = GetParticipantCount(client, voiceChannel.Id);
-                        if (voiceStates >= MinimumHumanParticipants && (voiceChannel.UserLimit == 0 || voiceStates < voiceChannel.UserLimit))
+                        if (voiceStates > 0 && (voiceChannel.UserLimit == 0 || voiceStates < voiceChannel.UserLimit))
                         {
-                            lock (ChannelLookupLock)
-                            {
-                                if (!BottedChannels.Contains(voiceChannel.Id))
-                                {
-                                    BottedChannels.Add(voiceChannel.Id);
-
-                                    Console.WriteLine(client.User.ToString() + " has found the channel " + voiceChannel.Id);
-                                    return voiceChannel.Id;
-                                }
-                            } 
+                            Console.WriteLine(client.User.ToString() + " has found the channel " + voiceChannel.Id);
+                            client.GetVoiceClient(TargetGuildId).Connect(voiceChannel.Id, new VoiceConnectionProperties() { Muted = true });
+                            return true;
                         }
                     }
                 }
-
-                Thread.Sleep(100);
             }
+
+            return false;
         }
     }
 }

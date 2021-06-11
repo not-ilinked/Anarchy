@@ -125,13 +125,6 @@
     <Compile Include="WebSockets\Gateway\Media\Voice\DiscordVoiceStateContainer.cs" />
     <Compile Include="WebSockets\Gateway\Session\GatewayIntentBundle.cs" />
     <Compile Include="WebSockets\Gateway\User\RemovedRelationshipEventArgs.cs" />
-    <Compile Include="WebSockets\Media\Livestreaming\DiscordGoLiveCloseEventArgs.cs" />
-    <Compile Include="WebSockets\Media\Livestreaming\DiscordGoLiveError.cs" />
-    <Compile Include="WebSockets\Media\Livestreaming\DiscordGoLiveException.cs" />
-    <Compile Include="WebSockets\Media\Livestreaming\StreamKey.cs" />
-    <Compile Include="WebSockets\Media\Livestreaming\StreamSSRC.cs" />
-    <Compile Include="WebSockets\Media\Media\MediaWebSocket.cs" />
-    <Compile Include="WebSockets\Media\Media\UnorthodoxCloseCode.cs" />
     <Compile Include="WebSockets\Gateway\Session\Auth\Resume.cs" />
     <Compile Include="WebSockets\Gateway\Channel\Private\ChannelRecipientEventArgs.cs" />
     <Compile Include="WebSockets\Gateway\Channel\GatewayChannelExtensions.cs" />
@@ -171,17 +164,23 @@
     <Compile Include="WebSockets\Media\Codecs\Opus\OpusDecoder.cs" />
     <Compile Include="WebSockets\Media\Codecs\Opus\OpusException.cs" />
     <Compile Include="WebSockets\Media\Codecs\VideoMediaCodec.cs" />
-    <Compile Include="WebSockets\Media\Livestreaming\DiscordGoLiveSession.cs" />
     <Compile Include="WebSockets\Gateway\Media\Go Live\GoLiveUpdate.cs" />
-    <Compile Include="WebSockets\Media\Media\DiscordMediaCloseEventArgs.cs" />
+    <Compile Include="WebSockets\Media\Livestreaming\StreamSSRC.cs" />
+    <Compile Include="WebSockets\Media\Media\DiscordMediaCloseCode.cs" />
+    <Compile Include="WebSockets\Media\Media\DiscordMediaConnection.cs" />
+    <Compile Include="WebSockets\Media\Media\MediaConnectionState.cs" />
+    <Compile Include="WebSockets\Media\Media\MediaPacketEventArgs.cs" />
     <Compile Include="WebSockets\Media\Media\Payloads\SSRCUpdate.cs" />
     <Compile Include="WebSockets\Media\Media\Auth\DiscordSessionDescription.cs" />
     <Compile Include="WebSockets\Media\Media\Payloads\MediaCodecSelection.cs" />
+    <Compile Include="WebSockets\Media\Voice\DiscordVoiceInput.cs" />
+    <Compile Include="WebSockets\Media\Voice\Speaking\IncomingVoiceStream.cs" />
+    <Compile Include="WebSockets\Gateway\Media\Voice\VoiceChannelSpeakingEventArgs.cs" />
+    <Compile Include="WebSockets\Gateway\Media\Voice\VoiceConnectEventArgs.cs" />
     <Compile Include="WebSockets\Media\RTP\RTPPacketHeader.cs" />
     <Compile Include="WebSockets\Media\RTP\SodiumException.cs" />
-    <Compile Include="WebSockets\Media\Voice\ChannelChangedEventArgs.cs" />
+    <Compile Include="WebSockets\Media\Voice\DiscordVoiceClient.cs" />
     <Compile Include="WebSockets\Media\Voice\Speaking\DiscordVoicePacket.cs" />
-    <Compile Include="WebSockets\Media\Voice\Speaking\IncomingVoiceStream.cs" />
     <Compile Include="Local\DiscordImage.cs" />
     <Compile Include="WebSockets\Gateway\Invite\InviteCreatedEventArgs.cs" />
     <Compile Include="REST\Billing\BillingAddress.cs" />
@@ -238,8 +237,6 @@
     <Compile Include="WebSockets\Gateway\User\DiscordSettingsEventArgs.cs" />
     <Compile Include="REST\User\Settings\DiscordUserSettings.cs" />
     <Compile Include="REST\User\Settings\DiscordGuildFolderUpdate.cs" />
-    <Compile Include="WebSockets\Media\Media\DiscordMediaSession.cs" />
-    <Compile Include="WebSockets\Media\Media\MediaSessionState.cs" />
     <Compile Include="WebSockets\Gateway\Session\Extensions.cs" />
     <Compile Include="WebSockets\Gateway\Session\Auth\Identification.cs" />
     <Compile Include="WebSockets\Gateway\Session\Auth\LoginEventArgs.cs" />
@@ -399,7 +396,6 @@
     <Compile Include="WebSockets\Gateway\User\UserEventArgs.cs" />
     <Compile Include="REST\Voice\Extensions.cs" />
     <Compile Include="REST\Voice\VoiceRegion.cs" />
-    <Compile Include="WebSockets\Media\Voice\DiscordVoiceStream.cs" />
     <Compile Include="WebSockets\Media\Voice\DiscordVoiceUtils.cs" />
     <Compile Include="WebSockets\Media\Voice\Speaking\DiscordSpeakingFlags.cs" />
     <Compile Include="WebSockets\Media\Media\Payloads\DiscordSSRC.cs" />
@@ -412,9 +408,7 @@
     <Compile Include="REST\Guild\Webhook\Default\WebhookMessageProperties.cs" />
     <Compile Include="REST\Guild\Webhook\Default\DiscordWebhookProfile.cs" />
     <Compile Include="REST\Guild\Webhook\DiscordWebhookProperties.cs" />
-    <Compile Include="WebSockets\Media\Media\DiscordMediaCloseCode.cs" />
     <Compile Include="WebSockets\Media\Media\Payloads\DiscordMediaOpcode.cs" />
-    <Compile Include="WebSockets\Media\Voice\DiscordVoiceSession.cs" />
     <Compile Include="WebSockets\Media\Media\Auth\DiscordMediaIdentify.cs" />
     <Compile Include="WebSockets\Media\Media\Payloads\MediaProtocolData.cs" />
     <Compile Include="WebSockets\Media\Media\Payloads\MediaProtocolSelection.cs" />
@@ -435,6 +429,9 @@
     <Compile Include="WebSockets\DiscordWebSocketCloseEventArgs.cs" />
     <Compile Include="WebSockets\DiscordWebSocketRequest.cs" />
     <Compile Include="WebSockets\DiscordWebSocketMessage.cs" />
+    <Compile Include="WebSockets\Gateway\Media\Voice\VoiceClientDictionary.cs" />
+    <Compile Include="WebSockets\Media\Voice\VoiceConnectionProperties.cs" />
+    <Compile Include="WebSockets\Gateway\Media\Voice\VoiceDisconnectEventArgs.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

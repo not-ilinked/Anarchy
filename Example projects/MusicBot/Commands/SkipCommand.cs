@@ -12,8 +12,8 @@ namespace MusicBot
             {
                 var list = Program.TrackLists[Message.Guild.Id];
 
-                var currentSong = list[0];
-                list.RemoveAt(0);
+                var currentSong = list.Tracks[0];
+                list.Tracks.RemoveAt(0);
                 currentSong.CancellationTokenSource.Cancel();
 
                 Message.Channel.SendMessage("Skipped the current song.");

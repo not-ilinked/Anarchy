@@ -6,7 +6,7 @@ namespace Discord.Media
 {
     public class IncomingVoiceStream
     {
-        public DiscordVoiceSession Session { get; private set; }
+        internal DiscordMediaConnection Session { get; private set; }
         public ulong UserId { get; private set; }
 
         private readonly ConcurrentQueue<DiscordVoicePacket> _packets;
@@ -22,7 +22,7 @@ namespace Discord.Media
             get { return _packets.Count; }
         }
 
-        public IncomingVoiceStream(DiscordVoiceSession session, ulong userId)
+        internal IncomingVoiceStream(DiscordMediaConnection session, ulong userId)
         {
             _packets = new ConcurrentQueue<DiscordVoicePacket>();
             Session = session;
@@ -52,7 +52,7 @@ namespace Discord.Media
         {
             if (_packets.TryDequeue(out DiscordVoicePacket packet))
                 return Task.FromResult(packet);
-            else if (Session.State == MediaSessionState.Authenticated && !Closed)
+            else if (Session.State == MediaConnectionState.Ready && !Closed)
             {
                 TaskCompletionSource<DiscordVoicePacket> task = new TaskCompletionSource<DiscordVoicePacket>();
 
