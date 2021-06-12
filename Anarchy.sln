@@ -19,7 +19,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GuildDuplicator", "Example 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MessageListener", "Example projects\MessageListener\MessageListener.csproj", "{F87B4C37-8004-493D-9595-719B8165D210}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TicTacToe", "TicTacToe\TicTacToe.csproj", "{761FB81F-4649-4302-9B21-8BE20AABDFC1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TicTacToe", "Example projects\TicTacToe\TicTacToe.csproj", "{761FB81F-4649-4302-9B21-8BE20AABDFC1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
