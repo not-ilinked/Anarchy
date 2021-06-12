@@ -12,12 +12,13 @@ namespace TicTacToe
 
         static void Main(string[] args)
         {
-            string token = "ODUwNDA0NDExMTE2NzQ4ODIx.YLpO0w.CcVOS0NdLNeyYA_cVm6RCmURV0E";
+            Console.WriteLine("Bot token: ");
+            string token = Console.ReadLine();
 
+            // this bot does not actually require any intents, but we have to add at least one :/
             DiscordSocketClient client = new DiscordSocketClient(new DiscordSocketConfig() { Intents = DiscordGatewayIntent.Guilds });
             client.OnLoggedIn += Client_OnLoggedIn;
             client.OnInteraction += Client_OnInteraction;
-            client.OnLoggedOut += Client_OnLoggedOut;
             client.Login("Bot " + token);
 
             Thread.Sleep(-1);
@@ -69,10 +70,6 @@ namespace TicTacToe
                 
                 args.Interaction.Respond(InteractionCallbackType.UpdateMessage, new InteractionResponseProperties());
             }
-        }
-
-        private static void Client_OnLoggedOut(DiscordSocketClient client, LogoutEventArgs args)
-        {
         }
 
         private static void Client_OnLoggedIn(DiscordSocketClient client, LoginEventArgs args)
