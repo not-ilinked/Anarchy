@@ -18,18 +18,19 @@ namespace Discord.Media
 
         private string _sessionId;
 
-        private ulong? _guildId;
+        private readonly ulong? _guildId;
         public MinimalGuild Guild => _guildId.HasValue ? new MinimalGuild(_guildId.Value) : null;
 
         private ulong? _channelId;
         public MinimalChannel Channel => _channelId.HasValue ? new MinimalChannel(_channelId.Value) : null;
 
         public DiscordVoiceInput Microphone { get; private set; }
+        public DiscordGoLiveClient GoLive { get; private set; }
 
         private OpusDecoder _decoder;
-        private Anarchy.ConcurrentDictionary<ulong, IncomingVoiceStream> _receivers = new Anarchy.ConcurrentDictionary<ulong, IncomingVoiceStream>();
-        private Anarchy.ConcurrentDictionary<uint, ulong> _ssrcToUserDictionary = new Anarchy.ConcurrentDictionary<uint, ulong>();
-        private static readonly byte[] SilenceFrame = new byte[] { 0xF8, 0xFF, 0xFE };
+        private readonly Anarchy.ConcurrentDictionary<ulong, IncomingVoiceStream> _receivers = new Anarchy.ConcurrentDictionary<ulong, IncomingVoiceStream>();
+        private readonly Anarchy.ConcurrentDictionary<uint, ulong> _ssrcToUserDictionary = new Anarchy.ConcurrentDictionary<uint, ulong>();
+        private static readonly byte[] _silenceFrame = new byte[] { 0xF8, 0xFF, 0xFE };
 
         public DiscordVoiceClient(DiscordSocketClient client, ulong? guildId)
         {
@@ -43,6 +44,7 @@ namespace Discord.Media
         {
             _ssrcToUserDictionary.Clear();
             _receivers.Clear();
+            if (_guildId.HasValue) GoLive = new DiscordGoLiveClient(_client, _guildId.Value, _channelId.Value);
 
             Connection = new DiscordMediaConnection(_client, _sessionId, server.Guild == null ? _channelId.Value : server.Guild.Id, server);
             
@@ -101,7 +103,7 @@ namespace Discord.Media
                     _client.TriggerVCSpeaking(this, receiver);
                 }
 
-                if (args.Payload.SequenceEqual(SilenceFrame))
+                if (args.Payload.SequenceEqual(_silenceFrame))
                 {
                     receiver.SilenceFramesReceived++;
 

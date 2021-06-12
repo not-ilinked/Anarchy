@@ -184,9 +184,21 @@ namespace Discord.Gateway
 
             OnMediaServer += (s, e) =>
             {
-                if (e.Guild == null) VoiceClients.Private.SetServer(e);
-                else VoiceClients[e.Guild.Id].SetServer(e);
+                if (e.StreamKey == null)
+                {
+                    if (e.Guild == null) VoiceClients.Private.SetServer(e);
+                    else VoiceClients[e.Guild.Id].SetServer(e);
+                }
+                else
+                {
+                    var key = new StreamKey(e.StreamKey);
+                    VoiceClients[key.GuildId].GoLive.SetSessionServer(key.UserId, e);
+                }
             };
+            
+            OnStreamCreated += (s, e) => GetVoiceClient(new StreamKey(e.StreamKey).GuildId).GoLive.CreateSession(e);
+            OnStreamUpdated += (s, e) => GetVoiceClient(new StreamKey(e.StreamKey).GuildId).GoLive.UpdateSession(e);
+            OnStreamDeleted += (s, e) => GetVoiceClient(new StreamKey(e.StreamKey).GuildId).GoLive.KillSession(e);
         }
 
         ~DiscordSocketClient()
@@ -263,9 +275,9 @@ namespace Discord.Gateway
             switch (message.Opcode)
             {
                 case GatewayOpcode.Event:
-                    /*
-                    Console.WriteLine(message.EventName);
                     
+                    Console.WriteLine(message.EventName);
+                    /*
                     File.AppendAllText("Debug.log", $"{message.EventName}: {message.Data}\n");
                     */
 
@@ -828,7 +840,7 @@ namespace Discord.Gateway
 
                     Task.Run(() =>
                     {
-                        int interval = message.Data.ToObject<JObject>().GetValue("heartbeat_interval").ToObject<int>();
+                        int interval = message.Data.ToObject<JObject>().GetValue("heartbeat_interval").ToObject<int>() - 1000;
 
                         try
                         {

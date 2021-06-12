@@ -105,7 +105,7 @@ namespace Discord.Gateway
 
         private static int RequestMembers(DiscordSocketClient client, ulong guildId, ulong channelId, int index)
         {
-            const int rangesPerRequest = 3;
+            const int rangesPerRequest = 1;
 
             int[][] chunks = new int[rangesPerRequest][];
 
