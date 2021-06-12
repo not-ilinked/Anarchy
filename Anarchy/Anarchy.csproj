@@ -74,6 +74,10 @@
     <Compile Include="REST\CDN\CDNEndpoint.cs" />
     <Compile Include="REST\CDN\CDNEndpoints.cs" />
     <Compile Include="REST\CDN\DiscordCDNImage.cs" />
+    <Compile Include="REST\Channel\Guild\Stage\DiscordStageInstance.cs" />
+    <Compile Include="REST\Channel\Guild\Stage\StageChannel.cs" />
+    <Compile Include="REST\Channel\Guild\Stage\StageDiscoveryItem.cs" />
+    <Compile Include="REST\Channel\Guild\Stage\StagePrivacyLevel.cs" />
     <Compile Include="REST\DiscordClient.cs" />
     <Compile Include="REST\DiscordConfig.cs" />
     <Compile Include="REST\Guild\Permissions\PermissionUtils.cs" />

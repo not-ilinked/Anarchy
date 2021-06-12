@@ -3,13 +3,15 @@
 - Added RestConnectionRetries to DiscordConfig, which allows you to set the amount of times the HTTP client should retry a failed request.
 - Added member screening functionality.
 - Added message references / replies.
+- Added stage channel support.
 - Added proper error handling for media binaries.
 - Added components.
 - Added slash commands.
 - TODO: Add threads.
 
 ### Improvements
-- Fixed v8 being unusable with socket clients.
+- Rewrote Anarchy's media implementation (voice and Go Live connections) to use a client-based structure instead of a session-based one.
+- Fixed v8-9 being unusable with socket clients.
 - Added the 'InviteGuild' object which can be found in GuildInvites.
 - Payment and gift functions now return more accurate data.
 - Added more filters to MessageFilters.

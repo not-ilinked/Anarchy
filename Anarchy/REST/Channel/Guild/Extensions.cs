@@ -94,5 +94,29 @@ namespace Discord
         {
             return client.FollowChannelAsync(channelToFollowId, crosspostChannelId).GetAwaiter().GetResult();
         }
+
+        public static async Task<DiscordStageInstance> CreateStageInstanceAsync(this DiscordClient client, ulong channelId, string topic, StagePrivacyLevel privacyLevel = StagePrivacyLevel.GuildOnly) =>
+            (await client.HttpClient.PostAsync("/stage-instances", new { channel_id = channelId, topic, privacy_level = privacyLevel })).Deserialize<DiscordStageInstance>().SetClient(client);
+
+        public static DiscordStageInstance CreateStageInstance(this DiscordClient client, ulong channelId, string topic, StagePrivacyLevel privacyLevel = StagePrivacyLevel.GuildOnly) =>
+            client.CreateStageInstanceAsync(channelId, topic, privacyLevel).GetAwaiter().GetResult();
+
+
+        public static Task DeleteStageInstanceAsync(this DiscordClient client, ulong channelId) => client.HttpClient.DeleteAsync("/stage-instances/" + channelId);
+        public static void DeleteStageInstance(this DiscordClient client, ulong channelId) => client.DeleteStageInstanceAsync(channelId).GetAwaiter().GetResult();
+
+        private static Task setStageSpeakingAsync(this DiscordClient client, ulong guildId, ulong channelId, string user, bool speaker) => 
+            client.HttpClient.PatchAsync($"/guilds/{guildId}/voice-states/" + user, new { channel_id = channelId, suppress = !speaker });
+
+        public static Task SetClientStageSpeakingAsync(this DiscordClient client, ulong guildId, ulong channelId, bool speaker) => client.setStageSpeakingAsync(guildId, channelId, "@me", speaker);
+        public static void SetClientStageSpeaking(this DiscordClient client, ulong guildId, ulong channelId, bool speaker) => client.SetClientStageSpeakingAsync(guildId, channelId, speaker).GetAwaiter().GetResult();
+
+        public static Task SetStageSpeakingAsync(this DiscordClient client, ulong guildId, ulong channelId, ulong userId, bool speaker) => client.setStageSpeakingAsync(guildId, channelId, userId.ToString(), speaker);
+        public static void SetStageSpeaking(this DiscordClient client, ulong guildId, ulong channelId, ulong userId, bool speaker) => client.SetStageSpeakingAsync(guildId, channelId, userId, speaker).GetAwaiter().GetResult();
+
+        public static async Task<IReadOnlyList<StageDiscoveryItem>> GetDiscoverableStagesAsync(this DiscordClient client) =>
+            (await client.HttpClient.GetAsync("/stage-instances")).Deserialize<List<StageDiscoveryItem>>().SetClientsInList(client);
+
+        public static IReadOnlyList<StageDiscoveryItem> GetDiscoverableStages(this DiscordClient client) => client.GetDiscoverableStagesAsync().GetAwaiter().GetResult();
     }
 }

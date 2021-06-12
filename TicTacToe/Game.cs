@@ -12,6 +12,8 @@ namespace TicTacToe
 
             for (int i = 0; i < Grid.Length; i++)
                 Grid[i] = new SquareState[] { SquareState.Neutral, SquareState.Neutral, SquareState.Neutral };
+
+            ChallengerTurn = true;
         }
 
         public string Id { get; set; }
@@ -19,7 +21,7 @@ namespace TicTacToe
         public DiscordUser Challengee { get; set; }
         public bool Accepted { get; set; }
 
-        public bool ChallengerTurn { get; set; } = true;
+        public bool ChallengerTurn { get; set; }
         public SquareState[][] Grid { get; set; }
 
         private string SerializeSquare(SquareState state)
@@ -37,49 +39,34 @@ namespace TicTacToe
             }
         }
 
-        private bool LadderCheck1(SquareState targetState) => Grid[0][0] == targetState && Grid[1][1] == targetState && Grid[2][2] == targetState;
-        private bool LadderCheck2(SquareState targetState) => Grid[0][2] == targetState && Grid[1][1] == targetState && Grid[2][0] == targetState;
+        private bool HasWon(SquareState targetState)
+        {
+            foreach (var row in Grid)
+            {
+                if (row.All(s => s == targetState)) 
+                    return true;
+            }
 
+            for (int i = 0; i < 3; i++)
+            {
+                if (Grid.All(row => row[i] == targetState)) 
+                    return true;
+            }
+
+            if (Grid[0][0] == targetState && Grid[1][1] == targetState && Grid[2][2] == targetState) return true;
+            else if (Grid[0][2] == targetState && Grid[1][1] == targetState && Grid[2][0] == targetState) return true;
+
+            return false;
+        }
 
         private bool TryFindWinner(out bool challengerWin)
         {
-            // straight rows
-            foreach (var row in Grid)
-            {
-                if (row.All(s => s == SquareState.Challenger))
-                {
-                    challengerWin = true;
-                    return true;
-                }
-                else if (row.All(s => s == SquareState.Challengee))
-                {
-                    challengerWin = false;
-                    return true;
-                }
-            }
-
-            // straight columns
-            for (int i = 0; i < 3; i++)
-            {
-                if (Grid.All(row => row[i] == SquareState.Challenger))
-                {
-                    challengerWin = true;
-                    return true;
-                }
-                else if (Grid.All(row => row[i] == SquareState.Challengee))
-                {
-                    challengerWin = false;
-                    return true;
-                }
-            }
-
-            // ladders
-            if (LadderCheck1(SquareState.Challenger) || LadderCheck2(SquareState.Challenger))
+            if (HasWon(SquareState.Challenger))
             {
                 challengerWin = true;
                 return true;
             }
-            else if (LadderCheck1(SquareState.Challengee) || LadderCheck2(SquareState.Challengee))
+            else if (HasWon(SquareState.Challengee))
             {
                 challengerWin = false;
                 return true;
@@ -89,7 +76,7 @@ namespace TicTacToe
             return false;
         }
 
-        public InteractionResponseProperties UpdateGrid()
+        public InteractionResponseProperties SerializeGrid()
         {
             bool hasWinner = TryFindWinner(out bool challengerIsWinner);
 

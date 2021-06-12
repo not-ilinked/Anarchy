@@ -12,7 +12,7 @@ namespace TicTacToe
 
         static void Main(string[] args)
         {
-            Console.WriteLine("Bot token: ");
+            Console.Write("Bot token: ");
             string token = Console.ReadLine();
 
             // this bot does not actually require any intents, but we have to add at least one :/
@@ -47,7 +47,7 @@ namespace TicTacToe
                     {
                         game.Grid[int.Parse(parts[1])][int.Parse(parts[2])] = game.ChallengerTurn ? SquareState.Challenger : SquareState.Challengee;
                         game.ChallengerTurn = !game.ChallengerTurn;
-                        args.Interaction.Respond(InteractionCallbackType.UpdateMessage, game.UpdateGrid());
+                        args.Interaction.Respond(InteractionCallbackType.UpdateMessage, game.SerializeGrid());
 
                         return;
                     }
@@ -57,7 +57,7 @@ namespace TicTacToe
                     if (parts[1] == "accept")
                     {
                         game.Accepted = true;
-                        args.Interaction.Respond(InteractionCallbackType.UpdateMessage, game.UpdateGrid());
+                        args.Interaction.Respond(InteractionCallbackType.UpdateMessage, game.SerializeGrid());
                     }
                     else
                     {

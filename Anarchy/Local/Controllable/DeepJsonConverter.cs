@@ -24,7 +24,7 @@ namespace Discord
                     { (int)ChannelType.GuildNewsThread, typeof(TextChannel) },
                     { (int)ChannelType.GuildPublicThread, typeof(TextChannel) },
                     { (int)ChannelType.GuildPrivateThread, typeof(TextChannel) },
-                    { (int)ChannelType.Stage, typeof(VoiceChannel) }
+                    { (int)ChannelType.Stage, typeof(StageChannel) }
                 }
             },
             {
