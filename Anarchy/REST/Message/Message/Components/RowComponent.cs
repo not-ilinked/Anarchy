@@ -5,7 +5,7 @@ namespace Discord
 {
     public class RowComponent : MessageComponent
     {
-        public RowComponent() 
+        internal RowComponent() 
         {
             Type = MessageComponentType.Row;
         }

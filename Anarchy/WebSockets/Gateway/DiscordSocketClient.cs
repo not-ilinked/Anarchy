@@ -62,11 +62,6 @@ namespace Discord.Gateway
 
         public event ClientEventHandler<VoiceStateEventArgs> OnVoiceStateUpdated;
         internal event ClientEventHandler<DiscordMediaServer> OnMediaServer;
-        internal event ClientEventHandler<DiscordVoiceState> OnSessionVoiceState;
-
-        internal event ClientEventHandler<GoLiveCreate> OnStreamCreated;
-        internal event ClientEventHandler<GoLiveUpdate> OnStreamUpdated;
-        internal event ClientEventHandler<GoLiveDelete> OnStreamDeleted;
 
         public event ClientEventHandler<UserTypingEventArgs> OnUserTyping;
         public event ClientEventHandler<MessageEventArgs> OnMessageReceived;
@@ -176,12 +171,6 @@ namespace Discord.Gateway
 
             VoiceClients = new VoiceClientDictionary(this);
 
-            OnSessionVoiceState += (s, e) =>
-            {
-                if (e.Guild == null) VoiceClients.Private.SetSessionId(e.SessionId);
-                else VoiceClients[e.Guild.Id].SetSessionId(e.SessionId);
-            };
-
             OnMediaServer += (s, e) =>
             {
                 if (e.StreamKey == null)
@@ -195,10 +184,6 @@ namespace Discord.Gateway
                     VoiceClients[key.GuildId].GoLive.SetSessionServer(key.UserId, e);
                 }
             };
-            
-            OnStreamCreated += (s, e) => GetVoiceClient(new StreamKey(e.StreamKey).GuildId).GoLive.CreateSession(e);
-            OnStreamUpdated += (s, e) => GetVoiceClient(new StreamKey(e.StreamKey).GuildId).GoLive.UpdateSession(e);
-            OnStreamDeleted += (s, e) => GetVoiceClient(new StreamKey(e.StreamKey).GuildId).GoLive.KillSession(e);
         }
 
         ~DiscordSocketClient()
@@ -500,43 +485,43 @@ namespace Discord.Gateway
                             }
                             break;
                         case "VOICE_STATE_UPDATE":
-                            if (Config.Cache || OnSessionVoiceState != null || OnVoiceStateUpdated != null)
+                            DiscordVoiceState newState = message.Data.ToObject<DiscordVoiceState>().SetClient(this);
+
+                            if (Config.Cache)
                             {
-                                DiscordVoiceState newState = message.Data.ToObject<DiscordVoiceState>().SetClient(this);
+                                if (newState.Guild == null)
+                                    VoiceStates[newState.UserId].PrivateChannelVoiceState = newState;
+                                else
+                                    VoiceStates[newState.UserId].GuildStates[newState.Guild.Id] = newState;
 
-                                if (Config.Cache)
+                                // we also store voice states within SocketGuilds, so make sure to update those.
+                                foreach (var guild in this.GetCachedGuilds())
                                 {
-                                    if (newState.Guild == null)
-                                        VoiceStates[newState.UserId].PrivateChannelVoiceState = newState;
-                                    else
-                                        VoiceStates[newState.UserId].GuildStates[newState.Guild.Id] = newState;
-
-                                    // we also store voice states within SocketGuilds, so make sure to update those.
-                                    foreach (var guild in this.GetCachedGuilds())
+                                    if (!guild.Unavailable)
                                     {
-                                        if (!guild.Unavailable)
+                                        if (newState.Guild == null || guild.Id != newState.Guild.Id)
+                                            guild._voiceStates.RemoveFirst(s => s.UserId == newState.UserId);
+                                        else
                                         {
-                                            if (newState.Guild == null || guild.Id != newState.Guild.Id)
-                                                guild._voiceStates.RemoveFirst(s => s.UserId == newState.UserId);
-                                            else
-                                            {
-                                                int i = guild._voiceStates.FindIndex(s => s.UserId == newState.UserId);
+                                            int i = guild._voiceStates.FindIndex(s => s.UserId == newState.UserId);
 
-                                                if (i > -1)
-                                                    guild._voiceStates[i] = newState;
-                                                else
-                                                    guild._voiceStates.Add(newState);
-                                            }
+                                            if (i > -1)
+                                                guild._voiceStates[i] = newState;
+                                            else
+                                                guild._voiceStates.Add(newState);
                                         }
                                     }
                                 }
-
-                                if (newState.UserId == User.Id)
-                                    OnSessionVoiceState?.Invoke(this, newState);
-
-                                if (OnVoiceStateUpdated != null)
-                                    Task.Run(() => OnVoiceStateUpdated.Invoke(this, new VoiceStateEventArgs(newState)));
                             }
+
+                            if (newState.UserId == User.Id)
+                            {
+                                if (newState.Guild == null) VoiceClients.Private.SetSessionId(newState.SessionId);
+                                else VoiceClients[newState.Guild.Id].SetSessionId(newState.SessionId);
+                            }
+
+                            if (OnVoiceStateUpdated != null)
+                                Task.Run(() => OnVoiceStateUpdated.Invoke(this, new VoiceStateEventArgs(newState)));
                             break;
                         case "VOICE_SERVER_UPDATE":
                             OnMediaServer?.Invoke(this, message.Data.ToObject<DiscordMediaServer>().SetClient(this));
@@ -799,13 +784,16 @@ namespace Discord.Gateway
                             OnMediaServer?.Invoke(this, message.Data.ToObject<DiscordMediaServer>().SetClient(this));
                             break;
                         case "STREAM_CREATE":
-                            OnStreamCreated?.Invoke(this, message.Data.ToObject<GoLiveCreate>());
+                            var create = message.Data.ToObject<GoLiveCreate>();
+                            GetVoiceClient(new StreamKey(create.StreamKey).GuildId).GoLive.CreateSession(create);
                             break;
                         case "STREAM_UPDATE":
-                            OnStreamUpdated?.Invoke(this, message.Data.ToObject<GoLiveUpdate>());
+                            var update = message.Data.ToObject<GoLiveUpdate>();
+                            GetVoiceClient(new StreamKey(update.StreamKey).GuildId).GoLive.UpdateSession(update);
                             break;
                         case "STREAM_DELETE":
-                            OnStreamDeleted?.Invoke(this, message.Data.ToObject<GoLiveDelete>());
+                            var delete = message.Data.ToObject<GoLiveDelete>();
+                            GetVoiceClient(new StreamKey(delete.StreamKey).GuildId).GoLive.KillSession(delete);
                             break;
                         case "CHANNEL_UNREAD_UPDATE":
                             if (Config.Cache || OnGuildUnreadMessagesUpdated != null)
