@@ -243,7 +243,7 @@ namespace Discord.Gateway
         internal void TriggerVCDisconnect(ulong? guildId, ulong channelId, CloseEventArgs args)
         {
             if (OnLeftVoiceChannel != null)
-                Task.Run(() => OnLeftVoiceChannel.Invoke(this, new VoiceDisconnectEventArgs(guildId, channelId, args)));
+                Task.Run(() => OnLeftVoiceChannel.Invoke(this, new VoiceDisconnectEventArgs(this, guildId, channelId, args)));
         }
 
         internal void TriggerVCSpeaking(DiscordVoiceClient client, IncomingVoiceStream stream)
@@ -813,6 +813,8 @@ namespace Discord.Gateway
                         case "INTERACTION_CREATE":
                             if (Config.Cache || OnInteraction != null)
                                 Task.Run(() => OnInteraction.Invoke(this, new DiscordInteractionEventArgs(message.Data.ToObject<DiscordInteraction>().SetClient(this))));
+                            break;
+                        case "USER_REQUIRED_ACTION_UPDATE":
                             break;
                         default:
                             break;

@@ -5,19 +5,17 @@ namespace Discord.Gateway
 {
     public class VoiceDisconnectEventArgs : EventArgs
     {
-        private readonly ulong? _guildId;
-        public MinimalGuild Guild => _guildId.HasValue ? new MinimalGuild(_guildId.Value) : null;
+        public MinimalGuild Guild { get; }
 
-        private readonly ulong? _channelId;
-        public MinimalChannel Channel => _channelId.HasValue ? new MinimalChannel(_channelId.Value) : null;
+        public MinimalChannel Channel { get; }
 
         public DiscordMediaCloseCode Code { get; private set; }
         public string Reason { get; private set; }
 
-        internal VoiceDisconnectEventArgs(ulong? guildId, ulong channelId, WebSocketSharp.CloseEventArgs close)
+        internal VoiceDisconnectEventArgs(DiscordSocketClient client, ulong? guildId, ulong channelId, WebSocketSharp.CloseEventArgs close)
         {
-            _guildId = guildId;
-            _channelId = channelId;
+            if (guildId.HasValue) Guild = new MinimalGuild(guildId.Value).SetClient(client);
+            Channel = new MinimalChannel(channelId).SetClient(client);
 
             Code = (DiscordMediaCloseCode)close.Code;
             Reason = close.Reason;

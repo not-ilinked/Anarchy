@@ -1,4 +1,5 @@
 ﻿using Discord;
+using Discord.Gateway;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -6,8 +7,12 @@ namespace TicTacToe
 {
     public class Game
     {
-        public Game()
+        public Game(DiscordSocketClient client, DiscordUser challenger, DiscordUser challengee)
         {
+            Client = client;
+            Challenger = challenger;
+            Challengee = challengee;
+
             Grid = new SquareState[3][];
 
             for (int i = 0; i < Grid.Length; i++)
@@ -16,13 +21,12 @@ namespace TicTacToe
             ChallengerTurn = true;
         }
 
-        public string Id { get; set; }
-        public DiscordUser Challenger { get; set; }
-        public DiscordUser Challengee { get; set; }
-        public bool Accepted { get; set; }
+        public DiscordSocketClient Client { get; }
+        public DiscordUser Challenger { get; }
+        public DiscordUser Challengee { get; }
 
         public bool ChallengerTurn { get; set; }
-        public SquareState[][] Grid { get; set; }
+        public SquareState[][] Grid { get; }
 
         private string SerializeSquare(SquareState state)
         {
@@ -76,20 +80,46 @@ namespace TicTacToe
             return false;
         }
 
-        public InteractionResponseProperties SerializeGrid()
+        private bool ValidMover(ulong moverId)
+        {
+            ulong id;
+
+            if (ChallengerTurn) id = Challenger.Id;
+            else id = Challengee.Id;
+
+            return moverId == id;
+        }
+
+        public InteractionResponseProperties SerializeState()
         {
             bool hasWinner = TryFindWinner(out bool challengerIsWinner);
 
-            List<MessageComponent> rows = new List<MessageComponent>();
+            var form = new DiscordComponentForm(Client);
 
             for (int i = 0; i < Grid.Length; i++)
             {
-                List<MessageComponent> buttons = new List<MessageComponent>();
+                List<ComponentFormButton> buttons = new List<ComponentFormButton>();
 
                 for (int j = 0; j < Grid[i].Length; j++)
-                    buttons.Add(new ButtonComponent() { Style = MessageButtonStyle.Secondary, Id = $"{Id}-{i}-{j}", Text = SerializeSquare(Grid[i][j]), Disabled = Grid[i][j] != SquareState.Neutral || hasWinner });
+                {
+                    int y = i;
+                    int x = j;
 
-                rows.Add(new RowComponent(buttons));
+                    var square = new ComponentFormButton(MessageButtonStyle.Secondary, SerializeSquare(Grid[y][x])) { Disabled = Grid[y][x] != SquareState.Neutral || hasWinner };
+                    square.OnClick += (s, e) =>
+                    {
+                        if (ValidMover(e.Member.User.Id))
+                        {
+                            Grid[y][x] = ChallengerTurn ? SquareState.Challenger : SquareState.Challengee;
+                            ChallengerTurn = !ChallengerTurn;
+                            e.Respond(InteractionCallbackType.UpdateMessage, SerializeState());
+                        }
+                    };
+
+                    buttons.Add(square);
+                }
+
+                form.Rows.Add(buttons);
             }
 
             var embed = new EmbedMaker() { Title = "Tic Tac Toe" }
@@ -100,9 +130,7 @@ namespace TicTacToe
             else if (!Grid.Any(row => row.Any(col => col == SquareState.Neutral))) embed.Description = "The game resulted in a tie";
             else embed.Description = $"{(ChallengerTurn ? Challenger.AsMessagable() : Challengee.AsMessagable())}'s turn";
 
-            var properties = new InteractionResponseProperties() { Components = rows, Embed = embed };
-
-            return properties;
+            return new InteractionResponseProperties() { Content = null, Components = form, Embed = embed };
         }
     }
 }

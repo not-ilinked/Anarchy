@@ -1,4 +1,5 @@
 ﻿using Discord;
+using Discord.Gateway;
 using Discord.Commands;
 using System;
 using System.Collections.Generic;
@@ -22,20 +23,39 @@ namespace TicTacToe
 
         public override InteractionResponseProperties Handle()
         {
-            string id = RandomString(8);
-            Program.Games[id] = new Game() { Challenger = Member.User, Challengee = Target, Id = id };
+            var game = new Game(Client, Member.User, Target);
+
+            var deny = new ComponentFormButton(MessageButtonStyle.Secondary, "Deny");
+            deny.OnClick += (s, e) =>
+            {
+                if (e.Member.User.Id == Target.Id)
+                {
+                    e.Respond(InteractionCallbackType.UpdateMessage, new InteractionResponseProperties() 
+                    { 
+                        Components = new List<MessageComponent>(), 
+                        Content = $"{Target.AsMessagable()} declined {Member.User.AsMessagable()}'s challenge" 
+                    });
+                }
+            };
+
+            var accept = new ComponentFormButton(MessageButtonStyle.Primary, "Accept");
+            accept.OnClick += (s, e) =>
+            {
+                if (e.Member.User.Id == Target.Id)
+                    e.Respond(InteractionCallbackType.UpdateMessage, game.SerializeState());
+            };
 
             return new InteractionResponseProperties()
             {
                 Content = $"{Member.User.AsMessagable()} is challenging you, {Target.AsMessagable()}",
-                Components = new List<MessageComponent>()
+                Components = new DiscordComponentForm(Client, new List<List<ComponentFormButton>>()
                 {
-                    new RowComponent(new List<MessageComponent>()
+                    new List<ComponentFormButton>()
                     {
-                        new ButtonComponent() { Style = MessageButtonStyle.Secondary, Text = "Deny", Id = $"{id}-deny" },
-                        new ButtonComponent() { Style = MessageButtonStyle.Primary, Text = "Accept", Id = $"{id}-accept" }
-                    })
-                }
+                        deny,
+                        accept
+                    }
+                })
             };
         }
     }

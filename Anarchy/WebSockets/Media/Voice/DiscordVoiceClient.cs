@@ -19,10 +19,10 @@ namespace Discord.Media
         private string _sessionId;
 
         private readonly ulong? _guildId;
-        public MinimalGuild Guild => _guildId.HasValue ? new MinimalGuild(_guildId.Value) : null;
+        public MinimalGuild Guild => _guildId.HasValue ? new MinimalGuild(_guildId.Value).SetClient(_client) : null;
 
         private ulong? _channelId;
-        public MinimalChannel Channel => _channelId.HasValue ? new MinimalChannel(_channelId.Value) : null;
+        public MinimalChannel Channel => _channelId.HasValue ? new MinimalChannel(_channelId.Value).SetClient(_client) : null;
 
         public DiscordVoiceInput Microphone { get; private set; }
         public DiscordGoLiveClient GoLive { get; private set; }

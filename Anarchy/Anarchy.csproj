@@ -118,6 +118,9 @@
     <Compile Include="REST\Interactions\InteractionResponse.cs" />
     <Compile Include="WebSockets\Gateway\Interaction\DiscordInteractionEventArgs.cs" />
     <Compile Include="WebSockets\Gateway\Interaction\DiscordInteractionType.cs" />
+    <Compile Include="WebSockets\Gateway\Interaction\Forms\ComponentFormButton.cs" />
+    <Compile Include="WebSockets\Gateway\Interaction\Forms\DiscordComponentForm.cs" />
+    <Compile Include="WebSockets\Gateway\Interaction\Forms\FormInteractionEventArgs.cs" />
     <Compile Include="WebSockets\Gateway\Interaction\ResolvedInteractionData.cs" />
     <Compile Include="WebSockets\Gateway\Interaction\SlashCommandArgument.cs" />
     <Compile Include="WebSockets\Gateway\Session\DiscordShard.cs" />

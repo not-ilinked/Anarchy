@@ -4,7 +4,9 @@ using PuppeteerSharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using UAParser;
 
@@ -15,10 +17,32 @@ namespace Discord
         private static Page _page;
         private static string _superProps;
 
+        private static int GetBuildNumber()
+        {
+            var client = new HttpClient();
+
+            string appPage = client.GetStringAsync("https://discord.com/app").Result;
+            const string findThis = "build_number:\"";
+
+            foreach (var asset in Regex.Matches(appPage, "/assets/.{20}.js"))
+            {
+                var content = client.GetStringAsync("https://discord.com" + asset).Result;
+
+                if (content.Contains(findThis))
+                {
+                    string buildNumber = content.Substring(content.IndexOf(findThis) + findThis.Length).Split('"')[0];
+
+                    return int.Parse(buildNumber);
+                }
+            }
+
+            throw new Exception();
+        }
+
         public static async Task StartAsync()
         {
             await new BrowserFetcher().DownloadAsync();
-            var browser = await Puppeteer.LaunchAsync(new LaunchOptions { Headless = true, IgnoreHTTPSErrors = true, Args = new string[] { "--no-sandbox", "--disable-web-security" } });
+            var browser = await Puppeteer.LaunchAsync(new LaunchOptions { Headless = false, IgnoreHTTPSErrors = true, Args = new string[] { "--no-sandbox", "--disable-web-security" } });
             _page = await browser.NewPageAsync();
 
             string ua = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.77 Safari/537.36";
@@ -35,6 +59,7 @@ namespace Discord
             properties.OS = os.Family;
             properties.OSVersion = os.Major; // this could be better
             properties.UserAgent = ua;
+            properties.ClientVersion = GetBuildNumber();
 
             _superProps = properties.ToBase64();
         }
@@ -87,7 +112,7 @@ headers: " + "{";
 
         public static async Task<GuildInvite> JoinGuildAsync(DiscordClient client, string invCode)
         {
-            return (await CallAsync<GuildInvite>(client, "POST", client.HttpClient.BaseUrl + "/invites/" + invCode));
+            return (await CallAsync<GuildInvite>(client, "POST", client.HttpClient.BaseUrl + "/invites/" + invCode + $"?inputValue={invCode}&with_counts=true&with_expiration=true"));
         }
 
         public static GuildInvite JoinGuild(DiscordClient client, string invCode)

@@ -18,10 +18,10 @@ namespace Discord.Media
         public event CloseHandler OnLeftLivestream;
 
         private readonly ulong _guildId;
-        public MinimalGuild Guild => new MinimalGuild(_guildId);
+        public MinimalGuild Guild => new MinimalGuild(_guildId).SetClient(Client);
 
         private readonly ulong _channelId;
-        public MinimalChannel Channel => new MinimalChannel(_channelId);
+        public MinimalChannel Channel => new MinimalChannel(_channelId).SetClient(Client);
 
         public DiscordSocketClient Client { get; }
 
