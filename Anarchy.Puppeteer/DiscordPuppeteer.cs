@@ -42,10 +42,11 @@ namespace Discord
         public static async Task StartAsync()
         {
             await new BrowserFetcher().DownloadAsync();
-            var browser = await Puppeteer.LaunchAsync(new LaunchOptions { Headless = false, IgnoreHTTPSErrors = true, Args = new string[] { "--no-sandbox", "--disable-web-security" } });
+            var browser = await Puppeteer.LaunchAsync(new LaunchOptions { Headless = true, IgnoreHTTPSErrors = true, Args = new string[] { "--no-sandbox", "--disable-web-security" } });
             _page = await browser.NewPageAsync();
+            await _page.GoToAsync("https://discord.com");
 
-            string ua = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.77 Safari/537.36";
+            string ua = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.101 Safari/537.36";
 
             await _page.SetUserAgentAsync(ua);
 
@@ -55,7 +56,7 @@ namespace Discord
 
             var properties = new DiscordConfig().SuperProperties;
             properties.Browser = userBrowser.Family;
-            properties.BrowserVersion = $"{userBrowser.Major}.{userBrowser.Minor}.{userBrowser.Patch}.77";
+            properties.BrowserVersion = $"{userBrowser.Major}.{userBrowser.Minor}.{userBrowser.Patch}.101";
             properties.OS = os.Family;
             properties.OSVersion = os.Major; // this could be better
             properties.UserAgent = ua;
@@ -74,14 +75,17 @@ namespace Discord
                 { "Authorization", parentClient.Token }
             };
 
+            headers["X-Super-Properties"] = _superProps;
+
             if (method == "POST")
             {
                 headers["Content-Type"] = "application/json";
-                headers["X-Super-Properties"] = _superProps;
-
+                
                 if (url.Contains("/invites/"))
                 {
-                    var invite = await CallAsync<GuildInvite>(parentClient, "GET", parentClient.HttpClient.BaseUrl + "/invites/" + url.Split('/').Last());
+                    string invCode = url.Split('/').Last();
+
+                    var invite = await CallAsync<GuildInvite>(parentClient, "GET", parentClient.HttpClient.BaseUrl + "/invites/" + invCode + $"?inputValue={invCode}&with_counts=true&with_expiration=true");
                     headers["X-Context-Properties"] = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{{\"location\":\"Join Guild\",\"location_guild_id\":\"{invite.Guild.Id}\",\"location_channel_id\":\"{invite.Channel.Id}\",\"location_channel_type\":{(int)invite.Channel.Type}}}"));
                 }
             }
@@ -112,7 +116,7 @@ headers: " + "{";
 
         public static async Task<GuildInvite> JoinGuildAsync(DiscordClient client, string invCode)
         {
-            return (await CallAsync<GuildInvite>(client, "POST", client.HttpClient.BaseUrl + "/invites/" + invCode + $"?inputValue={invCode}&with_counts=true&with_expiration=true"));
+            return (await CallAsync<GuildInvite>(client, "POST", client.HttpClient.BaseUrl + "/invites/" + invCode));
         }
 
         public static GuildInvite JoinGuild(DiscordClient client, string invCode)
