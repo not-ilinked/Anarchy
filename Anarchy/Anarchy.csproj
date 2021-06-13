@@ -165,6 +165,7 @@
     <Compile Include="WebSockets\Gateway\Role\GatewayRoleExtensions.cs" />
     <Compile Include="WebSockets\Gateway\Role\RoleDeletedEventArgs.cs" />
     <Compile Include="WebSockets\Gateway\Subscriptions\NitroBoostEventArgs.cs" />
+    <Compile Include="WebSockets\Gateway\User\RequiredActionEventArgs.cs" />
     <Compile Include="WebSockets\Media\Codecs\CodecType.cs" />
     <Compile Include="WebSockets\Media\Codecs\MediaCodec.cs" />
     <Compile Include="WebSockets\Media\Codecs\Opus\OpusConverter.cs" />

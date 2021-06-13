@@ -5,8 +5,7 @@
 - Added message references / replies.
 - Added stage channel support.
 - Added proper error handling for media binaries.
-- Added components.
-- Added slash commands.
+- Added interactions (slash commands and components).
 - TODO: Add threads.
 
 ### Improvements

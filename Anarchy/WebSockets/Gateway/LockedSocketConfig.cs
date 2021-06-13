@@ -2,10 +2,10 @@
 {
     public class LockedSocketConfig : LockedDiscordConfig
     {
-        public bool Cache { get; private set; }
-        public DiscordGatewayIntent? Intents { get; private set; }
-        public uint VoiceChannelConnectTimeout { get; private set; }
-        public DiscordShard Shard { get; private set; }
+        public bool Cache { get; }
+        public DiscordGatewayIntent? Intents { get; }
+        public uint VoiceChannelConnectTimeout { get; }
+        public DiscordShard Shard { get; }
 
         public LockedSocketConfig(DiscordSocketConfig config) : base(config)
         {

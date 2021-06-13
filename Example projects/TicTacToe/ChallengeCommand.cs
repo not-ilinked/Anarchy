@@ -31,7 +31,7 @@ namespace TicTacToe
                 if (e.Member.User.Id == Target.Id)
                 {
                     e.Respond(InteractionCallbackType.UpdateMessage, new InteractionResponseProperties() 
-                    { 
+                    {
                         Components = new List<MessageComponent>(), 
                         Content = $"{Target.AsMessagable()} declined {Member.User.AsMessagable()}'s challenge" 
                     });

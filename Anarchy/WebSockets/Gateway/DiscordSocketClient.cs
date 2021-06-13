@@ -87,11 +87,13 @@ namespace Discord.Gateway
         public event ClientEventHandler<EntitlementEventArgs> OnEntitlementCreated;
         public event ClientEventHandler<EntitlementEventArgs> OnEntitlementUpdated;
 
-        public event ClientEventHandler<DiscordInteractionEventArgs> OnInteraction;
+        internal event ClientEventHandler<DiscordInteractionEventArgs> OnInteraction;
 
         public event ClientEventHandler<VoiceConnectEventArgs> OnJoinedVoiceChannel;
         public event ClientEventHandler<VoiceDisconnectEventArgs> OnLeftVoiceChannel;
-        public event ClientEventHandler<VoiceChannelSpeakingEventArgs> OnUserSpeaking;
+        internal event ClientEventHandler<VoiceChannelSpeakingEventArgs> OnUserSpeaking;
+
+        public event ClientEventHandler<RequiredActionEventArgs> OnRequiredUserAction;
         #endregion
 
         // caching
@@ -196,10 +198,10 @@ namespace Discord.Gateway
         {
             if (Token != token)
                 Token = token;
-
+            
             if (User.Type == DiscordUserType.Bot && Config.ApiVersion >= 8 && !Config.Intents.HasValue)
                 throw new ArgumentNullException("Gateway intents must be provided as of API v8");
-
+            
             State = GatewayConnectionState.Connecting;
 
             WebSocket.SetProxy(Proxy);
@@ -260,9 +262,9 @@ namespace Discord.Gateway
             switch (message.Opcode)
             {
                 case GatewayOpcode.Event:
-                    
-                    Console.WriteLine(message.EventName);
                     /*
+                    Console.WriteLine(message.EventName);
+                    
                     File.AppendAllText("Debug.log", $"{message.EventName}: {message.Data}\n");
                     */
 
@@ -811,10 +813,12 @@ namespace Discord.Gateway
                             }
                             break;
                         case "INTERACTION_CREATE":
-                            if (Config.Cache || OnInteraction != null)
+                            if (OnInteraction != null)
                                 Task.Run(() => OnInteraction.Invoke(this, new DiscordInteractionEventArgs(message.Data.ToObject<DiscordInteraction>().SetClient(this))));
                             break;
                         case "USER_REQUIRED_ACTION_UPDATE":
+                            if (OnRequiredUserAction != null)
+                                Task.Run(() => OnRequiredUserAction.Invoke(this, message.Data.ToObject<RequiredActionEventArgs>()));
                             break;
                         default:
                             break;
