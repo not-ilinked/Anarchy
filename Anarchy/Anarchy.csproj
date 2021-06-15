@@ -173,10 +173,10 @@
     <Compile Include="WebSockets\Media\Codecs\Opus\OpusException.cs" />
     <Compile Include="WebSockets\Media\Codecs\VideoMediaCodec.cs" />
     <Compile Include="WebSockets\Gateway\Media\Go Live\GoLiveUpdate.cs" />
-    <Compile Include="WebSockets\Media\Livestreaming\DiscordGoLiveClient.cs" />
-    <Compile Include="WebSockets\Media\Livestreaming\DiscordGoLiveError.cs" />
-    <Compile Include="WebSockets\Media\Livestreaming\DiscordGoLiveSession.cs" />
-    <Compile Include="WebSockets\Media\Livestreaming\GoLiveDisconnectEventArgs.cs" />
+    <Compile Include="WebSockets\Media\Livestreaming\DiscordLivestreamClient.cs" />
+    <Compile Include="WebSockets\Media\Livestreaming\DiscordLivestreamError.cs" />
+    <Compile Include="WebSockets\Media\Livestreaming\DiscordLivestreamSession.cs" />
+    <Compile Include="WebSockets\Media\Livestreaming\LivestreamDisconnectEventArgs.cs" />
     <Compile Include="WebSockets\Media\Livestreaming\StreamKey.cs" />
     <Compile Include="WebSockets\Media\Livestreaming\StreamSSRC.cs" />
     <Compile Include="WebSockets\Media\Media\DiscordMediaCloseCode.cs" />

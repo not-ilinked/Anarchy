@@ -133,6 +133,8 @@ namespace Discord.Media
             else
                 payload = decrypted;
 
+            payload = null;
+
             return header;
         }
     }

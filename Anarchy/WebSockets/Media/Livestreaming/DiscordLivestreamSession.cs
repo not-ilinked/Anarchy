@@ -1,22 +1,19 @@
 ﻿using Discord.Gateway;
 using Newtonsoft.Json.Linq;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Discord.Media
 {
-    public class DiscordGoLiveSession
+    public class DiscordLivestreamSession
     {
-        public delegate void SessionHandler(DiscordGoLiveSession session);
+        public delegate void SessionHandler(DiscordLivestreamSession session);
         internal event SessionHandler OnConnected;
 
-        public delegate void UserConnectHandler(DiscordGoLiveSession session, ulong userId);
+        public delegate void UserConnectHandler(DiscordLivestreamSession session, ulong userId);
         public event UserConnectHandler OnUserConnected;
 
-        public delegate void UserDisconnectHandler(DiscordGoLiveSession session, ulong userId);
+        public delegate void UserDisconnectHandler(DiscordLivestreamSession session, ulong userId);
         public event UserDisconnectHandler OnUserDisconnected;
 
 
@@ -36,7 +33,7 @@ namespace Discord.Media
         public IReadOnlyList<ulong> Viewers { get; private set; }
         public bool Paused { get; private set; }
 
-        internal DiscordGoLiveSession(DiscordSocketClient client, StreamKey key, ulong rtcServerId, string sessionId)
+        internal DiscordLivestreamSession(DiscordSocketClient client, StreamKey key, ulong rtcServerId, string sessionId)
         {
             Client = client;
             _streamKey = key;

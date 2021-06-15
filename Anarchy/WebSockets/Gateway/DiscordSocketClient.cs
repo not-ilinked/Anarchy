@@ -183,7 +183,7 @@ namespace Discord.Gateway
                 else
                 {
                     var key = new StreamKey(e.StreamKey);
-                    VoiceClients[key.GuildId].GoLive.SetSessionServer(key.UserId, e);
+                    VoiceClients[key.GuildId].Livestream.SetSessionServer(key.UserId, e);
                 }
             };
         }
@@ -787,15 +787,15 @@ namespace Discord.Gateway
                             break;
                         case "STREAM_CREATE":
                             var create = message.Data.ToObject<GoLiveCreate>();
-                            GetVoiceClient(new StreamKey(create.StreamKey).GuildId).GoLive.CreateSession(create);
+                            GetVoiceClient(new StreamKey(create.StreamKey).GuildId).Livestream.CreateSession(create);
                             break;
                         case "STREAM_UPDATE":
                             var update = message.Data.ToObject<GoLiveUpdate>();
-                            GetVoiceClient(new StreamKey(update.StreamKey).GuildId).GoLive.UpdateSession(update);
+                            GetVoiceClient(new StreamKey(update.StreamKey).GuildId).Livestream.UpdateSession(update);
                             break;
                         case "STREAM_DELETE":
                             var delete = message.Data.ToObject<GoLiveDelete>();
-                            GetVoiceClient(new StreamKey(delete.StreamKey).GuildId).GoLive.KillSession(delete);
+                            GetVoiceClient(new StreamKey(delete.StreamKey).GuildId).Livestream.KillSession(delete);
                             break;
                         case "CHANNEL_UNREAD_UPDATE":
                             if (Config.Cache || OnGuildUnreadMessagesUpdated != null)

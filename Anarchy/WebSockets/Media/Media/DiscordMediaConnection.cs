@@ -217,13 +217,21 @@ namespace Discord.Media
                     {
                         while (SecretKey == null) { Thread.Sleep(100); }
 
+                        //Console.WriteLine($"{received[0]} {received[1]} {received[2]} {received[3]} {received[4]} {received[5]} {received[6]} {received[7]} {received[8]} {received[9]} {received[10]} {received[11]}");
+                        /*
+                        var ok = RTPPacketHeader.Read(SecretKey, received, out var _);
+
+                        Console.WriteLine($"{ok.Type} {ok.Flags} {ok.Sequence} {ok.Timestamp} {ok.SSRC} {ok.HasExtensions}");*/
+                        
+                        // not much point in doing this rn since the decryption fails
+                        /*
                         try
                         {
                             var header = RTPPacketHeader.Read(SecretKey, received, out byte[] payload);
 
                             OnUdpPacket?.Invoke(this, new MediaPacketEventArgs(header, payload));
                         }
-                        catch (SodiumException) { }
+                        catch (SodiumException) { }*/
                     }
                 }
             }

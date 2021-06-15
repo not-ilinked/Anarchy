@@ -1,0 +1,15 @@
+D:\repos\Anarchy\Example projects\AntiRaid\bin\Debug\AntiRaid.exe.config
+D:\repos\Anarchy\Example projects\AntiRaid\bin\Debug\AntiRaid.exe
+D:\repos\Anarchy\Example projects\AntiRaid\bin\Debug\AntiRaid.pdb
+D:\repos\Anarchy\Example projects\AntiRaid\bin\Debug\Anarchy.dll
+D:\repos\Anarchy\Example projects\AntiRaid\bin\Debug\Newtonsoft.Json.dll
+D:\repos\Anarchy\Example projects\AntiRaid\bin\Debug\Leaf.xNet.dll
+D:\repos\Anarchy\Example projects\AntiRaid\bin\Debug\websocket-sharp.dll
+D:\repos\Anarchy\Example projects\AntiRaid\bin\Debug\Anarchy.pdb
+D:\repos\Anarchy\Example projects\AntiRaid\bin\Debug\Newtonsoft.Json.xml
+D:\repos\Anarchy\Example projects\AntiRaid\bin\Debug\Leaf.xNet.xml
+D:\repos\Anarchy\Example projects\AntiRaid\obj\Debug\AntiRaid.csprojAssemblyReference.cache
+D:\repos\Anarchy\Example projects\AntiRaid\obj\Debug\AntiRaid.csproj.CoreCompileInputs.cache
+D:\repos\Anarchy\Example projects\AntiRaid\obj\Debug\AntiRaid.csproj.CopyComplete
+D:\repos\Anarchy\Example projects\AntiRaid\obj\Debug\AntiRaid.exe
+D:\repos\Anarchy\Example projects\AntiRaid\obj\Debug\AntiRaid.pdb

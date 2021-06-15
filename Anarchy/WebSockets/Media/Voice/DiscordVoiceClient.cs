@@ -25,7 +25,7 @@ namespace Discord.Media
         public MinimalChannel Channel => _channelId.HasValue ? new MinimalChannel(_channelId.Value).SetClient(_client) : null;
 
         public DiscordVoiceInput Microphone { get; private set; }
-        public DiscordGoLiveClient GoLive { get; private set; }
+        public DiscordLivestreamClient Livestream { get; private set; }
 
         private OpusDecoder _decoder;
         private readonly Anarchy.ConcurrentDictionary<ulong, IncomingVoiceStream> _receivers = new Anarchy.ConcurrentDictionary<ulong, IncomingVoiceStream>();
@@ -44,7 +44,7 @@ namespace Discord.Media
         {
             _ssrcToUserDictionary.Clear();
             _receivers.Clear();
-            if (_guildId.HasValue) GoLive = new DiscordGoLiveClient(_client, _guildId.Value, _channelId.Value);
+            if (_guildId.HasValue) Livestream = new DiscordLivestreamClient(_client, _guildId.Value, _channelId.Value);
 
             Connection = new DiscordMediaConnection(_client, _sessionId, server.Guild == null ? _channelId.Value : server.Guild.Id, server);
             

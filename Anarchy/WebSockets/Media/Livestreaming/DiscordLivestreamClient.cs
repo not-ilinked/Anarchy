@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 
 namespace Discord.Media
 {
-    public class DiscordGoLiveClient
+    public class DiscordLivestreamClient
     {
-        public delegate void CreateHandler(DiscordGoLiveClient client, DiscordGoLiveSession session);
+        public delegate void CreateHandler(DiscordLivestreamClient client, DiscordLivestreamSession session);
 
         public event CreateHandler OnStartedLivestream;
         public event CreateHandler OnJoinedLivestream;
 
-        public delegate void CloseHandler(DiscordGoLiveClient client, GoLiveDisconnectEventArgs args);
+        public delegate void CloseHandler(DiscordLivestreamClient client, LivestreamDisconnectEventArgs args);
         public event CloseHandler OnLeftLivestream;
 
         private readonly ulong _guildId;
@@ -25,18 +25,18 @@ namespace Discord.Media
 
         public DiscordSocketClient Client { get; }
 
-        public DiscordGoLiveClient(DiscordSocketClient client, ulong guildId, ulong channelId)
+        public DiscordLivestreamClient(DiscordSocketClient client, ulong guildId, ulong channelId)
         {
-            _watching = new Dictionary<ulong, DiscordGoLiveSession>();
+            _watching = new Dictionary<ulong, DiscordLivestreamSession>();
             Client = client;
             _guildId = guildId;
             _channelId = channelId;
         }
 
-        public DiscordGoLiveSession Own { get; private set; }
+        public DiscordLivestreamSession Own { get; private set; }
 
-        private readonly Dictionary<ulong, DiscordGoLiveSession> _watching;
-        public IReadOnlyList<DiscordGoLiveSession> Watching => _watching.Values.ToList();
+        private readonly Dictionary<ulong, DiscordLivestreamSession> _watching;
+        public IReadOnlyList<DiscordLivestreamSession> Watching => _watching.Values.ToList();
 
         internal void CreateSession(GoLiveCreate goLive)
         {
@@ -44,11 +44,11 @@ namespace Discord.Media
 
             var key = new StreamKey(goLive.StreamKey);
 
-            DiscordGoLiveSession session;
+            DiscordLivestreamSession session;
 
             if (key.UserId == Client.User.Id)
             {
-                session = Own = new DiscordGoLiveSession(Client, key, goLive.RtcServerId, goLive.SessionId);
+                session = Own = new DiscordLivestreamSession(Client, key, goLive.RtcServerId, goLive.SessionId);
                 session.OnConnected += s =>
                 {
                     if (OnStartedLivestream != null)
@@ -57,7 +57,7 @@ namespace Discord.Media
             }
             else
             {
-                session = _watching[key.UserId] = new DiscordGoLiveSession(Client, key, goLive.RtcServerId, goLive.SessionId);
+                session = _watching[key.UserId] = new DiscordLivestreamSession(Client, key, goLive.RtcServerId, goLive.SessionId);
                 session.OnConnected += s =>
                 {
                     if (OnJoinedLivestream != null)
@@ -93,7 +93,7 @@ namespace Discord.Media
             var key = new StreamKey(goLive.StreamKey);
 
             if (OnLeftLivestream != null)
-                Task.Run(() => OnLeftLivestream.Invoke(this, new GoLiveDisconnectEventArgs(key.UserId, goLive)));
+                Task.Run(() => OnLeftLivestream.Invoke(this, new LivestreamDisconnectEventArgs(key.UserId, goLive)));
         }
 
         public void Start()

@@ -1,6 +1,6 @@
 ﻿namespace Discord.Media
 {
-    public enum DiscordGoLiveError
+    public enum DiscordLivestreamError
     {
         Unknown,
         Unauthorized,
