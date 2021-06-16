@@ -62,7 +62,7 @@ namespace Discord
 
         public static async Task<DiscordProfile> GetProfileAsync(this DiscordClient client, ulong userId)
         {
-            return (await client.HttpClient.GetAsync($"/users/{userId}/profile"))
+            return (await client.HttpClient.GetAsync($"/users/{userId}/profile?with_mutual_guilds=true"))
                                 .Deserialize<DiscordProfile>().SetClient(client);
         }
 

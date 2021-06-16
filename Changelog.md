@@ -1,11 +1,11 @@
 # 0.8.1.0
 ### Additions
-- Added RestConnectionRetries to DiscordConfig, which allows you to set the amount of times the HTTP client should retry a failed request.
-- Added member screening functionality.
-- Added message references / replies.
-- Added stage channel support.
-- Added proper error handling for media binaries.
+- Added Community functionality.
 - Added interactions (slash commands and components).
+- Added RestConnectionRetries to DiscordConfig, which allows you to set the amount of times the HTTP client should retry a failed request.
+- Added message references / replies.
+- Added proper error handling for media binaries.
+- Added stage channel support.
 - TODO: Add threads.
 
 ### Improvements

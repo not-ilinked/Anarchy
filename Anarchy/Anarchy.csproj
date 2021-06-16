@@ -80,13 +80,11 @@
     <Compile Include="REST\Channel\Guild\Stage\StagePrivacyLevel.cs" />
     <Compile Include="REST\DiscordClient.cs" />
     <Compile Include="REST\DiscordConfig.cs" />
+    <Compile Include="REST\Guild\Community\Screening\VerificationFormProperties.cs" />
     <Compile Include="REST\Guild\Permissions\PermissionUtils.cs" />
-    <Compile Include="REST\Guild\Screening\GuildVerificationForm.cs" />
-    <Compile Include="REST\Guild\Screening\GuildVerificationFormField.cs" />
-    <Compile Include="REST\Guild\Screening\MemberScreeningExtensions.cs" />
-    <Compile Include="REST\Guild\Screening\MissingFieldResponseException.cs" />
-    <Compile Include="REST\Guild\Screening\VerificationFormResponse.cs" />
-    <Compile Include="REST\Guild\Screening\VerificationFormSubmissionProperties.cs" />
+    <Compile Include="REST\Guild\Community\Screening\GuildVerificationForm.cs" />
+    <Compile Include="REST\Guild\Community\Screening\GuildVerificationFormField.cs" />
+    <Compile Include="REST\Guild\Community\Screening\VerificationFormResponse.cs" />
     <Compile Include="REST\HTTP\Exceptions\DiscordConnectionException.cs" />
     <Compile Include="REST\Interactions\InteractionExtensions.cs" />
     <Compile Include="REST\Interactions\SlashCommands\ApplicationCommand.cs" />

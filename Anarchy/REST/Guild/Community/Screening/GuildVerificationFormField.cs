@@ -6,18 +6,18 @@ namespace Discord
     public class GuildVerificationFormField
     {
         [JsonProperty("field_type")]
-        public string FieldType { get; private set; }
+        public string FieldType { get; set; }
 
         [JsonProperty("label")]
-        public string Label { get; private set; }
+        public string Label { get; set; }
 
         [JsonProperty("values")]
-        public IReadOnlyList<string> Values { get; private set; }
+        public IReadOnlyList<string> Values { get; set; }
 
         [JsonProperty("required")]
-        public bool Required { get; private set; }
+        public bool Required { get; set; }
 
         [JsonProperty("response")]
-        public object Response { get; private set; }
+        public object Response { get; set; }
     }
 }
