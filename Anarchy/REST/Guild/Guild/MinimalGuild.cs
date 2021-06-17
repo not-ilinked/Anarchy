@@ -169,6 +169,13 @@ namespace Discord
         }
 
 
+        public Task<GuildVerificationForm> GetVerificationFormAsync(string inviteCode) => Client.GetGuildVerificationFormAsync(Id, inviteCode);
+        public GuildVerificationForm GetVerificationForm(string inviteCode) => GetVerificationFormAsync(inviteCode).GetAwaiter().GetResult();
+
+        public Task<GuildVerificationForm> ModifyVerificationFormAsync(VerificationFormProperties properties) => Client.ModifyGuildVerificationFormAsync(Id, properties);
+        public GuildVerificationForm ModifyVerificationForm(VerificationFormProperties properties) => ModifyVerificationFormAsync(properties).GetAwaiter().GetResult();
+
+
         public virtual async Task<IReadOnlyList<GuildChannel>> GetChannelsAsync()
         {
             return await Client.GetGuildChannelsAsync(Id);

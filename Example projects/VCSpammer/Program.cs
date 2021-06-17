@@ -52,6 +52,7 @@ namespace VCSpammer
         {
             Console.WriteLine(client.User.ToString() + " has joined " + args.Client.Channel.Id);
 
+            // exploit that lets you speak while muted (https://www.youtube.com/watch?v=PWzPa_BIv9s)
             args.Client.Microphone.Bitrate = ((VoiceChannel)client.GetChannel(args.Client.Channel.Id)).Bitrate;
             args.Client.Microphone.SetSpeakingState(DiscordSpeakingFlags.Soundshare);
 

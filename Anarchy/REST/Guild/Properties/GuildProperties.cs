@@ -161,5 +161,27 @@ namespace Discord
             get { return VanityProperty; }
             set { VanityProperty.Value = value; }
         }
+
+
+        private readonly DiscordParameter<ExplicitContentFilter> _contentFilterParam = new DiscordParameter<ExplicitContentFilter>();
+        [JsonProperty("explicit_content_filter")]
+        public ExplicitContentFilter ExplicitContentFilter
+        {
+            get { return _contentFilterParam; }
+            set { _contentFilterParam.Value = value; }
+        }
+
+        public bool ShouldSerializeExplicitContentFilter() => _contentFilterParam.Set;
+
+
+        private readonly DiscordParameter<string> _descParam = new DiscordParameter<string>();
+        [JsonProperty("description")]
+        public string Description
+        {
+            get { return _descParam; }
+            set { _descParam.Value = value; }
+        }
+
+        public bool ShouldSerializeDescription() => _descParam.Set;
     }
 }

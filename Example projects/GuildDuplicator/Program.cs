@@ -51,11 +51,13 @@ namespace GuildDuplicator
                 }
 
                 Console.WriteLine("Creating emojis...");
+                var dupedEmojis = new Dictionary<ulong, ulong>();
                 foreach (var emoji in targetGuild.Emojis)
                 {
                     try
                     {
-                        guild.CreateEmoji(new EmojiProperties() { Name = emoji.Name, Image = emoji.Icon.Download() });
+                        var created = guild.CreateEmoji(new EmojiProperties() { Name = emoji.Name, Image = emoji.Icon.Download() });
+                        dupedEmojis[emoji.Id.Value] = created.Id.Value;
                     }
                     catch (DiscordHttpException ex)
                     {
@@ -83,10 +85,10 @@ namespace GuildDuplicator
                     channel.Delete();
 
                 Console.WriteLine("Creating channels...");
-                Dictionary<ulong, ulong> dupedCategories = new Dictionary<ulong, ulong>();
+                Dictionary<ulong, ulong> dupedChannels = new Dictionary<ulong, ulong>();
                 foreach (var channel in targetGuild.Channels.OrderBy(c => c.Type != ChannelType.Category))
                 {
-                    var ourChannel = guild.CreateChannel(channel.Name, TranslateChannelType(channel), channel.ParentId.HasValue ? dupedCategories[channel.ParentId.Value] : (ulong?)null);
+                    var ourChannel = guild.CreateChannel(channel.Name, TranslateChannelType(channel), channel.ParentId.HasValue ? dupedChannels[channel.ParentId.Value] : (ulong?)null);
                     ourChannel.Modify(new GuildChannelProperties() { Position = channel.Position });
 
                     if (ourChannel.Type == ChannelType.Text)
@@ -106,15 +108,132 @@ namespace GuildDuplicator
                             ourChannel.AddPermissionOverwrite(dupedRoles[overwrite.AffectedId], PermissionOverwriteType.Role, overwrite.Allow, overwrite.Deny);
                     }
 
-                    if (ourChannel.Type == ChannelType.Category)
-                        dupedCategories[channel.Id] = ourChannel.Id;
+                    dupedChannels[channel.Id] = ourChannel.Id;
                 }
+
+                bool hasWelcomeScreen = TryGetWelcomeScreen(targetGuild, out var welcomeScreen);
+                bool hasVerificationForm = TryGetVerificationForm(targetGuild, out var verificationForm);
+
+                if (hasWelcomeScreen || hasVerificationForm)
+                {
+                    Console.WriteLine("Enabling Community...");
+
+                    guild.Modify(new GuildProperties()
+                    {
+                        DefaultNotifications = GuildDefaultNotifications.OnlyMentions,
+                        VerificationLevel = GuildVerificationLevel.Low,
+                        Features = new List<string>() { "COMMUNITY", "WELCOME_SCREEN_ENABLED" },
+                        PublicUpdatesChannelId = dupedChannels[targetGuild.PublicUpdatesChannel.Id],
+                        RulesChannelId = dupedChannels[targetGuild.RulesChannel.Id],
+                        Description = targetGuild.Description,
+                        ExplicitContentFilter = ExplicitContentFilter.KeepMeSafe
+                    });
+
+                    if (hasWelcomeScreen)
+                    {
+                        List<WelcomeChannelProperties> channels = new List<WelcomeChannelProperties>();
+
+                        foreach (var channel in welcomeScreen.Channels)
+                        {
+                            ulong? emojiId = null;
+
+                            if (channel.EmojiId.HasValue)
+                            {
+                                if (dupedEmojis.TryGetValue(channel.EmojiId.Value, out ulong emId)) emojiId = emId;
+                                else continue; // this relates to discord's ratelimit issue
+                            }
+
+                            channels.Add(new WelcomeChannelProperties()
+                            {
+                                ChannelId = dupedChannels[channel.Channel.Id],
+                                Description = channel.Description,
+                                EmojiId = emojiId,
+                                EmojiName = channel.EmojiName
+                            });
+                        }
+
+                        guild.ModifyWelcomeScreen(new WelcomeScreenProperties() { Enabled = true, Description = welcomeScreen.Description, Channels = channels });
+                    }
+
+                    if (hasVerificationForm)
+                    {
+                        // this doesnt work for some reason
+                        guild.ModifyVerificationForm(new VerificationFormProperties()
+                        {
+                            Description = verificationForm.Description,
+                            Enabled = true,
+                            Fields = verificationForm.Fields.ToList()
+                        });
+                    }
+
+                    Console.WriteLine("Updating news channels...");
+                    foreach (var channel in targetGuild.Channels)
+                    {
+                        if (channel.Type == ChannelType.News)
+                            client.ModifyGuildChannel(dupedChannels[channel.Id], new TextChannelProperties() { News = true });
+                    }
+                }
+
+                Console.WriteLine("Done!");
             }
             catch (DiscordHttpException ex)
             {
                 if (ex.Code == DiscordError.UnknownGuild) Console.WriteLine("You are not in this guild");
                 else Console.WriteLine(ex.ToString());
             }
+        }
+
+        private static bool TryGetWelcomeScreen(SocketGuild targetGuild, out WelcomeScreen screen)
+        {
+            try
+            {
+                screen = targetGuild.GetWelcomeScreen();
+                return true;
+            }
+            catch (DiscordHttpException)
+            {
+                screen = null;
+                return false;
+            }
+        }
+
+        private static bool TryGetVerificationForm(SocketGuild targetGuild, out GuildVerificationForm form)
+        {
+            try
+            {
+                if (TryGetInvite(targetGuild, out string code))
+                {
+                    form = targetGuild.GetVerificationForm(code);
+                    return true;
+                }
+            }
+            catch (DiscordHttpException) { }
+
+            form = null;
+            return false;
+        }
+
+        private static bool TryGetInvite(SocketGuild guild, out string code)
+        {
+            if (guild.VanityInvite != null)
+            {
+                code = guild.VanityInvite;
+                return true;
+            }
+            else
+            {
+                foreach (var channel in guild.Channels)
+                {
+                    if (channel.IsText && guild.ClientMember.GetPermissions(channel.PermissionOverwrites).Has(DiscordPermission.CreateInstantInvite))
+                    {
+                        code = ((TextChannel)channel).CreateInvite().Code;
+                        return true;
+                    }
+                }
+            }
+
+            code = null;
+            return false;
         }
     }
 }

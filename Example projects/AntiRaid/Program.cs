@@ -33,7 +33,7 @@ namespace AntiRaid
 
         private static void Client_OnMessageReceived(DiscordSocketClient client, MessageEventArgs args)
         {
-            if (args.Message.Guild != null && !string.IsNullOrEmpty(args.Message.Content))
+            if (!string.IsNullOrEmpty(args.Message.Content))
             {
                 var messages = Messages[args.Message.Guild.Id];
                 messages.RemoveAll(m => m.SentAt < DateTime.UtcNow - MessageExpiration);

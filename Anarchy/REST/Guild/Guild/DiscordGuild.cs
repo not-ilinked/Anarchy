@@ -56,7 +56,7 @@ namespace Discord
         public DiscordLanguage? PreferredLanguage { get; private set; }
 
 
-        [JsonProperty("rules_channels_id")]
+        [JsonProperty("rules_channel_id")]
         private ulong? _rulesChannelId;
 
         public MinimalTextChannel RulesChannel

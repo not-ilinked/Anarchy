@@ -11,7 +11,7 @@
             {
                 Token = client.Token,
                 Properties = client.Config.SuperProperties,
-                Intents = client.Config.Intents,
+                Intents = client.User.Type == DiscordUserType.Bot ? client.Config.Intents : null,
                 Shard = client.Config.Shard
             });
         }

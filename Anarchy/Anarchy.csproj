@@ -52,10 +52,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\Command\CommandAttribute.cs" />
-    <Compile Include="Commands\Parameter\CommandParameter.cs" />
+    <Compile Include="Commands\Command\Parameter\CommandParameter.cs" />
     <Compile Include="Commands\Command\DiscordCommand.cs" />
-    <Compile Include="Commands\Parameter\ParameterAttribute.cs" />
-    <Compile Include="Commands\CommandHandler.cs" />
+    <Compile Include="Commands\Command\Parameter\ParameterAttribute.cs" />
+    <Compile Include="Commands\Command\CommandHandler.cs" />
     <Compile Include="Commands\Command\CommandBase.cs" />
     <Compile Include="Commands\SlashCommands\IMentionable.cs" />
     <Compile Include="Commands\SlashCommands\SlashCommand.cs" />
