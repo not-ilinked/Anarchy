@@ -6,30 +6,30 @@ namespace Discord
     public class DiscordHttpResponse
     {
         public int StatusCode { get; private set; }
-        public JToken Object { get; private set; }
+        public JToken Body { get; private set; }
 
         public DiscordHttpResponse(int statusCode, string content)
         {
             StatusCode = statusCode;
             if (content != null && content.Length != 0)
-                Object = JToken.Parse(content);
+                Body = JToken.Parse(content);
         }
 
 
         public T Deserialize<T>()
         {
-            return Object.ToObject<T>();
+            return Body.ToObject<T>();
         }
 
 
         public T ParseDeterministic<T>()
         {
-            return ((JObject)Object).ParseDeterministic<T>();
+            return ((JObject)Body).ParseDeterministic<T>();
         }
 
         public List<T> MultipleDeterministic<T>()
         {
-            return ((JArray)Object).MultipleDeterministic<T>();
+            return ((JArray)Body).MultipleDeterministic<T>();
         }
     }
 }

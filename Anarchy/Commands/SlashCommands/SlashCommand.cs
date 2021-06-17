@@ -6,8 +6,8 @@ namespace Discord.Commands
     {
         public DiscordSocketClient Client { get; private set; }
 
-        public DiscordUser User { get; private set; }
-        public GuildMember Member { get; private set; }
+        public DiscordUser Caller { get; private set; }
+        public GuildMember CallerMember { get; private set; }
 
         public MinimalTextChannel Channel { get; private set; }
         public MinimalGuild Guild { get; private set; }
@@ -16,8 +16,8 @@ namespace Discord.Commands
         {
             Client = (DiscordSocketClient)interaction.Client;
 
-            User = interaction.User;
-            Member = interaction.Member;
+            Caller = interaction.User;
+            CallerMember = interaction.Member;
 
             Channel = interaction.Channel;
             Guild = interaction.Guild;

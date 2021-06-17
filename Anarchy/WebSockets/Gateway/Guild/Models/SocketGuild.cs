@@ -52,18 +52,7 @@ namespace Discord.Gateway
         [JsonProperty("members")]
         internal List<GuildMember> Members { get; private set; }
 
-        private GuildMember _member;
-        public GuildMember ClientMember
-        {
-            get
-            {
-                if (!Unavailable && _member == null)
-                    _member = Members.First(m => m.User.Id == Client.User.Id);
-
-                return _member;
-            }
-            internal set { _member = value; }
-        }
+        public GuildMember ClientMember => ((DiscordSocketClient)Client).ClientMembers[Id];
 
 
         [JsonProperty("channels")]

@@ -6,7 +6,7 @@ namespace Discord
     {
         public int RetryAfter { get; private set; }
 
-        public RateLimitException(DiscordClient client, int retryAfter) : base($"Ratelimited for {retryAfter} milliseconds")
+        public RateLimitException(int retryAfter) : base($"Ratelimited for {retryAfter} milliseconds")
         {
             RetryAfter = retryAfter;
         }

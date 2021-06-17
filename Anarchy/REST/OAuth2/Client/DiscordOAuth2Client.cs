@@ -1,0 +1,115 @@
+﻿using Discord.Gateway;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Text;
+
+namespace Discord
+{
+    public class DiscordOAuth2Client
+    {
+        readonly ulong _clientId;
+        private readonly string _clientSecret;
+        private DiscordOAuth2Authorization _auth;
+
+        private readonly HttpClient _httpClient;
+
+        public string RefreshToken => _auth.RefreshToken;
+        public string[] Scopes => _auth.Scopes;
+
+        public DiscordOAuth2Client(ulong clientId, string clientSecret)
+        {
+            _clientId = clientId;
+            _clientSecret = clientSecret;
+
+            _httpClient = new HttpClient();
+        }
+
+        private void authorize(string grantType, Dictionary<string, string> useSpecific)
+        {
+            Dictionary<string, string> values = new Dictionary<string, string>()
+            {
+                { "client_id", _clientId.ToString() },
+                { "client_secret", _clientSecret },
+                { "grant_type", grantType }
+            };
+
+            foreach (var key in useSpecific.Keys)
+                values[key] = useSpecific[key];
+
+            var resp = _httpClient.PostAsync(DiscordHttpUtil.BuildBaseUrl(9, "discord.com") + "/oauth2/token", new FormUrlEncodedContent(values)).Result;
+
+            if (resp.StatusCode >= HttpStatusCode.BadRequest)
+                throw new OAuth2Exception(JsonConvert.DeserializeObject<OAuth2HttpError>(resp.Content.ReadAsStringAsync().Result));
+
+            _auth = JsonConvert.DeserializeObject<DiscordOAuth2Authorization>(resp.Content.ReadAsStringAsync().Result);
+        }
+
+        public void Refresh(string refreshToken) => authorize("refresh_token", new Dictionary<string, string>() { { "refresh_token", refreshToken } });
+        public void Authorize(string code, string redirectUri) => authorize("authorization_code", new Dictionary<string, string>() { { "code", code }, { "redirect_uri", redirectUri } });
+
+
+        private void EnsureAuth()
+        {
+            if (_auth == null) throw new InvalidOperationException("You must authenticate before making this request");
+            else if (_auth.ExpiresAt < DateTime.UtcNow) Refresh(_auth.RefreshToken);
+        }
+
+
+        private T Request<T>(string method, string endpoint, object data = null)
+        {
+            EnsureAuth();
+
+            var req = new HttpRequestMessage()
+            {
+                Method = new HttpMethod(method),
+                RequestUri = new Uri(DiscordHttpUtil.BuildBaseUrl(9, "discord.com") + endpoint),
+                Content = data == null ? null : new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json")
+            };
+
+            req.Headers.Add("Authorization", $"{_auth.TokenType} {_auth.AccessToken}");
+
+            var resp = _httpClient.SendAsync(req).GetAwaiter().GetResult();
+            var bodyObj = JToken.Parse(resp.Content.ReadAsStringAsync().Result);
+
+            DiscordHttpUtil.ValidateResponse((int)resp.StatusCode, bodyObj);
+
+            return bodyObj.ToObject<T>();
+        }
+
+
+        public DiscordUser GetUser()
+        {
+            if (!_auth.Scopes.Contains("identify") && !_auth.Scopes.Contains("email")) throw new InvalidOperationException("You must have the 'identify' or 'email' scope to make this request");
+            return Request<DiscordUser>("GET", "/users/@me");
+        }
+
+        public IReadOnlyList<ConnectedAccount> GetConnectedAccounts()
+        {
+            if (!_auth.Scopes.Contains("connections")) throw new InvalidOperationException("You must have the 'connections' scope to make this request");
+            return Request<List<ConnectedAccount>>("GET", "/users/@me/connections");
+        }
+
+        public IReadOnlyList<PartialGuild> GetGuilds()
+        {
+            if (!_auth.Scopes.Contains("guilds")) throw new InvalidOperationException("You must have the 'guilds' scope to make this request");
+            return Request<List<PartialGuild>>("GET", "/users/@me/guilds");
+        }
+ 
+        public GuildMember JoinGuild(DiscordSocketClient botClient, ulong guildId, OAuth2GuildJoinProperties properties = null)
+        {
+            if (!_auth.Scopes.Contains("guilds.join")) throw new InvalidOperationException("You must have the 'guilds.join' scope to make this request");
+
+            EnsureAuth();
+
+            if (properties == null) properties = new OAuth2GuildJoinProperties();
+            properties.AccessToken = _auth.AccessToken;
+
+            return botClient.HttpClient.PutAsync($"/guilds/{guildId}/members/{GetUser().Id}", properties).GetAwaiter().GetResult().Deserialize<GuildMember>().SetClient(botClient);
+        }
+    }
+}

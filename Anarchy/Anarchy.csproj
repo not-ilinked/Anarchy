@@ -85,6 +85,7 @@
     <Compile Include="REST\Guild\Community\Screening\GuildVerificationForm.cs" />
     <Compile Include="REST\Guild\Community\Screening\GuildVerificationFormField.cs" />
     <Compile Include="REST\Guild\Community\Screening\VerificationFormResponse.cs" />
+    <Compile Include="REST\HTTP\DiscordHttpUtil.cs" />
     <Compile Include="REST\HTTP\Exceptions\DiscordConnectionException.cs" />
     <Compile Include="REST\Interactions\InteractionExtensions.cs" />
     <Compile Include="REST\Interactions\SlashCommands\ApplicationCommand.cs" />
@@ -105,6 +106,11 @@
     <Compile Include="REST\Message\Message\Stickers\DiscordSticker.cs" />
     <Compile Include="REST\Message\Message\Stickers\StickerFormatType.cs" />
     <Compile Include="REST\Message\Reaction\ReactionQuery.cs" />
+    <Compile Include="REST\OAuth2\Client\DiscordOAuth2Client.cs" />
+    <Compile Include="REST\OAuth2\Client\DiscordOAuth2Authorization.cs" />
+    <Compile Include="REST\OAuth2\Client\OAuth2Exception.cs" />
+    <Compile Include="REST\OAuth2\Client\OAuth2GuildJoinProperties.cs" />
+    <Compile Include="REST\OAuth2\Client\OAuth2HttpError.cs" />
     <Compile Include="REST\User\Connections\ConnectionProperties.cs" />
     <Compile Include="WebSockets\Gateway\Gifts\DiscordEntitlement.cs" />
     <Compile Include="WebSockets\Gateway\Gifts\EntitlementEventArgs.cs" />

@@ -23,7 +23,7 @@ namespace Discord.Commands
 
         private Dictionary<string, LocalCommandInfo> _handlerDict;
 
-        public SlashCommandHandler(DiscordSocketClient client, ulong appId)
+        public SlashCommandHandler(DiscordSocketClient client, ulong appId, ulong? guildId)
         {
             _client = client;
             _commands = new List<ApplicationCommandProperties>();
@@ -96,7 +96,8 @@ namespace Discord.Commands
                 }
             }
 
-            _client.SetGlobalApplicationCommands(appId, _commands);
+            if (guildId.HasValue) _client.HttpClient.PutAsync($"/applications/{appId}/guilds/{guildId.Value}/commands", _commands).GetAwaiter().GetResult();
+            else _client.SetGlobalApplicationCommands(appId, _commands);
 
             client.OnInteraction += Client_OnInteraction;
         }
@@ -122,38 +123,41 @@ namespace Discord.Commands
                         var handler = (SlashCommand)Activator.CreateInstance(localCommand.HandlerType);
                         handler.Prepare(args.Interaction);
 
-                        foreach (var suppliedArg in args.Interaction.Data.CommandArguments)
+                        if (args.Interaction.Data.CommandArguments != null)
                         {
-                            foreach (var param in cmd.Options)
+                            foreach (var suppliedArg in args.Interaction.Data.CommandArguments)
                             {
-                                if (param.Name == suppliedArg.Name)
+                                foreach (var param in cmd.Options)
                                 {
-                                    var property = localCommand.Parameters[param.Name];
-                                    object value = suppliedArg.Value;
-
-                                    switch (param.Type)
+                                    if (param.Name == suppliedArg.Name)
                                     {
-                                        case CommandOptionType.Channel:
-                                            value = args.Interaction.Data.Resolved.Channels[ulong.Parse(suppliedArg.Value)];
-                                            break;
-                                        case CommandOptionType.Role:
-                                            value = args.Interaction.Data.Resolved.Roles[ulong.Parse(suppliedArg.Value)];
-                                            break;
-                                        case CommandOptionType.User:
-                                            if (property.PropertyType == typeof(DiscordUser)) value = args.Interaction.Data.Resolved.Users[ulong.Parse(suppliedArg.Value)];
-                                            else value = args.Interaction.Data.Resolved.Members[ulong.Parse(suppliedArg.Value)];
-                                            break;
-                                        case CommandOptionType.Mentionable:
-                                            value = ResolveObject(args.Interaction.Data.Resolved, ulong.Parse(suppliedArg.Value));
-                                            break;
-                                        default:
-                                            value = Convert.ChangeType(value, property.PropertyType);
-                                            break;
+                                        var property = localCommand.Parameters[param.Name];
+                                        object value = suppliedArg.Value;
+
+                                        switch (param.Type)
+                                        {
+                                            case CommandOptionType.Channel:
+                                                value = args.Interaction.Data.Resolved.Channels[ulong.Parse(suppliedArg.Value)];
+                                                break;
+                                            case CommandOptionType.Role:
+                                                value = args.Interaction.Data.Resolved.Roles[ulong.Parse(suppliedArg.Value)];
+                                                break;
+                                            case CommandOptionType.User:
+                                                if (property.PropertyType == typeof(DiscordUser)) value = args.Interaction.Data.Resolved.Users[ulong.Parse(suppliedArg.Value)];
+                                                else value = args.Interaction.Data.Resolved.Members[ulong.Parse(suppliedArg.Value)];
+                                                break;
+                                            case CommandOptionType.Mentionable:
+                                                value = ResolveObject(args.Interaction.Data.Resolved, ulong.Parse(suppliedArg.Value));
+                                                break;
+                                            default:
+                                                value = Convert.ChangeType(value, property.PropertyType);
+                                                break;
+                                        }
+
+                                        property.SetValue(handler, value);
+
+                                        break;
                                     }
-
-                                    property.SetValue(handler, value);
-
-                                    break;
                                 }
                             }
                         }

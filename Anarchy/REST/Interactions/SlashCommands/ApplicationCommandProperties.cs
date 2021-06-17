@@ -21,5 +21,12 @@ namespace Discord
         public List<ApplicationCommandOption> Options { get; set; }
 
         public bool ShouldSerializeOptions() => Options != null;
+
+
+        [JsonProperty("flags")]
+        private int Flags => 64;
+
+        public bool Ephemeral { get; set; }
+        public bool ShouldSerializeFlags() => Ephemeral;
     }
 }

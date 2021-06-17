@@ -2,6 +2,7 @@
 ### Additions
 - Added Community functionality.
 - Added interactions (slash commands and components).
+- Finished OAuth2 implementation (using codes received from discord and such).
 - Added RestConnectionRetries to DiscordConfig, which allows you to set the amount of times the HTTP client should retry a failed request.
 - Added message references / replies.
 - Added proper error handling for media binaries.

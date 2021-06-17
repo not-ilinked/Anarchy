@@ -106,7 +106,7 @@ headers: " + "{";
 
             if (result.Status >= 400)
             {
-                if (result.Status == 429) throw new RateLimitException(parentClient, result.Body.Value<int>("retry_after"));
+                if (result.Status == 429) throw new RateLimitException(result.Body.Value<int>("retry_after"));
                 else throw new DiscordHttpException(result.Body.ToObject<DiscordHttpError>());
             }
 

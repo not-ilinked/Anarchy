@@ -23,7 +23,7 @@ namespace TicTacToe
 
         public override InteractionResponseProperties Handle()
         {
-            var game = new Game(Client, Member.User, Target);
+            var game = new Game(Client, CallerMember.User, Target);
 
             var deny = new ComponentFormButton(MessageButtonStyle.Secondary, "Deny");
             deny.OnClick += (s, e) =>
@@ -33,7 +33,7 @@ namespace TicTacToe
                     e.Respond(InteractionCallbackType.UpdateMessage, new InteractionResponseProperties() 
                     {
                         Components = new List<MessageComponent>(), 
-                        Content = $"{Target.AsMessagable()} declined {Member.User.AsMessagable()}'s challenge" 
+                        Content = $"{Target.AsMessagable()} declined {CallerMember.User.AsMessagable()}'s challenge" 
                     });
                 }
             };
@@ -47,7 +47,7 @@ namespace TicTacToe
 
             return new InteractionResponseProperties()
             {
-                Content = $"{Member.User.AsMessagable()} is challenging you, {Target.AsMessagable()}",
+                Content = $"{CallerMember.User.AsMessagable()} is challenging you, {Target.AsMessagable()}",
                 Components = new DiscordComponentForm(Client, new List<List<ComponentFormButton>>()
                 {
                     new List<ComponentFormButton>()

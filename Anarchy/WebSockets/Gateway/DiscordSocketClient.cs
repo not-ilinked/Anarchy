@@ -103,6 +103,7 @@ namespace Discord.Gateway
         internal AutoConcurrentDictionary<ulong, DiscordVoiceStateContainer> VoiceStates { get; private set; }
         internal ConcurrentDictionary<ulong, ClientGuildSettings> GuildSettings { get; private set; }
         internal List<DiscordChannelSettings> PrivateChannelSettings { get; private set; }
+        internal ConcurrentDictionary<ulong, GuildMember> ClientMembers { get; private set; }
 
         public CommandHandler CommandHandler { get; private set; }
         private SlashCommandHandler SlashCommandHandler { get; set; }
@@ -146,6 +147,7 @@ namespace Discord.Gateway
                 VoiceStates = new AutoConcurrentDictionary<ulong, DiscordVoiceStateContainer>((userId) => new DiscordVoiceStateContainer(userId));
                 GuildSettings = new ConcurrentDictionary<ulong, ClientGuildSettings>();
                 PrivateChannelSettings = new List<DiscordChannelSettings>();
+                ClientMembers = new ConcurrentDictionary<ulong, GuildMember>();
             }
 
             WebSocket = new DiscordWebSocket<GatewayOpcode>($"wss://gateway.discord.gg/?v={Config.ApiVersion}&encoding=json");
@@ -227,6 +229,12 @@ namespace Discord.Gateway
         {
             if (!guild.Unavailable)
             {
+                foreach (var member in guild.Members)
+                {
+                    if (member.User.Id == User.Id)
+                        ClientMembers[guild.Id] = member;
+                }
+
                 foreach (var state in guild.VoiceStates)
                     VoiceStates[state.UserId].GuildStates[guild.Id] = state;
 
@@ -442,12 +450,12 @@ namespace Discord.Gateway
 
                                     // Discord doesn't send us the user's JoinedAt on updates
                                     member.JoinedAt = guild.ClientMember.JoinedAt;
-                                    guild.ClientMember = member;
+                                    ClientMembers[guild.Id] = member;
 
                                     break;
                                 }
 
-                                Task.Run(() => OnGuildMemberUpdated?.Invoke(this, new GuildMemberEventArgs(member)));
+                                Task.Run(() => OnGuildMemberUpdated.Invoke(this, new GuildMemberEventArgs(member)));
                             }
                             break;
                         case "GUILD_MEMBERS_CHUNK":
@@ -868,10 +876,10 @@ namespace Discord.Gateway
         }
 
 
-        public void RegisterSlashCommands()
+        public void RegisterSlashCommands(ulong? guildId = null)
         {
             if (!LoggedIn) throw new InvalidOperationException("You must be logged in to register slash commands");
-            if (SlashCommandHandler == null || SlashCommandHandler.ApplicationId != _appId) SlashCommandHandler = new SlashCommandHandler(this, _appId);
+            if (SlashCommandHandler == null || SlashCommandHandler.ApplicationId != _appId) SlashCommandHandler = new SlashCommandHandler(this, _appId, guildId);
         }
 
 
@@ -891,6 +899,7 @@ namespace Discord.Gateway
                 GuildSettings.Clear();
                 PrivateChannelSettings.Clear();
                 VoiceClients.Clear();
+                ClientMembers.Clear();
             }
         }
 

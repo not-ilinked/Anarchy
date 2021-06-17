@@ -26,6 +26,15 @@ namespace Discord.Gateway
                             role.GuildId = _guildId.Value;
                     }
                 }
+
+                
+                if (Member != null)
+                {
+                    User = Member.User;
+                    Member.SetClient(Client);
+                }
+
+                User.SetClient(Client);
             };
         }
 

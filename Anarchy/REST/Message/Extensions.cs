@@ -165,7 +165,7 @@ namespace Discord
             var resp = await client.HttpClient.PostAsync($"/channels/{channelId}/typing");
 
             if (resp.ToString().Contains("cooldown"))
-                throw new RateLimitException(client, resp.Deserialize<JObject>().GetValue("message_send_cooldown_ms").ToObject<int>());
+                throw new RateLimitException(resp.Deserialize<JObject>().GetValue("message_send_cooldown_ms").ToObject<int>());
         }
 
         /// <summary>

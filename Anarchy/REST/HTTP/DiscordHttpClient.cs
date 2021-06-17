@@ -26,18 +26,6 @@ namespace Discord
         }
 
 
-        private void CheckResponse(DiscordHttpResponse response)
-        {
-            if (response.StatusCode >= 400)
-            {
-                if (response.StatusCode == 429)
-                    throw new RateLimitException(_discordClient, response.Deserialize<JObject>().Value<int>("retry_after"));
-                else
-                    throw new DiscordHttpException(response.Deserialize<DiscordHttpError>());
-            }
-        }
-
-
         /// <summary>
         /// Sends an HTTP request and checks for errors
         /// </summary>
@@ -108,7 +96,7 @@ namespace Discord
                         resp = new DiscordHttpResponse((int)response.StatusCode, response.ToString());
                     }
 
-                    CheckResponse(resp);
+                    DiscordHttpUtil.ValidateResponse(resp.StatusCode, resp.Body);
                     return resp;
                 }
                 catch (Exception ex) when (ex is HttpException || ex is HttpRequestException || ex is TaskCanceledException)
