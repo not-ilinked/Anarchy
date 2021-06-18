@@ -10,7 +10,7 @@ namespace Discord.Media
 {
     public class DiscordVoiceInput
     {
-        private readonly int _packetLoss = 5;
+        private readonly int _packetLoss = 0;
 
         private OpusEncoder _encoder;
         private readonly object _voiceLock = new object();
@@ -50,6 +50,9 @@ namespace Discord.Media
             UpdateEncoder();
             _nextTick = -1;
         }
+
+
+        private List<byte> _toBeUsed = new List<byte>();
 
 
         private void UpdateEncoder() => _encoder = new OpusEncoder(_bitrate, _audioApp, _packetLoss);
@@ -133,7 +136,17 @@ namespace Discord.Media
                 int read = stream.Read(buffer, 0, buffer.Length);
                 if (read == 0) return true;
 
-                Write(buffer, 0);
+                byte[] actual = new byte[read];
+                Buffer.BlockCopy(buffer, 0, actual, 0, read);
+                _toBeUsed.AddRange(actual);
+
+                if (_toBeUsed.Count >= OpusConverter.FrameBytes)
+                {
+                    byte[] slice = _toBeUsed.Take(OpusConverter.FrameBytes).ToArray();
+                    _toBeUsed = _toBeUsed.Skip(OpusConverter.FrameBytes).ToList();
+
+                    Write(slice, 0);
+                }
             }
 
             return false;

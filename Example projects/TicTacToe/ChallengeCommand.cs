@@ -23,6 +23,8 @@ namespace TicTacToe
 
         public override InteractionResponseProperties Handle()
         {
+            if (Target.Id == Caller.Id) return new InteractionResponseProperties() { Content = "You cannot challenge yourself" };
+
             var game = new Game(Client, CallerMember.User, Target);
 
             var deny = new ComponentFormButton(MessageButtonStyle.Secondary, "Deny");

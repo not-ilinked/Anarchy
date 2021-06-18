@@ -164,8 +164,15 @@ namespace Discord.Commands
 
                         if (localCommand.Delayed)
                         {
-                            args.Interaction.Respond(InteractionCallbackType.DelayedMessage);
-                            args.Interaction.ModifyResponse(handler.Handle());
+                            try
+                            {
+                                args.Interaction.Respond(InteractionCallbackType.DelayedMessage);
+                                args.Interaction.ModifyResponse(handler.Handle());
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine(ex);
+                            }
                         }
                         else args.Interaction.Respond(InteractionCallbackType.RespondWithMessage, handler.Handle());
 

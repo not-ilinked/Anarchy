@@ -31,6 +31,7 @@ namespace Discord
         [JsonProperty("embeds")]
         private List<DiscordEmbed> _embeds => _embedParam.Value;
 
+        [JsonIgnore]
         public DiscordEmbed Embed
         {
             get
@@ -56,5 +57,20 @@ namespace Discord
         }
 
         public bool ShouldSerializeComponents() => _componentParam.Set;
+
+
+        [JsonProperty("flags")]
+        private int _flags
+        {
+            get
+            {
+                return 64;
+            }
+        }
+
+        [JsonIgnore]
+        public bool Ephemeral { get; set; }
+
+        public bool ShouldSerialize_flags() => Ephemeral;
     }
 }
