@@ -72,7 +72,7 @@ namespace Discord
                 { new ByteArrayContent(fileData), "file", fileName }
             };
 
-            return JsonConvert.DeserializeObject<DiscordMessage>(await httpClient.PostAsync(client.HttpClient.BaseUrl + $"/channels/{channelId}/messages", content)
+            return JsonConvert.DeserializeObject<DiscordMessage>(await httpClient.PostAsync(DiscordHttpUtil.BuildBaseUrl(client.Config.ApiVersion, client.Config.SuperProperties.ReleaseChannel) + $"/channels/{channelId}/messages", content)
                                                                             .GetAwaiter().GetResult().Content.ReadAsStringAsync()).SetClient(client);
         }
 

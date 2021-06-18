@@ -86,6 +86,7 @@
     <Compile Include="REST\Guild\Community\Screening\GuildVerificationFormField.cs" />
     <Compile Include="REST\Guild\Community\Screening\VerificationFormResponse.cs" />
     <Compile Include="REST\HTTP\DiscordHttpUtil.cs" />
+    <Compile Include="REST\HTTP\DiscordReleaseChannel.cs" />
     <Compile Include="REST\HTTP\Exceptions\DiscordConnectionException.cs" />
     <Compile Include="REST\Interactions\InteractionExtensions.cs" />
     <Compile Include="REST\Interactions\SlashCommands\ApplicationCommand.cs" />

@@ -5,7 +5,7 @@ namespace Discord
 {
     public static class ControllableExtensions
     {
-        internal static T SetClient<T>(this T @class, DiscordClient client) where T : Controllable
+        public static T SetClient<T>(this T @class, DiscordClient client) where T : Controllable
         {
             if (@class != null)
                 @class.Client = client;

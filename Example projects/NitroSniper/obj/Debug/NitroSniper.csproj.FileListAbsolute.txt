@@ -8,7 +8,6 @@ D:\repos\Anarchy\Example projects\NitroSniper\bin\Debug\websocket-sharp.dll
 D:\repos\Anarchy\Example projects\NitroSniper\bin\Debug\Anarchy.pdb
 D:\repos\Anarchy\Example projects\NitroSniper\bin\Debug\Newtonsoft.Json.xml
 D:\repos\Anarchy\Example projects\NitroSniper\bin\Debug\Leaf.xNet.xml
-D:\repos\Anarchy\Example projects\NitroSniper\obj\Debug\NitroSniper.csprojAssemblyReference.cache
 D:\repos\Anarchy\Example projects\NitroSniper\obj\Debug\NitroSniper.csproj.CoreCompileInputs.cache
 D:\repos\Anarchy\Example projects\NitroSniper\obj\Debug\NitroSniper.csproj.CopyComplete
 D:\repos\Anarchy\Example projects\NitroSniper\obj\Debug\NitroSniper.exe

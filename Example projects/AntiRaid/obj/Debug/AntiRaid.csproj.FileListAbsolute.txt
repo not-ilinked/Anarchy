@@ -8,7 +8,6 @@ D:\repos\Anarchy\Example projects\AntiRaid\bin\Debug\websocket-sharp.dll
 D:\repos\Anarchy\Example projects\AntiRaid\bin\Debug\Anarchy.pdb
 D:\repos\Anarchy\Example projects\AntiRaid\bin\Debug\Newtonsoft.Json.xml
 D:\repos\Anarchy\Example projects\AntiRaid\bin\Debug\Leaf.xNet.xml
-D:\repos\Anarchy\Example projects\AntiRaid\obj\Debug\AntiRaid.csprojAssemblyReference.cache
 D:\repos\Anarchy\Example projects\AntiRaid\obj\Debug\AntiRaid.csproj.CoreCompileInputs.cache
 D:\repos\Anarchy\Example projects\AntiRaid\obj\Debug\AntiRaid.csproj.CopyComplete
 D:\repos\Anarchy\Example projects\AntiRaid\obj\Debug\AntiRaid.exe

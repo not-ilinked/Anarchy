@@ -13,11 +13,7 @@ namespace Discord
     public class DiscordHttpClient
     {
         private readonly DiscordClient _discordClient;
-
-        public string BaseUrl
-        {
-            get { return $"https://{_discordClient.Config.RestDomain}/api/v{_discordClient.Config.ApiVersion}"; }
-        }
+        public string BaseUrl => DiscordHttpUtil.BuildBaseUrl(_discordClient.Config.ApiVersion, _discordClient.Config.SuperProperties.ReleaseChannel);
 
 
         public DiscordHttpClient(DiscordClient discordClient)
@@ -34,7 +30,8 @@ namespace Discord
         /// <param name="payload">JSON content</param>
         private async Task<DiscordHttpResponse> SendAsync(Leaf.xNet.HttpMethod method, string endpoint, object payload = null)
         {
-            endpoint = BaseUrl + endpoint;
+            if (!endpoint.StartsWith("https")) 
+                endpoint = DiscordHttpUtil.BuildBaseUrl(_discordClient.Config.ApiVersion, _discordClient.Config.SuperProperties.ReleaseChannel) + endpoint;
 
             string json = "{}";
             if (payload != null)
@@ -71,7 +68,8 @@ namespace Discord
                         var response = await client.SendAsync(new HttpRequestMessage() 
                         { 
                             Content = hasData ? new System.Net.Http.StringContent(json, Encoding.UTF8, "application/json") : null, 
-                            Method = new System.Net.Http.HttpMethod(method.ToString()), RequestUri = new Uri(endpoint) 
+                            Method = new System.Net.Http.HttpMethod(method.ToString()), 
+                            RequestUri = new Uri(endpoint) 
                         });
 
                         resp = new DiscordHttpResponse((int)response.StatusCode, response.Content.ReadAsStringAsync().Result);
@@ -81,7 +79,7 @@ namespace Discord
                         HttpRequest msg = new HttpRequest
                         {
                             IgnoreProtocolErrors = true,
-                            UserAgent = _discordClient.User != null && _discordClient.User.Type == DiscordUserType.Bot ? "Anarchy/0.8.3.2" : _discordClient.Config.SuperProperties.UserAgent,
+                            UserAgent = _discordClient.User != null && _discordClient.User.Type == DiscordUserType.Bot ? "Anarchy/0.8.1.0" : _discordClient.Config.SuperProperties.UserAgent,
                             Authorization = _discordClient.Token
                         };
 

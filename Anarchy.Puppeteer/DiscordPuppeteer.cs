@@ -1,14 +1,10 @@
 ﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using PuppeteerSharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using UAParser;
 
 namespace Discord
 {
@@ -17,28 +13,6 @@ namespace Discord
         private static Page _page;
         private static string _superProps;
 
-        private static int GetBuildNumber()
-        {
-            var client = new HttpClient();
-
-            string appPage = client.GetStringAsync("https://discord.com/app").Result;
-            const string findThis = "build_number:\"";
-
-            foreach (var asset in Regex.Matches(appPage, "/assets/.{20}.js"))
-            {
-                var content = client.GetStringAsync("https://discord.com" + asset).Result;
-
-                if (content.Contains(findThis))
-                {
-                    string buildNumber = content.Substring(content.IndexOf(findThis) + findThis.Length).Split('"')[0];
-
-                    return int.Parse(buildNumber);
-                }
-            }
-
-            throw new Exception();
-        }
-
         public static async Task StartAsync()
         {
             await new BrowserFetcher().DownloadAsync();
@@ -46,22 +20,8 @@ namespace Discord
             _page = await browser.NewPageAsync();
             await _page.GoToAsync("https://discord.com");
 
-            string ua = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.101 Safari/537.36";
-
-            await _page.SetUserAgentAsync(ua);
-
-            var parser = Parser.GetDefault();
-            var userBrowser = parser.ParseUserAgent(ua);
-            var os = parser.ParseOS(ua);
-
-            var properties = new DiscordConfig().SuperProperties;
-            properties.Browser = userBrowser.Family;
-            properties.BrowserVersion = $"{userBrowser.Major}.{userBrowser.Minor}.{userBrowser.Patch}.101";
-            properties.OS = os.Family;
-            properties.OSVersion = os.Major; // this could be better
-            properties.UserAgent = ua;
-            properties.ClientVersion = GetBuildNumber();
-
+            var properties = new SuperProperties();
+            await _page.SetUserAgentAsync(properties.UserAgent);
             _superProps = properties.ToBase64();
         }
 
@@ -116,7 +76,7 @@ headers: " + "{";
 
         public static async Task<GuildInvite> JoinGuildAsync(DiscordClient client, string invCode)
         {
-            return (await CallAsync<GuildInvite>(client, "POST", client.HttpClient.BaseUrl + "/invites/" + invCode));
+            return (await CallAsync<GuildInvite>(client, "POST", client.HttpClient.BaseUrl + "/invites/" + invCode)).SetClient(client);
         }
 
         public static GuildInvite JoinGuild(DiscordClient client, string invCode)

@@ -13,7 +13,7 @@ namespace VCSpammer
 {
     class Program
     {
-        public static ulong TargetGuildId { get; private set; }
+        public static GuildInvite Invite { get; private set; }
         public static string AudioPath { get; private set; }
 
         public static object ChannelLookupLock = new object();
@@ -21,8 +21,11 @@ namespace VCSpammer
 
         static void Main(string[] args)
         {
-            Console.Write("Guild ID: ");
-            TargetGuildId = ulong.Parse(Console.ReadLine());
+            Console.WriteLine("Loading puppeteer...");
+            DiscordPuppeteer.Start();
+
+            Console.Write("Guild invite: ");
+            Invite = (GuildInvite)new DiscordClient().GetInvite(Console.ReadLine());
 
             Console.Write("Audio file path: ");
             AudioPath = Console.ReadLine();
@@ -37,10 +40,17 @@ namespace VCSpammer
                 client.OnLoggedIn += Client_OnLoggedIn;
                 client.OnJoinedVoiceChannel += Client_OnJoinedVoiceChannel;
                 client.OnLeftVoiceChannel += Client_OnLeftVoiceChannel;
+                client.OnJoinedGuild += Client_OnJoinedGuild;
                 client.Login(token);
             }
 
             Thread.Sleep(-1);
+        }
+
+        private static void Client_OnJoinedGuild(DiscordSocketClient client, SocketGuildEventArgs args)
+        {
+            if (args.Guild.Id == Invite.Guild.Id)
+                WaitConnect(client);
         }
 
         private static void Client_OnLeftVoiceChannel(DiscordSocketClient client, VoiceDisconnectEventArgs args)
@@ -85,7 +95,8 @@ namespace VCSpammer
 
             Console.WriteLine("Logged into " + client.User.ToString());
 
-            WaitConnect(client);
+            if (!args.Guilds.Any(g => g.Id == Invite.Guild.Id)) DiscordPuppeteer.JoinGuild(client, Invite.Code);
+            else WaitConnect(client);
         }
 
         private static int GetParticipantCount(DiscordSocketClient client, ulong channelId) =>
@@ -101,11 +112,11 @@ namespace VCSpammer
         {
             lock (ChannelLookupLock)
             {
-                var guild = client.GetCachedGuild(TargetGuildId);
+                var guild = client.GetCachedGuild(Invite.Guild.Id);
 
                 foreach (var ch in guild.Channels.Where(c => c.Type == ChannelType.Voice && !BotAccounts.Any(a =>
                 {
-                    var voiceClient = a.GetVoiceClient(TargetGuildId);
+                    var voiceClient = a.GetVoiceClient(Invite.Guild.Id);
                     return voiceClient.Channel != null && voiceClient.Channel.Id == c.Id;
                 })).OrderBy(c => GetParticipantCount(client, c.Id)).Reverse())
                 {
@@ -119,7 +130,7 @@ namespace VCSpammer
                         if (voiceStates > 0 && (voiceChannel.UserLimit == 0 || voiceStates < voiceChannel.UserLimit))
                         {
                             Console.WriteLine(client.User.ToString() + " has found the channel " + voiceChannel.Id);
-                            client.GetVoiceClient(TargetGuildId).Connect(voiceChannel.Id, new VoiceConnectionProperties() { Muted = true });
+                            client.GetVoiceClient(Invite.Guild.Id).Connect(voiceChannel.Id, new VoiceConnectionProperties() { Muted = true });
                             return true;
                         }
                     }

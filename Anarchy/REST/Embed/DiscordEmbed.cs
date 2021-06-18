@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 
@@ -59,6 +60,10 @@ namespace Discord
 
         [JsonProperty("author")]
         public EmbedAuthor Author { get; internal set; }
+
+
+        [JsonProperty("timestamp")]
+        public DateTime? Timestamp { get; internal set; }
 
 
         public override string ToString()

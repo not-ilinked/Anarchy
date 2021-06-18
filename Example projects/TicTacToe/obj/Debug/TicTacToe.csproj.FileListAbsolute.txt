@@ -23,7 +23,6 @@ D:\repos\Anarchy\Example projects\TicTacToe\bin\Debug\websocket-sharp.dll
 D:\repos\Anarchy\Example projects\TicTacToe\bin\Debug\Anarchy.pdb
 D:\repos\Anarchy\Example projects\TicTacToe\bin\Debug\Newtonsoft.Json.xml
 D:\repos\Anarchy\Example projects\TicTacToe\bin\Debug\Leaf.xNet.xml
-D:\repos\Anarchy\Example projects\TicTacToe\obj\Debug\TicTacToe.csprojAssemblyReference.cache
 D:\repos\Anarchy\Example projects\TicTacToe\obj\Debug\TicTacToe.csproj.CoreCompileInputs.cache
 D:\repos\Anarchy\Example projects\TicTacToe\obj\Debug\TicTacToe.csproj.CopyComplete
 D:\repos\Anarchy\Example projects\TicTacToe\obj\Debug\TicTacToe.exe

@@ -4,7 +4,8 @@ namespace Discord
 {
     internal static class DiscordHttpUtil
     {
-        public static string BuildBaseUrl(int apiVersion, string domain) => $"https://{domain}/api/v{apiVersion}";
+        public static string BuildBaseUrl(uint apiVersion, DiscordReleaseChannel releaseChannel) =>
+            $"https://{(releaseChannel == DiscordReleaseChannel.Stable ? "" : releaseChannel.ToString().ToLower() + ".")}discord.com/api/v{apiVersion}";
 
         public static void ValidateResponse(int statusCode, JToken body)
         {

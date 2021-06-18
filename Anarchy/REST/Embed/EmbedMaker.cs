@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 
@@ -95,6 +96,13 @@ namespace Discord
         {
             get { return _embed.Author; }
             set { _embed.Author = value; }
+        }
+
+
+        public DateTime? Timestamp
+        {
+            get { return _embed.Timestamp; }
+            set { _embed.Timestamp = value; }
         }
 
 

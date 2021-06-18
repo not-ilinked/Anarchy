@@ -138,8 +138,6 @@ D:\repos\Anarchy\Anarchy.Puppeteer\obj\Debug\Anarchy.Puppeteer.csproj.CoreCompil
 D:\repos\Anarchy\Anarchy.Puppeteer\obj\Debug\Anarchy.Puppeteer.csproj.CopyComplete
 D:\repos\Anarchy\Anarchy.Puppeteer\obj\Debug\Anarchy.Puppeteer.dll
 D:\repos\Anarchy\Anarchy.Puppeteer\obj\Debug\Anarchy.Puppeteer.pdb
-D:\repos\Anarchy\Anarchy.Puppeteer\bin\Debug\UAParser.dll
-D:\repos\Anarchy\Anarchy.Puppeteer\bin\Debug\UAParser.xml
 D:\downloads\Anarchy-dev\Anarchy-dev\Anarchy.Puppeteer\obj\Debug\Anarchy.Puppeteer.csprojAssemblyReference.cache
 D:\downloads\Anarchy-dev\Anarchy-dev\Anarchy.Puppeteer\obj\Debug\Anarchy.Puppeteer.csproj.CoreCompileInputs.cache
 D:\downloads\Anarchy-dev\Anarchy-dev\Anarchy.Puppeteer\bin\Debug\Anarchy.Puppeteer.dll.config
