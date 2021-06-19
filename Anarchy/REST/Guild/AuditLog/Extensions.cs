@@ -12,7 +12,7 @@ namespace Discord
                 filters = new AuditLogFilters();
 
             return (await client.HttpClient.GetAsync($"/guilds/{guildId}/audit-logs?{(filters.UserIdProperty.Set ? $"user_id={filters.UserId}" : "")}&{(filters.ActionTypeProperty.Set ? $"action_type={(int)filters.ActionType}" : "")}&{(filters.BeforeIdProperty.Set ? $"before={filters.BeforeId}" : "")}&{(filters.LimitProperty.Set ? $"limit={filters.Limit}" : "")}"))
-                                .Deserialize<JObject>().Value<IReadOnlyList<AuditLogEntry>>("audit_log_entries");
+                                .Body.Value<JToken>("audit_log_entries").ToObject<List<AuditLogEntry>>();
         }
 
         /// <summary>

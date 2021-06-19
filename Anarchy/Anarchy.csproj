@@ -80,6 +80,11 @@
     <Compile Include="REST\Channel\Guild\Stage\StagePrivacyLevel.cs" />
     <Compile Include="REST\DiscordClient.cs" />
     <Compile Include="REST\DiscordConfig.cs" />
+    <Compile Include="REST\Guild\AuditLog\Extensions.cs" />
+    <Compile Include="REST\Guild\AuditLog\Models\ActionType.cs" />
+    <Compile Include="REST\Guild\AuditLog\Models\Change.cs" />
+    <Compile Include="REST\Guild\AuditLog\Models\Entry.cs" />
+    <Compile Include="REST\Guild\AuditLog\Models\Filters.cs" />
     <Compile Include="REST\Guild\Community\Screening\VerificationFormProperties.cs" />
     <Compile Include="REST\Guild\Permissions\PermissionUtils.cs" />
     <Compile Include="REST\Guild\Community\Screening\GuildVerificationForm.cs" />
@@ -284,11 +289,6 @@
     <Compile Include="Local\Controllable\JsonExtensions.cs" />
     <Compile Include="Local\DiscordParameter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="REST\Guild\AuditLog\Extensions.cs" />
-    <Compile Include="REST\Guild\AuditLog\Models\ActionType.cs" />
-    <Compile Include="REST\Guild\AuditLog\Models\Change.cs" />
-    <Compile Include="REST\Guild\AuditLog\Models\Entry.cs" />
-    <Compile Include="REST\Guild\AuditLog\Models\Filters.cs" />
     <Compile Include="REST\CDN\DiscordCDNImageFormat.cs" />
     <Compile Include="REST\Channel\Channel\DiscordChannel.cs" />
     <Compile Include="WebSockets\Gateway\Channel\ChannelEventArgs.cs" />

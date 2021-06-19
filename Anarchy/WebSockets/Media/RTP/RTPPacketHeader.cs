@@ -106,10 +106,13 @@ namespace Discord.Media
                 Timestamp = BitConverter.ToUInt32(new byte[] { rawHeader[7], rawHeader[6], rawHeader[5], rawHeader[4] }, 0),
                 SSRC = BitConverter.ToUInt32(new byte[] { rawHeader[11], rawHeader[10], rawHeader[9], rawHeader[8] }, 0)
             };
-
+            
             byte[] decrypted = new byte[packet.Length - HeaderLength - Sodium.LengthDifference];
 
-            Sodium.Decrypt(packet, HeaderLength, packet.Length - HeaderLength, decrypted, 0, rawHeader, secretKey);
+            byte[] nonce = new byte[rawHeader.Length * 2];
+            Buffer.BlockCopy(rawHeader, 0, nonce, 0, rawHeader.Length);
+
+            Sodium.Decrypt(packet, HeaderLength, packet.Length - HeaderLength, decrypted, 0, nonce, secretKey);
 
             if (packet[0] == 0x90) // later on we might wanna check if index 3 (7 - 3 cuz big indian) is 1 to make anarchy's feature here live on for longer
             {
@@ -132,9 +135,7 @@ namespace Discord.Media
             }
             else
                 payload = decrypted;
-
-            payload = null;
-
+            
             return header;
         }
     }

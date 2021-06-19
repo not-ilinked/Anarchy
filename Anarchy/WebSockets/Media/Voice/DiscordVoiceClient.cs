@@ -46,7 +46,7 @@ namespace Discord.Media
             _receivers.Clear();
             if (_guildId.HasValue) Livestream = new DiscordLivestreamClient(_client, _guildId.Value, _channelId.Value);
 
-            Connection = new DiscordMediaConnection(_client, _sessionId, server.Guild == null ? _channelId.Value : server.Guild.Id, server);
+            Connection = new DiscordMediaConnection(_client, server.Guild == null ? _channelId.Value : server.Guild.Id, server);
             
             Connection.OnReady += (c) =>
             {

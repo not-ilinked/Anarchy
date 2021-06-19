@@ -40,7 +40,6 @@ namespace Discord.Media
 
         public DiscordSSRC SSRC { get; private set; }
         public byte[] SecretKey { get; set; }
-        private string _sessionId { get; }
 
         internal UdpClient UdpClient { get; private set; }
         public IPEndPoint ServerEndpoint { get; private set; }
@@ -48,10 +47,8 @@ namespace Discord.Media
 
         private readonly DiscordSocketClient _parentClient;
 
-        public DiscordMediaConnection(DiscordSocketClient parentClient, string sessionId, ulong serverId, DiscordMediaServer server) : base("wss://" + server.Endpoint + "?v=4") 
+        public DiscordMediaConnection(DiscordSocketClient parentClient, ulong serverId, DiscordMediaServer server) : base("wss://" + server.Endpoint + "?v=4") 
         {
-            _sessionId = sessionId;
-
             _parentClient = parentClient;
 
             _server = server;
@@ -221,17 +218,17 @@ namespace Discord.Media
                         /*
                         var ok = RTPPacketHeader.Read(SecretKey, received, out var _);
 
-                        Console.WriteLine($"{ok.Type} {ok.Flags} {ok.Sequence} {ok.Timestamp} {ok.SSRC} {ok.HasExtensions}");*/
-                        
+                        Console.WriteLine($"{ok.Type} {ok.Flags} {ok.Sequence} {ok.Timestamp} {ok.SSRC} {ok.HasExtensions}");
+                        */
                         // not much point in doing this rn since the decryption fails
-                        /*
+                        
                         try
                         {
                             var header = RTPPacketHeader.Read(SecretKey, received, out byte[] payload);
 
                             OnUdpPacket?.Invoke(this, new MediaPacketEventArgs(header, payload));
                         }
-                        catch (SodiumException) { }*/
+                        catch (SodiumException) { }
                     }
                 }
             }

@@ -74,6 +74,9 @@ namespace Discord.Media
 
         public int Write(byte[] buffer, int offset)
         {
+            if (_client.State < MediaConnectionState.Ready)
+                throw new InvalidOperationException("Client is not currently connected");
+
             lock (_voiceLock)
             {
                 if (_nextTick == -1)
@@ -109,6 +112,11 @@ namespace Discord.Media
 
         public int CopyFrom(byte[] buffer, int offset = 0, CancellationToken cancellationToken = default)
         {
+            if (_client.State < MediaConnectionState.Ready)
+                throw new InvalidOperationException("Client is not currently connected");
+
+            _nextTick = -1;
+
             while (offset < buffer.Length && !cancellationToken.IsCancellationRequested)
             {
                 try
@@ -126,11 +134,15 @@ namespace Discord.Media
 
         public bool CopyFrom(Stream stream, CancellationToken cancellationToken = default)
         {
+            if (_client.State < MediaConnectionState.Ready)
+                throw new InvalidOperationException("Client is not currently connected");
+
             if (!stream.CanRead)
                 throw new ArgumentException("Cannot read from stream", "stream");
 
-            byte[] buffer = new byte[OpusEncoder.FrameBytes];
+            _nextTick = -1;
 
+            byte[] buffer = new byte[OpusEncoder.FrameBytes];
             while (!cancellationToken.IsCancellationRequested && _client.Connection.State == MediaConnectionState.Ready)
             {
                 int read = stream.Read(buffer, 0, buffer.Length);

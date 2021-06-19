@@ -49,7 +49,7 @@ namespace Discord.Media
 
         internal void UpdateServer(DiscordMediaServer server)
         {
-            _connection = new DiscordMediaConnection(Client, _sessionId, _rtcServerId, server);
+            _connection = new DiscordMediaConnection(Client, _rtcServerId, server);
 
             _connection.OnReady += (c) =>
             {

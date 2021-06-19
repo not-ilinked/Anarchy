@@ -91,7 +91,7 @@ namespace Discord.Gateway
 
         public event ClientEventHandler<VoiceConnectEventArgs> OnJoinedVoiceChannel;
         public event ClientEventHandler<VoiceDisconnectEventArgs> OnLeftVoiceChannel;
-        internal event ClientEventHandler<VoiceChannelSpeakingEventArgs> OnUserSpeaking;
+        public event ClientEventHandler<VoiceChannelSpeakingEventArgs> OnUserSpeaking;
 
         public event ClientEventHandler<RequiredActionEventArgs> OnRequiredUserAction;
         #endregion
