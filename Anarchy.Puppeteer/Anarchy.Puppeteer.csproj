@@ -135,7 +135,6 @@
   <ItemGroup>
     <Compile Include="DiscordPuppeteer.cs" />
     <Compile Include="DiscordResponse.cs" />
-    <Compile Include="InvalidParameter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
