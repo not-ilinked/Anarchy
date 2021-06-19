@@ -2,7 +2,7 @@
 
 namespace Discord
 {
-    public class InvalidParameter
+    public class DiscordFieldError
     {
         [JsonProperty("code")]
         public string Code { get; private set; }

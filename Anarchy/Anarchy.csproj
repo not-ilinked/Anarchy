@@ -93,6 +93,7 @@
     <Compile Include="REST\HTTP\DiscordHttpUtil.cs" />
     <Compile Include="REST\HTTP\DiscordReleaseChannel.cs" />
     <Compile Include="REST\HTTP\Exceptions\DiscordConnectionException.cs" />
+    <Compile Include="REST\HTTP\Exceptions\FieldErrorDictionary.cs" />
     <Compile Include="REST\Interactions\InteractionExtensions.cs" />
     <Compile Include="REST\Interactions\SlashCommands\ApplicationCommand.cs" />
     <Compile Include="REST\Interactions\SlashCommands\ApplicationCommandOption.cs" />
@@ -118,6 +119,8 @@
     <Compile Include="REST\OAuth2\Client\OAuth2GuildJoinProperties.cs" />
     <Compile Include="REST\OAuth2\Client\OAuth2HttpError.cs" />
     <Compile Include="REST\User\Connections\ConnectionProperties.cs" />
+    <Compile Include="REST\User\User\DiscordReportReason.cs" />
+    <Compile Include="REST\User\User\UserReportIdentification.cs" />
     <Compile Include="WebSockets\Gateway\Gifts\DiscordEntitlement.cs" />
     <Compile Include="WebSockets\Gateway\Gifts\EntitlementEventArgs.cs" />
     <Compile Include="WebSockets\Gateway\Gifts\GiftCodeUpdatedEventArgs.cs" />
@@ -136,7 +139,7 @@
     <Compile Include="WebSockets\Gateway\Session\DiscordShard.cs" />
     <Compile Include="WebSockets\Gateway\DiscordSocketClient.cs" />
     <Compile Include="WebSockets\Gateway\DiscordSocketConfig.cs" />
-    <Compile Include="REST\HTTP\Exceptions\InvalidParameter.cs" />
+    <Compile Include="REST\HTTP\Exceptions\DiscordFieldError.cs" />
     <Compile Include="WebSockets\Gateway\General\GatewayConnectionState.cs" />
     <Compile Include="WebSockets\Gateway\LockedSocketConfig.cs" />
     <Compile Include="WebSockets\Gateway\Media\Voice\DiscordVoiceStateContainer.cs" />

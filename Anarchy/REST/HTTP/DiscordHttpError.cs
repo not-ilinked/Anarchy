@@ -11,7 +11,7 @@ namespace Discord
 
 
         [JsonProperty("errors")]
-        public Dictionary<string, JObject> Fields { get; private set; }
+        public JObject Fields { get; private set; }
         
 
         [JsonProperty("message")]
@@ -23,7 +23,6 @@ namespace Discord
         public DiscordHttpError(DiscordError code, string message)
         {
             Code = code;
-            Fields = new Dictionary<string, JObject>();
             Message = message;
         }
     }

@@ -61,17 +61,9 @@ namespace GuildDuplicator
                     }
                     catch (DiscordHttpException ex)
                     {
-                        if (ex.Code == DiscordError.InvalidFormBody) // This is used whenever discord wants to give us parameter-specific errors
-                        {
-                            if (ex.InvalidParameters.TryGetValue("image", out var errors))
-                            {
-                                if (!errors.ContainsKey("BINARY_TYPE_MAX_SIZE"))
-                                    foreach (var error in errors) Console.WriteLine($"Error in {error.Key}. Reason: {error.Value}");
-                            }
-                        }
-                        else if (ex.Code == DiscordError.MaximumEmojis)
+                        if (ex.Code == DiscordError.InvalidFormBody || ex.Code == DiscordError.MaximumEmojis)
                             break;
-                        else
+                        else if (ex.Code != DiscordError.InvalidFormBody)
                             throw;
                     }
                     catch (RateLimitException)
