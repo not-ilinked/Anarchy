@@ -27,3 +27,4 @@ D:\downloads\Anarchy-dev\Anarchy-dev\Example projects\MessageListener\obj\Debug\
 D:\downloads\Anarchy-dev\Anarchy-dev\Example projects\MessageListener\obj\Debug\MessageListener.csproj.CopyComplete
 D:\downloads\Anarchy-dev\Anarchy-dev\Example projects\MessageListener\obj\Debug\MessageListener.exe
 D:\downloads\Anarchy-dev\Anarchy-dev\Example projects\MessageListener\obj\Debug\MessageListener.pdb
+D:\repos\Anarchy\Example projects\MessageListener\obj\Debug\MessageListener.csprojAssemblyReference.cache

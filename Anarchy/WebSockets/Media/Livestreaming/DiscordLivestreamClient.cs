@@ -40,8 +40,6 @@ namespace Discord.Media
 
         internal void CreateSession(GoLiveCreate goLive)
         {
-            Console.WriteLine("Creating session");
-
             var key = new StreamKey(goLive.StreamKey);
 
             DiscordLivestreamSession session;
@@ -70,8 +68,6 @@ namespace Discord.Media
 
         internal void UpdateSession(GoLiveUpdate goLive)
         {
-            Console.WriteLine("Updating session");
-
             var key = new StreamKey(goLive.StreamKey);
 
             if (key.UserId == Client.User.Id) Own.Update(goLive);
@@ -80,16 +76,12 @@ namespace Discord.Media
 
         internal void SetSessionServer(ulong userId, DiscordMediaServer server)
         {
-            Console.WriteLine("Updating server");
-
             if (userId == Client.User.Id) Own.UpdateServer(server);
             else _watching[userId].UpdateServer(server);
         }
 
         internal void KillSession(GoLiveDelete goLive)
         {
-            Console.WriteLine("Killing session");
-
             var key = new StreamKey(goLive.StreamKey);
 
             if (OnLeftLivestream != null)
