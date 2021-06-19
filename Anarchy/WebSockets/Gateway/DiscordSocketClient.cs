@@ -455,7 +455,8 @@ namespace Discord.Gateway
                                     break;
                                 }
 
-                                Task.Run(() => OnGuildMemberUpdated.Invoke(this, new GuildMemberEventArgs(member)));
+                                if (OnGuildMemberUpdated != null)
+                                    Task.Run(() => OnGuildMemberUpdated.Invoke(this, new GuildMemberEventArgs(member)));
                             }
                             break;
                         case "GUILD_MEMBERS_CHUNK":

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Discord.Gateway
@@ -105,7 +106,7 @@ namespace Discord.Gateway
 
         private static int RequestMembers(DiscordSocketClient client, ulong guildId, ulong channelId, int index)
         {
-            const int rangesPerRequest = 1;
+            const int rangesPerRequest = 3;
 
             int[][] chunks = new int[rangesPerRequest][];
 
@@ -124,6 +125,9 @@ namespace Discord.Gateway
 
             return rangesPerRequest;
         }
+
+
+        public static void SubscribeToGuildEvents(this DiscordSocketClient client, ulong guildId) => client.WebSocket.Send($"{{\"op\":14,\"d\":{{\"guild_id\":\"{guildId}\",\"typing\":true,\"threads\":true,\"activities\":true,\"members\":[],\"channels\":{{}},\"thread_member_lists\":[]}}}}");
 
 
         public static Task<IReadOnlyList<GuildMember>> GetGuildChannelMembersAsync(this DiscordSocketClient client, ulong guildId, ulong channelId, MemberListQueryOptions options = null)
@@ -169,22 +173,25 @@ namespace Discord.Gateway
                         }
                     }
 
-                    if ((memberDict.Count >= options.Count && options.Count > 0) || memberDict.OrderBy(i => i.Key).Last().Key + 1 >= combined)
+                    if (args.Operations.Any(o => o["op"].ToString() == "SYNC"))
                     {
-                        client.OnMemberListUpdate -= handler;
+                        if ((memberDict.Count >= options.Count && options.Count > 0) || memberDict.OrderBy(i => i.Key).Last().Key + 1 >= combined)
+                        {
+                            client.OnMemberListUpdate -= handler;
 
-                        IEnumerable<GuildMember> result = memberDict.Select(i => i.Value);
+                            IEnumerable<GuildMember> result = memberDict.Select(i => i.Value);
 
-                        if (options.Count > 0)
-                            result = result.Take(options.Count);
+                            if (options.Count > 0)
+                                result = result.Take(options.Count);
 
-                        foreach (var member in result)
-                            member.GuildId = guildId;
+                            foreach (var member in result)
+                                member.GuildId = guildId;
 
-                        task.SetResult(result.ToList().SetClientsInList(client));
+                            task.SetResult(result.ToList().SetClientsInList(client));
+                        }
+                        else if (pendingRequests == 0)
+                            pendingRequests = RequestMembers(client, guildId, channelId, memberDict.OrderBy(i => i.Key).Last().Key);
                     }
-                    else if (pendingRequests == 0)
-                        pendingRequests = RequestMembers(client, guildId, channelId, memberDict.OrderBy(i => i.Key).Last().Key);
                 }
             }
 

@@ -115,7 +115,6 @@ D:\repos\Anarchy\Anarchy.Puppeteer\bin\Debug\System.Runtime.CompilerServices.Uns
 D:\repos\Anarchy\Anarchy.Puppeteer\bin\Debug\System.Text.Encodings.Web.dll
 D:\repos\Anarchy\Anarchy.Puppeteer\bin\Debug\System.Threading.Tasks.Extensions.dll
 D:\repos\Anarchy\Anarchy.Puppeteer\bin\Debug\websocket-sharp.dll
-D:\repos\Anarchy\Anarchy.Puppeteer\bin\Debug\Anarchy.pdb
 D:\repos\Anarchy\Anarchy.Puppeteer\bin\Debug\ICSharpCode.SharpZipLib.pdb
 D:\repos\Anarchy\Anarchy.Puppeteer\bin\Debug\ICSharpCode.SharpZipLib.xml
 D:\repos\Anarchy\Anarchy.Puppeteer\bin\Debug\Leaf.xNet.xml
