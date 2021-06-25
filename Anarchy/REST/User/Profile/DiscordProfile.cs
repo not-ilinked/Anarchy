@@ -40,6 +40,7 @@ namespace Discord
         [JsonProperty("mutual_guilds")]
         public IReadOnlyList<MutualGuild> MutualGuilds { get; private set; }
 
+
         [JsonProperty("connected_accounts")]
         public IReadOnlyList<ConnectedAccount> ConnectedAccounts { get; private set; }
 

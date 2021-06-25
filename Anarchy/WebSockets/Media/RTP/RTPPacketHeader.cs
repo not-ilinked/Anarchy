@@ -47,6 +47,13 @@ namespace Discord.Media
         private static readonly int HeaderLength = 12;
         private static readonly int ExtensionLength = 4;
 
+        private static byte[] CreateNonce(byte[] header)
+        {
+            byte[] nonce = new byte[header.Length * 2];
+            Buffer.BlockCopy(header, 0, nonce, 0, header.Length);
+            return nonce;
+        }
+
         public byte[] Write(byte[] secretKey, byte[] buffer, int offset, int count)
         {
             byte[] extensions;
@@ -87,7 +94,7 @@ namespace Discord.Media
             Buffer.BlockCopy(extensions, 0, packet, header.Length, extensions.Length);
 
             // the return value of this + HeaderLength gives us the length of packet.
-            Sodium.Encrypt(buffer, offset, count, packet, header.Length + extensions.Length, header, secretKey);
+            Sodium.Encrypt(buffer, offset, count, packet, header.Length + extensions.Length, CreateNonce(header), secretKey);
 
             return packet;
         }
@@ -109,10 +116,7 @@ namespace Discord.Media
             
             byte[] decrypted = new byte[packet.Length - HeaderLength - Sodium.LengthDifference];
 
-            byte[] nonce = new byte[rawHeader.Length * 2];
-            Buffer.BlockCopy(rawHeader, 0, nonce, 0, rawHeader.Length);
-
-            Sodium.Decrypt(packet, HeaderLength, packet.Length - HeaderLength, decrypted, 0, nonce, secretKey);
+            Sodium.Decrypt(packet, HeaderLength, packet.Length - HeaderLength, decrypted, 0, CreateNonce(rawHeader), secretKey);
 
             if (packet[0] == 0x90) // later on we might wanna check if index 3 (7 - 3 cuz big indian) is 1 to make anarchy's feature here live on for longer
             {

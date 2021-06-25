@@ -32,6 +32,7 @@ namespace Discord.Gateway
                 {
                     User = Member.User;
                     Member.SetClient(Client);
+                    Member.GuildId = _guildId.Value;
                 }
 
                 User.SetClient(Client);

@@ -60,6 +60,21 @@ namespace Discord
         }
 
 
+        public static async Task RemoveRelationshipAsync(this DiscordClient client, ulong userId)
+        {
+            await client.HttpClient.DeleteAsync($"/users/@me/relationships/{userId}");
+        }
+
+        /// <summary>
+        /// Removes any relationship (unfriending, unblocking etc.)
+        /// </summary>
+        /// <param name="userId">ID of the user</param>
+        public static void RemoveRelationship(this DiscordClient client, ulong userId)
+        {
+            client.RemoveRelationshipAsync(userId).GetAwaiter().GetResult();
+        }
+
+
         public static async Task<DiscordProfile> GetProfileAsync(this DiscordClient client, ulong userId)
         {
             return (await client.HttpClient.GetAsync($"/users/{userId}/profile?with_mutual_guilds=true"))
@@ -90,21 +105,6 @@ namespace Discord
         public static IReadOnlyList<DiscordUser> GetMutualFriends(this DiscordClient client, ulong userId)
         {
             return client.GetMutualFriendsAsync(userId).GetAwaiter().GetResult();
-        }
-
-
-        public static async Task RemoveRelationshipAsync(this DiscordClient client, ulong userId)
-        {
-            await client.HttpClient.DeleteAsync($"/users/@me/relationships/{userId}");
-        }
-
-        /// <summary>
-        /// Removes any relationship (unfriending, unblocking etc.)
-        /// </summary>
-        /// <param name="userId">ID of the user</param>
-        public static void RemoveRelationship(this DiscordClient client, ulong userId)
-        {
-            client.RemoveRelationshipAsync(userId).GetAwaiter().GetResult();
         }
     }
 }
