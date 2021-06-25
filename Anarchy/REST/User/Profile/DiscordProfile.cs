@@ -33,6 +33,15 @@ namespace Discord
         public DiscordUser User { get; private set; }
 
 
+        [JsonProperty("bio")]
+        public string Biography { get; private set; }
+
+
+        [JsonProperty("banner")]
+        private readonly string _bannerHash;
+        public DiscordCDNImage Banner => _bannerHash == null ? null : new DiscordCDNImage(CDNEndpoints.Banner, User.Id, _bannerHash);
+
+
         [JsonProperty("premium_since")]
         public DateTime? NitroSince { get; private set; }
 

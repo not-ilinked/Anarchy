@@ -12,7 +12,7 @@ namespace AntiRaid
         public static Dictionary<ulong, List<DiscordMessage>> Messages = new Dictionary<ulong, List<DiscordMessage>>();
         public static BanQueue BanQueue = new BanQueue();
 
-        public static readonly int MaxMessages = 10;
+        public static readonly int MaxMessages = 7;
         public static readonly TimeSpan MessageExpiration = new TimeSpan(0, 0, 10);
 
         static void Main(string[] args)
@@ -50,16 +50,11 @@ namespace AntiRaid
                     foreach (var msg in msgsCopy)
                         BanQueue.Enqueue(msg.Author.Member);
 
+                    // if we're on a bot account, we can delete messages from multiple users much faster than we can ban them. let's keep the chat clean :)
                     if (client.User.Type == DiscordUserType.Bot)
                     {
                         foreach (var group in msgsCopy.GroupBy(m => m.Channel.Id))
                             client.DeleteMessages(group.Key, group.Select(m => m.Id).ToList());
-                    }
-                    else
-                    {
-                        // we have to go the slow route :(
-                        foreach (var msg in msgsCopy)
-                            msg.Delete();
                     }
                 }
             }

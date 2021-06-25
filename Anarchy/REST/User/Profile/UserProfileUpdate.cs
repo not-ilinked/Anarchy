@@ -68,6 +68,29 @@ namespace Discord
         }
 
 
+        private readonly DiscordParameter<string> _bioParam = new DiscordParameter<string>();
+        [JsonProperty("bio")]
+        public string Biography
+        {
+            get { return _bioParam; }
+            set { _bioParam.Value = value; }
+        }
+
+        public bool ShouldSerializeBiography() => _bioParam.Set;
+
+
+        private readonly DiscordParameter<DiscordImage> _bannerParam = new DiscordParameter<DiscordImage>();
+        [JsonProperty("banner")]
+        public DiscordImage Banner
+        {
+            get { return _bannerParam; }
+            set { _bannerParam.Value = value; }
+        }
+
+        public bool ShouldSerializeBanner() => _bannerParam.Set;
+        
+
+
         [JsonProperty("password")]
         public string Password { get; set; }
 
