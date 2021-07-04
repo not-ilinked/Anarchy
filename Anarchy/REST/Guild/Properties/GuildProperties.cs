@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Drawing;
 
@@ -53,6 +53,48 @@ namespace Discord
             return IconProperty.Set;
         }
 
+        internal readonly DiscordParameter<DiscordImage> BannerProperty = new DiscordParameter<DiscordImage>();
+        [JsonProperty("banner")]
+        public DiscordImage Banner
+        {
+            get { return BannerProperty; }
+            set { BannerProperty.Value = value; }
+        }
+
+
+        public bool ShouldSerializeBanner()
+        {
+            return BannerProperty.Set;
+        }
+
+        internal readonly DiscordParameter<DiscordImage> SplashProperty = new DiscordParameter<DiscordImage>();
+        [JsonProperty("splash")]
+        public DiscordImage Splash
+        {
+            get { return SplashProperty; }
+            set { SplashProperty.Value = value; }
+        }
+
+
+        public bool ShouldSerializeSplash()
+        {
+            return SplashProperty.Set;
+        }
+
+
+        internal readonly DiscordParameter<DiscordImage> DiscoverySplashProperty = new DiscordParameter<DiscordImage>();
+        [JsonProperty("discovery_splash")]
+        public DiscordImage DiscoverySplash
+        {
+            get { return DiscoverySplashProperty; }
+            set { DiscoverySplashProperty.Value = value; }
+        }
+
+
+        public bool ShouldSerializeDiscoverySplash()
+        {
+            return DiscoverySplashProperty.Set;
+        }
 
         private readonly DiscordParameter<ulong> OwnerProperty = new DiscordParameter<ulong>();
         [JsonProperty("owner_id")]
