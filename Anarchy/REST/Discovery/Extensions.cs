@@ -49,12 +49,6 @@ namespace Discord
             }
         }
 
-        /// <summary>
-        /// Activate lurker mode on a guild.
-        /// 
-        /// Note: this currently does not actually get you into lurk mode on the server because of some weird session_id issues.
-        /// </summary>
-        /// <param name="guildId">ID of the guild</param>
         public static DiscordGuild LurkGuild(this DiscordSocketClient client, ulong guildId)
         {
             return client.LurkGuildAsync(guildId).GetAwaiter().GetResult();

@@ -68,6 +68,12 @@ namespace Anarchy
             return false;
         }
 
+        public new bool ContainsKey(TKey key)
+        {
+            lock (Lock)
+                return base.ContainsKey(key);
+        }
+
         public new bool Remove(TKey key)
         {
             lock (Lock)

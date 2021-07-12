@@ -27,3 +27,4 @@ D:\repos\Anarchy\Example projects\TicTacToe\obj\Debug\TicTacToe.csproj.CoreCompi
 D:\repos\Anarchy\Example projects\TicTacToe\obj\Debug\TicTacToe.csproj.CopyComplete
 D:\repos\Anarchy\Example projects\TicTacToe\obj\Debug\TicTacToe.exe
 D:\repos\Anarchy\Example projects\TicTacToe\obj\Debug\TicTacToe.pdb
+D:\repos\Anarchy\Example projects\TicTacToe\obj\Debug\TicTacToe.csprojAssemblyReference.cache

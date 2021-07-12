@@ -279,3 +279,4 @@ D:\downloads\Anarchy-dev\Anarchy-dev\Anarchy.Puppeteer\bin\Debug\UAParser.xml
 D:\downloads\Anarchy-dev\Anarchy-dev\Anarchy.Puppeteer\obj\Debug\Anarchy.Puppeteer.csproj.CopyComplete
 D:\downloads\Anarchy-dev\Anarchy-dev\Anarchy.Puppeteer\obj\Debug\Anarchy.Puppeteer.dll
 D:\downloads\Anarchy-dev\Anarchy-dev\Anarchy.Puppeteer\obj\Debug\Anarchy.Puppeteer.pdb
+D:\repos\Anarchy\Anarchy.Puppeteer\bin\Debug\Anarchy.pdb

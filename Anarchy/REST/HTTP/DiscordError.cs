@@ -32,6 +32,7 @@
         MaximumConnections,
         MaximumReactions = 30010,
         MaximumGuildChannels = 30013,
+        MaximumGuildMembers = 30019,
         MaximumGuildSubscriptions = 30026,
         Unauthorized = 40001,
         AccountUnverified,

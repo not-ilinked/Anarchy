@@ -433,8 +433,8 @@ namespace Discord.Gateway
                             {
                                 var member = message.Data.ToObject<PartialGuildMember>().SetClient(this);
 
-                                if (Config.Cache)
-                                    GuildCache[member.GuildId].MemberCount--;
+                                if (Config.Cache && GuildCache.ContainsKey(member.Guild.Id))
+                                    GuildCache[member.Guild.Id].MemberCount--;
 
                                 Task.Run(() => OnUserLeftGuild?.Invoke(this, new MemberRemovedEventArgs(member)));
                             }

@@ -1,6 +1,7 @@
 ﻿using Discord.Gateway;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Discord
@@ -9,6 +10,7 @@ namespace Discord
     {
         [JsonProperty("description")]
         public string Description { get; protected set; }
+
 
         [JsonProperty("approximate_presence_count")]
         public int OnlineMembers { get; private set; }
@@ -24,6 +26,33 @@ namespace Discord
 
         [JsonProperty("preferred_locale")]
         public DiscordLanguage PreferredLanguage { get; private set; }
+
+
+        [JsonProperty("discovery_splash")]
+        private readonly string _discoverySplashHash;
+
+        public DiscordCDNImage DiscoverySplash
+        {
+            get
+            {
+                if (_discoverySplashHash == null)
+                    return null;
+                else
+                    return new DiscordCDNImage(CDNEndpoints.DiscoverySplash, Id, _discoverySplashHash);
+            }
+        }
+
+
+        [JsonProperty("emojis")]
+        public IReadOnlyList<DiscordEmoji> Emojis { get; private set; }
+
+
+        [JsonProperty("keywords")]
+        public IReadOnlyList<string> Keywords { get; private set; }
+
+
+        [JsonProperty("vanity_url_code")]
+        public string VanityInvite { get; private set; }
 
 
         public async Task<DiscordGuild> LurkAsync()

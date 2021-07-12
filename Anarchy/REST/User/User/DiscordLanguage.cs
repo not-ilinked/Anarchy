@@ -36,7 +36,8 @@ namespace Discord
             { DiscordLanguage.Korean, "ko" },
             { DiscordLanguage.Bulgarian, "bg" },
             { DiscordLanguage.Taiwanese, "zh-TW" },
-            { DiscordLanguage.Lithuanian, "lt" }
+            { DiscordLanguage.Lithuanian, "lt" },
+            { DiscordLanguage.Hindi, "hi" }
         };
 
         private string ToString(DiscordLanguage lang)
@@ -102,6 +103,7 @@ namespace Discord
         Chinese,
         Japanese,
         Taiwanese,
-        Korean
+        Korean,
+        Hindi
     }
 }
