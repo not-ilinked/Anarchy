@@ -2,12 +2,10 @@
 
 namespace Discord.Gateway
 {
-    public class ComponentFormButton
+    public class ComponentFormButton : ComponentFormInput
     {
         public delegate void ClickHandler(object sender, FormInteractionEventArgs args);
         public event ClickHandler OnClick;
-
-        internal string Id { get; } = DiscordComponentForm.RandomString(8);
 
         public ComponentFormButton(MessageButtonStyle style, string text)
         {
@@ -28,7 +26,7 @@ namespace Discord.Gateway
         public bool Disabled { get; set; }
     
     
-        internal void TriggerClick(DiscordSocketClient client, DiscordInteraction interaction)
+        internal override void Handle(DiscordSocketClient client, DiscordInteraction interaction)
         {
             if (OnClick != null)
                 Task.Run(() => OnClick.Invoke(this, new FormInteractionEventArgs(client, interaction)));

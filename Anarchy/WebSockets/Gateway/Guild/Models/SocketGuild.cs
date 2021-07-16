@@ -2,6 +2,8 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Discord.Gateway
 {    
@@ -50,7 +52,18 @@ namespace Discord.Gateway
         [JsonProperty("members")]
         internal List<GuildMember> Members { get; private set; }
 
-        public GuildMember ClientMember => ((DiscordSocketClient)Client).ClientMembers[Id];
+        public GuildMember ClientMember
+        {
+            get
+            {
+                GuildMember member;
+
+                while (!((DiscordSocketClient)Client).ClientMembers.TryGetValue(Id, out member))
+                    Thread.Sleep(100);
+
+                return member;
+            }
+        }
 
 
         [JsonProperty("channels")]
@@ -67,10 +80,6 @@ namespace Discord.Gateway
                     return new List<GuildChannel>();
             }
         }
-
-
-        [JsonProperty("joined_at")]
-        public DateTime CreatedAt { get; private set; }
 
 
         [JsonProperty("presences")]
@@ -92,16 +101,11 @@ namespace Discord.Gateway
         }
 
 
-        public IReadOnlyList<GuildMember> GetMembers(uint limit = 0)
-        {
-            return ((DiscordSocketClient)Client).GetGuildMembers(Id, limit);
-        }
+        public Task<IReadOnlyList<GuildMember>> GetMembersAsync(uint limit = 0) => ((DiscordSocketClient)Client).GetGuildMembersAsync(Id, limit);
+        public IReadOnlyList<GuildMember> GetMembers(uint limit = 0) => GetMembersAsync(limit).GetAwaiter().GetResult();
 
-
-        public IReadOnlyList<GuildMember> GetChannelMembers(ulong channelId, MemberListQueryOptions options = null)
-        {
-            return ((DiscordSocketClient)Client).GetGuildChannelMembers(Id, channelId, options);
-        }
+        public Task<IReadOnlyList<GuildMember>> GetChannelMembersAsync(ulong channelId, uint limit = 0) => ((DiscordSocketClient)Client).GetGuildChannelMembersAsync(Id, channelId, limit);
+        public IReadOnlyList<GuildMember> GetChannelMembers(ulong channelId, uint limit = 0) => GetChannelMembersAsync(channelId, limit).GetAwaiter().GetResult();
 
 
         public new void Dispose()

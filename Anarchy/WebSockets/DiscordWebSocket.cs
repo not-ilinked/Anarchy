@@ -41,11 +41,6 @@ namespace Discord.WebSockets
             _socket.Close(error, reason);
         }
 
-        public void Send(string data)
-        {
-            _socket.Send(data);
-        }
-
         public void Send<T>(TOpcode op, T data)
         {
             _socket.Send(JsonConvert.SerializeObject(new DiscordWebSocketRequest<T, TOpcode>(op, data)));

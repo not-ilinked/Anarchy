@@ -11,20 +11,17 @@ namespace Discord.Gateway
         private DiscordSocketClient _client;
 
         internal string Id { get; }
-        public List<List<ComponentFormButton>> Rows { get; }
+        public List<List<ComponentFormInput>> Rows { get; }
 
-        public DiscordComponentForm(DiscordSocketClient client)
+        public DiscordComponentForm(DiscordSocketClient client, List<List<ComponentFormInput>> rows)
         {
             _client = client;
 
             _client.OnInteraction += HandleInteraction;
 
             Id = RandomString(16);
-            Rows = new List<List<ComponentFormButton>>();
-        }
+            Rows = new List<List<ComponentFormInput>>();
 
-        public DiscordComponentForm(DiscordSocketClient client, List<List<ComponentFormButton>> rows) : this(client)
-        {
             Rows = rows;
         }
 
@@ -41,7 +38,7 @@ namespace Discord.Gateway
                         foreach (var button in row)
                         {
                             if (button.Id == parts[1])
-                                button.TriggerClick(_client, args.Interaction);
+                                button.Handle(_client, args.Interaction);
                         }
                     }
                 }
@@ -62,22 +59,41 @@ namespace Discord.Gateway
 
             foreach (var row in instance.Rows)
             {
-                List<MessageComponent> buttons = new List<MessageComponent>();
+                List<MessageInputComponent> inputs = new List<MessageInputComponent>();
 
-                foreach (var button in row)
+                foreach (var input in row)
                 {
-                    buttons.Add(new ButtonComponent()
+                    if (input.GetType() == typeof(ComponentFormSelectMenu))
                     {
-                        Id = $"{instance.Id}-{button.Id}",
-                        Text = button.Text,
-                        Style = button.Style,
-                        Disabled = button.Disabled,
-                        Emoji = button.Emoji,
-                        RedirectUrl = button.RedirectUrl
-                    });
+                        var asSelect = (ComponentFormSelectMenu)input;
+                        inputs.Add(new SelectMenuComponent()
+                        {
+                            Id = $"{instance.Id}-{asSelect.Id}",
+                            Disabled = asSelect.Disabled,
+                            Placeholder = asSelect.Placeholder,
+                            MaxSelected = asSelect.MaxSelected,
+                            MinimumSelected = asSelect.MinimumSelected,
+                            Options = asSelect.Options
+                        });
+                    }
+                    else
+                    {
+                        var asButton = (ComponentFormButton)input;
+
+                        inputs.Add(new ButtonComponent()
+                        {
+                            Id = $"{instance.Id}-{asButton.Id}",
+                            Text = asButton.Text,
+                            Style = asButton.Style,
+                            Disabled = asButton.Disabled,
+                            Emoji = asButton.Emoji,
+                            RedirectUrl = asButton.RedirectUrl
+                        });
+                    }
+                    
                 }
 
-                components.Add(new RowComponent(buttons));
+                components.Add(new RowComponent(inputs));
             }
 
             return components;

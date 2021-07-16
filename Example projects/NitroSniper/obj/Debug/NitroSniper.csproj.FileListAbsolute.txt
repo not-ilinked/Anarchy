@@ -12,4 +12,3 @@ D:\repos\Anarchy\Example projects\NitroSniper\obj\Debug\NitroSniper.csproj.CoreC
 D:\repos\Anarchy\Example projects\NitroSniper\obj\Debug\NitroSniper.csproj.CopyComplete
 D:\repos\Anarchy\Example projects\NitroSniper\obj\Debug\NitroSniper.exe
 D:\repos\Anarchy\Example projects\NitroSniper\obj\Debug\NitroSniper.pdb
-D:\repos\Anarchy\Example projects\NitroSniper\obj\Debug\NitroSniper.csprojAssemblyReference.cache

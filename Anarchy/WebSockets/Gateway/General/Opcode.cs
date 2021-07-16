@@ -14,7 +14,7 @@
         Connected,
         HeartbeatAck,
         ReportOpenDM = 13, // seems like some data collection bs idk
-        RequestGuildMembersUser = 14,
+        GuildSubscriptions = 14,
         GoLive = 18,
         EndGoLive,
         WatchGoLive,

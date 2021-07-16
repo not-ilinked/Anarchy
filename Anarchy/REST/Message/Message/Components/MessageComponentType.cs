@@ -3,6 +3,7 @@
     public enum MessageComponentType
     {
         Row = 1,
-        Button
+        Button,
+        Select
     }
 }

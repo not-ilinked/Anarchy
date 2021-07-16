@@ -10,6 +10,7 @@ using System.IO;
 using Discord.Media;
 using Discord.WebSockets;
 using Anarchy;
+using Newtonsoft.Json;
 
 namespace Discord.Gateway
 {
@@ -42,7 +43,7 @@ namespace Discord.Gateway
         public event ClientEventHandler<InviteDeletedEventArgs> OnInviteDeleted;
 
         internal event ClientEventHandler<GuildMembersEventArgs> OnGuildMembersReceived;
-        internal event ClientEventHandler<GuildMemberListEventArgs> OnMemberListUpdate;
+        internal event ClientEventHandler<DiscordMemberListUpdate> OnMemberListUpdate;
         public event ClientEventHandler<PresenceUpdatedEventArgs> OnUserPresenceUpdated;
 
         public event ClientEventHandler<BanUpdateEventArgs> OnUserBanned;
@@ -166,7 +167,10 @@ namespace Discord.Gateway
                 GatewayCloseCode err = (GatewayCloseCode)args.Code;
 
                 if (LoggedIn && (lostConnection || err == GatewayCloseCode.RateLimited || err == GatewayCloseCode.SessionTimedOut || err == GatewayCloseCode.UnknownError))
+                {
+                    LoggedIn = false;
                     Login(Token);
+                }
                 else
                     OnLoggedOut?.Invoke(this, new LogoutEventArgs(err, args.Reason));
             };
@@ -232,7 +236,10 @@ namespace Discord.Gateway
                 foreach (var member in guild.Members)
                 {
                     if (member.User.Id == User.Id)
+                    {
                         ClientMembers[guild.Id] = member;
+                        break;
+                    }
                 }
 
                 foreach (var state in guild.VoiceStates)
@@ -366,7 +373,7 @@ namespace Discord.Gateway
                                 Task.Run(() => OnUserUpdated.Invoke(this, new UserEventArgs(user)));
                             break;
                         case "GUILD_MEMBER_LIST_UPDATE":
-                            OnMemberListUpdate?.Invoke(this, message.Data.ToObject<GuildMemberListEventArgs>());
+                            OnMemberListUpdate?.Invoke(this, message.Data.ToObject<DiscordMemberListUpdate>().SetClient(this));
                             break;
                         case "GUILD_CREATE":
                             if (Config.Cache || OnJoinedGuild != null)
@@ -496,43 +503,47 @@ namespace Discord.Gateway
                             }
                             break;
                         case "VOICE_STATE_UPDATE":
-                            DiscordVoiceState newState = message.Data.ToObject<DiscordVoiceState>().SetClient(this);
-
-                            if (Config.Cache)
+                            try
                             {
-                                if (newState.Guild == null)
-                                    VoiceStates[newState.UserId].PrivateChannelVoiceState = newState;
-                                else
-                                    VoiceStates[newState.UserId].GuildStates[newState.Guild.Id] = newState;
+                                DiscordVoiceState newState = message.Data.ToObject<DiscordVoiceState>().SetClient(this);
 
-                                // we also store voice states within SocketGuilds, so make sure to update those.
-                                foreach (var guild in this.GetCachedGuilds())
+                                if (Config.Cache)
                                 {
-                                    if (!guild.Unavailable)
-                                    {
-                                        if (newState.Guild == null || guild.Id != newState.Guild.Id)
-                                            guild._voiceStates.RemoveFirst(s => s.UserId == newState.UserId);
-                                        else
-                                        {
-                                            int i = guild._voiceStates.FindIndex(s => s.UserId == newState.UserId);
+                                    if (newState.Guild == null)
+                                        VoiceStates[newState.UserId].PrivateChannelVoiceState = newState;
+                                    else
+                                        VoiceStates[newState.UserId].GuildStates[newState.Guild.Id] = newState;
 
-                                            if (i > -1)
-                                                guild._voiceStates[i] = newState;
+                                    // we also store voice states within SocketGuilds, so make sure to update those.
+                                    foreach (var guild in this.GetCachedGuilds())
+                                    {
+                                        if (!guild.Unavailable)
+                                        {
+                                            if (newState.Guild == null || guild.Id != newState.Guild.Id)
+                                                guild._voiceStates.RemoveFirst(s => s.UserId == newState.UserId);
                                             else
-                                                guild._voiceStates.Add(newState);
+                                            {
+                                                int i = guild._voiceStates.FindIndex(s => s.UserId == newState.UserId);
+
+                                                if (i > -1)
+                                                    guild._voiceStates[i] = newState;
+                                                else
+                                                    guild._voiceStates.Add(newState);
+                                            }
                                         }
                                     }
                                 }
-                            }
 
-                            if (newState.UserId == User.Id)
-                            {
-                                if (newState.Guild == null) VoiceClients.Private.SetSessionId(newState.SessionId);
-                                else VoiceClients[newState.Guild.Id].SetSessionId(newState.SessionId);
-                            }
+                                if (newState.UserId == User.Id)
+                                {
+                                    if (newState.Guild == null) VoiceClients.Private.SetSessionId(newState.SessionId);
+                                    else VoiceClients[newState.Guild.Id].SetSessionId(newState.SessionId);
+                                }
 
-                            if (OnVoiceStateUpdated != null)
-                                Task.Run(() => OnVoiceStateUpdated.Invoke(this, new VoiceStateEventArgs(newState)));
+                                if (OnVoiceStateUpdated != null)
+                                    Task.Run(() => OnVoiceStateUpdated.Invoke(this, new VoiceStateEventArgs(newState)));
+                            }
+                            catch (JsonException) { } // very lazy fix for joined_at sometimes being null
                             break;
                         case "VOICE_SERVER_UPDATE":
                             OnMediaServer?.Invoke(this, message.Data.ToObject<DiscordMediaServer>().SetClient(this));

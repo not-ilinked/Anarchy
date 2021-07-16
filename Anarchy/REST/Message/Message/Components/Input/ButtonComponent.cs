@@ -2,7 +2,7 @@
 
 namespace Discord
 {
-    public class ButtonComponent : MessageComponent
+    public class ButtonComponent : MessageInputComponent
     {
         public ButtonComponent()
         {
@@ -18,13 +18,7 @@ namespace Discord
         [JsonProperty("emoji")]
         public PartialEmoji Emoji { get; set; }
 
-        [JsonProperty("custom_id")]
-        public string Id { get; set; }
-
         [JsonProperty("url")]
         public string RedirectUrl { get; set; }
-
-        [JsonProperty("disabled")]
-        public bool Disabled { get; set; }
     }
 }

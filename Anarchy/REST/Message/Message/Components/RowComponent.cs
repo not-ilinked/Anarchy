@@ -10,13 +10,13 @@ namespace Discord
             Type = MessageComponentType.Row;
         }
 
-        public RowComponent(List<MessageComponent> children) : this()
+        public RowComponent(List<MessageInputComponent> children) : this()
         {
             Components = children;
         }
 
         [JsonProperty("components")]
-        [JsonConverter(typeof(DeepJsonConverter<MessageComponent>))]
-        public List<MessageComponent> Components { get; private set; }
+        [JsonConverter(typeof(DeepJsonConverter<MessageInputComponent>))]
+        public List<MessageInputComponent> Components { get; private set; }
     }
 }

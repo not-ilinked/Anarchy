@@ -67,7 +67,9 @@ namespace Discord
                 new Dictionary<int, Type>()
                 {
                     { (int)MessageComponentType.Row, typeof(RowComponent) },
-                    { (int)MessageComponentType.Button, typeof(ButtonComponent) }
+                    { (int)MessageComponentType.Button, typeof(ButtonComponent) },
+                    { (int)MessageComponentType.Select, typeof(SelectMenuComponent) }
+
                 }
             }
         };

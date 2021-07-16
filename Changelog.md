@@ -1,3 +1,13 @@
+# 0.8.1.1
+### Additions
+- Added the [Select Menu](https://discord.com/developers/docs/interactions/message-components#select-menus) component.
+
+### Improvements
+- GetGuildChannelMembers() now works for huge guilds like .gg/fortnite.
+- Minor bug fixes.
+
+
+
 # 0.8.1.0
 ### Additions
 - Added Community functionality.

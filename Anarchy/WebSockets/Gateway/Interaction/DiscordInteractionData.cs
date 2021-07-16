@@ -27,5 +27,8 @@ namespace Discord.Gateway
 
         [JsonProperty("component_type")]
         public MessageComponentType ComponentType { get; private set; }
+
+        [JsonProperty("values")]
+        public string[] SelectMenuValues { get; private set; }
     }
 }

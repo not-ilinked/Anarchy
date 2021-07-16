@@ -104,111 +104,120 @@ namespace Discord.Gateway
         }
 
 
-        private static int RequestMembers(DiscordSocketClient client, ulong guildId, ulong channelId, int index)
+        private static void SetGuildSubscriptions(this DiscordSocketClient client, ulong guildId, GuildSubscriptionProperties properties)
         {
-            const int rangesPerRequest = 3;
-
-            int[][] chunks = new int[rangesPerRequest][];
-
-            for (int i = 0; i < chunks.Length; i++)
-            {
-                chunks[i] = new int[] { index, index + 99 };
-
-                index += 100;
-            }
-
-            client.Send(GatewayOpcode.RequestGuildMembersUser, new MemberListQuery()
-            {
-                GuildId = guildId,
-                Channels = new Dictionary<ulong, int[][]>() { { channelId, chunks } }
-            });
-
-            return rangesPerRequest;
+            properties.GuildId = guildId;
+            client.Send(GatewayOpcode.GuildSubscriptions, properties);
         }
 
 
-        public static void SubscribeToGuildEvents(this DiscordSocketClient client, ulong guildId) => client.WebSocket.Send($"{{\"op\":14,\"d\":{{\"guild_id\":\"{guildId}\",\"typing\":true,\"threads\":true,\"activities\":true,\"members\":[],\"channels\":{{}},\"thread_member_lists\":[]}}}}");
-
-
-        public static Task<IReadOnlyList<GuildMember>> GetGuildChannelMembersAsync(this DiscordSocketClient client, ulong guildId, ulong channelId, MemberListQueryOptions options = null)
+        private static int[][] CreateChunks(int from, bool more)
         {
-            if (options == null)
-                options = new MemberListQueryOptions();
+            int[][] results = new int[more ? 3 : 1][];
 
-            Dictionary<int, GuildMember> memberDict = new Dictionary<int, GuildMember>(); // might as well be a List right now, but this makes it easier to add more operations later
-            TaskCompletionSource<IReadOnlyList<GuildMember>> task = new TaskCompletionSource<IReadOnlyList<GuildMember>>();
-            int pendingRequests = 0;
+            results[0] = new int[] { 0, 99 };
 
-            void handler(DiscordSocketClient c, GuildMemberListEventArgs args)
+            if (more)
             {
-                if (args.GuildId == guildId)
+                for (int i = 1; i <= 2; i++)
                 {
-                    int combined = 0;
-                    foreach (var grp in args.Groups)
-                        combined += grp.Count;
+                    results[i] = new int[] { from, from + 99 };
+                    from += 100;
+                }
+            }
 
-                    foreach (var op in args.Operations)
-                    {
-                        if (op["op"].ToString() == "SYNC")
+            return results;
+        }
+
+
+        public static void SubscribeToGuildEvents(this DiscordSocketClient client, ulong guildId) => SetGuildSubscriptions(client, guildId, new GuildSubscriptionProperties() { Typing = true, Activities = true, Threads = true });
+
+
+        public static Task<IReadOnlyList<GuildMember>> GetGuildChannelMembersAsync(this DiscordSocketClient client, ulong guildId, ulong channelId, uint limit = 0)
+        {
+            var completionSource = new TaskCompletionSource<IReadOnlyList<GuildMember>>();
+            List<GuildMember> members = new List<GuildMember>();
+
+            // maybe could've made it start from the last chunk it received,
+            // but due to them possibly being logged out for an extended period of time, starting over is better
+            void loginHandler(DiscordSocketClient c, LoginEventArgs e)
+            {
+                members.Clear();
+                client.SetGuildSubscriptions(guildId, new GuildSubscriptionProperties()
+                {
+                    Activities = true,
+                    Typing = true,
+                    Threads = true,
+                    Channels = { { channelId, CreateChunks(0, false) } }
+                });
+            }
+
+            void handler(DiscordSocketClient s, DiscordMemberListUpdate e)
+            {
+                if (e.Guild.Id == guildId)
+                {
+                    int membersAccordingToRoles = 0;
+
+                    foreach (var group in e.Groups)
+                        membersAccordingToRoles += group.Count;
+
+                    try
+                    { 
+                        var syncOps = e.Operations.Where(o => o.Type == "SYNC").ToList();
+
+                        for (int i = syncOps.Count - 1; i >= 0; i--)
                         {
-                            List<GuildMember> newMembers = new List<GuildMember>();
+                            var operation = syncOps[i];
 
-                            foreach (var item in op["items"])
+                            if (operation.Type == "SYNC")
                             {
-                                JToken obj = item["member"];
+                                members.AddRange(operation.Items.Select(item => item.Member).Where(m => m != null));
 
-                                if (obj != null)
-                                    newMembers.Add(obj.ToObject<GuildMember>());
-                            }
+                                if (operation.Items.Count < 100 || (limit > 0 && members.Count >= limit))
+                                {
+                                    client.OnMemberListUpdate -= handler;
+                                    client.OnLoggedIn -= loginHandler;
+                                    completionSource.SetResult(limit > 0 ? members.Take((int)limit).ToList() : members);
+                                    break;
+                                }
+                                else if (i == 0)
+                                {
+                                    if (members.Count == 100)
+                                        client.SetGuildSubscriptions(guildId, new GuildSubscriptionProperties() { Channels = { { channelId, CreateChunks(0, false) } } });
 
-                            if (newMembers.Count > 0)
-                            {
-                                int[] range = op["range"].ToObject<int[]>();
-
-                                for (int i = 0; i < newMembers.Count; i++)
-                                    memberDict[i + range[0]] = newMembers[i];
-
-                                pendingRequests--;
+                                    client.SetGuildSubscriptions(guildId, new GuildSubscriptionProperties() { Channels = { { channelId, CreateChunks(operation.Range[1] + 1, true) } } });
+                                }
                             }
                         }
                     }
-
-                    if (args.Operations.Any(o => o["op"].ToString() == "SYNC"))
+                    catch (Exception ex)
                     {
-                        if ((memberDict.Count >= options.Count && options.Count > 0) || memberDict.OrderBy(i => i.Key).Last().Key + 1 >= combined)
-                        {
-                            client.OnMemberListUpdate -= handler;
-
-                            IEnumerable<GuildMember> result = memberDict.Select(i => i.Value);
-
-                            if (options.Count > 0)
-                                result = result.Take(options.Count);
-
-                            foreach (var member in result)
-                                member.GuildId = guildId;
-
-                            task.SetResult(result.ToList().SetClientsInList(client));
-                        }
-                        else if (pendingRequests == 0)
-                            pendingRequests = RequestMembers(client, guildId, channelId, memberDict.OrderBy(i => i.Key).Last().Key);
+                        completionSource.SetException(ex);
                     }
                 }
             }
 
             client.OnMemberListUpdate += handler;
+            client.OnLoggedIn += loginHandler;
 
-            pendingRequests = RequestMembers(client, guildId, channelId, options.Offset);
+            try
+            {
+                client.SetGuildSubscriptions(guildId, new GuildSubscriptionProperties()
+                {
+                    Activities = true,
+                    Typing = true,
+                    Threads = true,
+                    Channels = { { channelId, CreateChunks(0, false) } }
+                });
+            }
+            catch (Exception ex)
+            {
+                completionSource.SetException(ex);
+            }
 
-            return task.Task;
+            return completionSource.Task;
         }
 
-
-        /// <summary>
-        /// Warning: this does not work for official guilds
-        /// </summary>
-        public static IReadOnlyList<GuildMember> GetGuildChannelMembers(this DiscordSocketClient client, ulong guildId, ulong channelId, MemberListQueryOptions options = null)
-        {
-            return client.GetGuildChannelMembersAsync(guildId, channelId, options).GetAwaiter().GetResult();
-        }
+        public static IReadOnlyList<GuildMember> GetGuildChannelMembers(this DiscordSocketClient client, ulong guildId, ulong channelId, uint limit = 0) => client.GetGuildChannelMembersAsync(guildId, channelId, limit).GetAwaiter().GetResult();
     }
 }
