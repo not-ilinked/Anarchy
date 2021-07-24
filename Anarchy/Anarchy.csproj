@@ -123,6 +123,8 @@
     <Compile Include="REST\OAuth2\Client\OAuth2GuildJoinProperties.cs" />
     <Compile Include="REST\OAuth2\Client\OAuth2HttpError.cs" />
     <Compile Include="REST\User\Connections\ConnectionProperties.cs" />
+    <Compile Include="REST\User\Settings\FriendRequestFlags.cs" />
+    <Compile Include="REST\User\Settings\StickerAnimationAvailability.cs" />
     <Compile Include="REST\User\User\DiscordReportReason.cs" />
     <Compile Include="REST\User\User\UserReportIdentification.cs" />
     <Compile Include="WebSockets\Gateway\Gifts\DiscordEntitlement.cs" />

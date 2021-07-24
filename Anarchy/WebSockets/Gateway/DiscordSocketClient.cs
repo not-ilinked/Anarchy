@@ -291,7 +291,7 @@ namespace Discord.Gateway
                             if (login.Application != null) _appId = login.Application.Value<ulong>("id");
 
                             this.User = login.User;
-                            this.UserSettings = login.Settings;
+                            this.UserSettings = User.Type == DiscordUserType.User ? login.Settings : null;
                             this.SessionId = login.SessionId;
 
                             if (Config.Cache && this.User.Type == DiscordUserType.User)
@@ -323,11 +323,6 @@ namespace Discord.Gateway
                                 Task.Run(() => OnLoggedIn.Invoke(this, login));
                             break;
                         case "USER_SETTINGS_UPDATE":
-                            if (UserSettings == null)
-                            {
-
-                            }
-
                             UserSettings.Update((JObject)message.Data);
 
                             if (OnSettingsUpdated != null)
