@@ -50,9 +50,9 @@ namespace TicTacToe
             return new InteractionResponseProperties()
             {
                 Content = $"{CallerMember.User.AsMessagable()} is challenging you, {Target.AsMessagable()}",
-                Components = new DiscordComponentForm(Client, new List<List<ComponentFormButton>>()
+                Components = new DiscordComponentForm(Client, new List<List<ComponentFormInput>>()
                 {
-                    new List<ComponentFormButton>()
+                    new List<ComponentFormInput>()
                     {
                         deny,
                         accept

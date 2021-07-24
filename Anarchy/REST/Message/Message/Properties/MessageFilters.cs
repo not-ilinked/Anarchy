@@ -5,6 +5,9 @@
         public MessageAttachmentFilter? Has { get; set; }
 
 
+        public string Content { get; set; }
+
+
         public ulong? MentioningUserId { get; set; }
 
 

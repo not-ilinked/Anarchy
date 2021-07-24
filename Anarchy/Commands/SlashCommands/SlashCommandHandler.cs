@@ -78,19 +78,61 @@ namespace Discord.Commands
                             }
                         }
 
-                        _commands.Add(new ApplicationCommandProperties()
-                        {
-                            Name = attr.Name,
-                            Description = attr.Description,
-                            Options = parameters
-                        });
+                        string category = TryGetAttribute<SlashCommandCategoryAttribute>(type.GetCustomAttributes(), out var catAttr) ? catAttr.Category : null;
 
-                        _handlerDict[attr.Name] = new LocalCommandInfo()
+                        var handler = _handlerDict[category == null ? attr.Name : $"{category}.{attr.Name}"] = new LocalCommandInfo()
                         {
                             HandlerType = type,
                             Delayed = attr.Delayed,
                             Parameters = properties
                         };
+
+                        if (category != null)
+                        {
+                            var existing = _commands.Find(c => c.Name == category);
+
+                            if (existing == null)
+                            {
+                                _commands.Add(new ApplicationCommandProperties()
+                                {
+                                    Name = category,
+                                    Description = "choose an action",
+                                    Options = new List<ApplicationCommandOption>()
+                                    {
+                                        new ApplicationCommandOption()
+                                        {
+                                            Type = CommandOptionType.SubCommand,
+                                            Name = attr.Name,
+                                            Description = attr.Description,
+                                            Options = parameters
+                                        }
+                                    }
+                                });
+                            }
+                            else
+                            {
+                                var options = existing.Options.ToList();
+
+                                options.Add(new ApplicationCommandOption()
+                                {
+                                    Type = CommandOptionType.SubCommand,
+                                    Name = attr.Name,
+                                    Description = attr.Description,
+                                    Options = parameters
+                                });
+
+                                existing.Options = options;
+                            }
+                        }
+                        else
+                        {
+                            _commands.Add(new ApplicationCommandProperties()
+                            {
+                                Name = attr.Name,
+                                Description = attr.Description,
+                                Options = parameters
+                            });
+                        }
                     }
                     else throw new MissingMemberException("All commands must have a SlashCommand attribute");
                 }
@@ -118,61 +160,63 @@ namespace Discord.Commands
                 {
                     if (cmd.Name == args.Interaction.Data.CommandName)
                     {
-                        var localCommand = _handlerDict[cmd.Name];
-
-                        var handler = (SlashCommand)Activator.CreateInstance(localCommand.HandlerType);
-                        handler.Prepare(args.Interaction);
-
-                        if (args.Interaction.Data.CommandArguments != null)
+                        if (cmd.Options.Count > 0 && cmd.Options[0].Type == CommandOptionType.SubCommand)
                         {
-                            foreach (var suppliedArg in args.Interaction.Data.CommandArguments)
-                            {
-                                foreach (var param in cmd.Options)
-                                {
-                                    if (param.Name == suppliedArg.Name)
-                                    {
-                                        var property = localCommand.Parameters[param.Name];
-                                        object value = suppliedArg.Value;
-
-                                        switch (param.Type)
-                                        {
-                                            case CommandOptionType.Channel:
-                                                value = args.Interaction.Data.Resolved.Channels[ulong.Parse(suppliedArg.Value)];
-                                                break;
-                                            case CommandOptionType.Role:
-                                                value = args.Interaction.Data.Resolved.Roles[ulong.Parse(suppliedArg.Value)];
-                                                break;
-                                            case CommandOptionType.User:
-                                                if (property.PropertyType == typeof(DiscordUser)) value = args.Interaction.Data.Resolved.Users[ulong.Parse(suppliedArg.Value)];
-                                                else value = args.Interaction.Data.Resolved.Members[ulong.Parse(suppliedArg.Value)];
-                                                break;
-                                            case CommandOptionType.Mentionable:
-                                                value = ResolveObject(args.Interaction.Data.Resolved, ulong.Parse(suppliedArg.Value));
-                                                break;
-                                            default:
-                                                value = Convert.ChangeType(value, property.PropertyType);
-                                                break;
-                                        }
-
-                                        property.SetValue(handler, value);
-
-                                        break;
-                                    }
-                                }
-                            }
+                            var subCommand = args.Interaction.Data.CommandArguments[0];
+                            Handle($"{cmd.Name}.{subCommand.Name}", args.Interaction, subCommand.Options == null ? null : subCommand.Options.ToList());
                         }
-
-                        if (localCommand.Delayed)
-                        {
-                            args.Interaction.Respond(InteractionCallbackType.DelayedMessage);
-                            args.Interaction.ModifyResponse(handler.Handle());
-                        }
-                        else args.Interaction.Respond(InteractionCallbackType.RespondWithMessage, handler.Handle());
+                        else Handle(cmd.Name, args.Interaction, args.Interaction.Data.CommandArguments.ToList());
 
                         break;
                     }
                 }
             }
+        }
+
+        private void Handle(string cmdName, DiscordInteraction interaction, List<SlashCommandArgument> arguments)
+        {
+            var localCommand = _handlerDict[cmdName];
+
+            var handler = (SlashCommand)Activator.CreateInstance(localCommand.HandlerType);
+            handler.Prepare(interaction);
+
+            if (arguments != null)
+            {
+                foreach (var suppliedArg in arguments)
+                {
+                    var property = localCommand.Parameters[suppliedArg.Name];
+                    object value = suppliedArg.Value;
+
+                    switch (suppliedArg.Type)
+                    {
+                        case CommandOptionType.Channel:
+                            value = interaction.Data.Resolved.Channels[ulong.Parse(suppliedArg.Value)];
+                            break;
+                        case CommandOptionType.Role:
+                            value = interaction.Data.Resolved.Roles[ulong.Parse(suppliedArg.Value)];
+                            break;
+                        case CommandOptionType.User:
+                            if (property.PropertyType == typeof(DiscordUser)) value = interaction.Data.Resolved.Users[ulong.Parse(suppliedArg.Value)];
+                            else value = interaction.Data.Resolved.Members[ulong.Parse(suppliedArg.Value)];
+                            break;
+                        case CommandOptionType.Mentionable:
+                            value = ResolveObject(interaction.Data.Resolved, ulong.Parse(suppliedArg.Value));
+                            break;
+                        default:
+                            value = Convert.ChangeType(value, property.PropertyType);
+                            break;
+                    }
+
+                    property.SetValue(handler, value);
+                }
+            }
+
+            if (localCommand.Delayed)
+            {
+                interaction.Respond(InteractionCallbackType.DelayedMessage);
+                interaction.ModifyResponse(handler.Handle());
+            }
+            else interaction.Respond(InteractionCallbackType.RespondWithMessage, handler.Handle());
         }
 
         private bool IsInteger(Type type) => type == typeof(int) || type == typeof(uint) || type == typeof(long) || type == typeof(ulong);

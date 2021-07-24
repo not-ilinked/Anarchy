@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace Discord.Gateway
 {
@@ -12,5 +13,8 @@ namespace Discord.Gateway
 
         [JsonProperty("value")]
         public string Value { get; private set; }
+
+        [JsonProperty("options")]
+        public IReadOnlyList<SlashCommandArgument> Options { get; private set; }
     }
 }

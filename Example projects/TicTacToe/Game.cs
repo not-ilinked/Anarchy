@@ -98,7 +98,7 @@ namespace TicTacToe
 
             for (int i = 0; i < Grid.Length; i++)
             {
-                List<ComponentFormButton> buttons = new List<ComponentFormButton>();
+                List<ComponentFormInput> buttons = new List<ComponentFormInput>();
 
                 for (int j = 0; j < Grid[i].Length; j++)
                 {

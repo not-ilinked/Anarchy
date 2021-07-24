@@ -202,7 +202,8 @@ namespace Discord
                 if (filters.AfterId.HasValue) parameters += $"after={filters.AfterId.Value}&";
                 if (filters.AuthorId.HasValue) parameters += $"author_id={filters.AuthorId}&";
                 if (filters.MentioningUserId.HasValue) parameters += $"mentions={filters.MentioningUserId}&";
-                if (filters.Has.HasValue) parameters += $"has={filters.Has.ToString().ToLower()}";
+                if (filters.Has.HasValue) parameters += $"has={filters.Has.ToString().ToLower()}&";
+                if (!string.IsNullOrEmpty(filters.Content)) parameters += $"content={filters.Content}";
                 
                 var newMessages = (await client.HttpClient.GetAsync($"/channels/{channelId}/messages?{parameters}"))
                                                           .Deserialize<IReadOnlyList<DiscordMessage>>().SetClientsInList(client);

@@ -13,15 +13,17 @@ namespace Discord.Gateway
         internal string Id { get; }
         public List<List<ComponentFormInput>> Rows { get; }
 
-        public DiscordComponentForm(DiscordSocketClient client, List<List<ComponentFormInput>> rows)
+        public DiscordComponentForm(DiscordSocketClient client)
         {
             _client = client;
-
             _client.OnInteraction += HandleInteraction;
 
             Id = RandomString(16);
             Rows = new List<List<ComponentFormInput>>();
+        }
 
+        public DiscordComponentForm(DiscordSocketClient client, List<List<ComponentFormInput>> rows) : this(client)
+        {
             Rows = rows;
         }
 

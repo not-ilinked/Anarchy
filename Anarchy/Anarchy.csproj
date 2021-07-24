@@ -60,6 +60,7 @@
     <Compile Include="Commands\SlashCommands\IMentionable.cs" />
     <Compile Include="Commands\SlashCommands\SlashCommand.cs" />
     <Compile Include="Commands\SlashCommands\SlashCommandAttribute.cs" />
+    <Compile Include="Commands\SlashCommands\SlashCommandCategoryAttribute.cs" />
     <Compile Include="Commands\SlashCommands\SlashCommandHandler.cs" />
     <Compile Include="Commands\SlashCommands\SlashParameterAttribute.cs" />
     <Compile Include="Commands\SlashCommands\SlashParameterChoiceAttribute.cs" />
