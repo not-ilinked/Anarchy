@@ -1,0 +1,6 @@
+Testing/
+packages/
+NuGet/
+Anarchy.Puppeteer/NuGet/
+nuget.exe
+bin
