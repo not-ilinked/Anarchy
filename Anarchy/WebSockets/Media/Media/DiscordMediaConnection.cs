@@ -222,13 +222,16 @@ namespace Discord.Media
                         */
                         // not much point in doing this rn since the decryption fails
                         
-                        try
+                        if (_parentClient.Config.ParseIncomingRTPData)
                         {
-                            var header = RTPPacketHeader.Read(SecretKey, received, out byte[] payload);
+                            try
+                            {
+                                var header = RTPPacketHeader.Read(SecretKey, received, out byte[] payload);
 
-                            OnUdpPacket?.Invoke(this, new MediaPacketEventArgs(header, payload));
+                                OnUdpPacket?.Invoke(this, new MediaPacketEventArgs(header, payload));
+                            }
+                            catch (SodiumException) { }
                         }
-                        catch (SodiumException) { }
                     }
                 }
             }

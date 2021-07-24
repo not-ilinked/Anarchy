@@ -3,6 +3,7 @@
 - Added the [Select Menu](https://discord.com/developers/docs/interactions/message-components#select-menus) component.
 - Added SlashCommand "categories", which wrap Discord's [SubCommands](https://discord.com/developers/docs/interactions/slash-commands#subcommands-and-subcommand-groups).
 - Added all remaining API-controlled user settings.
+- Added the "HandleIncomingMediaData" member to DiscordSocketConfig which controls whether to parse incoming RTP data. This may help speed up certain bots.
 
 ### Improvements
 - GetGuildChannelMembers() now works for huge guilds like .gg/fortnite.
