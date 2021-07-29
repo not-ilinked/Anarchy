@@ -16,6 +16,9 @@ namespace Discord.Media
         public delegate void UserDisconnectHandler(DiscordLivestreamSession session, ulong userId);
         public event UserDisconnectHandler OnUserDisconnected;
 
+        public delegate void UdpHandler(DiscordLivestreamSession session, RTPPacketHeader header, byte[] payload);
+        public event UdpHandler OnUdp;
+
 
         private readonly StreamKey _streamKey;
         private readonly ulong _rtcServerId;
@@ -58,6 +61,8 @@ namespace Discord.Media
 
                 OnConnected?.Invoke(this);
             };
+
+            _connection.OnUdpPacket += (s, e) => OnUdp?.Invoke(this, e.Header, e.Payload);
 
             _connection.OnMessage += HandleMessage;
 

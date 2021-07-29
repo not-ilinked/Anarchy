@@ -165,7 +165,7 @@ namespace Discord.Commands
                             var subCommand = args.Interaction.Data.CommandArguments[0];
                             Handle($"{cmd.Name}.{subCommand.Name}", args.Interaction, subCommand.Options == null ? null : subCommand.Options.ToList());
                         }
-                        else Handle(cmd.Name, args.Interaction, args.Interaction.Data.CommandArguments.ToList());
+                        else Handle(cmd.Name, args.Interaction, args.Interaction.Data.CommandArguments == null ? new List<SlashCommandArgument>() : args.Interaction.Data.CommandArguments.ToList());
 
                         break;
                     }

@@ -44,8 +44,8 @@ namespace Discord.Media
         public byte[] ExtraExtensionData { get; set; }
         public List<byte[]> Extensions { get; private set; }
 
-        private static readonly int HeaderLength = 12;
-        private static readonly int ExtensionLength = 4;
+        public static readonly int HeaderLength = 12;
+        public static readonly int ExtensionLength = 4;
 
         private static byte[] CreateNonce(byte[] header)
         {
@@ -74,7 +74,7 @@ namespace Discord.Media
             else
                 extensions = new byte[0];
 
-            byte[] packet = new byte[HeaderLength + extensions.Length + count + Sodium.LengthDifference];
+            byte[] packet = new byte[HeaderLength + extensions.Length + count + (secretKey == null ? 0 : Sodium.LengthDifference)];
 
             byte[] header = new byte[HeaderLength];
             header[0] = Flags;
@@ -93,8 +93,8 @@ namespace Discord.Media
 
             Buffer.BlockCopy(extensions, 0, packet, header.Length, extensions.Length);
 
-            // the return value of this + HeaderLength gives us the length of packet.
-            Sodium.Encrypt(buffer, offset, count, packet, header.Length + extensions.Length, CreateNonce(header), secretKey);
+            if (secretKey == null) Buffer.BlockCopy(buffer, offset, packet, header.Length + extensions.Length, count);
+            else Sodium.Encrypt(buffer, offset, count, packet, header.Length + extensions.Length, CreateNonce(header), secretKey);
 
             return packet;
         }
