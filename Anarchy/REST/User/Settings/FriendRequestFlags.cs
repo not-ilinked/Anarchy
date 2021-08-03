@@ -4,13 +4,22 @@ namespace Discord
 {
     public class FriendRequestFlags
     {
+        public FriendRequestFlags() { }
+
+        public FriendRequestFlags(bool everyone, bool mutualFriends, bool mutualGuilds)
+        {
+            Everyone = everyone;
+            MutualFriends = mutualFriends;
+            MutualGuilds = mutualGuilds;
+        }
+
         [JsonProperty("all")]
-        public bool Everyone { get; set; }
+        public bool Everyone { get; private set; }
 
         [JsonProperty("mutual_friends")]
-        public bool MutualFriends { get; set; }
+        public bool MutualFriends { get; private set; }
 
         [JsonProperty("mutual_guilds")]
-        public bool MutualGuilds { get; set; }
+        public bool MutualGuilds { get; private set; }
     }
 }

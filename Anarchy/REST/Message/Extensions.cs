@@ -210,7 +210,8 @@ namespace Discord
 
                 messages.AddRange(newMessages);
 
-                filters.BeforeId = messages.Last().Id;
+                if (newMessages.Count > 0)
+                    filters.BeforeId = newMessages.Last().Id;
 
                 if (newMessages.Count < messagesPerRequest)
                     break;

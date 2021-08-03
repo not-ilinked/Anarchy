@@ -1,3 +1,9 @@
+# 0.8.1.2
+### Improvements
+- Minor bug fixes.
+
+
+
 # 0.8.1.1
 ### Additions
 - Added the [Select Menu](https://discord.com/developers/docs/interactions/message-components#select-menus) component.

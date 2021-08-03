@@ -12,3 +12,4 @@ D:\repos\Anarchy\Example projects\AntiRaid\obj\Debug\AntiRaid.csproj.CoreCompile
 D:\repos\Anarchy\Example projects\AntiRaid\obj\Debug\AntiRaid.csproj.CopyComplete
 D:\repos\Anarchy\Example projects\AntiRaid\obj\Debug\AntiRaid.exe
 D:\repos\Anarchy\Example projects\AntiRaid\obj\Debug\AntiRaid.pdb
+D:\repos\Anarchy\Example projects\AntiRaid\obj\Debug\AntiRaid.csprojAssemblyReference.cache

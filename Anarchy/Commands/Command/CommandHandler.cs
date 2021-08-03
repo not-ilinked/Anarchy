@@ -26,10 +26,14 @@ namespace Discord.Commands
             foreach (var type in executable.GetTypes())
             {
                 if (typeof(CommandBase).IsAssignableFrom(type) && TryGetAttribute(type.GetCustomAttributes(), out CommandAttribute attr))
-                    Commands.Add(attr.Name, new DiscordCommand(type, attr));
+                {
+                    if (Commands.ContainsKey(attr.Name))
+                        throw new InvalidOperationException($"More than 1 command has the name \"{attr.Name}\"");
+                    else
+                        Commands.Add(attr.Name, new DiscordCommand(type, attr));
+                }
             }
         }
-
 
         private void Client_OnMessageReceived(DiscordSocketClient client, MessageEventArgs args)
         {
