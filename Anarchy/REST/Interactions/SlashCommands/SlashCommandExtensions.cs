@@ -37,5 +37,8 @@ namespace Discord
 
         public static Task DeleteGlobalCommandAsync(this DiscordClient client, ulong appId, ulong commandId) => client.HttpClient.DeleteAsync($"/applications/{appId}/commands/{commandId}");
         public static void DeleteGlobalCommand(this DiscordClient client, ulong appId, ulong commandId) => client.DeleteGlobalCommandAsync(appId, commandId).GetAwaiter().GetResult();
+
+        public static Task DeleteGuildCommandAsync(this DiscordClient client, ulong appId, ulong commandId, ulong guildId) => client.HttpClient.DeleteAsync($"/applications/{appId}/guilds/{guildId}/commands/{commandId}");
+        public static void DeleteGuildCommand(this DiscordClient client, ulong appId, ulong commandId, ulong guildId) => client.DeleteGuildCommandAsync(appId, commandId, guildId).GetAwaiter().GetResult();
     }
 }
