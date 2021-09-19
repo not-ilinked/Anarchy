@@ -12,3 +12,17 @@ D:\repos\Anarchy\Example projects\NitroSniper\obj\Debug\NitroSniper.csproj.CoreC
 D:\repos\Anarchy\Example projects\NitroSniper\obj\Debug\NitroSniper.csproj.CopyComplete
 D:\repos\Anarchy\Example projects\NitroSniper\obj\Debug\NitroSniper.exe
 D:\repos\Anarchy\Example projects\NitroSniper\obj\Debug\NitroSniper.pdb
+C:\Users\ilink\source\repos\Anarchy\Example projects\NitroSniper\bin\Debug\NitroSniper.exe.config
+C:\Users\ilink\source\repos\Anarchy\Example projects\NitroSniper\bin\Debug\NitroSniper.exe
+C:\Users\ilink\source\repos\Anarchy\Example projects\NitroSniper\bin\Debug\NitroSniper.pdb
+C:\Users\ilink\source\repos\Anarchy\Example projects\NitroSniper\bin\Debug\Anarchy.dll
+C:\Users\ilink\source\repos\Anarchy\Example projects\NitroSniper\bin\Debug\Newtonsoft.Json.dll
+C:\Users\ilink\source\repos\Anarchy\Example projects\NitroSniper\bin\Debug\Leaf.xNet.dll
+C:\Users\ilink\source\repos\Anarchy\Example projects\NitroSniper\bin\Debug\websocket-sharp.dll
+C:\Users\ilink\source\repos\Anarchy\Example projects\NitroSniper\bin\Debug\Anarchy.pdb
+C:\Users\ilink\source\repos\Anarchy\Example projects\NitroSniper\bin\Debug\Newtonsoft.Json.xml
+C:\Users\ilink\source\repos\Anarchy\Example projects\NitroSniper\bin\Debug\Leaf.xNet.xml
+C:\Users\ilink\source\repos\Anarchy\Example projects\NitroSniper\obj\Debug\NitroSniper.csprojAssemblyReference.cache
+C:\Users\ilink\source\repos\Anarchy\Example projects\NitroSniper\obj\Debug\NitroSniper.csproj.CopyComplete
+C:\Users\ilink\source\repos\Anarchy\Example projects\NitroSniper\obj\Debug\NitroSniper.exe
+C:\Users\ilink\source\repos\Anarchy\Example projects\NitroSniper\obj\Debug\NitroSniper.pdb

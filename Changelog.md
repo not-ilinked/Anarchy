@@ -1,5 +1,6 @@
 # 0.8.1.2
 ### Improvements
+- Added bypass for joining guilds.
 - Minor bug fixes.
 
 

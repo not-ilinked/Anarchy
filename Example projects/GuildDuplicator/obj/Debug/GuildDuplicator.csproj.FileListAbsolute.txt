@@ -28,3 +28,17 @@ D:\downloads\Anarchy-dev\Anarchy-dev\Example projects\GuildDuplicator\obj\Debug\
 D:\downloads\Anarchy-dev\Anarchy-dev\Example projects\GuildDuplicator\obj\Debug\GuildDuplicator.exe
 D:\downloads\Anarchy-dev\Anarchy-dev\Example projects\GuildDuplicator\obj\Debug\GuildDuplicator.pdb
 D:\repos\Anarchy\Example projects\GuildDuplicator\obj\Debug\GuildDuplicator.csprojAssemblyReference.cache
+C:\Users\ilink\source\repos\Anarchy\Example projects\GuildDuplicator\bin\Debug\GuildDuplicator.exe.config
+C:\Users\ilink\source\repos\Anarchy\Example projects\GuildDuplicator\bin\Debug\GuildDuplicator.exe
+C:\Users\ilink\source\repos\Anarchy\Example projects\GuildDuplicator\bin\Debug\GuildDuplicator.pdb
+C:\Users\ilink\source\repos\Anarchy\Example projects\GuildDuplicator\bin\Debug\Anarchy.dll
+C:\Users\ilink\source\repos\Anarchy\Example projects\GuildDuplicator\bin\Debug\Newtonsoft.Json.dll
+C:\Users\ilink\source\repos\Anarchy\Example projects\GuildDuplicator\bin\Debug\Leaf.xNet.dll
+C:\Users\ilink\source\repos\Anarchy\Example projects\GuildDuplicator\bin\Debug\websocket-sharp.dll
+C:\Users\ilink\source\repos\Anarchy\Example projects\GuildDuplicator\bin\Debug\Anarchy.pdb
+C:\Users\ilink\source\repos\Anarchy\Example projects\GuildDuplicator\bin\Debug\Newtonsoft.Json.xml
+C:\Users\ilink\source\repos\Anarchy\Example projects\GuildDuplicator\bin\Debug\Leaf.xNet.xml
+C:\Users\ilink\source\repos\Anarchy\Example projects\GuildDuplicator\obj\Debug\GuildDuplicator.csprojAssemblyReference.cache
+C:\Users\ilink\source\repos\Anarchy\Example projects\GuildDuplicator\obj\Debug\GuildDuplicator.csproj.CopyComplete
+C:\Users\ilink\source\repos\Anarchy\Example projects\GuildDuplicator\obj\Debug\GuildDuplicator.exe
+C:\Users\ilink\source\repos\Anarchy\Example projects\GuildDuplicator\obj\Debug\GuildDuplicator.pdb

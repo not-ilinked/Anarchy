@@ -277,9 +277,9 @@ namespace Discord.Gateway
             switch (message.Opcode)
             {
                 case GatewayOpcode.Event:
-                    /*
-                    Console.WriteLine(message.EventName);
                     
+                    Console.WriteLine(message.EventName);
+                    /*
                     File.AppendAllText("Debug.log", $"{message.EventName}: {message.Data}\n");
                     */
 
