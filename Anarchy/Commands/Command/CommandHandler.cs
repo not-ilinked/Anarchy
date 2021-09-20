@@ -60,8 +60,8 @@ namespace Discord.Commands
 
                                 if (param.Property.PropertyType == typeof(string) && i == command.Parameters.Count - 1)
                                     value = string.Join(" ", parts.Skip(i));
-                                else if (args.Message.Guild != null && parts[i].StartsWith("<") && parts[i].EndsWith(">"))
-                                    value = ParseReference(param.Property.PropertyType, parts[i]);
+                                else if (parts[i].StartsWith("<") && parts[i].EndsWith(">"))
+                                    value = ParseReference(args.Message, param.Property.PropertyType, parts[i]);
                                 else
                                     value = parts[i];
 
@@ -93,7 +93,7 @@ namespace Discord.Commands
         }
 
         // https://discord.com/developers/docs/reference#message-formatting
-        private object ParseReference(Type expectedType, string reference)
+        private object ParseReference(DiscordMessage message, Type expectedType, string reference)
         {
             string value = reference.Substring(1, reference.Length - 2);
 
@@ -160,6 +160,11 @@ namespace Discord.Commands
                         }
                         else
                             throw new ArgumentException("Invalid reference type");
+                    }
+                    else if (expectedType == typeof(DiscordUser))
+                    {
+                        if (forSpecific == "@" || forSpecific == "@!")
+                            return message.Mentions.First(m => m.Id == anyId);
                     }
                     else
                         return anyId;
