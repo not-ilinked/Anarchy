@@ -22,7 +22,8 @@ C:\Users\ilink\source\repos\Anarchy\Example projects\NitroSniper\bin\Debug\webso
 C:\Users\ilink\source\repos\Anarchy\Example projects\NitroSniper\bin\Debug\Anarchy.pdb
 C:\Users\ilink\source\repos\Anarchy\Example projects\NitroSniper\bin\Debug\Newtonsoft.Json.xml
 C:\Users\ilink\source\repos\Anarchy\Example projects\NitroSniper\bin\Debug\Leaf.xNet.xml
-C:\Users\ilink\source\repos\Anarchy\Example projects\NitroSniper\obj\Debug\NitroSniper.csprojAssemblyReference.cache
 C:\Users\ilink\source\repos\Anarchy\Example projects\NitroSniper\obj\Debug\NitroSniper.csproj.CopyComplete
 C:\Users\ilink\source\repos\Anarchy\Example projects\NitroSniper\obj\Debug\NitroSniper.exe
 C:\Users\ilink\source\repos\Anarchy\Example projects\NitroSniper\obj\Debug\NitroSniper.pdb
+C:\Users\ilink\source\repos\Anarchy\Example projects\NitroSniper\obj\Debug\NitroSniper.csproj.AssemblyReference.cache
+C:\Users\ilink\source\repos\Anarchy\Example projects\NitroSniper\obj\Debug\NitroSniper.csproj.CoreCompileInputs.cache

@@ -38,7 +38,8 @@ C:\Users\ilink\source\repos\Anarchy\Example projects\MessageListener\bin\Debug\w
 C:\Users\ilink\source\repos\Anarchy\Example projects\MessageListener\bin\Debug\Anarchy.pdb
 C:\Users\ilink\source\repos\Anarchy\Example projects\MessageListener\bin\Debug\Newtonsoft.Json.xml
 C:\Users\ilink\source\repos\Anarchy\Example projects\MessageListener\bin\Debug\Leaf.xNet.xml
-C:\Users\ilink\source\repos\Anarchy\Example projects\MessageListener\obj\Debug\MessageListener.csprojAssemblyReference.cache
 C:\Users\ilink\source\repos\Anarchy\Example projects\MessageListener\obj\Debug\MessageListener.csproj.CopyComplete
 C:\Users\ilink\source\repos\Anarchy\Example projects\MessageListener\obj\Debug\MessageListener.exe
 C:\Users\ilink\source\repos\Anarchy\Example projects\MessageListener\obj\Debug\MessageListener.pdb
+C:\Users\ilink\source\repos\Anarchy\Example projects\MessageListener\obj\Debug\MessageListener.csproj.AssemblyReference.cache
+C:\Users\ilink\source\repos\Anarchy\Example projects\MessageListener\obj\Debug\MessageListener.csproj.CoreCompileInputs.cache

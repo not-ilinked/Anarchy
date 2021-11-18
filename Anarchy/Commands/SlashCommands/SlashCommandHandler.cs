@@ -15,6 +15,7 @@ namespace Discord.Commands
             public Type HandlerType { get; set; }
             public Dictionary<string, PropertyInfo> Parameters { get; set; }
             public bool Delayed { get; set; }
+            public bool Ephemeral { get; set; }
         }
 
         private DiscordSocketClient _client;
@@ -84,6 +85,7 @@ namespace Discord.Commands
                         {
                             HandlerType = type,
                             Delayed = attr.Delayed,
+                            Ephemeral = attr.Ephemeral,
                             Parameters = properties
                         };
 
@@ -211,12 +213,21 @@ namespace Discord.Commands
                 }
             }
 
-            if (localCommand.Delayed)
+            try
             {
-                interaction.Respond(InteractionCallbackType.DelayedMessage);
-                interaction.ModifyResponse(handler.Handle());
+                if (localCommand.Delayed)
+                {
+                    interaction.Respond(InteractionCallbackType.DelayedMessage, new InteractionResponseProperties() { Ephemeral = localCommand.Ephemeral });
+                    interaction.ModifyResponse(handler.Handle());
+                }
+                else
+                {
+                    var resp = handler.Handle();
+                    resp.Ephemeral = localCommand.Ephemeral;
+                    interaction.Respond(InteractionCallbackType.RespondWithMessage, resp);
+                }
             }
-            else interaction.Respond(InteractionCallbackType.RespondWithMessage, handler.Handle());
+            catch { }
         }
 
         private bool IsInteger(Type type) => type == typeof(int) || type == typeof(uint) || type == typeof(long) || type == typeof(ulong);

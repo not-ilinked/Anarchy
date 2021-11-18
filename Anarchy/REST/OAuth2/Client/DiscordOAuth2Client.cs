@@ -128,7 +128,10 @@ namespace Discord
             if (properties == null) properties = new OAuth2GuildJoinProperties();
             properties.AccessToken = _auth.AccessToken;
 
-            return _botClient.HttpClient.PutAsync($"/guilds/{guildId}/members/{GetUser().Id}", properties).GetAwaiter().GetResult().Deserialize<GuildMember>().SetClient(_botClient);
+            var resp = _botClient.HttpClient.PutAsync($"/guilds/{guildId}/members/{GetUser().Id}", properties).GetAwaiter().GetResult();
+
+            if (resp.Body == null) return null;
+            else return resp.Deserialize<GuildMember>().SetClient(_botClient);
         }
     }
 }

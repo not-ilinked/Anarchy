@@ -98,8 +98,9 @@ C:\Users\ilink\source\repos\Anarchy\Example projects\VCSpammer\bin\Debug\Microso
 C:\Users\ilink\source\repos\Anarchy\Example projects\VCSpammer\bin\Debug\System.Buffers.xml
 C:\Users\ilink\source\repos\Anarchy\Example projects\VCSpammer\bin\Debug\Microsoft.Net.Http.Headers.xml
 C:\Users\ilink\source\repos\Anarchy\Example projects\VCSpammer\bin\Debug\System.Text.Encodings.Web.xml
-C:\Users\ilink\source\repos\Anarchy\Example projects\VCSpammer\obj\Debug\VCSpammer.csprojAssemblyReference.cache
 C:\Users\ilink\source\repos\Anarchy\Example projects\VCSpammer\obj\Debug\VCSpammer.exe.config
 C:\Users\ilink\source\repos\Anarchy\Example projects\VCSpammer\obj\Debug\VCSpammer.csproj.CopyComplete
 C:\Users\ilink\source\repos\Anarchy\Example projects\VCSpammer\obj\Debug\VCSpammer.exe
 C:\Users\ilink\source\repos\Anarchy\Example projects\VCSpammer\obj\Debug\VCSpammer.pdb
+C:\Users\ilink\source\repos\Anarchy\Example projects\VCSpammer\obj\Debug\VCSpammer.csproj.AssemblyReference.cache
+C:\Users\ilink\source\repos\Anarchy\Example projects\VCSpammer\obj\Debug\VCSpammer.csproj.CoreCompileInputs.cache

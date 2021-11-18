@@ -9,6 +9,8 @@ namespace NitroSniper
     {
         static void Main(string[] args)
         {
+            var ok = BitConverter.GetBytes(65535);
+
             Console.Write("Token: ");
             string token = Console.ReadLine();
 

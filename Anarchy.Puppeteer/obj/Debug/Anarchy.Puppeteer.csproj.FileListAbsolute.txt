@@ -414,8 +414,9 @@ C:\Users\ilink\source\repos\Anarchy\Anarchy.Puppeteer\bin\Debug\System.Buffers.x
 C:\Users\ilink\source\repos\Anarchy\Anarchy.Puppeteer\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
 C:\Users\ilink\source\repos\Anarchy\Anarchy.Puppeteer\bin\Debug\System.Text.Encodings.Web.xml
 C:\Users\ilink\source\repos\Anarchy\Anarchy.Puppeteer\bin\Debug\System.Threading.Tasks.Extensions.xml
-C:\Users\ilink\source\repos\Anarchy\Anarchy.Puppeteer\obj\Debug\Anarchy.Puppeteer.csprojAssemblyReference.cache
 C:\Users\ilink\source\repos\Anarchy\Anarchy.Puppeteer\obj\Debug\Anarchy.Puppeteer.csproj.CopyComplete
 C:\Users\ilink\source\repos\Anarchy\Anarchy.Puppeteer\obj\Debug\Anarchy.Puppeteer.dll
 C:\Users\ilink\source\repos\Anarchy\Anarchy.Puppeteer\obj\Debug\Anarchy.Puppeteer.pdb
 C:\Users\ilink\source\repos\Anarchy\Anarchy.Puppeteer\bin\Debug\System.Text.Encodings.Web.dll
+C:\Users\ilink\source\repos\Anarchy\Anarchy.Puppeteer\obj\Debug\Anarchy.Puppeteer.csproj.AssemblyReference.cache
+C:\Users\ilink\source\repos\Anarchy\Anarchy.Puppeteer\obj\Debug\Anarchy.Puppeteer.csproj.CoreCompileInputs.cache

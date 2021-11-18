@@ -37,7 +37,8 @@ C:\Users\ilink\source\repos\Anarchy\Example projects\TicTacToe\bin\Debug\websock
 C:\Users\ilink\source\repos\Anarchy\Example projects\TicTacToe\bin\Debug\Anarchy.pdb
 C:\Users\ilink\source\repos\Anarchy\Example projects\TicTacToe\bin\Debug\Newtonsoft.Json.xml
 C:\Users\ilink\source\repos\Anarchy\Example projects\TicTacToe\bin\Debug\Leaf.xNet.xml
-C:\Users\ilink\source\repos\Anarchy\Example projects\TicTacToe\obj\Debug\TicTacToe.csprojAssemblyReference.cache
 C:\Users\ilink\source\repos\Anarchy\Example projects\TicTacToe\obj\Debug\TicTacToe.csproj.CopyComplete
 C:\Users\ilink\source\repos\Anarchy\Example projects\TicTacToe\obj\Debug\TicTacToe.exe
 C:\Users\ilink\source\repos\Anarchy\Example projects\TicTacToe\obj\Debug\TicTacToe.pdb
+C:\Users\ilink\source\repos\Anarchy\Example projects\TicTacToe\obj\Debug\TicTacToe.csproj.AssemblyReference.cache
+C:\Users\ilink\source\repos\Anarchy\Example projects\TicTacToe\obj\Debug\TicTacToe.csproj.CoreCompileInputs.cache

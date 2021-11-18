@@ -378,8 +378,10 @@ C:\Users\ilink\source\repos\Anarchy\Example projects\MusicBot\bin\Debug\System.V
 C:\Users\ilink\source\repos\Anarchy\Example projects\MusicBot\bin\Debug\YoutubeExplode.xml
 C:\Users\ilink\source\repos\Anarchy\Example projects\MusicBot\bin\Debug\Newtonsoft.Json.xml
 C:\Users\ilink\source\repos\Anarchy\Example projects\MusicBot\bin\Debug\Leaf.xNet.xml
-C:\Users\ilink\source\repos\Anarchy\Example projects\MusicBot\obj\Debug\MusicBot.csprojAssemblyReference.cache
 C:\Users\ilink\source\repos\Anarchy\Example projects\MusicBot\obj\Debug\MusicBot.exe.config
 C:\Users\ilink\source\repos\Anarchy\Example projects\MusicBot\obj\Debug\MusicBot.csproj.CopyComplete
 C:\Users\ilink\source\repos\Anarchy\Example projects\MusicBot\obj\Debug\MusicBot.exe
 C:\Users\ilink\source\repos\Anarchy\Example projects\MusicBot\obj\Debug\MusicBot.pdb
+C:\Users\ilink\source\repos\Anarchy\Example projects\MusicBot\bin\Debug\System.Text.Encodings.Web.dll
+C:\Users\ilink\source\repos\Anarchy\Example projects\MusicBot\obj\Debug\MusicBot.csproj.AssemblyReference.cache
+C:\Users\ilink\source\repos\Anarchy\Example projects\MusicBot\obj\Debug\MusicBot.csproj.CoreCompileInputs.cache

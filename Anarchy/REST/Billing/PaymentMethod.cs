@@ -21,10 +21,6 @@ namespace Discord
         public BillingAddress BillingAddress { get; private set; }
 
 
-        [JsonProperty("country")]
-        public string County { get; private set; }
-
-
         [JsonProperty("default")]
         public bool Default { get; private set; }
 

@@ -38,7 +38,8 @@ C:\Users\ilink\source\repos\Anarchy\Example projects\NicknameAnimation\bin\Debug
 C:\Users\ilink\source\repos\Anarchy\Example projects\NicknameAnimation\bin\Debug\Anarchy.pdb
 C:\Users\ilink\source\repos\Anarchy\Example projects\NicknameAnimation\bin\Debug\Newtonsoft.Json.xml
 C:\Users\ilink\source\repos\Anarchy\Example projects\NicknameAnimation\bin\Debug\Leaf.xNet.xml
-C:\Users\ilink\source\repos\Anarchy\Example projects\NicknameAnimation\obj\Debug\NicknameAnimation.csprojAssemblyReference.cache
 C:\Users\ilink\source\repos\Anarchy\Example projects\NicknameAnimation\obj\Debug\NicknameAnimation.csproj.CopyComplete
 C:\Users\ilink\source\repos\Anarchy\Example projects\NicknameAnimation\obj\Debug\NicknameAnimation.exe
 C:\Users\ilink\source\repos\Anarchy\Example projects\NicknameAnimation\obj\Debug\NicknameAnimation.pdb
+C:\Users\ilink\source\repos\Anarchy\Example projects\NicknameAnimation\obj\Debug\NicknameAnimation.csproj.AssemblyReference.cache
+C:\Users\ilink\source\repos\Anarchy\Example projects\NicknameAnimation\obj\Debug\NicknameAnimation.csproj.CoreCompileInputs.cache

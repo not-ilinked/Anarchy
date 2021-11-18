@@ -17,7 +17,6 @@ C:\Users\ilink\source\repos\Anarchy\Anarchy\bin\Debug\Newtonsoft.Json.dll
 C:\Users\ilink\source\repos\Anarchy\Anarchy\bin\Debug\websocket-sharp.dll
 C:\Users\ilink\source\repos\Anarchy\Anarchy\bin\Debug\Leaf.xNet.xml
 C:\Users\ilink\source\repos\Anarchy\Anarchy\bin\Debug\Newtonsoft.Json.xml
-C:\Users\ilink\source\repos\Anarchy\Anarchy\obj\Debug\Anarchy.csprojAssemblyReference.cache
 C:\Users\ilink\source\repos\Anarchy\Anarchy\obj\Debug\Anarchy.csproj.CopyComplete
 C:\Users\ilink\source\repos\Anarchy\Anarchy\obj\Debug\Anarchy.dll
 C:\Users\ilink\source\repos\Anarchy\Anarchy\obj\Debug\Anarchy.pdb
@@ -45,3 +44,5 @@ D:\downloads\Anarchy-dev\Anarchy-dev\Anarchy\obj\Debug\Anarchy.csproj.CopyComple
 D:\downloads\Anarchy-dev\Anarchy-dev\Anarchy\obj\Debug\Anarchy.dll
 D:\downloads\Anarchy-dev\Anarchy-dev\Anarchy\obj\Debug\Anarchy.pdb
 D:\repos\Anarchy\Anarchy\obj\Debug\Anarchy.csprojAssemblyReference.cache
+C:\Users\ilink\source\repos\Anarchy\Anarchy\obj\Debug\Anarchy.csproj.CoreCompileInputs.cache
+C:\Users\ilink\source\repos\Anarchy\Anarchy\obj\Debug\Anarchy.csproj.AssemblyReference.cache

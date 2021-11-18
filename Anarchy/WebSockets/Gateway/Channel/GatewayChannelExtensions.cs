@@ -52,7 +52,7 @@ namespace Discord.Gateway
         public static async Task<IReadOnlyList<GuildChannel>> GetGuildChannelsAsync(this DiscordSocketClient client, ulong guildId)
         {
             if (client.Config.Cache)
-                return client.GetCachedGuild(guildId).Channels;
+                return client.GetCachedGuild(guildId).Channels.SetClientsInList(client);
             else
                 return await ((DiscordClient)client).GetGuildChannelsAsync(guildId);
         }
