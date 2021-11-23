@@ -52,43 +52,17 @@ namespace Discord
                 {
                     DiscordHttpResponse resp;
 
-                    if (method == Leaf.xNet.HttpMethod.POST && endpoint.Contains("/invites/"))
-                    {
-                        HttpRequest request = new HttpRequest()
-                        {
-                            KeepTemporaryHeadersOnRedirect = false,
-                            EnableMiddleHeaders = false,
-                            AllowEmptyHeaderValues = false,
-                            SslProtocols = SslProtocols.Tls12
-                        };
+                    string ua = _discordClient.User != null && _discordClient.User.Type == DiscordUserType.Bot ? "Anarchy/0.8.1.0" : _discordClient.Config.SuperProperties.UserAgent;
 
-                        request.ClearAllHeaders();
-                        request.AddHeader("Accept", "*/*");
-                        request.AddHeader("Accept-Encoding", "gzip, deflate");
-                        request.AddHeader("Accept-Language", "en-US");
-                        request.AddHeader("Authorization", _discordClient.Token);
-                        request.AddHeader("Connection", "keep-alive");
-                        request.AddHeader("Cookie", "__cfduid=db537515176b9800b51d3de7330fc27d61618084707; __dcfduid=ec27126ae8e351eb9f5865035b40b75d; locale=en-US");
-                        request.AddHeader("DNT", "1");
-                        request.AddHeader("origin", "https://discord.com");
-                        request.AddHeader("Referer", "https://discord.com/channels/@me");
-                        request.AddHeader("TE", "Trailers");
-                        request.AddHeader("User-Agent", _discordClient.Config.SuperProperties.UserAgent);
-                        request.AddHeader("X-Super-Properties", _discordClient.Config.SuperProperties.ToBase64());
-
-                        var response = request.Post(endpoint);
-
-                        resp = new DiscordHttpResponse((int)response.StatusCode, response.ToString());
-                    }
-                    else if (_discordClient.Proxy == null || _discordClient.Proxy.Type == ProxyType.HTTP)
+                    if (_discordClient.Proxy == null || _discordClient.Proxy.Type == ProxyType.HTTP)
                     {
                         HttpClient client = new HttpClient(new HttpClientHandler() { Proxy = _discordClient.Proxy == null ? null : new WebProxy(_discordClient.Proxy.Host, _discordClient.Proxy.Port) });
                         if (_discordClient.Token != null)
                             client.DefaultRequestHeaders.Add("Authorization", _discordClient.Token);
 
-                        if (_discordClient.User != null && _discordClient.User.Type == DiscordUserType.Bot)
-                            client.DefaultRequestHeaders.Add("User-Agent", "Anarchy/0.8.1.0");
-                        else
+                        client.DefaultRequestHeaders.Add("User-Agent", ua);
+
+                        if (_discordClient.User == null || _discordClient.User.Type == DiscordUserType.User)
                         {
                             client.DefaultRequestHeaders.Add("User-Agent", _discordClient.Config.SuperProperties.UserAgent);
                             client.DefaultRequestHeaders.Add("X-Super-Properties", _discordClient.Config.SuperProperties.ToBase64());
@@ -108,7 +82,7 @@ namespace Discord
                         HttpRequest msg = new HttpRequest
                         {
                             IgnoreProtocolErrors = true,
-                            UserAgent = _discordClient.User != null && _discordClient.User.Type == DiscordUserType.Bot ? "Anarchy/0.8.1.0" : _discordClient.Config.SuperProperties.UserAgent,
+                            UserAgent = ua,
                             Authorization = _discordClient.Token
                         };
 

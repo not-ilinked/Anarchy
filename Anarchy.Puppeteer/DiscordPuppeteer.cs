@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using PuppeteerSharp;
 using System;
 using System.Collections.Generic;
@@ -27,8 +28,7 @@ namespace Discord
 
         public static void Start() => StartAsync().GetAwaiter().GetResult();
 
-
-        public static async Task<T> CallAsync<T>(DiscordClient parentClient, string method, string url, object data = null)
+        public static async Task<JToken> CallAsync(DiscordClient parentClient, string method, string url, object data = null)
         {
             Dictionary<string, string> headers = new Dictionary<string, string>()
             {
@@ -40,7 +40,7 @@ namespace Discord
             if (method == "POST")
             {
                 headers["Content-Type"] = "application/json";
-                
+
                 if (url.Contains("/invites/"))
                 {
                     string invCode = url.Split('/').Last();
@@ -60,8 +60,8 @@ headers: " + "{";
 ";
             if (data != null)
                 expression += $"body: '{JsonConvert.SerializeObject(data)}',";
-            expression += "}); return {status: req.status, body: await req.json()};}";
-            
+            expression += "}); return {status: req.status, body: req.status === 204 ? null : await req.json()};}";
+
             var result = await _page.EvaluateFunctionAsync<DiscordResponse>(expression);
 
             if (result.Status >= 400)
@@ -70,8 +70,10 @@ headers: " + "{";
                 else throw new DiscordHttpException(result.Body.ToObject<DiscordHttpError>());
             }
 
-            return result.Body.ToObject<T>();
+            return result.Body;
         }
+
+        public static async Task<T> CallAsync<T>(DiscordClient parentClient, string method, string url, object data = null) => (await CallAsync(parentClient, method, url, data)).ToObject<T>();
 
 
         public static async Task<GuildInvite> JoinGuildAsync(DiscordClient client, string invCode)
@@ -83,5 +85,14 @@ headers: " + "{";
         {
             return JoinGuildAsync(client, invCode).GetAwaiter().GetResult();
         }
+
+
+        public static async Task SendFriendRequestAsync(DiscordClient client, string username, uint discriminator)
+        {
+            await CallAsync(client, "POST", client.HttpClient.BaseUrl + "/users/@me/relationships", new { username, discriminator });
+        }
+
+        public static void SendFriendReqeuest(DiscordClient client, string username, uint discriminator) =>
+            SendFriendRequestAsync(client, username, discriminator).GetAwaiter().GetResult();
     }
 }
