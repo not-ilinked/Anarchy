@@ -47,10 +47,12 @@ namespace Discord
 
         private DiscordLanguage FromString(string langStr)
         {
-            foreach (var language in Languages)
+            foreach (KeyValuePair<DiscordLanguage, string> language in Languages)
             {
                 if (language.Value == langStr)
+                {
                     return language.Key;
+                }
             }
 
             throw new InvalidOperationException("Invalid language string");

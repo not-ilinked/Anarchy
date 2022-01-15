@@ -15,7 +15,7 @@ namespace Discord
 
         public async Task ModifyAsync(ConnectionProperties properties)
         {
-            var update = await Client.ModifyConnectedAccountAsync(Type, Id, properties);
+            ClientConnectedAccount update = await Client.ModifyConnectedAccountAsync(Type, Id, properties);
 
             Name = update.Name;
             Verified = update.Verified;
@@ -40,4 +40,3 @@ namespace Discord
         }
     }
 }
-    

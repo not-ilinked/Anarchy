@@ -8,7 +8,9 @@ namespace Discord
         public static async Task<DiscordInvite> CreateInviteAsync(this DiscordClient client, ulong channelId, InviteProperties properties = null)
         {
             if (properties == null)
+            {
                 properties = new InviteProperties();
+            }
 
             return (await client.HttpClient.PostAsync($"/channels/{channelId}/invites", properties))
                                     .ParseDeterministic<DiscordInvite>().SetClient(client);

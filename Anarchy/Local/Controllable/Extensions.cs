@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json.Linq;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Discord
 {
@@ -8,7 +7,10 @@ namespace Discord
         public static T SetClient<T>(this T @class, DiscordClient client) where T : Controllable
         {
             if (@class != null)
+            {
                 @class.Client = client;
+            }
+
             return @class;
         }
 
@@ -17,8 +19,10 @@ namespace Discord
         {
             if (classes != null)
             {
-                foreach (var @class in classes)
+                foreach (T @class in classes)
+                {
                     @class.Client = client;
+                }
             }
             return classes;
         }

@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using System.Drawing;
 
 namespace Discord
 {
@@ -12,8 +11,8 @@ namespace Discord
         [JsonProperty("username")]
         public string Username
         {
-            get { return NameProperty; }
-            set { NameProperty.Value = value; }
+            get => NameProperty;
+            set => NameProperty.Value = value;
         }
 
 
@@ -27,8 +26,8 @@ namespace Discord
         [JsonProperty("discriminator")]
         public uint Discriminator
         {
-            get { return DiscriminatorProperty; }
-            set { DiscriminatorProperty.Value = value; }
+            get => DiscriminatorProperty;
+            set => DiscriminatorProperty.Value = value;
         }
 
 
@@ -42,8 +41,8 @@ namespace Discord
         [JsonProperty("email")]
         public string Email
         {
-            get { return EmailProperty; }
-            set { EmailProperty.Value = value; }
+            get => EmailProperty;
+            set => EmailProperty.Value = value;
         }
 
 
@@ -57,8 +56,8 @@ namespace Discord
         [JsonProperty("avatar")]
         public DiscordImage Avatar
         {
-            get { return AvatarProperty; }
-            set { AvatarProperty.Value = value; }
+            get => AvatarProperty;
+            set => AvatarProperty.Value = value;
         }
 
 
@@ -72,24 +71,27 @@ namespace Discord
         [JsonProperty("bio")]
         public string Biography
         {
-            get { return _bioParam; }
-            set { _bioParam.Value = value; }
+            get => _bioParam;
+            set => _bioParam.Value = value;
         }
 
-        public bool ShouldSerializeBiography() => _bioParam.Set;
-
+        public bool ShouldSerializeBiography()
+        {
+            return _bioParam.Set;
+        }
 
         private readonly DiscordParameter<DiscordImage> _bannerParam = new DiscordParameter<DiscordImage>();
         [JsonProperty("banner")]
         public DiscordImage Banner
         {
-            get { return _bannerParam; }
-            set { _bannerParam.Value = value; }
+            get => _bannerParam;
+            set => _bannerParam.Value = value;
         }
 
-        public bool ShouldSerializeBanner() => _bannerParam.Set;
-        
-
+        public bool ShouldSerializeBanner()
+        {
+            return _bannerParam.Set;
+        }
 
         [JsonProperty("password")]
         public string Password { get; set; }

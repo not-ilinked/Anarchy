@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using Newtonsoft.Json;
 
 namespace Discord
 {
@@ -36,11 +36,15 @@ namespace Discord
             get
             {
                 if (_color.HasValue)
+                {
                     return System.Drawing.Color.FromArgb(_color.Value);
+                }
                 else
+                {
                     return null;
+                }
             }
-            set 
+            set
             {
                 if (value.HasValue)
                 {
@@ -49,23 +53,29 @@ namespace Discord
                     _color = System.Drawing.Color.FromArgb(0, val.R, val.G, val.B).ToArgb();
                 }
                 else
+                {
                     _color = null;
+                }
             }
         }
 
 
         public bool Folder
         {
-            get { return Id.HasValue; }
+            get => Id.HasValue;
             set
             {
                 if (value)
                 {
                     if (!Id.HasValue)
-                        Id = (long)_rnd.Next(1, 999999);
+                    {
+                        Id = _rnd.Next(1, 999999);
+                    }
                 }
                 else
+                {
                     Id = null;
+                }
             }
         }
 

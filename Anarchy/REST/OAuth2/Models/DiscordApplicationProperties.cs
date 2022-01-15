@@ -1,6 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Drawing;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace Discord
 {
@@ -10,8 +9,8 @@ namespace Discord
         [JsonProperty("name")]
         public string Name
         {
-            get { return _nameProperty; }
-            set { _nameProperty.Value = value; }
+            get => _nameProperty;
+            set => _nameProperty.Value = value;
         }
 
 
@@ -25,8 +24,8 @@ namespace Discord
         [JsonProperty("description")]
         public string Description
         {
-            get { return _descriptionProperty; }
-            set { _descriptionProperty.Value = value; }
+            get => _descriptionProperty;
+            set => _descriptionProperty.Value = value;
         }
 
 
@@ -40,8 +39,8 @@ namespace Discord
         [JsonProperty("icon")]
         public DiscordImage Icon
         {
-            get { return IconProperty; }
-            set { IconProperty.Value = value; }
+            get => IconProperty;
+            set => IconProperty.Value = value;
         }
 
         public bool ShouldSerializeIcon()
@@ -54,8 +53,8 @@ namespace Discord
         [JsonProperty("bot_public")]
         public bool PublicBot
         {
-            get { return _publicProperty; }
-            set { _publicProperty.Value = value; }
+            get => _publicProperty;
+            set => _publicProperty.Value = value;
         }
 
 
@@ -69,8 +68,8 @@ namespace Discord
         [JsonProperty("bot_require_code_grant")]
         public bool BotRequireCodeGrant
         {
-            get { return _codeGrantProperty; }
-            set { _codeGrantProperty.Value = value; }
+            get => _codeGrantProperty;
+            set => _codeGrantProperty.Value = value;
         }
 
 
@@ -84,8 +83,8 @@ namespace Discord
         [JsonProperty("redirect_urls")]
         public List<string> RedirectUrls
         {
-            get { return _redirectsProperty; }
-            set { _redirectsProperty.Value = value; }
+            get => _redirectsProperty;
+            set => _redirectsProperty.Value = value;
         }
 
 

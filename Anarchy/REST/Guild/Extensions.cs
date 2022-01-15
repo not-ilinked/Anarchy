@@ -11,11 +11,11 @@ namespace Discord
         #region management
         public static async Task<DiscordGuild> CreateGuildAsync(this DiscordClient client, string name, DiscordImage icon = null, string region = null)
         {
-            return (await client.HttpClient.PostAsync("/guilds", new GuildCreationProperties() 
-            { 
-                Name = name, 
-                Icon = icon, 
-                Region = region 
+            return (await client.HttpClient.PostAsync("/guilds", new GuildCreationProperties()
+            {
+                Name = name,
+                Icon = icon,
+                Region = region
             })).Deserialize<DiscordGuild>().SetClient(client);
         }
 
@@ -33,7 +33,9 @@ namespace Discord
         public static async Task<DiscordGuild> ModifyGuildAsync(this DiscordClient client, ulong guildId, GuildProperties properties)
         {
             if (properties.VanityProperty.Set)
+            {
                 await client.SetGuildVanityUrlAsync(guildId, properties.VanityUrlCode);
+            }
 
             return (await client.HttpClient.PatchAsync($"/guilds/{guildId}", properties)).Deserialize<DiscordGuild>().SetClient(client);
         }
@@ -80,8 +82,11 @@ namespace Discord
         {
             IReadOnlyList<DiscordBan> bans = (await client.HttpClient.GetAsync($"/guilds/{guildId}/bans"))
                                                     .Deserialize<IReadOnlyList<DiscordBan>>().SetClientsInList(client);
-            foreach (var ban in bans)
+            foreach (DiscordBan ban in bans)
+            {
                 ban.GuildId = guildId;
+            }
+
             return bans;
         }
 

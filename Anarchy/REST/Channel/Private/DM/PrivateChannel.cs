@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Anarchy;
+﻿using Anarchy;
 using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Discord
 {
@@ -19,10 +19,7 @@ namespace Discord
         internal ConcurrentList<DiscordUser> _recipients;
 
 
-        public IReadOnlyList<DiscordUser> Recipients
-        {
-            get { return _recipients; }
-        }
+        public IReadOnlyList<DiscordUser> Recipients => _recipients;
 
 
         [JsonProperty("last_message_id")]

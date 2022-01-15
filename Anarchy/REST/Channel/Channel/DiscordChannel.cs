@@ -1,6 +1,4 @@
-﻿using Discord.Commands;
-using Newtonsoft.Json;
-using System;
+﻿using Newtonsoft.Json;
 using System.Threading.Tasks;
 
 namespace Discord
@@ -15,20 +13,11 @@ namespace Discord
         public ChannelType Type { get; protected set; }
 
 
-        public bool InGuild
-        {
-            get { return Type != ChannelType.DM && Type != ChannelType.Group; }
-        }
+        public bool InGuild => Type != ChannelType.DM && Type != ChannelType.Group;
 
-        public bool IsText
-        {
-            get { return !IsVoice && Type != ChannelType.Category; }
-        }
+        public bool IsText => !IsVoice && Type != ChannelType.Category;
 
-        public bool IsVoice
-        {
-            get { return Type == ChannelType.Voice || Type == ChannelType.DM || Type == ChannelType.Group || Type == ChannelType.Stage; }
-        }
+        public bool IsVoice => Type == ChannelType.Voice || Type == ChannelType.DM || Type == ChannelType.Group || Type == ChannelType.Stage;
 
 
         protected void Update(DiscordChannel channel)

@@ -9,8 +9,8 @@ namespace Discord
         [JsonProperty("enabled")]
         public bool Enabled
         {
-            get { return _enabled; }
-            set { _enabled.Value = value; }
+            get => _enabled;
+            set => _enabled.Value = value;
         }
 
         public bool ShouldSerializeEnabled()
@@ -23,8 +23,8 @@ namespace Discord
         [JsonProperty("welcome_channels")]
         public List<WelcomeChannelProperties> Channels
         {
-            get { return _channels; }
-            set { _channels.Value = value; }
+            get => _channels;
+            set => _channels.Value = value;
         }
 
         public bool ShouldSerializeChannels()
@@ -37,8 +37,8 @@ namespace Discord
         [JsonProperty("description")]
         public string Description
         {
-            get { return _description; }
-            set { _description.Value = value; }
+            get => _description;
+            set => _description.Value = value;
         }
 
         public bool ShouldSerializeDescription()

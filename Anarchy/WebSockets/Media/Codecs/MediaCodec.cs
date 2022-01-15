@@ -14,14 +14,8 @@ namespace Discord.Media
 
         public CodecType Type
         {
-            get
-            {
-                return (CodecType)Enum.Parse(typeof(CodecType), _type, true);
-            }
-            set
-            {
-                _type = value.ToString().ToLower();
-            }
+            get => (CodecType)Enum.Parse(typeof(CodecType), _type, true);
+            set => _type = value.ToString().ToLower();
         }
 
 

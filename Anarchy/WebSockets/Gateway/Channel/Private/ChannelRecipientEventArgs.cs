@@ -16,9 +16,6 @@ namespace Discord.Gateway
         [JsonProperty("channel_id")]
         private readonly ulong _channelId;
 
-        public MinimalChannel Channel
-        {
-            get { return new MinimalChannel(_channelId).SetClient(Client); }
-        }
+        public MinimalChannel Channel => new MinimalChannel(_channelId).SetClient(Client);
     }
 }

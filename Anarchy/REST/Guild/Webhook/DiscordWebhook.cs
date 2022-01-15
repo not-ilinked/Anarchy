@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using System;
 using System.Threading.Tasks;
 
 namespace Discord
@@ -23,12 +22,16 @@ namespace Discord
 
         public DiscordCDNImage Avatar
         {
-            get 
+            get
             {
                 if (_avatarHash == null)
+                {
                     return null;
+                }
                 else
-                    return new DiscordCDNImage(CDNEndpoints.Avatar, Id, _avatarHash); 
+                {
+                    return new DiscordCDNImage(CDNEndpoints.Avatar, Id, _avatarHash);
+                }
             }
         }
 
@@ -50,7 +53,7 @@ namespace Discord
             OnClientUpdated += (s, e) => Creator.SetClient(Client);
         }
 
-        
+
         protected void Update(DiscordWebhook hook)
         {
             Id = hook.Id;

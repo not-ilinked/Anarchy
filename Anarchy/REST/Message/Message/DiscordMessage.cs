@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 
 namespace Discord
 {
@@ -23,11 +23,15 @@ namespace Discord
                     _authorMember.SetClient(Client);
 
                     if (Guild != null)
+                    {
                         _authorMember.GuildId = Guild.Id;
+                    }
                 }
 
                 if (_authorUser == null) // when the client itself is the author, "user" doesn't get sent
+                {
                     _authorUser = Client.User;
+                }
             };
         }
 
@@ -51,33 +55,32 @@ namespace Discord
         [JsonProperty("member")]
         private GuildMember _authorMember;
 
-        
+
         public MessageAuthor Author
         {
             get
             {
                 if (_authorMember != null)
+                {
                     _authorMember.User = _authorUser;
+                }
 
                 return new MessageAuthor(_authorUser, _authorMember);
             }
         }
-        
+
 
         [JsonProperty("attachments")]
         private readonly IReadOnlyList<DiscordAttachment> _attachments;
-        public DiscordAttachment Attachment
-        {
-            get { return _attachments == null || _attachments.Count == 0 ? null : _attachments[0]; }
-        }
+        public DiscordAttachment Attachment => _attachments == null || _attachments.Count == 0 ? null : _attachments[0];
 
 
         [JsonProperty("embeds")]
         private IReadOnlyList<DiscordEmbed> _embeds;
         public DiscordEmbed Embed
         {
-            get { return _embeds == null || _embeds.Count == 0 ? null : _embeds[0]; }
-            private set { _embeds = new List<DiscordEmbed>() { value }; }
+            get => _embeds == null || _embeds.Count == 0 ? null : _embeds[0];
+            private set => _embeds = new List<DiscordEmbed>() { value };
         }
 
 
@@ -127,9 +130,13 @@ namespace Discord
             get
             {
                 if (GuildId.HasValue)
+                {
                     return new MinimalGuild(GuildId.Value).SetClient(Client);
+                }
                 else
+                {
                     return null;
+                }
             }
         }
 
@@ -180,7 +187,9 @@ namespace Discord
         public async Task EditAsync(MessageEditProperties properties)
         {
             if (Type != MessageType.Default)
+            {
                 throw new InvalidOperationException("Can only edit messages of type Default");
+            }
 
             Update(await Client.EditMessageAsync(Channel.Id, Id, properties));
         }
@@ -194,7 +203,7 @@ namespace Discord
             EditAsync(properties).GetAwaiter().GetResult();
         }
 
-        
+
         public async Task DeleteAsync()
         {
             await Client.DeleteMessageAsync(Channel.Id, Id);

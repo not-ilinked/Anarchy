@@ -36,9 +36,13 @@ namespace Discord
             get
             {
                 if (_discoverySplashHash == null)
+                {
                     return null;
+                }
                 else
+                {
                     return new DiscordCDNImage(CDNEndpoints.DiscoverySplash, Id, _discoverySplashHash);
+                }
             }
         }
 
@@ -58,9 +62,13 @@ namespace Discord
         public async Task<DiscordGuild> LurkAsync()
         {
             if (Client.GetType() == typeof(DiscordSocketClient))
+            {
                 return await ((DiscordSocketClient)Client).LurkGuildAsync(Id);
+            }
             else
+            {
                 throw new NotSupportedException("This method is only available for socket clients.");
+            }
         }
 
         public DiscordGuild Lurk()

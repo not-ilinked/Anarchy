@@ -8,47 +8,56 @@ namespace Discord
         [JsonProperty("access_token")]
         internal string AccessToken { get; set; }
 
-        private DiscordParameter<string> _nickParam = new DiscordParameter<string>();
+        private readonly DiscordParameter<string> _nickParam = new DiscordParameter<string>();
         [JsonProperty("nick")]
         public string Nickname
         {
-            get { return _nickParam; }
-            set { _nickParam.Value = value; }
+            get => _nickParam;
+            set => _nickParam.Value = value;
         }
 
-        public bool ShouldSerializeNickname() => _nickParam.Set;
+        public bool ShouldSerializeNickname()
+        {
+            return _nickParam.Set;
+        }
 
-
-        private DiscordParameter<List<ulong>> _roleParam = new DiscordParameter<List<ulong>>();
+        private readonly DiscordParameter<List<ulong>> _roleParam = new DiscordParameter<List<ulong>>();
         [JsonProperty("roles")]
         public List<ulong> Roles
         {
-            get { return _roleParam; }
-            set { _roleParam.Value = value; }
+            get => _roleParam;
+            set => _roleParam.Value = value;
         }
 
-        public bool ShouldSerializeRoles() => _roleParam.Set;
+        public bool ShouldSerializeRoles()
+        {
+            return _roleParam.Set;
+        }
 
-
-        private DiscordParameter<bool> _muteParam = new DiscordParameter<bool>();
+        private readonly DiscordParameter<bool> _muteParam = new DiscordParameter<bool>();
         [JsonProperty("mute")]
         public bool Mute
         {
-            get { return _muteParam; }
-            set { _muteParam.Value = value; }
+            get => _muteParam;
+            set => _muteParam.Value = value;
         }
 
-        public bool ShouldSerializeMute() => _muteParam.Set;
+        public bool ShouldSerializeMute()
+        {
+            return _muteParam.Set;
+        }
 
-
-        private DiscordParameter<bool> _deafParam = new DiscordParameter<bool>();
+        private readonly DiscordParameter<bool> _deafParam = new DiscordParameter<bool>();
         [JsonProperty("deaf")]
         public bool Deaf
         {
-            get { return _deafParam; }
-            set { _deafParam.Value = value; }
+            get => _deafParam;
+            set => _deafParam.Value = value;
         }
 
-        public bool ShouldSerializeDeaf() => _deafParam.Set;
+        public bool ShouldSerializeDeaf()
+        {
+            return _deafParam.Set;
+        }
     }
 }

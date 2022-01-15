@@ -1,13 +1,11 @@
-﻿using Newtonsoft.Json.Linq;
-using System.Threading;
+﻿using Leaf.xNet;
 using Newtonsoft.Json;
 using System;
-using System.Text;
-using System.Net.Http;
-using Leaf.xNet;
 using System.Net;
+using System.Net.Http;
+using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
-using System.Security.Authentication;
 
 namespace Discord
 {
@@ -31,16 +29,22 @@ namespace Discord
         /// <param name="payload">JSON content</param>
         private async Task<DiscordHttpResponse> SendAsync(Leaf.xNet.HttpMethod method, string endpoint, object payload = null)
         {
-            if (!endpoint.StartsWith("https")) 
+            if (!endpoint.StartsWith("https"))
+            {
                 endpoint = DiscordHttpUtil.BuildBaseUrl(_discordClient.Config.ApiVersion, _discordClient.Config.SuperProperties.ReleaseChannel) + endpoint;
+            }
 
             string json = "{}";
             if (payload != null)
             {
                 if (payload.GetType() == typeof(string))
+                {
                     json = (string)payload;
+                }
                 else
+                {
                     json = JsonConvert.SerializeObject(payload);
+                }
             }
 
             uint retriesLeft = _discordClient.Config.RestConnectionRetries;
@@ -58,7 +62,9 @@ namespace Discord
                     {
                         HttpClient client = new HttpClient(new HttpClientHandler() { Proxy = _discordClient.Proxy == null ? null : new WebProxy(_discordClient.Proxy.Host, _discordClient.Proxy.Port) });
                         if (_discordClient.Token != null)
+                        {
                             client.DefaultRequestHeaders.Add("Authorization", _discordClient.Token);
+                        }
 
                         client.DefaultRequestHeaders.Add("User-Agent", ua);
 
@@ -68,11 +74,11 @@ namespace Discord
                             client.DefaultRequestHeaders.Add("X-Super-Properties", _discordClient.Config.SuperProperties.ToBase64());
                         }
 
-                        var response = await client.SendAsync(new HttpRequestMessage() 
-                        { 
-                            Content = hasData ? new System.Net.Http.StringContent(json, Encoding.UTF8, "application/json") : null, 
-                            Method = new System.Net.Http.HttpMethod(method.ToString()), 
-                            RequestUri = new Uri(endpoint) 
+                        HttpResponseMessage response = await client.SendAsync(new HttpRequestMessage()
+                        {
+                            Content = hasData ? new System.Net.Http.StringContent(json, Encoding.UTF8, "application/json") : null,
+                            Method = new System.Net.Http.HttpMethod(method.ToString()),
+                            RequestUri = new Uri(endpoint)
                         });
 
                         resp = new DiscordHttpResponse((int)response.StatusCode, response.Content.ReadAsStringAsync().Result);
@@ -87,12 +93,21 @@ namespace Discord
                         };
 
                         if (hasData)
+                        {
                             msg.AddHeader(HttpHeader.ContentType, "application/json");
+                        }
 
-                        if (_discordClient.User == null || _discordClient.User.Type == DiscordUserType.User) msg.AddHeader("X-Super-Properties", _discordClient.Config.SuperProperties.ToBase64());
-                        if (_discordClient.Proxy != null) msg.Proxy = _discordClient.Proxy;
+                        if (_discordClient.User == null || _discordClient.User.Type == DiscordUserType.User)
+                        {
+                            msg.AddHeader("X-Super-Properties", _discordClient.Config.SuperProperties.ToBase64());
+                        }
 
-                        var response = msg.Raw(method, endpoint, hasData ? new Leaf.xNet.StringContent(json) : null);
+                        if (_discordClient.Proxy != null)
+                        {
+                            msg.Proxy = _discordClient.Proxy;
+                        }
+
+                        HttpResponse response = msg.Raw(method, endpoint, hasData ? new Leaf.xNet.StringContent(json) : null);
 
                         resp = new DiscordHttpResponse((int)response.StatusCode, response.ToString());
                     }
@@ -103,16 +118,22 @@ namespace Discord
                 catch (Exception ex) when (ex is HttpException || ex is HttpRequestException || ex is TaskCanceledException)
                 {
                     if (retriesLeft == 0)
+                    {
                         throw new DiscordConnectionException();
+                    }
 
                     retriesLeft--;
                 }
                 catch (RateLimitException ex)
                 {
                     if (_discordClient.Config.RetryOnRateLimit)
+                    {
                         Thread.Sleep(ex.RetryAfter);
+                    }
                     else
+                    {
                         throw;
+                    }
                 }
             }
         }

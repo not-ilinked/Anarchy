@@ -13,14 +13,14 @@ namespace Discord
         {
             if (_versionCache == 0)
             {
-                var client = new HttpClient();
+                HttpClient client = new HttpClient();
 
                 string appPage = client.GetStringAsync("https://discord.com/app").Result;
                 const string findThis = "build_number:\"";
 
-                foreach (var asset in Regex.Matches(appPage, "/assets/.{20}.js"))
+                foreach (object asset in Regex.Matches(appPage, "/assets/.{20}.js"))
                 {
-                    var content = client.GetStringAsync("https://discord.com" + asset).Result;
+                    string content = client.GetStringAsync("https://discord.com" + asset).Result;
 
                     if (content.Contains(findThis))
                     {

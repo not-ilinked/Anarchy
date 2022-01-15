@@ -33,8 +33,8 @@ namespace Discord
         private uint _color;
         public Color Color
         {
-            get { return Color.FromArgb((int)_color); }
-            set { _color = (uint)Color.FromArgb(0, value.R, value.G, value.B).ToArgb(); }
+            get => Color.FromArgb((int)_color);
+            set => _color = (uint)Color.FromArgb(0, value.R, value.G, value.B).ToArgb();
         }
 
 

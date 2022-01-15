@@ -8,7 +8,7 @@ namespace Discord
     {
         public static async Task<DiscordActiveSubscription> GetActiveSubscriptionAsync(this DiscordClient client)
         {
-            var activeSubscriptions = (await client.HttpClient.GetAsync("/users/@me/billing/subscriptions"))
+            IReadOnlyList<DiscordActiveSubscription> activeSubscriptions = (await client.HttpClient.GetAsync("/users/@me/billing/subscriptions"))
                                                         .Deserialize<IReadOnlyList<DiscordActiveSubscription>>();
 
             return activeSubscriptions.Count > 0 ? activeSubscriptions[0] : null;
@@ -25,7 +25,9 @@ namespace Discord
             List<AdditionalSubscriptionPlan> plans = new List<AdditionalSubscriptionPlan>();
 
             if (additionalBoosts > 0)
+            {
                 plans.Add(new AdditionalSubscriptionPlan() { Id = DiscordNitroSubTypes.GuildBoost.SubscriptionPlanId, Quantity = (int)additionalBoosts });
+            }
 
             return (await client.HttpClient.PostAsync("/users/@me/billing/subscriptions", $"{{\"plan_id\":{skuId},\"payment_source_id\":{paymentMethodId},\"additional_plans\":{JsonConvert.SerializeObject(plans)}}}"))
                                 .Deserialize<DiscordActiveSubscription>();

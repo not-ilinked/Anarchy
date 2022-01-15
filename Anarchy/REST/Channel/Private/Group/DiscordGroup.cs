@@ -16,9 +16,13 @@ namespace Discord
             get
             {
                 if (_iconHash == null)
+                {
                     return null;
+                }
                 else
+                {
                     return new DiscordCDNImage(CDNEndpoints.ChannelIcon, Id, _iconHash);
+                }
             }
         }
 

@@ -13,8 +13,8 @@ namespace Discord.Gateway
         [JsonProperty("guild_id")]
         public ulong GuildId
         {
-            get { return _guildId; }
-            set { Role.GuildId = _guildId = value; }
+            get => _guildId;
+            set => Role.GuildId = _guildId = value;
         }
 
 

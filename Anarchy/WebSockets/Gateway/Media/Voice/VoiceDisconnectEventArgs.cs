@@ -14,7 +14,11 @@ namespace Discord.Gateway
 
         internal VoiceDisconnectEventArgs(DiscordSocketClient client, ulong? guildId, ulong channelId, WebSocketSharp.CloseEventArgs close)
         {
-            if (guildId.HasValue) Guild = new MinimalGuild(guildId.Value).SetClient(client);
+            if (guildId.HasValue)
+            {
+                Guild = new MinimalGuild(guildId.Value).SetClient(client);
+            }
+
             Channel = new MinimalChannel(channelId).SetClient(client);
 
             Code = (DiscordMediaCloseCode)close.Code;

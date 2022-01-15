@@ -19,8 +19,10 @@ namespace Discord
                     {
                         _roles.SetClientsInList(Client);
 
-                        foreach (var role in _roles)
+                        foreach (DiscordRole role in _roles)
+                        {
                             role.GuildId = Id;
+                        }
                     }
 
                     Emojis.SetClientsInList(Client);
@@ -34,12 +36,16 @@ namespace Discord
 
         public DiscordCDNImage DiscoverySplash
         {
-            get 
+            get
             {
                 if (_discoverySplashHash == null)
+                {
                     return null;
+                }
                 else
-                    return new DiscordCDNImage(CDNEndpoints.DiscoverySplash, Id, _discoverySplashHash); 
+                {
+                    return new DiscordCDNImage(CDNEndpoints.DiscoverySplash, Id, _discoverySplashHash);
+                }
             }
         }
 
@@ -64,9 +70,13 @@ namespace Discord
             get
             {
                 if (_rulesChannelId.HasValue)
+                {
                     return new MinimalTextChannel(_rulesChannelId.Value).SetClient(Client);
+                }
                 else
+                {
                     return null;
+                }
             }
         }
 
@@ -79,9 +89,13 @@ namespace Discord
             get
             {
                 if (_updateChannelId.HasValue)
+                {
                     return new MinimalTextChannel(_updateChannelId.Value).SetClient(Client);
+                }
                 else
+                {
                     return null;
+                }
             }
         }
 
@@ -108,34 +122,27 @@ namespace Discord
 
         [JsonProperty("roles")]
         internal ConcurrentList<DiscordRole> _roles;
-        
-        public IReadOnlyList<DiscordRole> Roles
-        {
-            get { return _roles; }
-        }
 
-        public DiscordRole EveryoneRole
-        {
-            get
-            {
-                return Unavailable ? null : Roles.First(r => r.Name == "@everyone");
-            }
-        }
+        public IReadOnlyList<DiscordRole> Roles => _roles;
+
+        public DiscordRole EveryoneRole => Unavailable ? null : Roles.First(r => r.Name == "@everyone");
 
 
         [JsonProperty("emojis")]
         internal List<DiscordEmoji> _emojis;
-        
+
         public IReadOnlyList<DiscordEmoji> Emojis
         {
             get
             {
                 if (!Unavailable)
                 {
-                    foreach (var emoji in _emojis)
+                    foreach (DiscordEmoji emoji in _emojis)
+                    {
                         emoji.GuildId = Id;
+                    }
                 }
-                
+
                 return _emojis;
             }
         }
@@ -150,17 +157,14 @@ namespace Discord
 
 
         [JsonProperty("system_channel_id")]
-        private ulong? _sysChannelId; 
+        private ulong? _sysChannelId;
 
 
         [JsonProperty("system_channel_flags")]
         private int _sysChannelFlags;
 
 
-        public SystemChannelInformation SystemChannel
-        {
-            get { return new SystemChannelInformation(_sysChannelId, _sysChannelFlags).SetClient(Client); }
-        }
+        public SystemChannelInformation SystemChannel => new SystemChannelInformation(_sysChannelId, _sysChannelFlags).SetClient(Client);
 
 
         internal void Update(DiscordGuild guild)
@@ -215,7 +219,7 @@ namespace Discord
 
         public override async Task<IReadOnlyList<DiscordRole>> GetRolesAsync()
         {
-            var roles = await base.GetRolesAsync();
+            IReadOnlyList<DiscordRole> roles = await base.GetRolesAsync();
             _roles = new ConcurrentList<DiscordRole>(roles);
 
             return roles;
@@ -232,7 +236,7 @@ namespace Discord
 
         public override async Task<IReadOnlyList<DiscordRole>> SetRolePositionsAsync(List<RolePositionUpdate> positions)
         {
-            var roles = await base.SetRolePositionsAsync(positions);
+            IReadOnlyList<DiscordRole> roles = await base.SetRolePositionsAsync(positions);
             _roles = new ConcurrentList<DiscordRole>(roles);
 
             return roles;

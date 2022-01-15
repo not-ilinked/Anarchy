@@ -48,10 +48,14 @@ namespace Discord
             await Client.ModifyGuildMemberAsync(GuildId, User.Id, properties);
 
             if (properties.NickProperty.Set)
+            {
                 Nickname = properties.Nickname;
+            }
 
             if (properties.RoleProperty.Set)
+            {
                 Roles = properties.Roles;
+            }
         }
 
         /// <summary>
@@ -98,10 +102,12 @@ namespace Discord
         {
             if (Client.GetType() == typeof(DiscordSocketClient))
             {
-                var socketClient = (DiscordSocketClient)Client;
+                DiscordSocketClient socketClient = (DiscordSocketClient)Client;
 
                 if (socketClient.Config.Cache)
+                {
                     return socketClient.GetCachedGuild(GuildId);
+                }
             }
 
             return await Client.GetGuildAsync(GuildId);
@@ -112,14 +118,20 @@ namespace Discord
             DiscordPermission permissions = DiscordPermission.None;
 
             if (guild.OwnerId == User.Id)
+            {
                 permissions = PermissionUtils.GetAllPermissions();
+            }
             else
             {
-                foreach (var role in guild.Roles.Where(r => Roles.Contains(r.Id) || r.Name == "@everyone"))
+                foreach (DiscordRole role in guild.Roles.Where(r => Roles.Contains(r.Id) || r.Name == "@everyone"))
+                {
                     permissions = permissions.Add(role.Permissions);
+                }
 
                 if (permissions.Has(DiscordPermission.Administrator))
+                {
                     permissions = PermissionUtils.GetAllPermissions();
+                }
             }
 
             return permissions;
@@ -143,16 +155,18 @@ namespace Discord
 
         public async Task<DiscordPermission> GetPermissionsAsync(IEnumerable<DiscordPermissionOverwrite> affectedBy)
         {
-            var guild = await SeekGuildAsync();
+            DiscordGuild guild = await SeekGuildAsync();
 
-            var perms = ComputePermissions(guild);
+            DiscordPermission perms = ComputePermissions(guild);
 
             if (guild.OwnerId != User.Id && !perms.Has(DiscordPermission.Administrator))
             {
-                foreach (var overwrite in affectedBy)
+                foreach (DiscordPermissionOverwrite overwrite in affectedBy)
                 {
                     if (overwrite.Type == PermissionOverwriteType.Role && overwrite.AffectedId == guild.EveryoneRole.Id || Roles.Contains(overwrite.AffectedId) || (overwrite.Type == PermissionOverwriteType.Member && overwrite.AffectedId == User.Id))
+                    {
                         perms = perms.Remove(overwrite.Deny).Add(overwrite.Allow);
+                    }
                 }
             }
 

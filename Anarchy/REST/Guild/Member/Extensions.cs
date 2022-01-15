@@ -66,8 +66,10 @@ namespace Discord
         {
             string url = $"/guilds/{guildId}/prune?days={properties.Days}";
 
-            foreach (var role in properties.IncludedRoles)
+            foreach (ulong role in properties.IncludedRoles)
+            {
                 url += "&include_roles=" + role;
+            }
 
             return (await client.HttpClient.GetAsync(url)).Deserialize<JObject>().Value<uint>("pruned");
         }

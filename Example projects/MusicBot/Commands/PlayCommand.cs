@@ -1,13 +1,7 @@
-﻿using Discord.Commands;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Discord;
+﻿using Discord;
+using Discord.Commands;
 using Discord.Gateway;
 using Discord.Media;
-using System.Threading;
-using YoutubeExplode.Videos.Streams;
-using System.IO;
 
 namespace MusicBot
 {
@@ -21,7 +15,7 @@ namespace MusicBot
         {
             const string YouTubeVideo = "https://www.youtube.com/watch?v=";
 
-            var targetConnected = Client.GetVoiceStates(Message.Author.User.Id).GuildVoiceStates.TryGetValue(Message.Guild.Id, out var theirState);
+            bool targetConnected = Client.GetVoiceStates(Message.Author.User.Id).GuildVoiceStates.TryGetValue(Message.Guild.Id, out DiscordVoiceState theirState);
 
             if (!targetConnected || theirState.Channel == null)
             {
@@ -29,12 +23,12 @@ namespace MusicBot
                 return;
             }
 
-            var channel = (VoiceChannel)Client.GetChannel(theirState.Channel.Id);
-            var voiceClient = Client.GetVoiceClient(Message.Guild.Id);
+            VoiceChannel channel = (VoiceChannel)Client.GetChannel(theirState.Channel.Id);
+            DiscordVoiceClient voiceClient = Client.GetVoiceClient(Message.Guild.Id);
 
             if (voiceClient.State < MediaConnectionState.Ready || voiceClient.Channel.Id != channel.Id)
             {
-                var permissions = Client.GetCachedGuild(Message.Guild.Id).ClientMember.GetPermissions(channel.PermissionOverwrites);
+                DiscordPermission permissions = Client.GetCachedGuild(Message.Guild.Id).ClientMember.GetPermissions(channel.PermissionOverwrites);
 
                 if (!permissions.Has(DiscordPermission.ConnectToVC) || !permissions.Has(DiscordPermission.SpeakInVC))
                 {
@@ -53,18 +47,29 @@ namespace MusicBot
             {
                 string id = Url.Substring(Url.IndexOf(YouTubeVideo) + YouTubeVideo.Length); // lazy
 
-                var track = new AudioTrack(id);
-                if (!Program.TrackLists.TryGetValue(Message.Guild.Id, out var list)) list = Program.TrackLists[Message.Guild.Id] = new TrackQueue(Client, Message.Guild.Id);
+                AudioTrack track = new AudioTrack(id);
+                if (!Program.TrackLists.TryGetValue(Message.Guild.Id, out TrackQueue list))
+                {
+                    list = Program.TrackLists[Message.Guild.Id] = new TrackQueue(Client, Message.Guild.Id);
+                }
+
                 list.Tracks.Add(track);
 
                 Message.Channel.SendMessage($"Song \"{track.Title}\" has been added to the queue");
 
                 if (voiceClient.State < MediaConnectionState.Ready || voiceClient.Channel.Id != channel.Id)
+                {
                     voiceClient.Connect(channel.Id, new VoiceConnectionProperties() { Deafened = true });
-                else if (!list.Running) 
+                }
+                else if (!list.Running)
+                {
                     list.Start();
+                }
             }
-            else Message.Channel.SendMessage("Please enter a valid YouTube video URL");
+            else
+            {
+                Message.Channel.SendMessage("Please enter a valid YouTube video URL");
+            }
         }
     }
 }

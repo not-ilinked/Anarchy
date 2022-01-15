@@ -9,15 +9,12 @@ namespace Discord
     {
         internal readonly DiscordParameter<ChannelType> TypeProperty = new DiscordParameter<ChannelType>();
         [JsonProperty("type")]
-        private ChannelType _type
-        {
-            get { return TypeProperty; }
-        }
+        private ChannelType _type => TypeProperty;
 
         public bool News
         {
-            get { return TypeProperty == ChannelType.News; }
-            set { TypeProperty.Value = value ? ChannelType.News : ChannelType.Text; }
+            get => TypeProperty == ChannelType.News;
+            set => TypeProperty.Value = value ? ChannelType.News : ChannelType.Text;
         }
 
         public bool ShouldSerialize_type()
@@ -29,8 +26,8 @@ namespace Discord
         [JsonProperty("topic")]
         public string Topic
         {
-            get { return TopicProperty; }
-            set { TopicProperty.Value = value; }
+            get => TopicProperty;
+            set => TopicProperty.Value = value;
         }
 
 
@@ -44,8 +41,8 @@ namespace Discord
         [JsonProperty("nsfw")]
         public bool Nsfw
         {
-            get { return NsfwProperty; }
-            set { NsfwProperty.Value = value; }
+            get => NsfwProperty;
+            set => NsfwProperty.Value = value;
         }
 
 
@@ -59,8 +56,8 @@ namespace Discord
         [JsonProperty("rate_limit_per_user")]
         public int SlowMode
         {
-            get { return SlowModeProperty; }
-            set { SlowModeProperty.Value = value; }
+            get => SlowModeProperty;
+            set => SlowModeProperty.Value = value;
         }
 
 

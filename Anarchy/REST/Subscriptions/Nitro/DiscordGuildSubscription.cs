@@ -18,13 +18,7 @@ namespace Discord
         private readonly ulong _guildId;
 #pragma warning restore CS0649
 
-        public MinimalGuild Guild
-        {
-            get
-            {
-                return new MinimalGuild(_guildId).SetClient(Client);
-            }
-        }
+        public MinimalGuild Guild => new MinimalGuild(_guildId).SetClient(Client);
 
 
         [JsonProperty("ended")]

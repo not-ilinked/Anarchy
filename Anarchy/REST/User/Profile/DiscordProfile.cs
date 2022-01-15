@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
 
 namespace Discord
 {
@@ -8,7 +8,7 @@ namespace Discord
     {
         public DiscordProfile()
         {
-            OnClientUpdated += (sender, e) => 
+            OnClientUpdated += (sender, e) =>
             {
                 User.SetClient(Client);
                 MutualGuilds.SetClientsInList(Client);

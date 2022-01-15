@@ -4,12 +4,12 @@ namespace Discord
 {
     public class MessageEditProperties
     {
-        private DiscordParameter<string> _contentProperty = new DiscordParameter<string>();
+        private readonly DiscordParameter<string> _contentProperty = new DiscordParameter<string>();
         [JsonProperty("content")]
         public string Content
         {
-            get { return _contentProperty; }
-            set { _contentProperty.Value = value; }
+            get => _contentProperty;
+            set => _contentProperty.Value = value;
         }
 
         public bool ShouldSerializeContent()
@@ -18,12 +18,12 @@ namespace Discord
         }
 
 
-        private DiscordParameter<DiscordEmbed> _embedProperty = new DiscordParameter<DiscordEmbed>();
+        private readonly DiscordParameter<DiscordEmbed> _embedProperty = new DiscordParameter<DiscordEmbed>();
         [JsonProperty("embed")]
         public DiscordEmbed Embed
         {
-            get { return _embedProperty; }
-            set { _embedProperty.Value = value; }
+            get => _embedProperty;
+            set => _embedProperty.Value = value;
         }
 
         public bool ShouldSerializeEmbed()
@@ -32,12 +32,12 @@ namespace Discord
         }
 
 
-        private DiscordParameter<MessageFlags> _flagProperty = new DiscordParameter<MessageFlags>();
+        private readonly DiscordParameter<MessageFlags> _flagProperty = new DiscordParameter<MessageFlags>();
         [JsonProperty("flags")]
         public MessageFlags Flags
         {
-            get { return _flagProperty; }
-            set { _flagProperty.Value = value; }
+            get => _flagProperty;
+            set => _flagProperty.Value = value;
         }
 
         public bool ShouldSerializeFlags()

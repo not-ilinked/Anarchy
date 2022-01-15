@@ -1,5 +1,4 @@
-﻿using System.Drawing;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace Discord
 {
@@ -12,8 +11,8 @@ namespace Discord
         [JsonProperty("name")]
         public string Name
         {
-            get { return NameProperty; }
-            set { NameProperty.Value = value; }
+            get => NameProperty;
+            set => NameProperty.Value = value;
         }
 
 
@@ -26,8 +25,8 @@ namespace Discord
         [JsonProperty("icon")]
         public DiscordImage Icon
         {
-            get { return IconProperty; }
-            set { IconProperty.Value = value; }
+            get => IconProperty;
+            set => IconProperty.Value = value;
         }
 
 

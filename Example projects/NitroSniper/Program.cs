@@ -1,15 +1,15 @@
-﻿using System;
-using System.Text.RegularExpressions;
-using Discord;
+﻿using Discord;
 using Discord.Gateway;
+using System;
+using System.Text.RegularExpressions;
 
 namespace NitroSniper
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
-            var ok = BitConverter.GetBytes(65535);
+            byte[] ok = BitConverter.GetBytes(65535);
 
             Console.Write("Token: ");
             string token = Console.ReadLine();
@@ -26,7 +26,7 @@ namespace NitroSniper
         {
             const string giftPrefix = "discord.gift/";
 
-            var match = Regex.Match(args.Message.Content, giftPrefix + ".{16,24}");
+            Match match = Regex.Match(args.Message.Content, giftPrefix + ".{16,24}");
 
             if (match.Success)
             {

@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Discord
@@ -10,10 +9,12 @@ namespace Discord
 #pragma warning disable IDE1006
         public static async Task<IReadOnlyList<GuildChannel>> GetGuildChannelsAsync(this DiscordClient client, ulong guildId)
         {
-            var channels = (await client.HttpClient.GetAsync($"/guilds/{guildId}/channels")).MultipleDeterministic<GuildChannel>().SetClientsInList(client);
+            IReadOnlyList<GuildChannel> channels = (await client.HttpClient.GetAsync($"/guilds/{guildId}/channels")).MultipleDeterministic<GuildChannel>().SetClientsInList(client);
 
-            foreach (var channel in channels)
+            foreach (GuildChannel channel in channels)
+            {
                 channel.GuildId = guildId;
+            }
 
             return channels;
         }
@@ -30,7 +31,7 @@ namespace Discord
 
         public static async Task<GuildChannel> CreateGuildChannelAsync(this DiscordClient client, ulong guildId, string name, ChannelType type, ulong? parentId = null)
         {
-            var channel = (await client.HttpClient.PostAsync($"/guilds/{guildId}/channels", new GuildChannelCreationProperties() { Name = name, Type = type, ParentId = parentId }))
+            GuildChannel channel = (await client.HttpClient.PostAsync($"/guilds/{guildId}/channels", new GuildChannelCreationProperties() { Name = name, Type = type, ParentId = parentId }))
                                             .ParseDeterministic<GuildChannel>().SetClient(client);
 
             channel.GuildId = guildId;
@@ -51,7 +52,7 @@ namespace Discord
 
         public static async Task<DiscordPermissionOverwrite> AddPermissionOverwriteAsync(this DiscordClient client, ulong channelId, ulong affectedId, PermissionOverwriteType type, DiscordPermission allow, DiscordPermission deny)
         {
-            var overwrite = new DiscordPermissionOverwrite() { AffectedId = affectedId, Type = type, Allow = allow, Deny = deny };
+            DiscordPermissionOverwrite overwrite = new DiscordPermissionOverwrite() { AffectedId = affectedId, Type = type, Allow = allow, Deny = deny };
 
             await client.HttpClient.PutAsync($"/channels/{channelId}/permissions/{overwrite.AffectedId}", overwrite);
 
@@ -95,28 +96,59 @@ namespace Discord
             return client.FollowChannelAsync(channelToFollowId, crosspostChannelId).GetAwaiter().GetResult();
         }
 
-        public static async Task<DiscordStageInstance> CreateStageInstanceAsync(this DiscordClient client, ulong channelId, string topic, StagePrivacyLevel privacyLevel = StagePrivacyLevel.GuildOnly) =>
-            (await client.HttpClient.PostAsync("/stage-instances", new { channel_id = channelId, topic, privacy_level = privacyLevel })).Deserialize<DiscordStageInstance>().SetClient(client);
+        public static async Task<DiscordStageInstance> CreateStageInstanceAsync(this DiscordClient client, ulong channelId, string topic, StagePrivacyLevel privacyLevel = StagePrivacyLevel.GuildOnly)
+        {
+            return (await client.HttpClient.PostAsync("/stage-instances", new { channel_id = channelId, topic, privacy_level = privacyLevel })).Deserialize<DiscordStageInstance>().SetClient(client);
+        }
 
-        public static DiscordStageInstance CreateStageInstance(this DiscordClient client, ulong channelId, string topic, StagePrivacyLevel privacyLevel = StagePrivacyLevel.GuildOnly) =>
-            client.CreateStageInstanceAsync(channelId, topic, privacyLevel).GetAwaiter().GetResult();
+        public static DiscordStageInstance CreateStageInstance(this DiscordClient client, ulong channelId, string topic, StagePrivacyLevel privacyLevel = StagePrivacyLevel.GuildOnly)
+        {
+            return client.CreateStageInstanceAsync(channelId, topic, privacyLevel).GetAwaiter().GetResult();
+        }
 
+        public static Task DeleteStageInstanceAsync(this DiscordClient client, ulong channelId)
+        {
+            return client.HttpClient.DeleteAsync("/stage-instances/" + channelId);
+        }
 
-        public static Task DeleteStageInstanceAsync(this DiscordClient client, ulong channelId) => client.HttpClient.DeleteAsync("/stage-instances/" + channelId);
-        public static void DeleteStageInstance(this DiscordClient client, ulong channelId) => client.DeleteStageInstanceAsync(channelId).GetAwaiter().GetResult();
+        public static void DeleteStageInstance(this DiscordClient client, ulong channelId)
+        {
+            client.DeleteStageInstanceAsync(channelId).GetAwaiter().GetResult();
+        }
 
-        private static Task setStageSpeakingAsync(this DiscordClient client, ulong guildId, ulong channelId, string user, bool speaker) => 
-            client.HttpClient.PatchAsync($"/guilds/{guildId}/voice-states/" + user, new { channel_id = channelId, suppress = !speaker });
+        private static Task setStageSpeakingAsync(this DiscordClient client, ulong guildId, ulong channelId, string user, bool speaker)
+        {
+            return client.HttpClient.PatchAsync($"/guilds/{guildId}/voice-states/" + user, new { channel_id = channelId, suppress = !speaker });
+        }
 
-        public static Task SetClientStageSpeakingAsync(this DiscordClient client, ulong guildId, ulong channelId, bool speaker) => client.setStageSpeakingAsync(guildId, channelId, "@me", speaker);
-        public static void SetClientStageSpeaking(this DiscordClient client, ulong guildId, ulong channelId, bool speaker) => client.SetClientStageSpeakingAsync(guildId, channelId, speaker).GetAwaiter().GetResult();
+        public static Task SetClientStageSpeakingAsync(this DiscordClient client, ulong guildId, ulong channelId, bool speaker)
+        {
+            return client.setStageSpeakingAsync(guildId, channelId, "@me", speaker);
+        }
 
-        public static Task SetStageSpeakingAsync(this DiscordClient client, ulong guildId, ulong channelId, ulong userId, bool speaker) => client.setStageSpeakingAsync(guildId, channelId, userId.ToString(), speaker);
-        public static void SetStageSpeaking(this DiscordClient client, ulong guildId, ulong channelId, ulong userId, bool speaker) => client.SetStageSpeakingAsync(guildId, channelId, userId, speaker).GetAwaiter().GetResult();
+        public static void SetClientStageSpeaking(this DiscordClient client, ulong guildId, ulong channelId, bool speaker)
+        {
+            client.SetClientStageSpeakingAsync(guildId, channelId, speaker).GetAwaiter().GetResult();
+        }
 
-        public static async Task<IReadOnlyList<StageDiscoveryItem>> GetDiscoverableStagesAsync(this DiscordClient client) =>
-            (await client.HttpClient.GetAsync("/stage-instances")).Deserialize<List<StageDiscoveryItem>>().SetClientsInList(client);
+        public static Task SetStageSpeakingAsync(this DiscordClient client, ulong guildId, ulong channelId, ulong userId, bool speaker)
+        {
+            return client.setStageSpeakingAsync(guildId, channelId, userId.ToString(), speaker);
+        }
 
-        public static IReadOnlyList<StageDiscoveryItem> GetDiscoverableStages(this DiscordClient client) => client.GetDiscoverableStagesAsync().GetAwaiter().GetResult();
+        public static void SetStageSpeaking(this DiscordClient client, ulong guildId, ulong channelId, ulong userId, bool speaker)
+        {
+            client.SetStageSpeakingAsync(guildId, channelId, userId, speaker).GetAwaiter().GetResult();
+        }
+
+        public static async Task<IReadOnlyList<StageDiscoveryItem>> GetDiscoverableStagesAsync(this DiscordClient client)
+        {
+            return (await client.HttpClient.GetAsync("/stage-instances")).Deserialize<List<StageDiscoveryItem>>().SetClientsInList(client);
+        }
+
+        public static IReadOnlyList<StageDiscoveryItem> GetDiscoverableStages(this DiscordClient client)
+        {
+            return client.GetDiscoverableStagesAsync().GetAwaiter().GetResult();
+        }
     }
 }

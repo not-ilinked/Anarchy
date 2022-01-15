@@ -9,11 +9,13 @@ namespace Discord
 
         public string Name
         {
-            get { return _name; }
+            get => _name;
             set
             {
                 if (value.Length > 256)
+                {
                     throw new EmbedException(EmbedError.AuthorNameToolong);
+                }
 
                 _name = value;
             }

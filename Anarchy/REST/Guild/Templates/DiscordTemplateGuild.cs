@@ -1,6 +1,5 @@
-﻿using System.Collections.Generic;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace Discord
 {
@@ -33,21 +32,22 @@ namespace Discord
 
         [JsonProperty("channels")]
         [JsonConverter(typeof(DeepJsonConverter<GuildChannel>))]
-        private List<GuildChannel> _channels;
+        private readonly List<GuildChannel> _channels;
 
-        public IReadOnlyList<GuildChannel> Channels
-        {
-            get { return _channels; }
-        }
+        public IReadOnlyList<GuildChannel> Channels => _channels;
 
 
         internal void SetGuildId(ulong guildId)
         {
-            foreach (var role in Roles)
+            foreach (DiscordRole role in Roles)
+            {
                 role.GuildId = guildId;
+            }
 
-            foreach (var channel in Channels)
+            foreach (GuildChannel channel in Channels)
+            {
                 channel.GuildId = guildId;
+            }
         }
     }
 }

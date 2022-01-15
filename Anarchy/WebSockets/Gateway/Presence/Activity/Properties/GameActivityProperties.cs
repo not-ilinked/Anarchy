@@ -12,10 +12,7 @@ namespace Discord.Gateway
 
 
         [JsonProperty("type")]
-        public new ActivityType Type
-        {
-            get { return ActivityType.Game; }
-        }
+        public new ActivityType Type => ActivityType.Game;
 
 
         [JsonProperty("details")]
@@ -27,12 +24,12 @@ namespace Discord.Gateway
 
 
         [JsonProperty("timestamps")]
-        private TimestampProperties _timestamps;
+        private readonly TimestampProperties _timestamps;
 
         public TimeSpan Elapsed
         {
-            get { return _timestamps.Start; }
-            set { _timestamps.Start = value; }
+            get => _timestamps.Start;
+            set => _timestamps.Start = value;
         }
     }
 }

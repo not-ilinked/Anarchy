@@ -1,8 +1,6 @@
-﻿using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Discord.Gateway
@@ -12,17 +10,23 @@ namespace Discord.Gateway
         public static IReadOnlyList<SocketGuild> GetCachedGuilds(this DiscordSocketClient client)
         {
             if (!client.Config.Cache)
+            {
                 throw new NotSupportedException("Caching is disabled for this client.");
+            }
 
             lock (client.GuildCache.Lock)
+            {
                 return client.GuildCache.Values.ToList();
+            }
         }
 
 
         public static SocketGuild GetCachedGuild(this DiscordSocketClient client, ulong guildId)
         {
             if (!client.Config.Cache)
+            {
                 throw new NotSupportedException("Caching is disabled for this client.");
+            }
 
             try
             {
@@ -52,18 +56,22 @@ namespace Discord.Gateway
 
         public static DiscordChannelSettings GetChannelSettings(this DiscordSocketClient client, ulong channelId)
         {
-            foreach (var settings in client.PrivateChannelSettings)
+            foreach (DiscordChannelSettings settings in client.PrivateChannelSettings)
             {
                 if (settings.Id == channelId)
+                {
                     return settings;
+                }
             }
 
-            foreach (var guildSettings in client.GuildSettings.Values)
+            foreach (ClientGuildSettings guildSettings in client.GuildSettings.Values)
             {
-                foreach (var channel in guildSettings.ChannelOverrides)
+                foreach (DiscordChannelSettings channel in guildSettings.ChannelOverrides)
                 {
                     if (channel.Id == channelId)
+                    {
                         return channel;
+                    }
                 }
             }
 
@@ -130,12 +138,14 @@ namespace Discord.Gateway
         }
 
 
-        public static void SubscribeToGuildEvents(this DiscordSocketClient client, ulong guildId) => SetGuildSubscriptions(client, guildId, new GuildSubscriptionProperties() { Typing = true, Activities = true, Threads = true });
-
+        public static void SubscribeToGuildEvents(this DiscordSocketClient client, ulong guildId)
+        {
+            SetGuildSubscriptions(client, guildId, new GuildSubscriptionProperties() { Typing = true, Activities = true, Threads = true });
+        }
 
         public static Task<IReadOnlyList<GuildMember>> GetGuildChannelMembersAsync(this DiscordSocketClient client, ulong guildId, ulong channelId, uint limit = 0)
         {
-            var completionSource = new TaskCompletionSource<IReadOnlyList<GuildMember>>();
+            TaskCompletionSource<IReadOnlyList<GuildMember>> completionSource = new TaskCompletionSource<IReadOnlyList<GuildMember>>();
             List<GuildMember> members = new List<GuildMember>();
 
             // maybe could've made it start from the last chunk it received,
@@ -158,16 +168,18 @@ namespace Discord.Gateway
                 {
                     int membersAccordingToRoles = 0;
 
-                    foreach (var group in e.Groups)
+                    foreach (MemberListGroup group in e.Groups)
+                    {
                         membersAccordingToRoles += group.Count;
+                    }
 
                     try
-                    { 
-                        var syncOps = e.Operations.Where(o => o.Type == "SYNC").ToList();
+                    {
+                        List<MemberListUpdateOperation> syncOps = e.Operations.Where(o => o.Type == "SYNC").ToList();
 
                         for (int i = syncOps.Count - 1; i >= 0; i--)
                         {
-                            var operation = syncOps[i];
+                            MemberListUpdateOperation operation = syncOps[i];
 
                             if (operation.Type == "SYNC")
                             {
@@ -183,7 +195,9 @@ namespace Discord.Gateway
                                 else if (i == 0)
                                 {
                                     if (members.Count == 100)
+                                    {
                                         client.SetGuildSubscriptions(guildId, new GuildSubscriptionProperties() { Channels = { { channelId, CreateChunks(0, false) } } });
+                                    }
 
                                     client.SetGuildSubscriptions(guildId, new GuildSubscriptionProperties() { Channels = { { channelId, CreateChunks(operation.Range[1] + 1, true) } } });
                                 }
@@ -218,6 +232,9 @@ namespace Discord.Gateway
             return completionSource.Task;
         }
 
-        public static IReadOnlyList<GuildMember> GetGuildChannelMembers(this DiscordSocketClient client, ulong guildId, ulong channelId, uint limit = 0) => client.GetGuildChannelMembersAsync(guildId, channelId, limit).GetAwaiter().GetResult();
+        public static IReadOnlyList<GuildMember> GetGuildChannelMembers(this DiscordSocketClient client, ulong guildId, ulong channelId, uint limit = 0)
+        {
+            return client.GetGuildChannelMembersAsync(guildId, channelId, limit).GetAwaiter().GetResult();
+        }
     }
 }

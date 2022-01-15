@@ -17,9 +17,13 @@ namespace Discord
             get
             {
                 if (_splashHash == null)
+                {
                     return null;
+                }
                 else
+                {
                     return new DiscordCDNImage(CDNEndpoints.Splash, Id, _splashHash);
+                }
             }
         }
 

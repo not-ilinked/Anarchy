@@ -15,7 +15,10 @@ namespace Discord
         #region management
         public static async Task<DiscordMessage> SendMessageAsync(this DiscordClient client, ulong channelId, MessageProperties properties)
         {
-            if (properties.ReplyTo != null) properties.ReplyTo.ChannelId = channelId;
+            if (properties.ReplyTo != null)
+            {
+                properties.ReplyTo.ChannelId = channelId;
+            }
 
             return (await client.HttpClient.PostAsync($"/channels/{channelId}/messages", properties))
                                  .Deserialize<DiscordMessage>().SetClient(client);
@@ -24,7 +27,7 @@ namespace Discord
         public static DiscordMessage SendMessage(this DiscordClient client, ulong channelId, MessageProperties properties)
         {
             return client.SendMessageAsync(channelId, properties).GetAwaiter().GetResult();
-        } 
+        }
 
         public static async Task<DiscordMessage> SendMessageAsync(this DiscordClient client, ulong channelId, string message, bool tts = false, DiscordEmbed embed = null)
         {
@@ -162,10 +165,12 @@ namespace Discord
 
         public static async Task TriggerTypingAsync(this DiscordClient client, ulong channelId)
         {
-            var resp = await client.HttpClient.PostAsync($"/channels/{channelId}/typing");
+            DiscordHttpResponse resp = await client.HttpClient.PostAsync($"/channels/{channelId}/typing");
 
             if (resp.ToString().Contains("cooldown"))
+            {
                 throw new RateLimitException(resp.Deserialize<JObject>().GetValue("message_send_cooldown_ms").ToObject<int>());
+            }
         }
 
         /// <summary>
@@ -187,7 +192,9 @@ namespace Discord
         public static async Task<IReadOnlyList<DiscordMessage>> GetChannelMessagesAsync(this DiscordClient client, ulong channelId, MessageFilters filters = null)
         {
             if (filters == null)
+            {
                 filters = new MessageFilters();
+            }
 
             const int messagesPerRequest = 100;
 
@@ -196,25 +203,59 @@ namespace Discord
             while (true)
             {
                 string parameters = "";
-                if (filters.Limit.HasValue) parameters += $"limit={(uint)Math.Min(messagesPerRequest, filters.Limit.Value - messages.Count)}&";
-                else parameters += $"limit={messagesPerRequest}&";
-                if (filters.BeforeId.HasValue) parameters += $"before={filters.BeforeId.Value}&";
-                if (filters.AfterId.HasValue) parameters += $"after={filters.AfterId.Value}&";
-                if (filters.AuthorId.HasValue) parameters += $"author_id={filters.AuthorId}&";
-                if (filters.MentioningUserId.HasValue) parameters += $"mentions={filters.MentioningUserId}&";
-                if (filters.Has.HasValue) parameters += $"has={filters.Has.ToString().ToLower()}&";
-                if (!string.IsNullOrEmpty(filters.Content)) parameters += $"content={filters.Content}";
-                
-                var newMessages = (await client.HttpClient.GetAsync($"/channels/{channelId}/messages?{parameters}"))
+                if (filters.Limit.HasValue)
+                {
+                    parameters += $"limit={(uint)Math.Min(messagesPerRequest, filters.Limit.Value - messages.Count)}&";
+                }
+                else
+                {
+                    parameters += $"limit={messagesPerRequest}&";
+                }
+
+                if (filters.BeforeId.HasValue)
+                {
+                    parameters += $"before={filters.BeforeId.Value}&";
+                }
+
+                if (filters.AfterId.HasValue)
+                {
+                    parameters += $"after={filters.AfterId.Value}&";
+                }
+
+                if (filters.AuthorId.HasValue)
+                {
+                    parameters += $"author_id={filters.AuthorId}&";
+                }
+
+                if (filters.MentioningUserId.HasValue)
+                {
+                    parameters += $"mentions={filters.MentioningUserId}&";
+                }
+
+                if (filters.Has.HasValue)
+                {
+                    parameters += $"has={filters.Has.ToString().ToLower()}&";
+                }
+
+                if (!string.IsNullOrEmpty(filters.Content))
+                {
+                    parameters += $"content={filters.Content}";
+                }
+
+                IReadOnlyList<DiscordMessage> newMessages = (await client.HttpClient.GetAsync($"/channels/{channelId}/messages?{parameters}"))
                                                           .Deserialize<IReadOnlyList<DiscordMessage>>().SetClientsInList(client);
 
                 messages.AddRange(newMessages);
 
                 if (newMessages.Count > 0)
+                {
                     filters.BeforeId = newMessages.Last().Id;
+                }
 
                 if (newMessages.Count < messagesPerRequest)
+                {
                     break;
+                }
             }
 
             return messages;
@@ -225,7 +266,7 @@ namespace Discord
             return client.GetChannelMessagesAsync(channelId, filters).GetAwaiter().GetResult();
         }
 
-        
+
         /// <summary>
         /// Gets a list of messages from a channel
         /// </summary>

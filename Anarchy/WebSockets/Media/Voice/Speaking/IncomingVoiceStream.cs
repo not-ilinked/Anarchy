@@ -17,10 +17,7 @@ namespace Discord.Media
         internal int SilenceFramesReceived { get; set; }
 
         public bool Closed { get; private set; }
-        public int QueuedPackets
-        {
-            get { return _packets.Count; }
-        }
+        public int QueuedPackets => _packets.Count;
 
         internal IncomingVoiceStream(DiscordMediaConnection session, ulong userId)
         {
@@ -51,7 +48,9 @@ namespace Discord.Media
         public Task<DiscordVoicePacket> ReadAsync()
         {
             if (_packets.TryDequeue(out DiscordVoicePacket packet))
+            {
                 return Task.FromResult(packet);
+            }
             else if (Session.State == MediaConnectionState.Ready && !Closed)
             {
                 TaskCompletionSource<DiscordVoicePacket> task = new TaskCompletionSource<DiscordVoicePacket>();
@@ -76,7 +75,9 @@ namespace Discord.Media
                 return task.Task;
             }
             else
+            {
                 throw new InvalidOperationException("The parent session or this receiver has been closed.");
+            }
         }
 
         public DiscordVoicePacket Read()

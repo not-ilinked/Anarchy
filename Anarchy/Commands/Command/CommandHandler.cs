@@ -23,14 +23,18 @@ namespace Discord.Commands
             Assembly executable = Assembly.GetEntryAssembly();
 
             Commands = new Dictionary<string, DiscordCommand>();
-            foreach (var type in executable.GetTypes())
+            foreach (Type type in executable.GetTypes())
             {
                 if (typeof(CommandBase).IsAssignableFrom(type) && TryGetAttribute(type.GetCustomAttributes(), out CommandAttribute attr))
                 {
                     if (Commands.ContainsKey(attr.Name))
+                    {
                         throw new InvalidOperationException($"More than 1 command has the name \"{attr.Name}\"");
+                    }
                     else
+                    {
                         Commands.Add(attr.Name, new DiscordCommand(type, attr));
+                    }
                 }
             }
         }
@@ -50,7 +54,7 @@ namespace Discord.Commands
 
                     for (int i = 0; i < command.Parameters.Count; i++)
                     {
-                        var param = command.Parameters[i];
+                        CommandParameter param = command.Parameters[i];
 
                         if (i < parts.Count)
                         {
@@ -59,26 +63,36 @@ namespace Discord.Commands
                                 object value;
 
                                 if (param.Property.PropertyType == typeof(string) && i == command.Parameters.Count - 1)
+                                {
                                     value = string.Join(" ", parts.Skip(i));
+                                }
                                 else if (parts[i].StartsWith("<") && parts[i].EndsWith(">"))
+                                {
                                     value = ParseReference(args.Message, param.Property.PropertyType, parts[i]);
+                                }
                                 else
+                                {
                                     value = parts[i];
+                                }
 
                                 if (!param.Property.PropertyType.IsAssignableFrom(value.GetType()))
+                                {
                                     value = Convert.ChangeType(value, param.Property.PropertyType);
+                                }
 
                                 param.Property.SetValue(inst, value);
                             }
-                            catch (Exception ex) 
-                            { 
+                            catch (Exception ex)
+                            {
                                 inst.HandleError(param.Name, parts[i], ex);
 
                                 return;
                             }
                         }
                         else if (param.Optional)
+                        {
                             break;
+                        }
                         else
                         {
                             inst.HandleError(param.Name, null, new ArgumentNullException("Too few arguments provided"));
@@ -100,7 +114,7 @@ namespace Discord.Commands
             // Get the object's ID (always last thing in the sequence)
 
             MatchCollection matches = Regex.Matches(value, @"\d{18,}");
-            if (matches.Count > 0) 
+            if (matches.Count > 0)
             {
                 Match match = matches[matches.Count - 1];
 
@@ -117,27 +131,41 @@ namespace Discord.Commands
                             if (expectedType.IsAssignableFrom(typeof(DiscordChannel)))
                             {
                                 if (_client.Config.Cache)
+                                {
                                     return _client.GetChannel(anyId);
+                                }
                                 else
+                                {
                                     throw new InvalidOperationException("Caching must be enabled to parse DiscordChannels");
+                                }
                             }
                             else
+                            {
                                 return new MinimalTextChannel(anyId).SetClient(_client);
+                            }
                         }
                         else
+                        {
                             throw new ArgumentException("Invalid reference type");
+                        }
                     }
                     else if (expectedType == typeof(DiscordRole))
                     {
                         if (forSpecific.StartsWith("@&"))
                         {
                             if (_client.Config.Cache)
+                            {
                                 return _client.GetGuildRole(anyId);
+                            }
                             else
+                            {
                                 throw new InvalidOperationException("Caching must be enabled to parse DiscordChannels");
+                            }
                         }
                         else
+                        {
                             throw new ArgumentException("Invalid reference type");
+                        }
                     }
                     else if (expectedType.IsAssignableFrom(typeof(PartialEmoji)))
                     {
@@ -151,42 +179,54 @@ namespace Discord.Commands
                             if (expectedType == typeof(DiscordEmoji))
                             {
                                 if (_client.Config.Cache)
+                                {
                                     return _client.GetGuildEmoji(anyId);
+                                }
                                 else
+                                {
                                     throw new InvalidOperationException("Caching must be enabled to parase DiscordEmojis");
+                                }
                             }
                             else
+                            {
                                 return new PartialEmoji(anyId, name, animated).SetClient(_client);
+                            }
                         }
                         else
+                        {
                             throw new ArgumentException("Invalid reference type");
+                        }
                     }
                     else if (expectedType == typeof(DiscordUser))
                     {
                         if (forSpecific == "@" || forSpecific == "@!")
+                        {
                             return message.Mentions.First(m => m.Id == anyId);
+                        }
                     }
                     else
+                    {
                         return anyId;
+                    }
                 }
             }
-            
+
             throw new ArgumentException("Invalid reference");
         }
 
-            internal static bool TryGetAttribute<TAttr>(IEnumerable<object> attributes, out TAttr attr) where TAttr : Attribute
+        internal static bool TryGetAttribute<TAttr>(IEnumerable<object> attributes, out TAttr attr) where TAttr : Attribute
+        {
+            foreach (object attribute in attributes)
             {
-                foreach (var attribute in attributes)
+                if (attribute.GetType() == typeof(TAttr))
                 {
-                    if (attribute.GetType() == typeof(TAttr))
-                    {
-                        attr = (TAttr)attribute;
-                        return true;
-                    }
+                    attr = (TAttr)attribute;
+                    return true;
                 }
-
-                attr = null;
-                return false;
             }
+
+            attr = null;
+            return false;
+        }
     }
 }

@@ -15,18 +15,12 @@ namespace Discord.Gateway
         [JsonProperty("channel_id")]
         private readonly ulong _channelId;
 
-        public MinimalTextChannel Channel
-        {
-            get { return new MinimalTextChannel(_channelId).SetClient(Client); }
-        }
+        public MinimalTextChannel Channel => new MinimalTextChannel(_channelId).SetClient(Client);
 
 
         [JsonProperty("guild_id")]
         private readonly ulong _guildId;
 
-        public MinimalGuild Guild
-        {
-            get { return new MinimalGuild(_guildId).SetClient(Client); }
-        }
+        public MinimalGuild Guild => new MinimalGuild(_guildId).SetClient(Client);
     }
 }

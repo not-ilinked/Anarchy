@@ -21,37 +21,49 @@ namespace Anarchy
             get
             {
                 lock (Lock)
+                {
                     return base[i];
+                }
             }
             set
             {
                 lock (Lock)
+                {
                     base[i] = value;
+                }
             }
         }
 
         public List<T> CreateCopy()
         {
             lock (Lock)
+            {
                 return new List<T>(this);
+            }
         }
 
         public new void Add(T item)
         {
             lock (Lock)
+            {
                 base.Add(item);
+            }
         }
 
         public new void Remove(T item)
         {
             lock (Lock)
+            {
                 base.Remove(item);
+            }
         }
 
         public new void AddRange(IEnumerable<T> items)
         {
             lock (Lock)
+            {
                 base.AddRange(items);
+            }
         }
 
         public bool ReplaceFirst(Predicate<T> match, T newItem)
@@ -93,13 +105,17 @@ namespace Anarchy
         public new int FindIndex(Predicate<T> match)
         {
             lock (Lock)
+            {
                 return base.FindIndex(match);
+            }
         }
 
         public new void Clear()
         {
             lock (Lock)
+            {
                 base.Clear();
+            }
         }
     }
 }

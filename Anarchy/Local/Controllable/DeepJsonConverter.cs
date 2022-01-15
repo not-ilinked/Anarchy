@@ -87,14 +87,20 @@ namespace Discord
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
             if (reader.TokenType == JsonToken.StartObject)
+            {
                 return JObject.Load(reader).ParseDeterministic<T>();
+            }
             else if (reader.TokenType == JsonToken.StartArray)
+            {
                 return Activator.CreateInstance(objectType, JArray.Load(reader).MultipleDeterministic<T>());
+            }
             else
+            {
                 throw new JsonException("Invalid use of DeepJsonConverter");
+            }
         }
 
-        public override void WriteJson(JsonWriter writer,  object value, JsonSerializer serializer)
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
             throw new NotImplementedException();
         }

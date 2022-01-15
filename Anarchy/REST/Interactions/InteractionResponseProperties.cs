@@ -9,23 +9,27 @@ namespace Discord
         [JsonProperty("tts")]
         public bool Tts
         {
-            get { return _ttsParam; }
-            set { _ttsParam.Value = value; }
+            get => _ttsParam;
+            set => _ttsParam.Value = value;
         }
 
-        public bool ShouldSerializeTts() => _ttsParam.Set;
-
+        public bool ShouldSerializeTts()
+        {
+            return _ttsParam.Set;
+        }
 
         private readonly DiscordParameter<string> _contentParam = new DiscordParameter<string>();
         [JsonProperty("content")]
         public string Content
         {
-            get { return _contentParam; }
-            set { _contentParam.Value = value; }
+            get => _contentParam;
+            set => _contentParam.Value = value;
         }
 
-        public bool ShouldSerializeContent() => _contentParam.Set;
-
+        public bool ShouldSerializeContent()
+        {
+            return _contentParam.Set;
+        }
 
         private readonly DiscordParameter<List<DiscordEmbed>> _embedParam = new DiscordParameter<List<DiscordEmbed>>();
         [JsonProperty("embeds")]
@@ -34,43 +38,47 @@ namespace Discord
         [JsonIgnore]
         public DiscordEmbed Embed
         {
-            get
-            {
-                return _embedParam.Value?[0];
-            }
+            get => _embedParam.Value?[0];
             set
             {
-                if (value == null) _embedParam.Value = null;
-                else _embedParam.Value = new List<DiscordEmbed>() { value };
+                if (value == null)
+                {
+                    _embedParam.Value = null;
+                }
+                else
+                {
+                    _embedParam.Value = new List<DiscordEmbed>() { value };
+                }
             }
         }
 
-        public bool ShouldSerialize_embeds() => _embedParam.Set;
-
+        public bool ShouldSerialize_embeds()
+        {
+            return _embedParam.Set;
+        }
 
         private readonly DiscordParameter<List<MessageComponent>> _componentParam = new DiscordParameter<List<MessageComponent>>();
         [JsonProperty("components")]
         public List<MessageComponent> Components
         {
-            get { return _componentParam; }
-            set { _componentParam.Value = value; }
+            get => _componentParam;
+            set => _componentParam.Value = value;
         }
 
-        public bool ShouldSerializeComponents() => _componentParam.Set;
-
+        public bool ShouldSerializeComponents()
+        {
+            return _componentParam.Set;
+        }
 
         [JsonProperty("flags")]
-        private int _flags
-        {
-            get
-            {
-                return 64;
-            }
-        }
+        private int _flags => 64;
 
         [JsonIgnore]
         public bool Ephemeral { get; set; }
 
-        public bool ShouldSerialize_flags() => Ephemeral;
+        public bool ShouldSerialize_flags()
+        {
+            return Ephemeral;
+        }
     }
 }

@@ -23,11 +23,17 @@ namespace Discord
         public OverwrittenPermissionState GetPermissionState(DiscordPermission permission)
         {
             if (Allow.HasFlag(permission))
+            {
                 return OverwrittenPermissionState.Allow;
+            }
             else if (Deny.HasFlag(permission))
+            {
                 return OverwrittenPermissionState.Deny;
+            }
             else
+            {
                 return OverwrittenPermissionState.Inherit;
+            }
         }
     }
 }

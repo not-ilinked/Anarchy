@@ -12,7 +12,9 @@ namespace Discord
         {
             StatusCode = statusCode;
             if (content != null && content.Length != 0)
+            {
                 Body = JToken.Parse(content);
+            }
         }
 
 

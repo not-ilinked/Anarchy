@@ -16,16 +16,17 @@ namespace Discord
         private List<DiscordEmbed> _embeds;
         public DiscordEmbed Embed
         {
-            get
-            {
-                return _embeds == null || _embeds.Count == 0 ? null : _embeds[0];
-            }
+            get => _embeds == null || _embeds.Count == 0 ? null : _embeds[0];
             set
             {
                 if (value == null)
+                {
                     _embeds = null;
+                }
                 else
+                {
                     _embeds = new List<DiscordEmbed>() { value };
+                }
             }
         }
 
@@ -34,8 +35,8 @@ namespace Discord
         [JsonProperty("username")]
         public string Username
         {
-            get { return NameProperty; }
-            set { NameProperty.Value = value; }
+            get => NameProperty;
+            set => NameProperty.Value = value;
         }
 
 
@@ -49,8 +50,8 @@ namespace Discord
         [JsonProperty("avatar_url")]
         public string AvatarUrl
         {
-            get { return AvatarProperty; }
-            set { AvatarProperty.Value = value; }
+            get => AvatarProperty;
+            set => AvatarProperty.Value = value;
         }
 
 

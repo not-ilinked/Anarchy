@@ -49,7 +49,10 @@ namespace AntiRaid
 
                         _raiders.RemoveAt(0);
                     }
-                    else Thread.Sleep(10);
+                    else
+                    {
+                        Thread.Sleep(10);
+                    }
                 }
             });
         }

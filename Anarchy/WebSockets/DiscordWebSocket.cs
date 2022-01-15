@@ -28,7 +28,9 @@ namespace Discord.WebSockets
         public void SetProxy(ProxyClient client)
         {
             if (client != null && client.Type == ProxyType.HTTP)
+            {
                 _socket.SetProxy($"http://{client.Host}:{client.Port}", client.Username, client.Password);
+            }
         }
 
         public void Connect()

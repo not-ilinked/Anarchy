@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace Discord.Media
 {
@@ -18,14 +16,14 @@ namespace Discord.Media
         private long _nextTick;
         private ushort _sequence;
         private uint _timestamp;
-        private DiscordVoiceClient _client;
+        private readonly DiscordVoiceClient _client;
 
         private uint _bitrate = 64000;
         private AudioApplication _audioApp = AudioApplication.Mixed;
 
         public uint Bitrate
         {
-            get { return _bitrate; }
+            get => _bitrate;
             set
             {
                 _bitrate = value;
@@ -35,9 +33,9 @@ namespace Discord.Media
 
         public AudioApplication AudioApplication
         {
-            get { return _audioApp; }
-            set 
-            { 
+            get => _audioApp;
+            set
+            {
                 _audioApp = value;
                 UpdateEncoder();
             }
@@ -55,13 +53,17 @@ namespace Discord.Media
         private List<byte> _toBeUsed = new List<byte>();
 
 
-        private void UpdateEncoder() => _encoder = new OpusEncoder(_bitrate, _audioApp, _packetLoss);
-
+        private void UpdateEncoder()
+        {
+            _encoder = new OpusEncoder(_bitrate, _audioApp, _packetLoss);
+        }
 
         public void SetSpeakingState(DiscordSpeakingFlags flags)
         {
             if (_client.State < MediaConnectionState.Ready)
+            {
                 throw new InvalidOperationException("Client is not currently connected");
+            }
 
             _client.Connection.Send(DiscordMediaOpcode.Speaking, new DiscordSpeakingRequest()
             {
@@ -75,18 +77,24 @@ namespace Discord.Media
         public int Write(byte[] buffer, int offset)
         {
             if (_client.State < MediaConnectionState.Ready)
+            {
                 throw new InvalidOperationException("Client is not currently connected");
+            }
 
             lock (_voiceLock)
             {
                 if (_nextTick == -1)
+                {
                     _nextTick = Environment.TickCount;
+                }
                 else
                 {
                     long distance = _nextTick - Environment.TickCount;
 
                     if (distance > 0)
+                    {
                         Thread.Sleep((int)distance);
+                    }
                 }
 
                 byte[] opusFrame = new byte[OpusConverter.FrameBytes];
@@ -113,7 +121,9 @@ namespace Discord.Media
         public int CopyFrom(byte[] buffer, int offset = 0, CancellationToken cancellationToken = default)
         {
             if (_client.State < MediaConnectionState.Ready)
+            {
                 throw new InvalidOperationException("Client is not currently connected");
+            }
 
             _nextTick = -1;
 
@@ -135,10 +145,14 @@ namespace Discord.Media
         public bool CopyFrom(Stream stream, CancellationToken cancellationToken = default)
         {
             if (_client.State < MediaConnectionState.Ready)
+            {
                 throw new InvalidOperationException("Client is not currently connected");
+            }
 
             if (!stream.CanRead)
+            {
                 throw new ArgumentException("Cannot read from stream", "stream");
+            }
 
             _nextTick = -1;
 
@@ -146,7 +160,10 @@ namespace Discord.Media
             while (!cancellationToken.IsCancellationRequested && _client.Connection.State == MediaConnectionState.Ready)
             {
                 int read = stream.Read(buffer, 0, buffer.Length);
-                if (read == 0) return true;
+                if (read == 0)
+                {
+                    return true;
+                }
 
                 byte[] actual = new byte[read];
                 Buffer.BlockCopy(buffer, 0, actual, 0, read);

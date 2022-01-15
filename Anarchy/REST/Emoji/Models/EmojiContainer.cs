@@ -7,12 +7,14 @@ namespace Discord.Gateway
     {
         public EmojiContainer()
         {
-            OnClientUpdated += (sender, e) => 
+            OnClientUpdated += (sender, e) =>
             {
                 Emojis.SetClientsInList(Client);
 
-                foreach (var emoji in Emojis)
+                foreach (DiscordEmoji emoji in Emojis)
+                {
                     emoji.GuildId = GuildId;
+                }
             };
         }
 

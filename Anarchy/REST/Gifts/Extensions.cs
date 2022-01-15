@@ -8,7 +8,7 @@ namespace Discord
     // Things may have been changed (or i've ignored them for whatever reason), so i'll patch everything up once i have data
     public static class GiftsExtensions
     {
-        
+
         public static async Task<string> PurchaseGiftAsync(this DiscordClient client, ulong paymentMethodId, ulong skuId, ulong subPlanId, int expectedAmount)
         {
             return (await client.HttpClient.PostAsync($"/store/skus/{skuId}/purchase", new PurchaseOptions()

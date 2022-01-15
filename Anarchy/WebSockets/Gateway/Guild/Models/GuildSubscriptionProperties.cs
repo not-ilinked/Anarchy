@@ -1,9 +1,5 @@
 ﻿using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Discord.Gateway
 {
@@ -16,31 +12,40 @@ namespace Discord.Gateway
         [JsonProperty("typing")]
         public bool Typing
         {
-            get { return _typeParam; }
-            set { _typeParam.Value = value; }
+            get => _typeParam;
+            set => _typeParam.Value = value;
         }
 
-        public bool ShouldSerializeTyping() => _typeParam.Set;
+        public bool ShouldSerializeTyping()
+        {
+            return _typeParam.Set;
+        }
 
         private readonly DiscordParameter<bool> _threadParam = new DiscordParameter<bool>();
         [JsonProperty("threads")]
         public bool Threads
         {
-            get { return _threadParam; }
-            set { _threadParam.Value = value; }
+            get => _threadParam;
+            set => _threadParam.Value = value;
         }
 
-        public bool ShouldSerializeThreads() => _threadParam.Set;
+        public bool ShouldSerializeThreads()
+        {
+            return _threadParam.Set;
+        }
 
         private readonly DiscordParameter<bool> _activityParam = new DiscordParameter<bool>();
         [JsonProperty("activities")]
         public bool Activities
         {
-            get { return _activityParam; }
-            set { _activityParam.Value = value; }
+            get => _activityParam;
+            set => _activityParam.Value = value;
         }
 
-        public bool ShouldSerializeActivities() => _activityParam.Set;
+        public bool ShouldSerializeActivities()
+        {
+            return _activityParam.Set;
+        }
 
         [JsonProperty("members")]
         public List<ulong> Members { get; set; } = new List<ulong>();

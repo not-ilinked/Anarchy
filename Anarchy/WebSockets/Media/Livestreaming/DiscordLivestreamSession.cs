@@ -57,7 +57,9 @@ namespace Discord.Media
             _connection.OnReady += (c) =>
             {
                 if (StreamerId == Client.User.Id)
+                {
                     Client.Send(GatewayOpcode.GoLiveUpdate, new StreamUpdate() { StreamKey = StreamKey, Paused = false });
+                }
 
                 OnConnected?.Invoke(this);
             };
@@ -74,7 +76,7 @@ namespace Discord.Media
             Client.EndGoLive(_streamKey.Serialize());
             _connection.Close(1000, "Closed by client");
         }
-             
+
         private void HandleMessage(DiscordMediaConnection connection, WebSockets.DiscordWebSocketMessage<DiscordMediaOpcode> message)
         {
             if (message.Opcode == DiscordMediaOpcode.SSRCUpdate)
@@ -95,7 +97,9 @@ namespace Discord.Media
 
                 List<ulong> viewers = Viewers.ToList();
                 if (viewers.Remove(userId))
+                {
                     Viewers = viewers;
+                }
 
                 OnUserDisconnected?.Invoke(this, userId);
             }

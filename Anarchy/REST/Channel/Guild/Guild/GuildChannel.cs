@@ -13,14 +13,8 @@ namespace Discord
         [JsonProperty("guild_id")]
         internal ulong GuildId
         {
-            get
-            {
-                return Guild.Id;
-            }
-            set
-            {
-                Guild = new MinimalGuild(value).SetClient(Client);
-            }
+            get => Guild.Id;
+            set => Guild = new MinimalGuild(value).SetClient(Client);
         }
 
         public MinimalGuild Guild { get; private set; }
@@ -28,7 +22,7 @@ namespace Discord
 
         [JsonProperty("position")]
         public uint Position { get; protected set; }
-        
+
 
         [JsonProperty("parent_id")]
         public ulong? ParentId { get; protected set; }
@@ -78,15 +72,19 @@ namespace Discord
 
         public async Task AddPermissionOverwriteAsync(ulong affectedId, PermissionOverwriteType type, DiscordPermission allow, DiscordPermission deny)
         {
-            var overwrite = await Client.AddPermissionOverwriteAsync(Id, affectedId, type, allow, deny);
+            DiscordPermissionOverwrite overwrite = await Client.AddPermissionOverwriteAsync(Id, affectedId, type, allow, deny);
             List<DiscordPermissionOverwrite> overwrites = PermissionOverwrites.ToList();
 
             int i = overwrites.FindIndex(o => o.AffectedId == o.AffectedId);
 
             if (i == -1)
+            {
                 overwrites.Add(overwrite);
+            }
             else
+            {
                 overwrites[i] = overwrite;
+            }
 
             PermissionOverwrites = overwrites;
         }

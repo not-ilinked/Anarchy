@@ -5,7 +5,7 @@ using System.Drawing.Imaging;
 
 namespace Discord
 {
-    class ImageJsonConverter : JsonConverter
+    internal class ImageJsonConverter : JsonConverter
     {
         public override bool CanRead => false;
 
@@ -38,18 +38,28 @@ namespace Discord
         public override string ToString()
         {
             if (Image == null)
+            {
                 return null;
+            }
 
             string type;
 
             if (ImageFormat.Jpeg.Equals(Image.RawFormat))
+            {
                 type = "jpeg";
+            }
             else if (ImageFormat.Png.Equals(Image.RawFormat))
+            {
                 type = "png";
+            }
             else if (ImageFormat.Gif.Equals(Image.RawFormat))
+            {
                 type = "gif";
+            }
             else
+            {
                 throw new NotSupportedException("File extension not supported");
+            }
 
             return $"data:image/{type};base64,{Convert.ToBase64String((byte[])new ImageConverter().ConvertTo(Image, typeof(byte[])))}";
         }

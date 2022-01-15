@@ -12,8 +12,8 @@ namespace Discord
         public string AccessToken { get; private set; }
 
         [JsonProperty("expires_in")]
-        private int _expiresIn 
-        { 
+        private int _expiresIn
+        {
             set => ExpiresAt = DateTimeOffset.UtcNow.AddSeconds(value);
         }
 
@@ -23,7 +23,7 @@ namespace Discord
         public string RefreshToken { get; private set; }
 
         [JsonProperty("scope")]
-        private string _scope;
+        private readonly string _scope;
         public string[] Scopes => _scope.Split(' ');
     }
 }
