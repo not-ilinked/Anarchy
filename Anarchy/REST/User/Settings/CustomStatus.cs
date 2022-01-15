@@ -8,8 +8,8 @@ namespace Discord
         [JsonProperty("emoji_id")]
         public ulong? EmojiId
         {
-            get { return EmojiProperty; }
-            set { EmojiProperty.Value = value; }
+            get => EmojiProperty;
+            set => EmojiProperty.Value = value;
         }
 
 

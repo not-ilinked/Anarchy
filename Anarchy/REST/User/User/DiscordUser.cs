@@ -30,9 +30,13 @@ namespace Discord
             get
             {
                 if (_avatarHash == null)
+                {
                     return null;
+                }
                 else
+                {
                     return new DiscordCDNImage(CDNEndpoints.Avatar, Id, _avatarHash);
+                }
             }
         }
 
@@ -50,14 +54,15 @@ namespace Discord
             get
             {
                 if (_flags == DiscordBadge.None)
+                {
                     return _publicFlags;
+                }
                 else
+                {
                     return _flags;
+                }
             }
-            protected set
-            {
-                _flags = value;
-            }
+            protected set => _flags = value;
         }
 
 
@@ -70,9 +75,13 @@ namespace Discord
             get
             {
                 if (Discriminator == 0)
+                {
                     return DiscordUserType.Webhook;
+                }
                 else
+                {
                     return _bot ? DiscordUserType.Bot : DiscordUserType.User;
+                }
             }
         }
 
@@ -97,10 +106,7 @@ namespace Discord
         }
 
 
-        public DateTimeOffset CreatedAt
-        {
-            get { return DateTimeOffset.FromUnixTimeMilliseconds((long)((Id >> 22) + 1420070400000UL)); }
-        }
+        public DateTimeOffset CreatedAt => DateTimeOffset.FromUnixTimeMilliseconds((long)((Id >> 22) + 1420070400000UL));
 
 
         internal void Update(DiscordUser user)
@@ -144,7 +150,9 @@ namespace Discord
         public async Task SendFriendRequestAsync()
         {
             if (Id == Client.User.Id)
+            {
                 throw new NotSupportedException("Cannot send a friend request to self.");
+            }
 
             await Client.SendFriendRequestAsync(Username, Discriminator);
         }
@@ -161,7 +169,9 @@ namespace Discord
         public async Task BlockAsync()
         {
             if (Id == Client.User.Id)
+            {
                 throw new NotSupportedException("Cannot block self.");
+            }
 
             await Client.BlockUserAsync(Id);
         }
@@ -178,7 +188,9 @@ namespace Discord
         public async Task RemoveRelationshipAsync()
         {
             if (Id == Client.User.Id)
+            {
                 throw new NotSupportedException("Cannot remove relationship from self.");
+            }
 
             await Client.RemoveRelationshipAsync(Id);
         }

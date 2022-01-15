@@ -12,9 +12,6 @@ namespace Discord.Gateway
         public bool Unavailable { get; private set; }
 
 
-        public bool Removed
-        {
-            get { return !Unavailable; }
-        }
+        public bool Removed => !Unavailable;
     }
 }

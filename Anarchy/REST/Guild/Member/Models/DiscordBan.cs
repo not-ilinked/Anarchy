@@ -20,13 +20,7 @@ namespace Discord
 
         internal ulong GuildId { get; set; }
 
-        public MinimalGuild Guild
-        {
-            get
-            {
-                return new MinimalGuild(GuildId).SetClient(Client);
-            }
-        }
+        public MinimalGuild Guild => new MinimalGuild(GuildId).SetClient(Client);
 
 
         /// <summary>

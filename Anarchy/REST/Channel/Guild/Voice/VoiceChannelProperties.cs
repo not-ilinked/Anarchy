@@ -11,8 +11,8 @@ namespace Discord
         [JsonProperty("bitrate")]
         public uint Bitrate
         {
-            get { return BitrateProperty; }
-            set { BitrateProperty.Value = value; }
+            get => BitrateProperty;
+            set => BitrateProperty.Value = value;
         }
 
 
@@ -26,8 +26,8 @@ namespace Discord
         [JsonProperty("user_limit")]
         public uint UserLimit
         {
-            get { return UserLimitProperty; }
-            set { UserLimitProperty.Value = value; }
+            get => UserLimitProperty;
+            set => UserLimitProperty.Value = value;
         }
 
 

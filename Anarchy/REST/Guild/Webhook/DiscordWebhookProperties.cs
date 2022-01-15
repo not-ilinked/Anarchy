@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using System.Drawing;
 
 namespace Discord
 {
@@ -12,8 +11,8 @@ namespace Discord
         [JsonProperty("name")]
         public string Name
         {
-            get { return NameProperty; }
-            set { NameProperty.Value = value; }
+            get => NameProperty;
+            set => NameProperty.Value = value;
         }
 
 
@@ -27,8 +26,8 @@ namespace Discord
         [JsonProperty("avatar")]
         public DiscordImage Avatar
         {
-            get { return AvatarProperty; }
-            set { AvatarProperty.Value = value; }
+            get => AvatarProperty;
+            set => AvatarProperty.Value = value;
         }
 
 
@@ -42,8 +41,8 @@ namespace Discord
         [JsonProperty("channel_id")]
         public ulong ChannelId
         {
-            get { return ChannelProperty; }
-            set { ChannelProperty.Value = value; }
+            get => ChannelProperty;
+            set => ChannelProperty.Value = value;
         }
 
 

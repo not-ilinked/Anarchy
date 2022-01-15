@@ -13,10 +13,7 @@ namespace Discord.Gateway
 
         public ulong UserId { get; private set; }
         internal ConcurrentDictionary<ulong, DiscordVoiceState> GuildStates { get; private set; }
-        public Dictionary<ulong, DiscordVoiceState> GuildVoiceStates
-        {
-            get { return new Dictionary<ulong, DiscordVoiceState>(GuildStates); }
-        }
+        public Dictionary<ulong, DiscordVoiceState> GuildVoiceStates => new Dictionary<ulong, DiscordVoiceState>(GuildStates);
         public DiscordVoiceState PrivateChannelVoiceState { get; internal set; }
     }
 }

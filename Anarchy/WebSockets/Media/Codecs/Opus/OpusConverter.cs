@@ -19,7 +19,9 @@ namespace Discord.Media
         protected void CheckError(OpusError error)
         {
             if (error < OpusError.OK)
+            {
                 throw new OpusException(error);
+            }
         }
     }
 }

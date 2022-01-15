@@ -1,5 +1,5 @@
-﻿using System;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
+using System;
 
 namespace Discord.Gateway
 {
@@ -8,13 +8,7 @@ namespace Discord.Gateway
         [JsonProperty("channel_id")]
         private readonly ulong _channelId;
 
-        public MinimalTextChannel Channel
-        {
-            get
-            {
-                return new MinimalTextChannel(_channelId).SetClient(Client);
-            }
-        }
+        public MinimalTextChannel Channel => new MinimalTextChannel(_channelId).SetClient(Client);
 
 
         [JsonProperty("guild_id")]
@@ -25,9 +19,13 @@ namespace Discord.Gateway
             get
             {
                 if (_guildId.HasValue)
+                {
                     return new MinimalGuild(_guildId.Value).SetClient(Client);
+                }
                 else
+                {
                     return null;
+                }
             }
         }
 
@@ -42,10 +40,7 @@ namespace Discord.Gateway
 #pragma warning restore CS0649
 
         [JsonIgnore]
-        public DateTimeOffset Timestamp
-        {
-            get { return DateTimeOffset.FromUnixTimeSeconds((long)_timestamp); }
-        }
+        public DateTimeOffset Timestamp => DateTimeOffset.FromUnixTimeSeconds((long)_timestamp);
 
 
         public override string ToString()

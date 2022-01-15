@@ -4,21 +4,21 @@ namespace Discord.Gateway
 {
     public class PresenceProperties
     {
-        private DiscordParameter<UserStatus> _statusParam = new DiscordParameter<UserStatus>();
+        private readonly DiscordParameter<UserStatus> _statusParam = new DiscordParameter<UserStatus>();
         [JsonProperty("status")]
         public UserStatus Status
         {
-            get { return _statusParam; }
-            set { _statusParam.Value = value; }
+            get => _statusParam;
+            set => _statusParam.Value = value;
         }
 
 
-        private DiscordParameter<ActivityProperties> _activityParam = new DiscordParameter<ActivityProperties>();
+        private readonly DiscordParameter<ActivityProperties> _activityParam = new DiscordParameter<ActivityProperties>();
         [JsonProperty("game")]
         public ActivityProperties Activity
         {
-            get { return _activityParam; }
-            set { _activityParam.Value = value; }
+            get => _activityParam;
+            set => _activityParam.Value = value;
         }
 
 

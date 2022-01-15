@@ -9,8 +9,8 @@ namespace Discord
         [JsonProperty("supress_everyone")]
         public bool SupressEveryone
         {
-            get { return _supressProperty; }
-            set { _supressProperty.Value = value; }
+            get => _supressProperty;
+            set => _supressProperty.Value = value;
         }
 
 
@@ -24,8 +24,8 @@ namespace Discord
         [JsonProperty("supress_roles")]
         public bool SupressRoles
         {
-            get { return _supressRolesProperty; }
-            set { _supressRolesProperty.Value = value; }
+            get => _supressRolesProperty;
+            set => _supressRolesProperty.Value = value;
         }
 
 
@@ -39,8 +39,8 @@ namespace Discord
         [JsonProperty("channel_overrides")]
         public Dictionary<ulong, ChannelSettingsProperties> ChannelOverrides
         {
-            get { return _channelsProperty; }
-            set { _channelsProperty.Value = value; }
+            get => _channelsProperty;
+            set => _channelsProperty.Value = value;
         }
     }
 }

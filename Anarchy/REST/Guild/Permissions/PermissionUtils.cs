@@ -8,7 +8,9 @@ namespace Discord
         {
             DiscordPermission permissions = DiscordPermission.None;
             foreach (DiscordPermission permission in Enum.GetValues(typeof(DiscordPermission)))
+            {
                 permissions |= permission;
+            }
 
             return permissions;
         }
@@ -26,9 +28,13 @@ namespace Discord
         public static bool Has(this DiscordPermission permissions, DiscordPermission requiredPermission)
         {
             if (And(permissions, DiscordPermission.Administrator))
+            {
                 return true;
+            }
             else
+            {
                 return And(permissions, requiredPermission);
+            }
         }
 
         public static DiscordPermission Remove(this DiscordPermission permissions, DiscordPermission permsToRemove)

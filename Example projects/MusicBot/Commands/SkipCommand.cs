@@ -1,5 +1,4 @@
-﻿using Discord.Gateway;
-using Discord.Commands;
+﻿using Discord.Commands;
 
 namespace MusicBot
 {
@@ -10,9 +9,9 @@ namespace MusicBot
         {
             if (Program.CanModifyList(Client, Message))
             {
-                var list = Program.TrackLists[Message.Guild.Id];
+                TrackQueue list = Program.TrackLists[Message.Guild.Id];
 
-                var currentSong = list.Tracks[0];
+                AudioTrack currentSong = list.Tracks[0];
                 list.Tracks.RemoveAt(0);
                 currentSong.CancellationTokenSource.Cancel();
 

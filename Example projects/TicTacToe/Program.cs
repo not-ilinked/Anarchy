@@ -1,18 +1,15 @@
-﻿using Discord;
-using Discord.Gateway;
+﻿using Discord.Gateway;
 using System;
 using System.Collections.Generic;
-using System.Net.Http;
-using System.Text;
 using System.Threading;
 
 namespace TicTacToe
 {
-    class Program
+    internal class Program
     {
         public static Dictionary<string, Game> Games = new Dictionary<string, Game>();
 
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             Console.Write("Bot token: ");
             string token = Console.ReadLine();

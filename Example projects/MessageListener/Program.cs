@@ -1,13 +1,13 @@
-﻿using System;
-using System.Threading;
-using Discord;
+﻿using Discord;
 using Discord.Gateway;
+using System;
+using System.Threading;
 
 namespace MessageLogger
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             DiscordSocketClient client = new DiscordSocketClient();
             client.OnLoggedIn += OnLoggedIn;
@@ -33,10 +33,12 @@ namespace MessageLogger
             DiscordChannel channel = client.GetChannel(args.Message.Channel.Id);
 
             if (channel.InGuild)
+            {
                 from = $"#{channel.Name} / {client.GetCachedGuild(((TextChannel)channel).Guild.Id).Name}";
+            }
             else
             {
-                var privChannel = (PrivateChannel)channel;
+                PrivateChannel privChannel = (PrivateChannel)channel;
                 from = privChannel.Name ?? privChannel.Recipients[0].ToString();
             }
 

@@ -9,16 +9,18 @@ namespace Discord.Gateway
         {
             if (client.Config.Cache)
             {
-                foreach (var guild in client.GetCachedGuilds())
+                foreach (SocketGuild guild in client.GetCachedGuilds())
                 {
                     if (!guild.Unavailable)
                     {
                         lock (guild.ChannelsConcurrent.Lock)
                         {
-                            foreach (var channel in guild.ChannelsConcurrent)
+                            foreach (GuildChannel channel in guild.ChannelsConcurrent)
                             {
                                 if (channel.Id == channelId)
+                                {
                                     return channel;
+                                }
                             }
                         }
                     }
@@ -26,17 +28,21 @@ namespace Discord.Gateway
 
                 lock (client.PrivateChannels.Lock)
                 {
-                    foreach (var channel in client.PrivateChannels)
+                    foreach (PrivateChannel channel in client.PrivateChannels)
                     {
                         if (channel.Id == channelId)
+                        {
                             return channel;
+                        }
                     }
                 }
 
                 throw new DiscordHttpException(new DiscordHttpError(DiscordError.UnknownChannel, "Channel was not found in cache"));
             }
             else
+            {
                 return await ((DiscordClient)client).GetChannelAsync(channelId);
+            }
         }
 
         /// <summary>
@@ -52,9 +58,13 @@ namespace Discord.Gateway
         public static async Task<IReadOnlyList<GuildChannel>> GetGuildChannelsAsync(this DiscordSocketClient client, ulong guildId)
         {
             if (client.Config.Cache)
+            {
                 return client.GetCachedGuild(guildId).Channels.SetClientsInList(client);
+            }
             else
+            {
                 return await ((DiscordClient)client).GetGuildChannelsAsync(guildId);
+            }
         }
 
         /// <summary>
@@ -69,7 +79,7 @@ namespace Discord.Gateway
 
         public static async Task<IReadOnlyList<DiscordMessage>> GetChannelMessagesAsync(this DiscordSocketClient client, ulong channelId, MessageFilters filters = null)
         {
-            var messages = await ((DiscordClient)client).GetChannelMessagesAsync(channelId, filters);
+            IReadOnlyList<DiscordMessage> messages = await ((DiscordClient)client).GetChannelMessagesAsync(channelId, filters);
 
             if (client.Config.Cache)
             {
@@ -79,8 +89,10 @@ namespace Discord.Gateway
                 {
                     GuildChannel guildChannel = (GuildChannel)channel;
 
-                    foreach (var message in messages)
+                    foreach (DiscordMessage message in messages)
+                    {
                         message.GuildId = guildChannel.GuildId;
+                    }
                 }
             }
 
@@ -118,14 +130,16 @@ namespace Discord.Gateway
         {
             if (client.Config.Cache)
             {
-                foreach (var channel in client.GetPrivateChannels())
+                foreach (PrivateChannel channel in client.GetPrivateChannels())
                 {
                     if (channel.Type == ChannelType.DM)
                     {
-                        foreach (var recipient in channel.Recipients)
+                        foreach (DiscordUser recipient in channel.Recipients)
                         {
                             if (recipient.Id == recipientId)
+                            {
                                 return channel;
+                            }
                         }
                     }
                 }

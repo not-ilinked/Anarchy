@@ -7,7 +7,7 @@ using System.Threading;
 
 namespace AntiRaid
 {
-    class Program
+    internal class Program
     {
         public static Dictionary<ulong, List<DiscordMessage>> Messages = new Dictionary<ulong, List<DiscordMessage>>();
         public static BanQueue BanQueue = new BanQueue();
@@ -15,7 +15,7 @@ namespace AntiRaid
         public static readonly int MaxMessages = 7;
         public static readonly TimeSpan MessageExpiration = new TimeSpan(0, 0, 10);
 
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             Console.WriteLine("Token: ");
             string token = Console.ReadLine();
@@ -35,7 +35,7 @@ namespace AntiRaid
         {
             if (!string.IsNullOrEmpty(args.Message.Content))
             {
-                var messages = Messages[args.Message.Guild.Id];
+                List<DiscordMessage> messages = Messages[args.Message.Guild.Id];
                 messages.RemoveAll(m => m.SentAt < DateTime.UtcNow - MessageExpiration);
 
                 messages.Add(args.Message);
@@ -44,17 +44,21 @@ namespace AntiRaid
                 {
                     Console.WriteLine("Raid detected");
 
-                    var msgsCopy = new List<DiscordMessage>(messages);
+                    List<DiscordMessage> msgsCopy = new List<DiscordMessage>(messages);
                     messages.Clear();
 
-                    foreach (var msg in msgsCopy)
+                    foreach (DiscordMessage msg in msgsCopy)
+                    {
                         BanQueue.Enqueue(msg.Author.Member);
+                    }
 
                     // if we're on a bot account, we can delete messages from multiple users much faster than we can ban them. let's keep the chat clean :)
                     if (client.User.Type == DiscordUserType.Bot)
                     {
-                        foreach (var group in msgsCopy.GroupBy(m => m.Channel.Id))
+                        foreach (IGrouping<ulong, DiscordMessage> group in msgsCopy.GroupBy(m => m.Channel.Id))
+                        {
                             client.DeleteMessages(group.Key, group.Select(m => m.Id).ToList());
+                        }
                     }
                 }
             }
@@ -64,8 +68,10 @@ namespace AntiRaid
         {
             if (client.User.Type == DiscordUserType.User)
             {
-                foreach (var guild in args.Guilds)
+                foreach (MinimalGuild guild in args.Guilds)
+                {
                     Messages[guild.Id] = new List<DiscordMessage>();
+                }
             }
 
             Console.WriteLine("Logged in");

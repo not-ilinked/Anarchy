@@ -33,10 +33,7 @@ namespace Discord
         protected InviteGuild _guild;
 
 
-        public InviteType Type
-        {
-            get { return _guild != null ? InviteType.Guild : InviteType.Group; }
-        }
+        public InviteType Type => _guild != null ? InviteType.Guild : InviteType.Group;
 
 
         public async Task DeleteAsync()
@@ -57,16 +54,20 @@ namespace Discord
         public async Task JoinAsync()
         {
             if (Type == InviteType.Guild)
+            {
                 await Client.JoinGuildAsync(Code);
+            }
             else
+            {
                 await Client.JoinGroupAsync(Code);
+            }
         }
 
         public void Join()
         {
             JoinAsync().GetAwaiter().GetResult();
         }
-        
+
 
         public override string ToString()
         {

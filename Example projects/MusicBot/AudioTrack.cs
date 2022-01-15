@@ -14,7 +14,7 @@ namespace MusicBot
         {
             Id = id;
 
-            var video = Program.YouTubeClient.Videos.GetAsync(id).Result;
+            YoutubeExplode.Videos.Video video = Program.YouTubeClient.Videos.GetAsync(id).Result;
             Title = video.Title;
             ChannelName = video.Author.Title;
 

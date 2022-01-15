@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace Discord.Gateway
 {
@@ -8,10 +8,7 @@ namespace Discord.Gateway
         [JsonProperty("channel_id")]
         private readonly ulong _channelId;
 
-        public MinimalTextChannel Channel
-        {
-            get { return new MinimalTextChannel(_channelId).SetClient(Client); }
-        }
+        public MinimalTextChannel Channel => new MinimalTextChannel(_channelId).SetClient(Client);
 
 
         [JsonProperty("message_id")]

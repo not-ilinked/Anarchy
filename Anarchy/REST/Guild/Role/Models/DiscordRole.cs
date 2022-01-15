@@ -13,10 +13,7 @@ namespace Discord
 
         internal ulong GuildId { get; set; }
 
-        public MinimalGuild Guild
-        {
-            get { return new MinimalGuild(GuildId).SetClient(Client); }
-        }
+        public MinimalGuild Guild => new MinimalGuild(GuildId).SetClient(Client);
 
 
         [JsonProperty("name")]
@@ -27,8 +24,8 @@ namespace Discord
         private uint _color;
         public Color Color
         {
-            get { return Color.FromArgb((int)_color); }
-            private set { _color = (uint)Color.FromArgb(0, value.R, value.G, value.B).ToArgb(); }
+            get => Color.FromArgb((int)_color);
+            private set => _color = (uint)Color.FromArgb(0, value.R, value.G, value.B).ToArgb();
         }
 
 

@@ -25,6 +25,9 @@
         public ulong ChannelId { get; }
         public ulong UserId { get; }
 
-        public string Serialize() => $"{Location}:{GuildId}:{ChannelId}:{UserId}";
+        public string Serialize()
+        {
+            return $"{Location}:{GuildId}:{ChannelId}:{UserId}";
+        }
     }
 }

@@ -7,7 +7,7 @@ namespace Discord
         // cba to implement this rn lol
         [JsonProperty("mute_config")]
 #pragma warning disable IDE0052
-        private readonly GuildMuteConfig _muteConfig = new GuildMuteConfig() 
+        private readonly GuildMuteConfig _muteConfig = new GuildMuteConfig()
         {
             EndTime = null,
             SelectedTimeWindow = -1
@@ -25,8 +25,8 @@ namespace Discord
         [JsonProperty("muted")]
         public bool Muted
         {
-            get { return _mutedProperty; }
-            set { _mutedProperty.Value = value; }
+            get => _mutedProperty;
+            set => _mutedProperty.Value = value;
         }
 
 
@@ -40,8 +40,8 @@ namespace Discord
         [JsonProperty("message_notifications")]
         public ClientNotificationLevel Notifications
         {
-            get { return _notifsProperty; }
-            set { _notifsProperty.Value = value; }
+            get => _notifsProperty;
+            set => _notifsProperty.Value = value;
         }
 
 

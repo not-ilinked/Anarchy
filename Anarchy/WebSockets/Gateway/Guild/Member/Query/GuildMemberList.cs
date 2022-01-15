@@ -15,12 +15,14 @@ namespace Discord.Gateway
         [JsonProperty("guild_id")]
         public ulong GuildId
         {
-            get { return _guildId; }
+            get => _guildId;
             set
             {
                 _guildId = value;
-                foreach (var member in Members)
+                foreach (GuildMember member in Members)
+                {
                     member.GuildId = _guildId;
+                }
             }
         }
 

@@ -11,7 +11,7 @@ namespace Discord
         [JsonIgnore]
         public DiscordClient Client
         {
-            get { return _client; }
+            get => _client;
             set
             {
                 _client = value;

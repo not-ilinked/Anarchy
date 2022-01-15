@@ -96,16 +96,18 @@ namespace Discord
 
         internal void Update(JObject jObj)
         {
-            foreach (var property in this.GetType().GetProperties())
+            foreach (System.Reflection.PropertyInfo property in GetType().GetProperties())
             {
-                foreach (var attr in property.GetCustomAttributes(false))
+                foreach (object attr in property.GetCustomAttributes(false))
                 {
                     if (attr.GetType() == typeof(JsonPropertyAttribute))
                     {
-                        var jsonAttr = (JsonPropertyAttribute)attr;
+                        JsonPropertyAttribute jsonAttr = (JsonPropertyAttribute)attr;
 
                         if (jObj.TryGetValue(jsonAttr.PropertyName, out JToken value))
+                        {
                             property.SetValue(this, value.ToObject(property.PropertyType));
+                        }
 
                         break;
                     }
@@ -113,7 +115,9 @@ namespace Discord
             }
 
             if (jObj.TryGetValue("theme", out JToken theme))
+            {
                 _theme = theme.ToObject<string>();
+            }
         }
     }
 }

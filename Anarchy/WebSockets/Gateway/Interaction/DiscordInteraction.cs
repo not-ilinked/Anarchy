@@ -7,7 +7,7 @@ namespace Discord.Gateway
     {
         public DiscordInteraction()
         {
-            OnClientUpdated += (s, e) => 
+            OnClientUpdated += (s, e) =>
             {
                 Message.SetClient(Client);
                 Data.SetClient(Client);
@@ -16,18 +16,22 @@ namespace Discord.Gateway
                 {
                     if (Data.Resolved.Members != null)
                     {
-                        foreach (var member in Data.Resolved.Members.Values)
+                        foreach (GuildMember member in Data.Resolved.Members.Values)
+                        {
                             member.GuildId = _guildId.Value;
+                        }
                     }
 
                     if (Data.Resolved.Roles != null)
                     {
-                        foreach (var role in Data.Resolved.Roles.Values)
+                        foreach (DiscordRole role in Data.Resolved.Roles.Values)
+                        {
                             role.GuildId = _guildId.Value;
+                        }
                     }
                 }
 
-                
+
                 if (Member != null)
                 {
                     User = Member.User;
@@ -73,10 +77,24 @@ namespace Discord.Gateway
         [JsonProperty("message")]
         public DiscordMessage Message { get; private set; }
 
-        public Task RespondAsync(InteractionCallbackType callbackType, InteractionResponseProperties properties = null) => Client.RespondToInteractionAsync(Id, Token, callbackType, properties);
-        public void Respond(InteractionCallbackType callbackType, InteractionResponseProperties properties = null) => RespondAsync(callbackType, properties).GetAwaiter().GetResult();
+        public Task RespondAsync(InteractionCallbackType callbackType, InteractionResponseProperties properties = null)
+        {
+            return Client.RespondToInteractionAsync(Id, Token, callbackType, properties);
+        }
 
-        public Task ModifyResponseAsync(InteractionResponseProperties changes) => Client.ModifyInteractionResponseAsync(ApplicationId, Token, changes);
-        public void ModifyResponse(InteractionResponseProperties changes) => ModifyResponseAsync(changes).GetAwaiter().GetResult();
+        public void Respond(InteractionCallbackType callbackType, InteractionResponseProperties properties = null)
+        {
+            RespondAsync(callbackType, properties).GetAwaiter().GetResult();
+        }
+
+        public Task ModifyResponseAsync(InteractionResponseProperties changes)
+        {
+            return Client.ModifyInteractionResponseAsync(ApplicationId, Token, changes);
+        }
+
+        public void ModifyResponse(InteractionResponseProperties changes)
+        {
+            ModifyResponseAsync(changes).GetAwaiter().GetResult();
+        }
     }
 }

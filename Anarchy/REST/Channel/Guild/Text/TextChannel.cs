@@ -26,8 +26,8 @@ namespace Discord
         [JsonProperty("rate_limit_per_user")]
         public int SlowMode
         {
-            get { return _slowMode; }
-            private set { _slowMode = value * 10; } //convert to milliseconds
+            get => _slowMode;
+            private set => _slowMode = value * 10;  //convert to milliseconds
         }
 
 
@@ -60,7 +60,9 @@ namespace Discord
             Update(await Client.ModifyGuildChannelAsync(Id, properties));
 
             if (properties.TypeProperty.Set)
+            {
                 Type = properties.TypeProperty;
+            }
         }
 
         /// <summary>
@@ -221,7 +223,7 @@ namespace Discord
         }
         #endregion
 
-        
+
         public async Task<ulong> FollowAsync(ulong crosspostChannelId)
         {
             return await Client.FollowChannelAsync(Id, crosspostChannelId);
@@ -230,7 +232,9 @@ namespace Discord
         public ulong Follow(ulong crosspostChannelId)
         {
             if (Type != ChannelType.News)
+            {
                 throw new InvalidOperationException("Channel must be of type News");
+            }
 
             return FollowAsync(crosspostChannelId).GetAwaiter().GetResult();
         }

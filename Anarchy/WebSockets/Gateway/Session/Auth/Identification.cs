@@ -22,8 +22,8 @@ namespace Discord.Gateway
 
         [JsonProperty("intents")]
         public DiscordGatewayIntent? Intents { get; set; }
-        
-        
+
+
         public bool ShouldSerializeIntents()
         {
             return Intents.HasValue;
@@ -31,10 +31,7 @@ namespace Discord.Gateway
 
 
         [JsonProperty("shard")]
-        private uint[] _shard
-        {
-            get { return new uint[] { Shard.Index, Shard.Total }; }
-        }
+        private uint[] _shard => new uint[] { Shard.Index, Shard.Total };
 
         [JsonIgnore]
         public DiscordShard Shard { get; set; }

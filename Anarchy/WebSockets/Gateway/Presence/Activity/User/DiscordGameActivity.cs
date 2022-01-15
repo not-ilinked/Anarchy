@@ -18,9 +18,13 @@ namespace Discord.Gateway
             get
             {
                 if (_obj != null)
+                {
                     return DateTimeOffset.FromUnixTimeMilliseconds(_obj.Value<long>("start"));
+                }
                 else
+                {
                     return null;
+                }
             }
         }
     }

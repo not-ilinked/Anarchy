@@ -22,16 +22,10 @@ namespace Discord.Media
 
 
         [JsonProperty("address")]
-        public string Host
-        {
-            get { return ProtocolData.Host; }
-        }
+        public string Host => ProtocolData.Host;
 
 
         [JsonProperty("port")]
-        public int Port
-        {
-            get { return ProtocolData.Port; }
-        }
+        public int Port => ProtocolData.Port;
     }
 }

@@ -1,8 +1,6 @@
 ﻿using Discord.Gateway;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Discord.Media
@@ -40,7 +38,7 @@ namespace Discord.Media
 
         internal void CreateSession(GoLiveCreate goLive)
         {
-            var key = new StreamKey(goLive.StreamKey);
+            StreamKey key = new StreamKey(goLive.StreamKey);
 
             DiscordLivestreamSession session;
 
@@ -50,7 +48,9 @@ namespace Discord.Media
                 session.OnConnected += s =>
                 {
                     if (OnStartedLivestream != null)
+                    {
                         Task.Run(() => OnStartedLivestream.Invoke(this, s));
+                    }
                 };
             }
             else
@@ -59,7 +59,9 @@ namespace Discord.Media
                 session.OnConnected += s =>
                 {
                     if (OnJoinedLivestream != null)
+                    {
                         Task.Run(() => OnJoinedLivestream.Invoke(this, s));
+                    }
                 };
             }
 
@@ -68,24 +70,38 @@ namespace Discord.Media
 
         internal void UpdateSession(GoLiveUpdate goLive)
         {
-            var key = new StreamKey(goLive.StreamKey);
+            StreamKey key = new StreamKey(goLive.StreamKey);
 
-            if (key.UserId == Client.User.Id) Own.Update(goLive);
-            else _watching[key.UserId].Update(goLive);
+            if (key.UserId == Client.User.Id)
+            {
+                Own.Update(goLive);
+            }
+            else
+            {
+                _watching[key.UserId].Update(goLive);
+            }
         }
 
         internal void SetSessionServer(ulong userId, DiscordMediaServer server)
         {
-            if (userId == Client.User.Id) Own.UpdateServer(server);
-            else _watching[userId].UpdateServer(server);
+            if (userId == Client.User.Id)
+            {
+                Own.UpdateServer(server);
+            }
+            else
+            {
+                _watching[userId].UpdateServer(server);
+            }
         }
 
         internal void KillSession(GoLiveDelete goLive)
         {
-            var key = new StreamKey(goLive.StreamKey);
+            StreamKey key = new StreamKey(goLive.StreamKey);
 
             if (OnLeftLivestream != null)
+            {
                 Task.Run(() => OnLeftLivestream.Invoke(this, new LivestreamDisconnectEventArgs(key.UserId, goLive)));
+            }
         }
 
         public void Start()

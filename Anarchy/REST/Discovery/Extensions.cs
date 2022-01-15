@@ -8,15 +8,21 @@ namespace Discord
         public static async Task<GuildQueryResult> QueryGuildsAsync(this DiscordClient client, GuildQueryOptions options = null)
         {
             if (options == null)
+            {
                 options = new GuildQueryOptions();
+            }
 
             string query = $"?limit={options.Limit}&offset={options.Offset}";
 
             if (options.Query != null)
+            {
                 query += "&query=" + options.Query;
+            }
 
             if (options.Category.HasValue)
+            {
                 query += "&categories=" + (int)options.Category;
+            }
 
             return (await client.HttpClient.GetAsync($"/discoverable-guilds" + query)).Deserialize<GuildQueryResult>().SetClient(client);
         }
@@ -44,7 +50,9 @@ namespace Discord
                 catch (DiscordHttpException ex)
                 {
                     if (ex.Code != DiscordError.UnknownSession || client.SessionId == null)
+                    {
                         throw;
+                    }
                 }
             }
         }

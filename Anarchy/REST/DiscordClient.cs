@@ -1,8 +1,4 @@
 ﻿using Leaf.xNet;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
-using System.Text;
 
 namespace Discord
 {
@@ -17,16 +13,13 @@ namespace Discord
         private string _token;
         public string Token
         {
-            get
-            {
-                return _token;
-            }
+            get => _token;
             set
             {
                 string previousToken = Token;
 
                 _token = value;
-                
+
                 try
                 {
                     this.GetClientUser();
@@ -36,9 +29,13 @@ namespace Discord
                     _token = previousToken;
 
                     if (ex.Code == DiscordError.MessageOnlyError && ex.ErrorMessage == "401: Unauthorized")
+                    {
                         throw new InvalidTokenException(value);
+                    }
                     else
+                    {
                         throw;
+                    }
                 }
             }
         }
@@ -57,7 +54,9 @@ namespace Discord
         public DiscordClient(DiscordConfig config = null) : this()
         {
             if (config == null)
+            {
                 config = new DiscordConfig();
+            }
 
             Config = new LockedDiscordConfig(config);
             FinishConfig();
@@ -71,7 +70,9 @@ namespace Discord
         protected void FinishConfig()
         {
             if (Config.Proxy != null)
+            {
                 Proxy = Config.Proxy.CreateProxyClient();
+            }
         }
 
 

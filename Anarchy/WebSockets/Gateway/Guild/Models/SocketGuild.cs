@@ -6,34 +6,40 @@ using System.Threading;
 using System.Threading.Tasks;
 
 namespace Discord.Gateway
-{    
+{
     public class SocketGuild : DiscordGuild, IDisposable
     {
         public SocketGuild()
         {
-            OnClientUpdated += (sender, e) => 
+            OnClientUpdated += (sender, e) =>
             {
                 if (!Unavailable)
                 {
                     Members.SetClientsInList(Client);
 
-                    foreach (var member in Members)
+                    foreach (GuildMember member in Members)
+                    {
                         member.GuildId = Id;
+                    }
 
                     lock (ChannelsConcurrent.Lock)
                     {
                         ChannelsConcurrent.SetClientsInList(Client);
 
-                        foreach (var channel in ChannelsConcurrent)
+                        foreach (GuildChannel channel in ChannelsConcurrent)
+                        {
                             channel.GuildId = Id;
+                        }
                     }
 
                     lock (_voiceStates.Lock)
                     {
                         _voiceStates.SetClientsInList(Client);
 
-                        foreach (var state in _voiceStates)
+                        foreach (DiscordVoiceState state in _voiceStates)
+                        {
                             state.Guild = this;
+                        }
                     }
                 }
             };
@@ -59,7 +65,9 @@ namespace Discord.Gateway
                 GuildMember member;
 
                 while (!((DiscordSocketClient)Client).ClientMembers.TryGetValue(Id, out member))
+                {
                     Thread.Sleep(100);
+                }
 
                 return member;
             }
@@ -75,9 +83,13 @@ namespace Discord.Gateway
             get
             {
                 if (!Unavailable)
+                {
                     return ChannelsConcurrent;
+                }
                 else
+                {
                     return new List<GuildChannel>();
+                }
             }
         }
 
@@ -94,19 +106,36 @@ namespace Discord.Gateway
             get
             {
                 if (!Unavailable)
+                {
                     lock (_voiceStates.Lock) { return _voiceStates; }
+                }
                 else
+                {
                     return new List<DiscordVoiceState>();
+                }
             }
         }
 
 
-        public Task<IReadOnlyList<GuildMember>> GetMembersAsync(uint limit = 0) => ((DiscordSocketClient)Client).GetGuildMembersAsync(Id, limit);
-        public IReadOnlyList<GuildMember> GetMembers(uint limit = 0) => GetMembersAsync(limit).GetAwaiter().GetResult();
+        public Task<IReadOnlyList<GuildMember>> GetMembersAsync(uint limit = 0)
+        {
+            return ((DiscordSocketClient)Client).GetGuildMembersAsync(Id, limit);
+        }
 
-        public Task<IReadOnlyList<GuildMember>> GetChannelMembersAsync(ulong channelId, uint limit = 0) => ((DiscordSocketClient)Client).GetGuildChannelMembersAsync(Id, channelId, limit);
-        public IReadOnlyList<GuildMember> GetChannelMembers(ulong channelId, uint limit = 0) => GetChannelMembersAsync(channelId, limit).GetAwaiter().GetResult();
+        public IReadOnlyList<GuildMember> GetMembers(uint limit = 0)
+        {
+            return GetMembersAsync(limit).GetAwaiter().GetResult();
+        }
 
+        public Task<IReadOnlyList<GuildMember>> GetChannelMembersAsync(ulong channelId, uint limit = 0)
+        {
+            return ((DiscordSocketClient)Client).GetGuildChannelMembersAsync(Id, channelId, limit);
+        }
+
+        public IReadOnlyList<GuildMember> GetChannelMembers(ulong channelId, uint limit = 0)
+        {
+            return GetChannelMembersAsync(channelId, limit).GetAwaiter().GetResult();
+        }
 
         public new void Dispose()
         {

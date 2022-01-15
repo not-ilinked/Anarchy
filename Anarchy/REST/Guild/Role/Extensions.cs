@@ -12,7 +12,10 @@ namespace Discord
                                     .Deserialize<DiscordRole>().SetClient(client);
             role.GuildId = guildId;
             if (properties != null)
+            {
                 role.Modify(properties);
+            }
+
             return role;
         }
 
@@ -66,10 +69,13 @@ namespace Discord
 
         public static async Task<IReadOnlyList<DiscordRole>> SetRolePositionsAsync(this DiscordClient client, ulong guildId, List<RolePositionUpdate> roles)
         {
-            var result = (await client.HttpClient.PatchAsync($"/guilds/{guildId}/roles", roles))
+            IReadOnlyList<DiscordRole> result = (await client.HttpClient.PatchAsync($"/guilds/{guildId}/roles", roles))
                                     .Deserialize<List<DiscordRole>>().SetClientsInList(client);
-            foreach (var role in result)
+            foreach (DiscordRole role in result)
+            {
                 role.GuildId = guildId;
+            }
+
             return result;
         }
 
@@ -118,8 +124,11 @@ namespace Discord
         {
             IReadOnlyList<DiscordRole> roles = (await client.HttpClient.GetAsync($"/guilds/{guildId}/roles"))
                                                     .Deserialize<IReadOnlyList<DiscordRole>>().SetClientsInList(client);
-            foreach (var role in roles)
+            foreach (DiscordRole role in roles)
+            {
                 role.GuildId = guildId;
+            }
+
             return roles;
         }
 

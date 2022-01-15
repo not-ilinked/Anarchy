@@ -11,8 +11,8 @@ namespace Discord
         [JsonProperty("nick")]
         public string Nickname
         {
-            get { return NickProperty; }
-            set { NickProperty.Value = value; }
+            get => NickProperty;
+            set => NickProperty.Value = value;
         }
 
 
@@ -26,8 +26,8 @@ namespace Discord
         [JsonProperty("roles")]
         public List<ulong> Roles
         {
-            get { return RoleProperty; }
-            set { RoleProperty.Value = value; }
+            get => RoleProperty;
+            set => RoleProperty.Value = value;
         }
 
 
@@ -41,8 +41,8 @@ namespace Discord
         [JsonProperty("channel_id")]
         public ulong ChannelId
         {
-            get { return ChannelProperty; }
-            set { ChannelProperty.Value = value; }
+            get => ChannelProperty;
+            set => ChannelProperty.Value = value;
         }
 
 
@@ -50,8 +50,8 @@ namespace Discord
         [JsonProperty("mute")]
         public bool Muted
         {
-            get { return MuteProperty; }
-            set { MuteProperty.Value = value; }
+            get => MuteProperty;
+            set => MuteProperty.Value = value;
         }
 
 
@@ -65,8 +65,8 @@ namespace Discord
         [JsonProperty("deaf")]
         public bool Deafened
         {
-            get { return DeafProperty; }
-            set { DeafProperty.Value = value; }
+            get => DeafProperty;
+            set => DeafProperty.Value = value;
         }
 
 

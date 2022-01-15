@@ -11,13 +11,7 @@ namespace Discord
 
         [JsonProperty("type")]
         private readonly string _type;
-        public ConnectedAccountType Type
-        {
-            get
-            {
-                return (ConnectedAccountType)Enum.Parse(typeof(ConnectedAccountType), _type, true);
-            }
-        }
+        public ConnectedAccountType Type => (ConnectedAccountType)Enum.Parse(typeof(ConnectedAccountType), _type, true);
 
 
         [JsonProperty("name")]

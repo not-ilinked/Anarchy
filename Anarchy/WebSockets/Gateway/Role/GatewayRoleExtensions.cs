@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Discord.Gateway
@@ -10,9 +9,13 @@ namespace Discord.Gateway
         public static async Task<IReadOnlyList<DiscordRole>> GetGuildRolesAsync(this DiscordSocketClient client, ulong guildId)
         {
             if (client.Config.Cache)
+            {
                 return client.GetCachedGuild(guildId).Roles;
+            }
             else
+            {
                 return await ((DiscordClient)client).GetGuildRolesAsync(guildId);
+            }
         }
 
         /// <summary>
@@ -28,14 +31,18 @@ namespace Discord.Gateway
         public static DiscordRole GetGuildRole(this DiscordSocketClient client, ulong roleId)
         {
             if (!client.Config.Cache)
-                throw new NotSupportedException("Caching is disabled for this client.");
-
-            foreach (var guild in client.GetCachedGuilds())
             {
-                foreach (var role in guild.Roles)
+                throw new NotSupportedException("Caching is disabled for this client.");
+            }
+
+            foreach (SocketGuild guild in client.GetCachedGuilds())
+            {
+                foreach (DiscordRole role in guild.Roles)
                 {
                     if (role.Id == roleId)
+                    {
                         return role;
+                    }
                 }
             }
 

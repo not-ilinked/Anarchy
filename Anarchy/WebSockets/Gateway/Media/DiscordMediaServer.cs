@@ -17,9 +17,13 @@ namespace Discord.Gateway
             get
             {
                 if (GuildId.HasValue)
+                {
                     return new MinimalGuild(GuildId.Value).SetClient(Client);
+                }
                 else
+                {
                     return null;
+                }
             }
         }
 
@@ -28,15 +32,17 @@ namespace Discord.Gateway
         [JsonProperty("endpoint")]
         public string Endpoint
         {
-            get { return _endpoint; }
-            set 
-            { 
+            get => _endpoint;
+            set
+            {
                 if (value != null)
-                    _endpoint = value.Split(':')[0]; 
+                {
+                    _endpoint = value.Split(':')[0];
+                }
             }
         }
 
-        
+
         [JsonProperty("stream_key")]
         internal string StreamKey { get; private set; }
     }

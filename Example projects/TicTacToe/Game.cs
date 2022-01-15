@@ -16,7 +16,9 @@ namespace TicTacToe
             Grid = new SquareState[3][];
 
             for (int i = 0; i < Grid.Length; i++)
+            {
                 Grid[i] = new SquareState[] { SquareState.Neutral, SquareState.Neutral, SquareState.Neutral };
+            }
 
             ChallengerTurn = true;
         }
@@ -45,20 +47,30 @@ namespace TicTacToe
 
         private bool HasWon(SquareState targetState)
         {
-            foreach (var row in Grid)
+            foreach (SquareState[] row in Grid)
             {
-                if (row.All(s => s == targetState)) 
+                if (row.All(s => s == targetState))
+                {
                     return true;
+                }
             }
 
             for (int i = 0; i < 3; i++)
             {
-                if (Grid.All(row => row[i] == targetState)) 
+                if (Grid.All(row => row[i] == targetState))
+                {
                     return true;
+                }
             }
 
-            if (Grid[0][0] == targetState && Grid[1][1] == targetState && Grid[2][2] == targetState) return true;
-            else if (Grid[0][2] == targetState && Grid[1][1] == targetState && Grid[2][0] == targetState) return true;
+            if (Grid[0][0] == targetState && Grid[1][1] == targetState && Grid[2][2] == targetState)
+            {
+                return true;
+            }
+            else if (Grid[0][2] == targetState && Grid[1][1] == targetState && Grid[2][0] == targetState)
+            {
+                return true;
+            }
 
             return false;
         }
@@ -84,8 +96,14 @@ namespace TicTacToe
         {
             ulong id;
 
-            if (ChallengerTurn) id = Challenger.Id;
-            else id = Challengee.Id;
+            if (ChallengerTurn)
+            {
+                id = Challenger.Id;
+            }
+            else
+            {
+                id = Challengee.Id;
+            }
 
             return moverId == id;
         }
@@ -94,7 +112,7 @@ namespace TicTacToe
         {
             bool hasWinner = TryFindWinner(out bool challengerIsWinner);
 
-            var form = new DiscordComponentForm(Client);
+            DiscordComponentForm form = new DiscordComponentForm(Client);
 
             for (int i = 0; i < Grid.Length; i++)
             {
@@ -105,7 +123,7 @@ namespace TicTacToe
                     int y = i;
                     int x = j;
 
-                    var square = new ComponentFormButton(MessageButtonStyle.Secondary, SerializeSquare(Grid[y][x])) { Disabled = Grid[y][x] != SquareState.Neutral || hasWinner };
+                    ComponentFormButton square = new ComponentFormButton(MessageButtonStyle.Secondary, SerializeSquare(Grid[y][x])) { Disabled = Grid[y][x] != SquareState.Neutral || hasWinner };
                     square.OnClick += (s, e) =>
                     {
                         if (ValidMover(e.Member.User.Id))
@@ -122,13 +140,22 @@ namespace TicTacToe
                 form.Rows.Add(buttons);
             }
 
-            var embed = new EmbedMaker() { Title = "Tic Tac Toe" }
+            EmbedMaker embed = new EmbedMaker() { Title = "Tic Tac Toe" }
                                 .AddField($"{SerializeSquare(SquareState.Challenger)} Player 1", Challenger.AsMessagable())
                                 .AddField($"{SerializeSquare(SquareState.Challengee)} Player 2", Challengee.AsMessagable());
 
-            if (hasWinner) embed.Description = $"{(challengerIsWinner ? Challenger.AsMessagable() : Challengee.AsMessagable())} won";
-            else if (!Grid.Any(row => row.Any(col => col == SquareState.Neutral))) embed.Description = "The game resulted in a tie";
-            else embed.Description = $"{(ChallengerTurn ? Challenger.AsMessagable() : Challengee.AsMessagable())}'s turn";
+            if (hasWinner)
+            {
+                embed.Description = $"{(challengerIsWinner ? Challenger.AsMessagable() : Challengee.AsMessagable())} won";
+            }
+            else if (!Grid.Any(row => row.Any(col => col == SquareState.Neutral)))
+            {
+                embed.Description = "The game resulted in a tie";
+            }
+            else
+            {
+                embed.Description = $"{(ChallengerTurn ? Challenger.AsMessagable() : Challengee.AsMessagable())}'s turn";
+            }
 
             return new InteractionResponseProperties() { Content = null, Components = form, Embed = embed };
         }

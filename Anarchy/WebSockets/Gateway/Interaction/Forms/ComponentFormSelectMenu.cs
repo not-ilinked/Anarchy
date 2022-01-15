@@ -22,7 +22,9 @@ namespace Discord.Gateway
         internal override void Handle(DiscordSocketClient client, DiscordInteraction interaction)
         {
             if (OnSelect != null)
+            {
                 Task.Run(() => OnSelect.Invoke(this, new FormSelectMenuEventArgs(client, interaction)));
+            }
         }
     }
 }

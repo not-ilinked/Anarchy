@@ -47,6 +47,9 @@ namespace Discord
             return client.HttpClient.PostAsync("/report", identification);
         }
 
-        public static void ReportUser(this DiscordClient client, DiscordReportReason reason, UserReportIdentification identification) => client.ReportUserAsync(reason, identification);
+        public static void ReportUser(this DiscordClient client, DiscordReportReason reason, UserReportIdentification identification)
+        {
+            client.ReportUserAsync(reason, identification);
+        }
     }
 }

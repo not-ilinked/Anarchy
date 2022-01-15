@@ -1,9 +1,8 @@
-﻿using System;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 
 namespace Discord.Media
 {
-    internal unsafe static class Sodium
+    internal static unsafe class Sodium
     {
         public static string EncryptionMode = "xsalsa20_poly1305";
         public static int LengthDifference = 16;
@@ -20,7 +19,10 @@ namespace Discord.Media
             {
                 int status = SecretBoxEasy(outPtr + outputOffset, inPtr + inputOffset, inputLength, nonce, secret);
                 if (status != 0)
+                {
                     throw new SodiumException();
+                }
+
                 return inputLength + LengthDifference;
             }
         }
@@ -32,7 +34,10 @@ namespace Discord.Media
             {
                 int status = SecretBoxOpenEasy(outPtr + outputOffset, inPtr + inputOffset, inputLength, nonce, secret);
                 if (status != 0)
+                {
                     throw new SodiumException();
+                }
+
                 return inputLength - LengthDifference;
             }
         }

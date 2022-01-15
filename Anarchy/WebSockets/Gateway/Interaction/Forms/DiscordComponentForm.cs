@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Discord.Gateway
 {
     public class DiscordComponentForm
     {
-        private DiscordSocketClient _client;
+        private readonly DiscordSocketClient _client;
 
         internal string Id { get; }
         public List<List<ComponentFormInput>> Rows { get; }
@@ -35,19 +33,21 @@ namespace Discord.Gateway
 
                 if (parts[0] == Id)
                 {
-                    foreach (var row in Rows)
+                    foreach (List<ComponentFormInput> row in Rows)
                     {
-                        foreach (var button in row)
+                        foreach (ComponentFormInput button in row)
                         {
                             if (button.Id == parts[1])
+                            {
                                 button.Handle(_client, args.Interaction);
+                            }
                         }
                     }
                 }
             }
         }
 
-        private static Random random = new Random();
+        private static readonly Random random = new Random();
         internal static string RandomString(int length)
         {
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -59,15 +59,15 @@ namespace Discord.Gateway
         {
             List<MessageComponent> components = new List<MessageComponent>();
 
-            foreach (var row in instance.Rows)
+            foreach (List<ComponentFormInput> row in instance.Rows)
             {
                 List<MessageInputComponent> inputs = new List<MessageInputComponent>();
 
-                foreach (var input in row)
+                foreach (ComponentFormInput input in row)
                 {
                     if (input.GetType() == typeof(ComponentFormSelectMenu))
                     {
-                        var asSelect = (ComponentFormSelectMenu)input;
+                        ComponentFormSelectMenu asSelect = (ComponentFormSelectMenu)input;
                         inputs.Add(new SelectMenuComponent()
                         {
                             Id = $"{instance.Id}-{asSelect.Id}",
@@ -80,7 +80,7 @@ namespace Discord.Gateway
                     }
                     else
                     {
-                        var asButton = (ComponentFormButton)input;
+                        ComponentFormButton asButton = (ComponentFormButton)input;
 
                         inputs.Add(new ButtonComponent()
                         {
@@ -92,7 +92,7 @@ namespace Discord.Gateway
                             RedirectUrl = asButton.RedirectUrl
                         });
                     }
-                    
+
                 }
 
                 components.Add(new RowComponent(inputs));

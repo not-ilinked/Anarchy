@@ -1,11 +1,8 @@
 ﻿using Discord.Gateway;
 using Discord.WebSockets;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Concurrent;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Discord.Media
 {
@@ -38,16 +35,22 @@ namespace Discord.Media
             _guildId = guildId;
         }
 
-        internal void SetSessionId(string newSessionId) => _sessionId = newSessionId;
+        internal void SetSessionId(string newSessionId)
+        {
+            _sessionId = newSessionId;
+        }
 
         internal void SetServer(DiscordMediaServer server)
         {
             _ssrcToUserDictionary.Clear();
             _receivers.Clear();
-            if (_guildId.HasValue) Livestream = new DiscordLivestreamClient(_client, _guildId.Value, _channelId.Value);
+            if (_guildId.HasValue)
+            {
+                Livestream = new DiscordLivestreamClient(_client, _guildId.Value, _channelId.Value);
+            }
 
             Connection = new DiscordMediaConnection(_client, server.Guild == null ? _channelId.Value : server.Guild.Id, server);
-            
+
             Connection.OnReady += (c) =>
             {
                 Microphone = new DiscordVoiceInput(this);
@@ -75,10 +78,13 @@ namespace Discord.Media
             switch (message.Opcode)
             {
                 case DiscordMediaOpcode.Speaking:
-                    var state = message.Data.ToObject<DiscordSpeakingState>();
+                    DiscordSpeakingState state = message.Data.ToObject<DiscordSpeakingState>();
 
                     if (state.UserId.HasValue)
+                    {
                         _ssrcToUserDictionary[state.SSRC] = state.UserId.Value;
+                    }
+
                     break;
                 case DiscordMediaOpcode.SSRCUpdate:
                     SSRCUpdate update = message.Data.ToObject<SSRCUpdate>();
@@ -88,7 +94,10 @@ namespace Discord.Media
                     ulong userId = message.Data.ToObject<JObject>().Value<ulong>("user_id");
 
                     if (_ssrcToUserDictionary.TryGetKey(userId, out uint ssrc))
+                    {
                         _ssrcToUserDictionary.Remove(ssrc);
+                    }
+
                     break;
             }
         }
@@ -129,33 +138,55 @@ namespace Discord.Media
 
         private void KillPreviousConnection()
         {
-            foreach (var client in _client.VoiceClients)
+            foreach (System.Collections.Generic.KeyValuePair<ulong, DiscordVoiceClient> client in _client.VoiceClients)
             {
                 if (client.Key != _guildId && client.Value.State > MediaConnectionState.NotConnected)
+                {
                     client.Value.Disconnect();
+                }
             }
         }
 
         public void Connect(ulong channelId, VoiceConnectionProperties properties = null)
         {
             if (!File.Exists("libsodium.dll"))
+            {
                 throw new FileNotFoundException("libsodium.dll was not found");
+            }
             else if (!File.Exists("opus.dll"))
+            {
                 throw new FileNotFoundException("opus.dll was not found");
+            }
             else if (!File.Exists("libsodium.dll"))
+            {
                 throw new FileNotFoundException("libsodium.dll was not found");
+            }
 
             _decoder = new OpusDecoder();
 
-            if (_client.User.Type == DiscordUserType.User) KillPreviousConnection();
+            if (_client.User.Type == DiscordUserType.User)
+            {
+                KillPreviousConnection();
+            }
 
-            var state = new VoiceStateProperties() { ChannelId = channelId, GuildId = _guildId };
+            VoiceStateProperties state = new VoiceStateProperties() { ChannelId = channelId, GuildId = _guildId };
 
             if (properties != null)
             {
-                if (properties.Muted.HasValue) state.Muted = properties.Muted.Value;
-                if (properties.Deafened.HasValue) state.Deafened = properties.Deafened.Value;
-                if (properties.Video.HasValue) state.Video = properties.Video.Value;
+                if (properties.Muted.HasValue)
+                {
+                    state.Muted = properties.Muted.Value;
+                }
+
+                if (properties.Deafened.HasValue)
+                {
+                    state.Deafened = properties.Deafened.Value;
+                }
+
+                if (properties.Video.HasValue)
+                {
+                    state.Video = properties.Video.Value;
+                }
             }
 
             _channelId = channelId;

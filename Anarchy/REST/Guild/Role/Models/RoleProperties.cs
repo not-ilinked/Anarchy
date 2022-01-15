@@ -12,8 +12,8 @@ namespace Discord
         [JsonProperty("name")]
         public string Name
         {
-            get { return NameProperty; }
-            set { NameProperty.Value = value; }
+            get => NameProperty;
+            set => NameProperty.Value = value;
         }
 
 
@@ -27,8 +27,8 @@ namespace Discord
         [JsonProperty("permissions")]
         public DiscordPermission Permissions
         {
-            get { return PermissionsProperty; }
-            set { PermissionsProperty.Value = value; }
+            get => PermissionsProperty;
+            set => PermissionsProperty.Value = value;
         }
 
 
@@ -43,14 +43,14 @@ namespace Discord
 #pragma warning disable IDE1006, IDE0051
         private uint _color
         {
-            get { return ColorProperty; }
-            set { ColorProperty.Value = value; }
+            get => ColorProperty;
+            set => ColorProperty.Value = value;
         }
 #pragma warning restore IDE1006, IDE0051
         public Color Color
         {
-            get { return Color.FromArgb((int)_color); }
-            set { _color = (uint)Color.FromArgb(0, value.R, value.G, value.B).ToArgb(); }
+            get => Color.FromArgb((int)_color);
+            set => _color = (uint)Color.FromArgb(0, value.R, value.G, value.B).ToArgb();
         }
 
 
@@ -64,8 +64,8 @@ namespace Discord
         [JsonProperty("hoist")]
         public bool Seperated
         {
-            get { return SeperatedProperty; }
-            set { SeperatedProperty.Value = value; }
+            get => SeperatedProperty;
+            set => SeperatedProperty.Value = value;
         }
 
 
@@ -79,8 +79,8 @@ namespace Discord
         [JsonProperty("mentionable")]
         public bool Mentionable
         {
-            get { return MentionableProperty; }
-            set { MentionableProperty.Value = value; }
+            get => MentionableProperty;
+            set => MentionableProperty.Value = value;
         }
 
 

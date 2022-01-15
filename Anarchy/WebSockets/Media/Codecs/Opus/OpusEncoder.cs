@@ -1,5 +1,4 @@
-﻿using Discord.Media;
-using System;
+﻿using System;
 using System.Runtime.InteropServices;
 
 namespace Discord.Media
@@ -21,7 +20,9 @@ namespace Discord.Media
         public OpusEncoder(uint bitrate, AudioApplication application, int packetLoss)
         {
             if (bitrate < 5 * 1000 || bitrate > 384 * 1000)
+            {
                 throw new ArgumentOutOfRangeException(nameof(bitrate));
+            }
 
             Application = application;
             BitRate = bitrate;
@@ -46,7 +47,7 @@ namespace Discord.Media
                     throw new ArgumentOutOfRangeException(nameof(application));
             }
 
-            _ptr = CreateEncoder(SamplingRate, Channels, (int)opusApplication, out var error);
+            _ptr = CreateEncoder(SamplingRate, Channels, (int)opusApplication, out OpusError error);
             CheckError(error);
             CheckError(EncoderCtl(_ptr, OpusCtl.SetSignal, (int)opusSignal));
             CheckError(EncoderCtl(_ptr, OpusCtl.SetPacketLossPercent, packetLoss)); //%
@@ -59,7 +60,10 @@ namespace Discord.Media
             int result = 0;
             fixed (byte* inPtr = input)
             fixed (byte* outPtr = output)
+            {
                 result = Encode(_ptr, inPtr + inputOffset, FrameSamplesPerChannel, outPtr + outputOffset, output.Length - outputOffset);
+            }
+
             CheckError((OpusError)result);
             return result;
         }

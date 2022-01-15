@@ -9,14 +9,14 @@ namespace Discord.Gateway
         [JsonProperty("start")]
         private long _startValue
         {
-            get { return _startParam; }
-            set { _startParam.Value = value; }
+            get => _startParam;
+            set => _startParam.Value = value;
         }
 
         private TimeSpan _start;
         public TimeSpan Start
         {
-            get { return _start; }
+            get => _start;
             set
             {
                 _start = new TimeSpan(value.Hours > 14 ? 14 : value.Hours, value.Minutes, 0);

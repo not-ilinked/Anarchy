@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using System;
 using System.Threading.Tasks;
 
 namespace Discord
@@ -44,10 +43,7 @@ namespace Discord
         [JsonProperty("premium_type")]
         private DiscordNitroType? _nitro;
 
-        public DiscordNitroType Nitro
-        {
-            get { return _nitro ?? DiscordNitroType.None; }
-        }
+        public DiscordNitroType Nitro => _nitro ?? DiscordNitroType.None;
 
 
         internal void Update(DiscordClientUser user)
@@ -74,18 +70,28 @@ namespace Discord
         public async Task ChangeProfileAsync(UserProfileUpdate settings)
         {
             if (settings.Email == null)
+            {
                 settings.Email = Email;
+            }
+
             if (!settings.DiscriminatorProperty.Set)
+            {
                 settings.Discriminator = Discriminator;
+            }
+
             if (settings.Username == null)
+            {
                 settings.Username = Username;
+            }
 
             DiscordClientUser user = (await Client.HttpClient.PatchAsync("/users/@me", settings)).Deserialize<DiscordClientUser>();
 
             Update(user);
 
             if (user.Token != null)
+            {
                 Client.Token = user.Token;
+            }
         }
 
         /// <summary>
@@ -161,9 +167,13 @@ namespace Discord
         public async Task SetHypesquadAsync(Hypesquad house)
         {
             if (house == Hypesquad.None)
+            {
                 await Client.HttpClient.DeleteAsync("/hypesquad/online");
+            }
             else
+            {
                 await Client.HttpClient.PostAsync("/hypesquad/online", $"{{\"house_id\":{(int)house}}}");
+            }
         }
 
         /// <summary>

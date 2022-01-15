@@ -23,9 +23,13 @@ namespace Discord.Gateway
             get
             {
                 if (ChannelId.HasValue)
+                {
                     return new MinimalChannel(ChannelId.Value).SetClient(Client);
+                }
                 else
+                {
                     return null;
+                }
             }
         }
 
@@ -39,7 +43,9 @@ namespace Discord.Gateway
             get
             {
                 if (_member != null)
+                {
                     _member.GuildId = Guild;
+                }
 
                 return _member;
             }
@@ -58,14 +64,15 @@ namespace Discord.Gateway
             get
             {
                 if (_guildId.HasValue)
+                {
                     return new MinimalGuild(_guildId.Value).SetClient(Client);
+                }
                 else
+                {
                     return null;
+                }
             }
-            internal set
-            {
-                _guildId = value.Id;
-            }
+            internal set => _guildId = value.Id;
         }
 
 

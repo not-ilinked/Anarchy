@@ -29,10 +29,24 @@ namespace Discord
         public string InviteCode { get; private set; }
 
 
-        public Task SetClientSpeakingAsync(bool speaker) => Client.SetClientStageSpeakingAsync(_guildId, _channelId, speaker);
-        public void SetClientSpeaking(bool speaker) => SetClientSpeakingAsync(speaker).GetAwaiter().GetResult();
+        public Task SetClientSpeakingAsync(bool speaker)
+        {
+            return Client.SetClientStageSpeakingAsync(_guildId, _channelId, speaker);
+        }
 
-        public Task DeleteAsync() => Client.DeleteStageInstanceAsync(_channelId);
-        public void Delete() => DeleteAsync().GetAwaiter().GetResult();
+        public void SetClientSpeaking(bool speaker)
+        {
+            SetClientSpeakingAsync(speaker).GetAwaiter().GetResult();
+        }
+
+        public Task DeleteAsync()
+        {
+            return Client.DeleteStageInstanceAsync(_channelId);
+        }
+
+        public void Delete()
+        {
+            DeleteAsync().GetAwaiter().GetResult();
+        }
     }
 }

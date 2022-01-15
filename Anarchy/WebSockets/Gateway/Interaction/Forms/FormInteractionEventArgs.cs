@@ -24,10 +24,24 @@ namespace Discord.Gateway
         public GuildMember Member { get; }
         public DiscordUser User { get; }
 
-        public Task RespondAsync(InteractionCallbackType callbackType, InteractionResponseProperties properties = null) => _client.RespondToInteractionAsync(_id, _token, callbackType, properties);
-        public void Respond(InteractionCallbackType callbackType, InteractionResponseProperties properties = null) => RespondAsync(callbackType, properties).GetAwaiter().GetResult();
+        public Task RespondAsync(InteractionCallbackType callbackType, InteractionResponseProperties properties = null)
+        {
+            return _client.RespondToInteractionAsync(_id, _token, callbackType, properties);
+        }
 
-        public Task ModifyResponseAsync(InteractionResponseProperties changes) => _client.ModifyInteractionResponseAsync(_appId, _token, changes);
-        public void ModifyResponse(InteractionResponseProperties changes) => ModifyResponseAsync(changes).GetAwaiter().GetResult();
+        public void Respond(InteractionCallbackType callbackType, InteractionResponseProperties properties = null)
+        {
+            RespondAsync(callbackType, properties).GetAwaiter().GetResult();
+        }
+
+        public Task ModifyResponseAsync(InteractionResponseProperties changes)
+        {
+            return _client.ModifyInteractionResponseAsync(_appId, _token, changes);
+        }
+
+        public void ModifyResponse(InteractionResponseProperties changes)
+        {
+            ModifyResponseAsync(changes).GetAwaiter().GetResult();
+        }
     }
 }

@@ -1,12 +1,12 @@
-﻿using System;
+﻿using Discord;
+using System;
 using System.Threading;
-using Discord;
 
 namespace NicknameAnimation
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             //create client
             Console.Write("Token: ");

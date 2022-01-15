@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using Newtonsoft.Json;
 
 namespace Discord
 {
@@ -16,8 +16,10 @@ namespace Discord
             get
             {
                 List<MinimalGuild> guilds = new List<MinimalGuild>();
-                foreach (var guildId in _guilds)
+                foreach (ulong guildId in _guilds)
+                {
                     guilds.Add(new MinimalGuild(guildId).SetClient(Client));
+                }
 
                 return guilds;
             }
@@ -40,17 +42,18 @@ namespace Discord
             get
             {
                 if (_color.HasValue)
+                {
                     return System.Drawing.Color.FromArgb(_color.Value);
+                }
                 else
+                {
                     return null;
+                }
             }
         }
 
 
-        public bool Folder
-        {
-            get { return Id.HasValue; }
-        }
+        public bool Folder => Id.HasValue;
 
 
         public DiscordGuildFolderUpdate ToUpdate()

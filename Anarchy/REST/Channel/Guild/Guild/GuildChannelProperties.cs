@@ -11,8 +11,8 @@ namespace Discord
         [JsonProperty("name")]
         public string Name
         {
-            get { return NameProperty; }
-            set { NameProperty.Value = value; }
+            get => NameProperty;
+            set => NameProperty.Value = value;
         }
 
         public bool ShouldSerializeName()
@@ -25,8 +25,8 @@ namespace Discord
         [JsonProperty("parent_id")]
         public ulong? ParentId
         {
-            get { return ParentProperty; }
-            set { ParentProperty.Value = value; }
+            get => ParentProperty;
+            set => ParentProperty.Value = value;
         }
 
         public bool ShouldSerializeParentId()
@@ -39,8 +39,8 @@ namespace Discord
         [JsonProperty("position")]
         public uint Position
         {
-            get { return PositionProperty; }
-            set { PositionProperty.Value = value; }
+            get => PositionProperty;
+            set => PositionProperty.Value = value;
         }
 
 

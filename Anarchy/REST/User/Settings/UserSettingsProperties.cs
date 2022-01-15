@@ -11,8 +11,8 @@ namespace Discord
         [JsonProperty("explicit_content_filter")]
         public ExplicitContentFilter ExplicitContentFilter
         {
-            get { return ExplicityProperty; }
-            set { ExplicityProperty.Value = value; }
+            get => ExplicityProperty;
+            set => ExplicityProperty.Value = value;
         }
 
         public bool ShouldSerializeExplicitContentFilter()
@@ -25,47 +25,51 @@ namespace Discord
         [JsonProperty("default_guilds_restricted")]
         public bool RestrictGuildsByDefault
         {
-            get { return _defaultGuildRestrictParam; }
-            set { _defaultGuildRestrictParam.Value = value; }
+            get => _defaultGuildRestrictParam;
+            set => _defaultGuildRestrictParam.Value = value;
         }
 
-        public bool ShouldSerializeRestrictGuildsByDefault() => _defaultGuildRestrictParam.Set;
-
+        public bool ShouldSerializeRestrictGuildsByDefault()
+        {
+            return _defaultGuildRestrictParam.Set;
+        }
 
         private readonly DiscordParameter<bool> _nsfwGuildParam = new DiscordParameter<bool>();
         [JsonProperty("view_nsfw_guilds")]
         public bool ViewNsfwGuilds
         {
-            get { return _nsfwGuildParam; }
-            set { _nsfwGuildParam.Value = value; }
+            get => _nsfwGuildParam;
+            set => _nsfwGuildParam.Value = value;
         }
 
-        public bool ShouldSerializeViewNsfwGuilds() => _nsfwGuildParam.Set;
-
+        public bool ShouldSerializeViewNsfwGuilds()
+        {
+            return _nsfwGuildParam.Set;
+        }
 
         private readonly DiscordParameter<FriendRequestFlags> _friendFlags = new DiscordParameter<FriendRequestFlags>();
         [JsonProperty("friend_source_flags")]
         public FriendRequestFlags FriendRequestFlags
         {
-            get { return _friendFlags; }
-            set { _friendFlags.Value = value; }
+            get => _friendFlags;
+            set => _friendFlags.Value = value;
         }
 
-        public bool ShouldSerializeFriendRequestFlags() => _friendFlags.Set;
+        public bool ShouldSerializeFriendRequestFlags()
+        {
+            return _friendFlags.Set;
+        }
 
 
         // Appearance
         private readonly DiscordParameter<string> ThemeProperty = new DiscordParameter<string>();
         [JsonProperty("theme")]
-        private string _theme
-        {
-            get { return ThemeProperty.Value; }
-        }
+        private string _theme => ThemeProperty.Value;
 
         public DiscordTheme Theme
         {
-            get { return (DiscordTheme)Enum.Parse(typeof(DiscordTheme), _theme, true); }
-            set { ThemeProperty.Value = value.ToString().ToLower(); }
+            get => (DiscordTheme)Enum.Parse(typeof(DiscordTheme), _theme, true);
+            set => ThemeProperty.Value = value.ToString().ToLower();
         }
 
         public bool ShouldSerialize_theme()
@@ -78,8 +82,8 @@ namespace Discord
         [JsonProperty("message_display_compact")]
         public bool CompactMessages
         {
-            get { return CompactProperty; }
-            set { CompactProperty.Value = value; }
+            get => CompactProperty;
+            set => CompactProperty.Value = value;
         }
 
         public bool ShouldSerializeCompactMessages()
@@ -93,8 +97,8 @@ namespace Discord
         [JsonProperty("gif_auto_play")]
         public bool PlayGifsAutomatically
         {
-            get { return GifProperty; }
-            set { GifProperty.Value = value; }
+            get => GifProperty;
+            set => GifProperty.Value = value;
         }
 
 
@@ -108,30 +112,34 @@ namespace Discord
         [JsonProperty("animate_emoji")]
         public bool PlayAnimatedEmojis
         {
-            get { return _emojiProperty; }
-            set { _emojiProperty.Value = value; }
+            get => _emojiProperty;
+            set => _emojiProperty.Value = value;
         }
 
-        public bool ShouldSerializePlayAnimatedEmojis() => _emojiProperty.Set;
-
+        public bool ShouldSerializePlayAnimatedEmojis()
+        {
+            return _emojiProperty.Set;
+        }
 
         private readonly DiscordParameter<StickerAnimationAvailability> _stickerProperty = new DiscordParameter<StickerAnimationAvailability>();
         [JsonProperty("animate_stickers")]
         public StickerAnimationAvailability StickerAnimation
         {
-            get { return _stickerProperty; }
-            set { _stickerProperty.Value = value; }
+            get => _stickerProperty;
+            set => _stickerProperty.Value = value;
         }
 
-        public bool ShouldSerializeStickerAnimation() => _stickerProperty.Set;
-
+        public bool ShouldSerializeStickerAnimation()
+        {
+            return _stickerProperty.Set;
+        }
 
         private readonly DiscordParameter<bool> TtsProperty = new DiscordParameter<bool>();
         [JsonProperty("enable_tts_playback")]
         public bool EnableTts
         {
-            get { return TtsProperty; }
-            set { TtsProperty.Value = value; }
+            get => TtsProperty;
+            set => TtsProperty.Value = value;
         }
 
 
@@ -146,55 +154,66 @@ namespace Discord
         [JsonProperty("inline_embed_media")]
         public bool EmbedMedia
         {
-            get { return _mediaParam; }
-            set { _mediaParam.Value = value; }
+            get => _mediaParam;
+            set => _mediaParam.Value = value;
         }
 
-        public bool ShouldSerializeEmbedMedia() => _mediaParam.Set;
-
+        public bool ShouldSerializeEmbedMedia()
+        {
+            return _mediaParam.Set;
+        }
 
         private readonly DiscordParameter<bool> _attachmentParam = new DiscordParameter<bool>();
         [JsonProperty("inline_attachment_media")]
         public bool EmbedAttachments
         {
-            get { return _attachmentParam; }
-            set { _attachmentParam.Value = value; }
+            get => _attachmentParam;
+            set => _attachmentParam.Value = value;
         }
 
-        public bool ShouldSerializeEmbedAttachments() => _attachmentParam.Set;
-
+        public bool ShouldSerializeEmbedAttachments()
+        {
+            return _attachmentParam.Set;
+        }
 
         private readonly DiscordParameter<bool> _embedParam = new DiscordParameter<bool>();
         [JsonProperty("render_embeds")]
         public bool EmbedLinks
         {
-            get { return _embedParam; }
-            set { _embedParam.Value = value; }
+            get => _embedParam;
+            set => _embedParam.Value = value;
         }
 
-        public bool ShouldSerializeEmbedLinks() => _embedParam.Set;
-
+        public bool ShouldSerializeEmbedLinks()
+        {
+            return _embedParam.Set;
+        }
 
         private readonly DiscordParameter<bool> _reactionParam = new DiscordParameter<bool>();
         [JsonProperty("render_reactions")]
         public bool ShowReactions
         {
-            get { return _reactionParam; }
-            set { _reactionParam.Value = value; }
+            get => _reactionParam;
+            set => _reactionParam.Value = value;
         }
 
-        public bool ShouldSerializeShowReactions() => _reactionParam.Set;
-
+        public bool ShouldSerializeShowReactions()
+        {
+            return _reactionParam.Set;
+        }
 
         private readonly DiscordParameter<bool> _emoticonParam = new DiscordParameter<bool>();
         [JsonProperty("convert_emoticons")]
         public bool ConvertEmoticons
         {
-            get { return _emoticonParam; }
-            set { _emoticonParam.Value = value; }
+            get => _emoticonParam;
+            set => _emoticonParam.Value = value;
         }
 
-        public bool ShouldSerializeConvertEmoticons() => _emoticonParam.Set;
+        public bool ShouldSerializeConvertEmoticons()
+        {
+            return _emoticonParam.Set;
+        }
 
 
         // Language
@@ -202,8 +221,8 @@ namespace Discord
         [JsonProperty("locale")]
         public DiscordLanguage Language
         {
-            get { return LocaleProperty.Value; }
-            set { LocaleProperty.Value = value; }
+            get => LocaleProperty.Value;
+            set => LocaleProperty.Value = value;
         }
 
 
@@ -218,8 +237,8 @@ namespace Discord
         [JsonProperty("developer_mode")]
         public bool DeveloperMode
         {
-            get { return DevProperty; }
-            set { DevProperty.Value = value; }
+            get => DevProperty;
+            set => DevProperty.Value = value;
         }
 
 
@@ -234,8 +253,8 @@ namespace Discord
         [JsonProperty("custom_status")]
         public CustomStatus CustomStatus
         {
-            get { return StatusProperty; }
-            set { StatusProperty.Value = value; }
+            get => StatusProperty;
+            set => StatusProperty.Value = value;
         }
 
 
@@ -249,8 +268,8 @@ namespace Discord
         [JsonProperty("guild_folders")]
         public List<DiscordGuildFolderUpdate> GuildFolders
         {
-            get { return _folderProperty; }
-            set { _folderProperty.Value = value; }
+            get => _folderProperty;
+            set => _folderProperty.Value = value;
         }
 
 
@@ -258,10 +277,13 @@ namespace Discord
         [JsonProperty("restricted_guilds")]
         public List<ulong> RestrictedGuilds
         {
-            get { return _guildRestrictParam; }
-            set { _guildRestrictParam.Value = value; }
+            get => _guildRestrictParam;
+            set => _guildRestrictParam.Value = value;
         }
 
-        public bool ShouldSerializeRestrictedGuilds() => _guildRestrictParam.Set;
+        public bool ShouldSerializeRestrictedGuilds()
+        {
+            return _guildRestrictParam.Set;
+        }
     }
 }

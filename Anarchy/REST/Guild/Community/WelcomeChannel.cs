@@ -7,10 +7,7 @@ namespace Discord
         [JsonProperty("channel_id")]
         private readonly ulong _id;
 
-        public MinimalTextChannel Channel
-        {
-            get { return new MinimalTextChannel(_id).SetClient(Client); }
-        }
+        public MinimalTextChannel Channel => new MinimalTextChannel(_id).SetClient(Client);
 
         [JsonProperty("description")]
         public string Description { get; private set; }

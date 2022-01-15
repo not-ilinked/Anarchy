@@ -20,21 +20,9 @@ namespace Discord.Media
             Extensions = new List<byte[]>();
         }
 
-        public byte Flags
-        {
-            get
-            {
-                return HasExtensions ? (byte)0x90 : (byte)0x80;
-            }
-        }
+        public byte Flags => HasExtensions ? (byte)0x90 : (byte)0x80;
 
-        public bool HasExtensions
-        {
-            get
-            {
-                return Extensions.Count > 0 || (ExtraExtensionData != null && ExtraExtensionData.Length > 0);
-            }
-        }
+        public bool HasExtensions => Extensions.Count > 0 || (ExtraExtensionData != null && ExtraExtensionData.Length > 0);
 
         public byte Type { get; set; }
         public ushort Sequence { get; set; }
@@ -63,16 +51,22 @@ namespace Discord.Media
                 extensions = new byte[(Extensions.Count + 1) * ExtensionLength];
 
                 if (ExtraExtensionData != null)
+                {
                     Buffer.BlockCopy(ExtraExtensionData, 0, extensions, 0, Math.Min(ExtraExtensionData.Length, ExtensionLength / 2));
+                }
 
                 extensions[2] = (byte)(Extensions.Count >> 8);
                 extensions[3] = (byte)(Extensions.Count >> 0);
 
                 for (int i = 0; i < Extensions.Count; i++)
+                {
                     Buffer.BlockCopy(Extensions[i], 0, extensions, (i + 1) * ExtensionLength, ExtensionLength);
+                }
             }
             else
+            {
                 extensions = new byte[0];
+            }
 
             byte[] packet = new byte[HeaderLength + extensions.Length + count + (secretKey == null ? 0 : Sodium.LengthDifference)];
 
@@ -93,8 +87,14 @@ namespace Discord.Media
 
             Buffer.BlockCopy(extensions, 0, packet, header.Length, extensions.Length);
 
-            if (secretKey == null) Buffer.BlockCopy(buffer, offset, packet, header.Length + extensions.Length, count);
-            else Sodium.Encrypt(buffer, offset, count, packet, header.Length + extensions.Length, CreateNonce(header), secretKey);
+            if (secretKey == null)
+            {
+                Buffer.BlockCopy(buffer, offset, packet, header.Length + extensions.Length, count);
+            }
+            else
+            {
+                Sodium.Encrypt(buffer, offset, count, packet, header.Length + extensions.Length, CreateNonce(header), secretKey);
+            }
 
             return packet;
         }
@@ -113,7 +113,7 @@ namespace Discord.Media
                 Timestamp = BitConverter.ToUInt32(new byte[] { rawHeader[7], rawHeader[6], rawHeader[5], rawHeader[4] }, 0),
                 SSRC = BitConverter.ToUInt32(new byte[] { rawHeader[11], rawHeader[10], rawHeader[9], rawHeader[8] }, 0)
             };
-            
+
             byte[] decrypted = new byte[packet.Length - HeaderLength - Sodium.LengthDifference];
 
             Sodium.Decrypt(packet, HeaderLength, packet.Length - HeaderLength, decrypted, 0, CreateNonce(rawHeader), secretKey);
@@ -138,8 +138,10 @@ namespace Discord.Media
                 Buffer.BlockCopy(decrypted, extensionCount * ExtensionLength, payload, 0, payload.Length);
             }
             else
+            {
                 payload = decrypted;
-            
+            }
+
             return header;
         }
     }

@@ -5,13 +5,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace VCSpammer
 {
-    class Program
+    internal class Program
     {
         public static GuildInvite Invite { get; private set; }
         public static string AudioPath { get; private set; }
@@ -19,7 +18,7 @@ namespace VCSpammer
         public static object ChannelLookupLock = new object();
         public static List<DiscordSocketClient> BotAccounts = new List<DiscordSocketClient>();
 
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             Console.WriteLine("Loading puppeteer...");
             DiscordPuppeteer.Start();
@@ -34,9 +33,9 @@ namespace VCSpammer
 
             Console.WriteLine($"Logging into {tokens.Length} accounts");
 
-            foreach (var token in tokens)
+            foreach (string token in tokens)
             {
-                var client = new DiscordSocketClient(new DiscordSocketConfig() { VoiceChannelConnectTimeout = 5000 });
+                DiscordSocketClient client = new DiscordSocketClient(new DiscordSocketConfig() { VoiceChannelConnectTimeout = 5000 });
                 client.OnLoggedIn += Client_OnLoggedIn;
                 client.OnJoinedVoiceChannel += Client_OnJoinedVoiceChannel;
                 client.OnLeftVoiceChannel += Client_OnLeftVoiceChannel;
@@ -50,7 +49,9 @@ namespace VCSpammer
         private static void Client_OnJoinedGuild(DiscordSocketClient client, SocketGuildEventArgs args)
         {
             if (args.Guild.Id == Invite.Guild.Id)
+            {
                 WaitConnect(client);
+            }
         }
 
         private static void Client_OnLeftVoiceChannel(DiscordSocketClient client, VoiceDisconnectEventArgs args)
@@ -75,8 +76,14 @@ namespace VCSpammer
                     if (GetParticipantCount(client, args.Client.Channel.Id) == 0)
                     {
                         source.Cancel();
-                        if (Connect(client)) Console.WriteLine(client.User.ToString() + " is switching channel, due to there being noone in the current one");
-                        else args.Client.Disconnect();
+                        if (Connect(client))
+                        {
+                            Console.WriteLine(client.User.ToString() + " is switching channel, due to there being noone in the current one");
+                        }
+                        else
+                        {
+                            args.Client.Disconnect();
+                        }
 
                         return;
                     }
@@ -86,7 +93,9 @@ namespace VCSpammer
             });
 
             while (args.Client.State == MediaConnectionState.Ready && !source.IsCancellationRequested)
+            {
                 args.Client.Microphone.CopyFrom(DiscordVoiceUtils.GetAudioStream(AudioPath), source.Token);
+            }
         }
 
         private static void Client_OnLoggedIn(DiscordSocketClient client, LoginEventArgs args)
@@ -95,34 +104,44 @@ namespace VCSpammer
 
             Console.WriteLine("Logged into " + client.User.ToString());
 
-            if (!args.Guilds.Any(g => g.Id == Invite.Guild.Id)) DiscordPuppeteer.JoinGuild(client, Invite.Code);
-            else WaitConnect(client);
+            if (!args.Guilds.Any(g => g.Id == Invite.Guild.Id))
+            {
+                DiscordPuppeteer.JoinGuild(client, Invite.Code);
+            }
+            else
+            {
+                WaitConnect(client);
+            }
         }
 
-        private static int GetParticipantCount(DiscordSocketClient client, ulong channelId) =>
-            client.GetChannelVoiceStates(channelId).Where(s => !BotAccounts.Any(c => c.User.Id == s.UserId)).Count();
+        private static int GetParticipantCount(DiscordSocketClient client, ulong channelId)
+        {
+            return client.GetChannelVoiceStates(channelId).Where(s => !BotAccounts.Any(c => c.User.Id == s.UserId)).Count();
+        }
 
         private static void WaitConnect(DiscordSocketClient client)
         {
             while (!Connect(client))
+            {
                 Thread.Sleep(100);
+            }
         }
 
         private static bool Connect(DiscordSocketClient client)
         {
             lock (ChannelLookupLock)
             {
-                var guild = client.GetCachedGuild(Invite.Guild.Id);
+                SocketGuild guild = client.GetCachedGuild(Invite.Guild.Id);
 
-                foreach (var ch in guild.Channels.Where(c => c.Type == ChannelType.Voice && !BotAccounts.Any(a =>
+                foreach (GuildChannel ch in guild.Channels.Where(c => c.Type == ChannelType.Voice && !BotAccounts.Any(a =>
                 {
-                    var voiceClient = a.GetVoiceClient(Invite.Guild.Id);
+                    DiscordVoiceClient voiceClient = a.GetVoiceClient(Invite.Guild.Id);
                     return voiceClient.Channel != null && voiceClient.Channel.Id == c.Id;
                 })).OrderBy(c => GetParticipantCount(client, c.Id)).Reverse())
                 {
-                    var voiceChannel = (VoiceChannel)ch;
+                    VoiceChannel voiceChannel = (VoiceChannel)ch;
 
-                    var perms = guild.ClientMember.GetPermissions(voiceChannel.PermissionOverwrites);
+                    DiscordPermission perms = guild.ClientMember.GetPermissions(voiceChannel.PermissionOverwrites);
 
                     if (perms.Has(DiscordPermission.ViewChannel) && perms.Has(DiscordPermission.ConnectToVC) && perms.Has(DiscordPermission.SpeakInVC))
                     {

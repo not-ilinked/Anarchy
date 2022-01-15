@@ -8,8 +8,8 @@ namespace Discord
         [JsonProperty("visibility")]
         public bool Visible
         {
-            get { return _visibleParameter; }
-            set { _visibleParameter.Value = value; }
+            get => _visibleParameter;
+            set => _visibleParameter.Value = value;
         }
 
         public bool ShouldSerializeVisible()
@@ -21,8 +21,8 @@ namespace Discord
         [JsonProperty("show_activity")]
         public bool ShowAsActivity
         {
-            get { return _showParameter; }
-            set { _showParameter.Value = value; }
+            get => _showParameter;
+            set => _showParameter.Value = value;
         }
 
         public bool ShouldSerializeShowAsActivity()

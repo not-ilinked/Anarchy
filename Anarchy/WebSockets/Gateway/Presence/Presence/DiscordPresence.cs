@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Discord.Gateway
 {
@@ -19,10 +19,7 @@ namespace Discord.Gateway
         [JsonProperty("user")]
         private readonly JObject _user;
 
-        public ulong UserId
-        {
-            get { return _user["id"].ToObject<ulong>(); }
-        }
+        public ulong UserId => _user["id"].ToObject<ulong>();
 
 
         private readonly DiscordParameter<List<DiscordActivity>> _activitiesParam = new DiscordParameter<List<DiscordActivity>>();
@@ -30,57 +27,53 @@ namespace Discord.Gateway
         [JsonConverter(typeof(DeepJsonConverter<DiscordActivity>))]
         private List<DiscordActivity> _activities
         {
-            get { return _activitiesParam; }
-            set { _activitiesParam.Value = value; }
+            get => _activitiesParam;
+            set => _activitiesParam.Value = value;
         }
 
-        public IReadOnlyList<DiscordActivity> Activities
-        {
-            get { return _activities; }
-        }
+        public IReadOnlyList<DiscordActivity> Activities => _activities;
 
-        public bool ActivitiesSet
-        {
-            get { return _activitiesParam.Set; }
-        }
+        public bool ActivitiesSet => _activitiesParam.Set;
 
 
         private readonly DiscordParameter<UserStatus> _statusParam = new DiscordParameter<UserStatus>();
         [JsonProperty("status")]
         public UserStatus Status
         {
-            get { return _statusParam; }
-            private set { _statusParam.Value = value; }
+            get => _statusParam;
+            private set => _statusParam.Value = value;
         }
 
-        public bool StatusSet
-        {
-            get { return _statusParam.Set; }
-        }
+        public bool StatusSet => _statusParam.Set;
 
 
         private readonly DiscordParameter<ActiveSessionPlatforms> _platformsParam = new DiscordParameter<ActiveSessionPlatforms>();
         [JsonProperty("client_status")]
         public ActiveSessionPlatforms ActivePlatforms
         {
-            get { return _platformsParam; }
-            set { _platformsParam.Value = value; }
+            get => _platformsParam;
+            set => _platformsParam.Value = value;
         }
 
-        public bool ActivePlatformsSet
-        {
-            get { return _platformsParam.Set; }
-        }
+        public bool ActivePlatformsSet => _platformsParam.Set;
 
 
         internal void Update(DiscordPresence presence)
         {
             if (presence.ActivePlatformsSet)
+            {
                 ActivePlatforms = presence.ActivePlatforms;
+            }
+
             if (presence.ActivitiesSet)
+            {
                 _activities = presence.Activities.ToList();
+            }
+
             if (presence.StatusSet)
+            {
                 Status = presence.Status;
+            }
         }
 
 

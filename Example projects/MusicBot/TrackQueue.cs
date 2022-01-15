@@ -1,12 +1,9 @@
 ﻿using Discord;
 using Discord.Gateway;
 using Discord.Media;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using YoutubeExplode.Videos.Streams;
 
@@ -17,8 +14,8 @@ namespace MusicBot
         public List<AudioTrack> Tracks { get; private set; }
         public bool Running { get; private set; }
 
-        private DiscordSocketClient _client;
-        private ulong _guildId;
+        private readonly DiscordSocketClient _client;
+        private readonly ulong _guildId;
         private Stream _stream;
 
         public TrackQueue(DiscordSocketClient client, ulong guildId)
@@ -34,13 +31,13 @@ namespace MusicBot
 
             Task.Run(() =>
             {
-                var voiceClient = _client.GetVoiceClient(_guildId);
+                DiscordVoiceClient voiceClient = _client.GetVoiceClient(_guildId);
 
                 while (voiceClient.State == MediaConnectionState.Ready && Tracks.Count > 0)
                 {
-                    var currentSong = Tracks[0];
+                    AudioTrack currentSong = Tracks[0];
 
-                    var manifest = Program.YouTubeClient.Videos.Streams.GetManifestAsync(currentSong.Id).Result;
+                    StreamManifest manifest = Program.YouTubeClient.Videos.Streams.GetManifestAsync(currentSong.Id).Result;
 
                     if (_stream == null)
                     {
@@ -53,7 +50,10 @@ namespace MusicBot
                         _stream = null;
                         Tracks.RemoveAt(0);
                     }
-                    else if (currentSong.CancellationTokenSource.IsCancellationRequested) _stream = null;
+                    else if (currentSong.CancellationTokenSource.IsCancellationRequested)
+                    {
+                        _stream = null;
+                    }
                 }
 
                 Running = false;
@@ -62,17 +62,19 @@ namespace MusicBot
 
         private string GetVideoUrl(string videoId, uint channelBitrate)
         {
-            var manifest = Program.YouTubeClient.Videos.Streams.GetManifestAsync(videoId).Result;
+            StreamManifest manifest = Program.YouTubeClient.Videos.Streams.GetManifestAsync(videoId).Result;
 
             AudioOnlyStreamInfo bestStream = null;
-            foreach (var stream in manifest.GetAudioOnlyStreams().OrderBy(s => s.Bitrate))
+            foreach (AudioOnlyStreamInfo stream in manifest.GetAudioOnlyStreams().OrderBy(s => s.Bitrate))
             {
                 if (bestStream == null || stream.Bitrate > bestStream.Bitrate)
                 {
                     bestStream = stream;
 
                     if (stream.Bitrate.BitsPerSecond > channelBitrate)
+                    {
                         break;
+                    }
                 }
             }
 

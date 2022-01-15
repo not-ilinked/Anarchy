@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Discord
@@ -40,14 +39,19 @@ namespace Discord
 
         public static async Task SendWebhookMessageAsync(this DiscordClient client, ulong webhookId, string webhookToken, string content, DiscordEmbed embed = null, DiscordWebhookProfile profile = null)
         {
-            var properties = new WebhookMessageProperties() { Content = content, Embed = embed };
+            WebhookMessageProperties properties = new WebhookMessageProperties() { Content = content, Embed = embed };
 
             if (profile != null)
             {
                 if (profile.NameProperty.Set)
+                {
                     properties.Username = profile.Username;
+                }
+
                 if (profile.AvatarProperty.Set)
+                {
                     properties.AvatarUrl = profile.AvatarUrl;
+                }
             }
 
             await client.HttpClient.PostAsync($"/webhooks/{webhookId}/{webhookToken}", properties);
@@ -87,7 +91,9 @@ namespace Discord
             string url = "/webhooks/" + webhookId;
 
             if (token != null)
+            {
                 url += "/" + token;
+            }
 
             return (await client.HttpClient.GetAsync(url)).ParseDeterministic<DiscordWebhook>().SetClient(client);
         }

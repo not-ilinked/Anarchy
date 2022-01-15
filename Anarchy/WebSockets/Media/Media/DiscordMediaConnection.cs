@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using WebSocketSharp;
@@ -47,7 +46,7 @@ namespace Discord.Media
 
         private readonly DiscordSocketClient _parentClient;
 
-        public DiscordMediaConnection(DiscordSocketClient parentClient, ulong serverId, DiscordMediaServer server) : base("wss://" + server.Endpoint + "?v=4") 
+        public DiscordMediaConnection(DiscordSocketClient parentClient, ulong serverId, DiscordMediaServer server) : base("wss://" + server.Endpoint + "?v=4")
         {
             _parentClient = parentClient;
 
@@ -70,7 +69,7 @@ namespace Discord.Media
             }
             else if (args.Code >= 4000)
             {
-                var discordCode = (DiscordMediaCloseCode)args.Code;
+                DiscordMediaCloseCode discordCode = (DiscordMediaCloseCode)args.Code;
 
                 if (discordCode == DiscordMediaCloseCode.SessionTimeout || discordCode == DiscordMediaCloseCode.ServerCrashed)
                 {
@@ -80,7 +79,9 @@ namespace Discord.Media
             }
 
             if (args.Code != 1004)
+            {
                 OnDead?.Invoke(this, args);
+            }
         }
 
         private void HandleMessage(object sender, DiscordWebSocketMessage<DiscordMediaOpcode> message)
@@ -102,7 +103,7 @@ namespace Discord.Media
                     Holepunch();
                     break;
                 case DiscordMediaOpcode.SessionDescription:
-                    var description = message.Data.ToObject<DiscordSessionDescription>();
+                    DiscordSessionDescription description = message.Data.ToObject<DiscordSessionDescription>();
 
                     SecretKey = description.SecretKey;
 
@@ -201,9 +202,13 @@ namespace Discord.Media
                         for (int i = 8; i < received.Length; i++)
                         {
                             if (received[i] == 0)
+                            {
                                 break;
+                            }
                             else
+                            {
                                 ip += (char)received[i];
+                            }
                         }
 
                         _localEndpoint = new IPEndPoint(IPAddress.Parse(ip), BitConverter.ToUInt16(new byte[] { received[received.Length - 1], received[received.Length - 2] }, 0));
@@ -221,12 +226,12 @@ namespace Discord.Media
                         Console.WriteLine($"{ok.Type} {ok.Flags} {ok.Sequence} {ok.Timestamp} {ok.SSRC} {ok.HasExtensions}");
                         */
                         // not much point in doing this rn since the decryption fails
-                        
+
                         if (_parentClient.Config.ParseIncomingRTPData)
                         {
                             try
                             {
-                                var header = RTPPacketHeader.Read(SecretKey, received, out byte[] payload);
+                                RTPPacketHeader header = RTPPacketHeader.Read(SecretKey, received, out byte[] payload);
 
                                 OnUdpPacket?.Invoke(this, new MediaPacketEventArgs(header, payload));
                             }

@@ -17,7 +17,7 @@ namespace Discord
         {
             string[] split = proxy.Split(':');
 
-            var a = new AnarchyProxy()
+            AnarchyProxy a = new AnarchyProxy()
             {
                 Host = split[0],
                 Port = int.Parse(split[1])

@@ -1,8 +1,6 @@
-﻿using System;
+﻿using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 
 namespace Discord
 {
@@ -13,7 +11,9 @@ namespace Discord
             OnClientUpdated += (sender, e) =>
             {
                 if (Bot != null)
+                {
                     Bot.SetClient(Client);
+                }
             };
         }
 
@@ -34,9 +34,13 @@ namespace Discord
             get
             {
                 if (_iconHash == null)
+                {
                     return null;
+                }
                 else
-                    return new DiscordCDNImage(CDNEndpoints.AppIcon, Id, _iconHash); 
+                {
+                    return new DiscordCDNImage(CDNEndpoints.AppIcon, Id, _iconHash);
+                }
             }
         }
 

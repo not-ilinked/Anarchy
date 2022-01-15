@@ -1,6 +1,6 @@
 ﻿using Discord;
-using Discord.Gateway;
 using Discord.Commands;
+using Discord.Gateway;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +13,7 @@ namespace TicTacToe
         [SlashParameter("user", "The user you wish to challenge")]
         public DiscordUser Target { get; private set; }
 
-        private static Random random = new Random();
+        private static readonly Random random = new Random();
         public static string RandomString(int length)
         {
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -23,28 +23,33 @@ namespace TicTacToe
 
         public override InteractionResponseProperties Handle()
         {
-            if (Target.Id == Caller.Id) return new InteractionResponseProperties() { Content = "You cannot challenge yourself", Ephemeral = true };
+            if (Target.Id == Caller.Id)
+            {
+                return new InteractionResponseProperties() { Content = "You cannot challenge yourself", Ephemeral = true };
+            }
 
-            var game = new Game(Client, CallerMember.User, Target);
-            
-            var deny = new ComponentFormButton(MessageButtonStyle.Secondary, "Deny");
+            Game game = new Game(Client, CallerMember.User, Target);
+
+            ComponentFormButton deny = new ComponentFormButton(MessageButtonStyle.Secondary, "Deny");
             deny.OnClick += (s, e) =>
             {
                 if (e.Member.User.Id == Target.Id)
                 {
-                    e.Respond(InteractionCallbackType.UpdateMessage, new InteractionResponseProperties() 
+                    e.Respond(InteractionCallbackType.UpdateMessage, new InteractionResponseProperties()
                     {
-                        Components = new List<MessageComponent>(), 
-                        Content = $"{Target.AsMessagable()} declined {CallerMember.User.AsMessagable()}'s challenge" 
+                        Components = new List<MessageComponent>(),
+                        Content = $"{Target.AsMessagable()} declined {CallerMember.User.AsMessagable()}'s challenge"
                     });
                 }
             };
 
-            var accept = new ComponentFormButton(MessageButtonStyle.Primary, "Accept");
+            ComponentFormButton accept = new ComponentFormButton(MessageButtonStyle.Primary, "Accept");
             accept.OnClick += (s, e) =>
             {
                 if (e.Member.User.Id == Target.Id)
+                {
                     e.Respond(InteractionCallbackType.UpdateMessage, game.SerializeState());
+                }
             };
 
             return new InteractionResponseProperties()

@@ -10,8 +10,10 @@ namespace Discord.Gateway
         {
             OnClientUpdated += (s, e) =>
             {
-                if (Channels != null) 
+                if (Channels != null)
+                {
                     Channels.Values.ToList().SetClientsInList(Client);
+                }
 
                 if (Users != null)
                 {
@@ -21,12 +23,17 @@ namespace Discord.Gateway
                     {
                         Members.Values.ToList().SetClientsInList(Client);
 
-                        foreach (var user in Users.Values)
+                        foreach (DiscordUser user in Users.Values)
+                        {
                             Members[user.Id].User = user;
+                        }
                     }
                 }
 
-                if (Roles != null) Roles.Values.ToList().SetClientsInList(Client);
+                if (Roles != null)
+                {
+                    Roles.Values.ToList().SetClientsInList(Client);
+                }
             };
         }
 

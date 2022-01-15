@@ -1,7 +1,7 @@
 ﻿namespace Discord.Media
 {
     public enum DiscordMediaOpcode
-    { 
+    {
         Identify,
         SelectProtocol,
         Ready,

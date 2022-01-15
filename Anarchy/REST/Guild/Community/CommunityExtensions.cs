@@ -41,12 +41,15 @@ namespace Discord
         }
 
 
-        public static async Task<GuildVerificationForm> ModifyGuildVerificationFormAsync(this DiscordClient client, ulong guildId, VerificationFormProperties properties) =>
-            (await client.HttpClient.PatchAsync($"/guilds/{guildId}/member-verification", properties)).Deserialize<GuildVerificationForm>();
+        public static async Task<GuildVerificationForm> ModifyGuildVerificationFormAsync(this DiscordClient client, ulong guildId, VerificationFormProperties properties)
+        {
+            return (await client.HttpClient.PatchAsync($"/guilds/{guildId}/member-verification", properties)).Deserialize<GuildVerificationForm>();
+        }
 
-        public static GuildVerificationForm ModifyGuildVerificationForm(this DiscordClient client, ulong guildId, VerificationFormProperties properties) =>
-            client.ModifyGuildVerificationFormAsync(guildId, properties).GetAwaiter().GetResult();
-
+        public static GuildVerificationForm ModifyGuildVerificationForm(this DiscordClient client, ulong guildId, VerificationFormProperties properties)
+        {
+            return client.ModifyGuildVerificationFormAsync(guildId, properties).GetAwaiter().GetResult();
+        }
 
         public static async Task<VerificationFormResponse> SubmitGuildVerificationFormAsync(this DiscordClient client, ulong guildId, string formVersion, List<GuildVerificationFormField> fields)
         {

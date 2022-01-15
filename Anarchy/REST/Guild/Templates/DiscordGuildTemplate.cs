@@ -1,7 +1,6 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace Discord
 {
@@ -48,15 +47,12 @@ namespace Discord
         [JsonProperty("source_guild_id")]
         private ulong _guildId;
 
-        public MinimalGuild SourceGuild
-        {
-            get { return new MinimalGuild(_guildId).SetClient(Client); }
-        }
+        public MinimalGuild SourceGuild => new MinimalGuild(_guildId).SetClient(Client);
 
 
         [JsonProperty("serialized_source_guild")]
         private DiscordTemplateGuild _guild;
-        
+
         public DiscordTemplateGuild Snapshot
         {
             get
@@ -65,25 +61,19 @@ namespace Discord
 
                 return _guild;
             }
-            private set
-            {
-                _guild = value;
-            }
+            private set => _guild = value;
         }
 
 
         [JsonProperty("is_dirty")]
         private readonly bool? _dirty;
 
-        public bool HasUnsyncedChanges
-        {
-            get { return _dirty.HasValue; }
-        }
+        public bool HasUnsyncedChanges => _dirty.HasValue;
 
 
         public async Task UpdateAsync()
         {
-            var template = await Client.GetGuildTemplateAsync(Code);
+            DiscordGuildTemplate template = await Client.GetGuildTemplateAsync(Code);
             Name = template.Name;
             Usages = template.Usages;
             Creator = template.Creator;

@@ -16,11 +16,15 @@ namespace Anarchy
             get
             {
                 if (TryGetValue(key, out TValue value))
+                {
                     return value;
+                }
                 else
+                {
                     return this[key] = _valueCreate(key);
+                }
             }
-            set { base[key] = value; }
+            set => base[key] = value;
         }
 
         public TValue this[TKey key, bool doNotSave]
@@ -30,12 +34,18 @@ namespace Anarchy
                 if (doNotSave)
                 {
                     if (TryGetValue(key, out TValue value))
+                    {
                         return value;
+                    }
                     else
+                    {
                         return _valueCreate(key);
+                    }
                 }
                 else
+                {
                     return this[key];
+                }
             }
         }
     }

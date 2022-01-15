@@ -8,10 +8,10 @@ namespace Discord
     {
         public ulong GuildId { get; private set; }
         public IReadOnlyList<GuildMember> Members { get; private set; }
-        
+
         public int Index { get; private set; }
         public int Total { get; private set; }
-        
+
         internal GuildMembersEventArgs(GuildMemberList members)
         {
             Index = members.ChunkIndex;

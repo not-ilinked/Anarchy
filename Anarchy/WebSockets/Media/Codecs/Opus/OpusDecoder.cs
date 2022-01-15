@@ -16,7 +16,7 @@ namespace Discord.Media
 
         public OpusDecoder()
         {
-            _ptr = CreateDecoder(SamplingRate, Channels, out var error);
+            _ptr = CreateDecoder(SamplingRate, Channels, out OpusError error);
             CheckError(error);
         }
 
@@ -25,7 +25,10 @@ namespace Discord.Media
             int result = 0;
             fixed (byte* inPtr = input)
             fixed (byte* outPtr = output)
+            {
                 result = Decode(_ptr, inPtr + inputOffset, inputCount, outPtr + outputOffset, FrameSamplesPerChannel, decodeFEC ? 1 : 0);
+            }
+
             CheckError((OpusError)result);
             return result * SampleBytes;
         }

@@ -20,8 +20,11 @@ namespace Discord.Gateway
                 Presences.SetClientsInList(Client);
 
                 List<MinimalGuild> guilds = new List<MinimalGuild>();
-                foreach (var obj in _guilds)
+                foreach (JObject obj in _guilds)
+                {
                     guilds.Add((Client.User.Type == DiscordUserType.User ? obj.ToObject<SocketGuild>() : obj.ToObject<MinimalGuild>()).SetClient(Client));
+                }
+
                 Guilds = guilds;
             };
         }
@@ -57,10 +60,7 @@ namespace Discord.Gateway
         [JsonConverter(typeof(DeepJsonConverter<PrivateChannel>))]
         private readonly List<PrivateChannel> _channels;
 
-        public IReadOnlyList<PrivateChannel> PrivateChannels
-        {
-            get { return _channels; }
-        }
+        public IReadOnlyList<PrivateChannel> PrivateChannels => _channels;
 
 
         [JsonProperty("relationships")]
@@ -95,11 +95,17 @@ namespace Discord.Gateway
             SessionId = null;
             User.Dispose();
             User = null;
-            foreach (var guild in Guilds)
+            foreach (MinimalGuild guild in Guilds)
+            {
                 guild.Dispose();
+            }
+
             Guilds = null;
-            foreach (var pc in PrivateChannels)
+            foreach (PrivateChannel pc in PrivateChannels)
+            {
                 pc.Dispose();
+            }
+
             _channels.Clear();
             Relationships = null;
             ClientGuildSettings = null;

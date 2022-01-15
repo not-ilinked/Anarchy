@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace Discord
 {
@@ -64,9 +63,13 @@ namespace Discord
 
         public static async Task<IReadOnlyList<DiscordEmoji>> GetGuildEmojisAsync(this DiscordClient client, ulong guildId)
         {
-            var emojis = (await client.HttpClient.GetAsync($"/guilds/{guildId}/emojis"))
+            IReadOnlyList<DiscordEmoji> emojis = (await client.HttpClient.GetAsync($"/guilds/{guildId}/emojis"))
                                         .Deserialize<IReadOnlyList<DiscordEmoji>>().SetClientsInList(client);
-            foreach (var emoji in emojis) emoji.GuildId = guildId;
+            foreach (DiscordEmoji emoji in emojis)
+            {
+                emoji.GuildId = guildId;
+            }
+
             return emojis;
         }
 

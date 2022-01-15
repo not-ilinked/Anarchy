@@ -10,9 +10,13 @@ namespace Discord.Gateway
         public static async Task<IReadOnlyList<DiscordEmoji>> GetGuildEmojisAsync(this DiscordSocketClient client, ulong guildId)
         {
             if (client.Config.Cache)
+            {
                 return client.GetCachedGuild(guildId).Emojis;
+            }
             else
+            {
                 return await ((DiscordClient)client).GetGuildEmojisAsync(guildId);
+            }
         }
 
         /// <summary>
@@ -39,7 +43,9 @@ namespace Discord.Gateway
                 }
             }
             else
+            {
                 return await ((DiscordClient)client).GetGuildEmojiAsync(guildId, emojiId);
+            }
         }
 
         public static DiscordEmoji GetGuildEmoji(this DiscordSocketClient client, ulong guildId, ulong emojiId)
@@ -51,14 +57,18 @@ namespace Discord.Gateway
         public static DiscordEmoji GetGuildEmoji(this DiscordSocketClient client, ulong emojiId)
         {
             if (!client.Config.Cache)
-                throw new NotSupportedException("Caching is disabled for this client.");
-
-            foreach (var guild in client.GetCachedGuilds())
             {
-                foreach (var emoji in guild.Emojis)
+                throw new NotSupportedException("Caching is disabled for this client.");
+            }
+
+            foreach (SocketGuild guild in client.GetCachedGuilds())
+            {
+                foreach (DiscordEmoji emoji in guild.Emojis)
                 {
                     if (emoji.Id == emojiId)
+                    {
                         return emoji;
+                    }
                 }
             }
 
