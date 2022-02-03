@@ -24,7 +24,8 @@ namespace Discord
                     { (int)ChannelType.GuildNewsThread, typeof(TextChannel) },
                     { (int)ChannelType.GuildPublicThread, typeof(TextChannel) },
                     { (int)ChannelType.GuildPrivateThread, typeof(TextChannel) },
-                    { (int)ChannelType.Stage, typeof(StageChannel) }
+                    { (int)ChannelType.Stage, typeof(StageChannel) },
+                    { (int)ChannelType.Event, typeof(GuildChannel) }
                 }
             },
             {
@@ -59,7 +60,8 @@ namespace Discord
                     { (int)ActivityType.Watching, typeof(DiscordActivity) },
                     { (int)ActivityType.Game, typeof(DiscordGameActivity) },
                     { (int)ActivityType.Listening, typeof(DiscordListeningActivity) },
-                    { (int)ActivityType.CustomStatus, typeof(CustomStatusActivity) }
+                    { (int)ActivityType.CustomStatus, typeof(CustomStatusActivity) },
+                    { (int)ActivityType.IdkWhatThisIs, typeof(DiscordActivity) }
                 }
             },
             {

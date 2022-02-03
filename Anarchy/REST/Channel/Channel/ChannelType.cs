@@ -12,6 +12,7 @@
         GuildNewsThread = 10,
         GuildPublicThread,
         GuildPrivateThread,
-        Stage
+        Stage,
+        Event = 14
     }
 }

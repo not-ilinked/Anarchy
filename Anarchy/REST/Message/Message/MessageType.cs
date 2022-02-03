@@ -15,8 +15,15 @@
         GuildBoostedTier2,
         GuildBoostedTier3,
         ChannelFollowAdd,
-        GuildDiscoveryDisgualified,
+        GuildDiscoveryDisgualified = 14,
         GuildDiscoveryRequalified,
-        Reply = 19
+        GuildDiscoveryGracePeriodInitialWarning,
+        GuildDiscoveryGracePeriodFinalWarning,
+        ThreadCreated,
+        Reply,
+        ChatInputCommand,
+        ThreadStarterMessage,
+        GuildInviteReminder,
+        ContextMenuCommand
     }
 }

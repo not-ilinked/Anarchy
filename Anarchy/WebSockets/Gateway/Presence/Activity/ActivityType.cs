@@ -6,6 +6,7 @@
         Streaming,
         Listening,
         Watching,
-        CustomStatus
+        CustomStatus,
+        IdkWhatThisIs
     }
 }

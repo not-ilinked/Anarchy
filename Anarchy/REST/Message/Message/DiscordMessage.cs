@@ -154,7 +154,7 @@ namespace Discord
         public List<MessageComponent> Components { get; private set; }
 
 
-        [JsonProperty("stickers")]
+        [JsonProperty("sticker_items")]
         public IReadOnlyList<DiscordSticker> Stickers { get; private set; }
 
 
