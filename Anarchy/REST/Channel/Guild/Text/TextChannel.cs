@@ -282,6 +282,20 @@ namespace Discord
         }
 
 
+        public Task<DiscordThread> CreateThreadAsync(ulong messageId, string name, TimeSpan ttl)
+            => Client.CreateThreadAsync(Id, messageId, name, ttl);
+
+        public DiscordThread CreateThread(ulong messageId, string name, TimeSpan ttl)
+            => CreateThreadAsync(messageId, name, ttl).GetAwaiter().GetResult();
+
+
+        public Task<DiscordThread> CreateThreadAsync(string name, TimeSpan ttl)
+            => Client.CreateThreadAsync(Id, name, ttl);
+
+        public DiscordThread CreateThread(string name, TimeSpan ttl)
+            => CreateThreadAsync(name, ttl).GetAwaiter().GetResult();
+
+
         internal override void SetLastMessageId(ulong id)
         {
             LastMessageId = id;

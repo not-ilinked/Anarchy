@@ -81,6 +81,9 @@ namespace Discord.Gateway
             }
         }
 
+        [JsonProperty("threads")]
+        public IReadOnlyList<DiscordThread> Threads { get; internal set; }
+
 
         [JsonProperty("presences")]
         public IReadOnlyList<DiscordPresence> Presences { get; private set; }

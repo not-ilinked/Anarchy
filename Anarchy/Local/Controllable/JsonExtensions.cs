@@ -22,7 +22,10 @@ namespace Discord
         public static T ParseDeterministic<T>(this JObject obj)
         {
             if (TryFindTypes(typeof(T), out Dictionary<int, Type> types))
-                return (T)obj.ToObject(types[obj.Value<int>("type")]);
+            {
+                int type = obj.Value<int>("type");
+                return (T)obj.ToObject(types.TryGetValue(type, out var t) ? t : typeof(T));
+            }
             else
                 throw new InvalidCastException("Unable to find any implementations for T");
         }

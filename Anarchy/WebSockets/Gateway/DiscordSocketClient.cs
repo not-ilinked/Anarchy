@@ -57,6 +57,11 @@ namespace Discord.Gateway
         public event ClientEventHandler<ChannelEventArgs> OnChannelUpdated;
         public event ClientEventHandler<ChannelEventArgs> OnChannelDeleted;
 
+        public event ClientEventHandler<ThreadEventArgs> OnThreadCreated;
+        public event ClientEventHandler<ThreadEventArgs> OnThreadUpdated;
+        public event ClientEventHandler<ThreadEventArgs> OnThreadDeleted;
+        public event ClientEventHandler<ThreadMembersEventArgs> OnThreadMembersUpdated;
+
         public event ClientEventHandler<RingingEventArgs> OnRinging;
         public event ClientEventHandler<CallUpdateEventArgs> OnCallUpdated;
         public event ClientEventHandler<MinimalTextChannel> OnCallEnded;
@@ -835,7 +840,103 @@ namespace Discord.Gateway
                             if (OnRequiredUserAction != null)
                                 Task.Run(() => OnRequiredUserAction.Invoke(this, message.Data.ToObject<RequiredActionEventArgs>()));
                             break;
+                        case "THREAD_CREATE":
+                            if (Config.Cache || OnThreadCreated != null)
+                            {
+                                var thread = message.Data.ToObject<DiscordThread>();
+
+                                if (Config.Cache)
+                                {
+                                    var list = new List<DiscordThread>(GuildCache[thread.Guild.Id].Threads);
+                                    list.Add(thread);
+
+                                    GuildCache[thread.Guild.Id].Threads = list;
+                                }
+
+                                if (OnThreadCreated != null)
+                                    Task.Run(() => OnThreadCreated.Invoke(this, new ThreadEventArgs(thread)));
+                            }
+                            break;
+                        case "THREAD_UPDATE":
+                            if (Config.Cache || OnThreadUpdated != null)
+                            {
+                                var thread = message.Data.ToObject<DiscordThread>();
+
+                                if (Config.Cache)
+                                {
+                                    var list = new List<DiscordThread>(GuildCache[thread.Guild.Id].Threads);
+
+                                    for (int i = 0; i < list.Count; i++)
+                                    {
+                                        if (list[i].Id == thread.Id)
+                                        {
+                                            list[i] = thread;
+                                            break;
+                                        }
+                                    }
+
+                                    GuildCache[thread.Guild.Id].Threads = list;
+                                }
+
+                                if (OnThreadUpdated != null)
+                                    Task.Run(() => OnThreadUpdated.Invoke(this, new ThreadEventArgs(thread)));
+                            }
+                            break;
+                        case "THREAD_DELETE":
+                            if (Config.Cache || OnThreadDeleted != null)
+                            {
+                                var thread = message.Data.ToObject<DiscordThread>();
+
+                                if (Config.Cache)
+                                {
+                                    var list = new List<DiscordThread>(GuildCache[thread.Guild.Id].Threads);
+                                    list.RemoveAll(t => t.Id == thread.Id);
+                                    GuildCache[thread.Guild.Id].Threads = list;
+                                }
+
+                                if (OnThreadUpdated != null)
+                                    Task.Run(() => OnThreadUpdated.Invoke(this, new ThreadEventArgs(thread)));
+                            }
+                            break;
+                        case "THREAD_MEMBERS_UPDATE":
+                            if (Config.Cache || OnThreadMembersUpdated != null)
+                            {
+                                var ev = message.Data.ToObject<ThreadMembersEventArgs>();
+
+                                if (Config.Cache)
+                                {
+                                    lock (GuildCache.Lock)
+                                    {
+                                        foreach (var guild in GuildCache.Values)
+                                        {
+                                            foreach (var thread in guild.Threads)
+                                            {
+                                                if (thread.Id == ev.Id)
+                                                {
+                                                    thread.MemberCount = ev.MemberCount;
+
+                                                    var members = new List<ulong>(thread.MemberPreview);
+
+                                                    if (ev.AddedMembers != null)
+                                                    {
+                                                        foreach (var added in ev.AddedMembers)
+                                                            members.Add(added.UserId);
+                                                    }
+                                                    
+                                                    if (ev.RemovedMembers != null)
+                                                        members.RemoveAll(id => ev.RemovedMembers.Contains(id));
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+
+                                if (OnThreadMembersUpdated != null)
+                                    Task.Run(() => OnThreadMembersUpdated.Invoke(this, ev));
+                            }
+                            break;
                         default:
+                            Console.WriteLine(message.EventName);
                             break;
                     }
                     break;

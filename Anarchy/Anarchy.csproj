@@ -91,6 +91,13 @@
     <Compile Include="REST\Guild\Community\Screening\GuildVerificationForm.cs" />
     <Compile Include="REST\Guild\Community\Screening\GuildVerificationFormField.cs" />
     <Compile Include="REST\Guild\Community\Screening\VerificationFormResponse.cs" />
+    <Compile Include="REST\Guild\Threads\DiscordThread.cs" />
+    <Compile Include="REST\Guild\Threads\DiscordThreadMember.cs" />
+    <Compile Include="REST\Guild\Threads\DiscordThreadMetadata.cs" />
+    <Compile Include="REST\Guild\Threads\ThreadCreationProperties.cs" />
+    <Compile Include="REST\Guild\Threads\ThreadExtensions.cs" />
+    <Compile Include="REST\Guild\Threads\ThreadProperties.cs" />
+    <Compile Include="REST\Guild\Threads\ThreadTTLs.cs" />
     <Compile Include="REST\HTTP\DiscordHttpUtil.cs" />
     <Compile Include="REST\HTTP\DiscordReleaseChannel.cs" />
     <Compile Include="REST\HTTP\Exceptions\DiscordConnectionException.cs" />
@@ -136,6 +143,8 @@
     <Compile Include="WebSockets\Gateway\Guild\Member\List\MemberListUpdateOperation.cs" />
     <Compile Include="WebSockets\Gateway\Guild\Member\Query\MemberListQueryOptions.cs" />
     <Compile Include="WebSockets\Gateway\Guild\Models\GuildSubscriptionProperties.cs" />
+    <Compile Include="WebSockets\Gateway\Guild\Threads\ThreadEventArgs.cs" />
+    <Compile Include="WebSockets\Gateway\Guild\Threads\ThreadMembersEventArgs.cs" />
     <Compile Include="WebSockets\Gateway\Interaction\DiscordInteraction.cs" />
     <Compile Include="WebSockets\Gateway\Interaction\DiscordInteractionData.cs" />
     <Compile Include="REST\Interactions\InteractionResponseProperties.cs" />
