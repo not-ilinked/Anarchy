@@ -30,16 +30,7 @@ namespace Discord
 
 
         [JsonProperty("user")]
-        public DiscordUser User { get; private set; }
-
-
-        [JsonProperty("bio")]
-        public string Biography { get; private set; }
-
-
-        [JsonProperty("banner")]
-        private readonly string _bannerHash;
-        public DiscordCDNImage Banner => _bannerHash == null ? null : new DiscordCDNImage(CDNEndpoints.Banner, User.Id, _bannerHash);
+        public DiscordProfileUser User { get; private set; }
 
 
         [JsonProperty("premium_since")]
