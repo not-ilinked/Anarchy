@@ -1,3 +1,14 @@
+# 0.8.1.2
+### Additions
+- Added threads.
+
+### Improvements
+- Changed deterministic parsing to accept non-registered object types without crashing.
+- Fixed various bugs that made clients disconnect.
+- Minor bug fixes.
+
+
+
 # 0.8.1.1
 ### Additions
 - Added the [Select Menu](https://discord.com/developers/docs/interactions/message-components#select-menus) component.
