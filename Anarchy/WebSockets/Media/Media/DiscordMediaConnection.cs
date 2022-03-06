@@ -49,6 +49,8 @@ namespace Discord.Media
 
         public DiscordMediaConnection(DiscordSocketClient parentClient, ulong serverId, DiscordMediaServer server) : base("wss://" + server.Endpoint + "?v=4") 
         {
+            SSRC = new DiscordSSRC();
+
             _parentClient = parentClient;
 
             _server = server;
@@ -85,46 +87,52 @@ namespace Discord.Media
 
         private void HandleMessage(object sender, DiscordWebSocketMessage<DiscordMediaOpcode> message)
         {
-            switch (message.Opcode)
+            try
             {
-                case DiscordMediaOpcode.Ready:
-                    DiscordMediaReady ready = message.Data.ToObject<DiscordMediaReady>();
+                switch (message.Opcode)
+                {
+                    case DiscordMediaOpcode.Ready:
+                        DiscordMediaReady ready = message.Data.ToObject<DiscordMediaReady>();
 
-                    SSRC = new DiscordSSRC() { Audio = ready.SSRC };
+                        SSRC = new DiscordSSRC() { Audio = ready.SSRC };
+                        ServerEndpoint = new IPEndPoint(IPAddress.Parse(ready.IP), ready.Port);
 
-                    ServerEndpoint = new IPEndPoint(IPAddress.Parse(ready.IP), ready.Port);
+                        UdpClient = new UdpClient();
+                        UdpClient.Connect(ServerEndpoint);
 
-                    UdpClient = new UdpClient();
-                    UdpClient.Connect(ServerEndpoint);
+                        if (_parentClient.Config.HandleIncomingMediaData)
+                        {
+                            Task.Run(() => StartListener());
+                            Holepunch();
+                        }
+                        else SelectProtocol(ServerEndpoint);
+                        break;
+                    case DiscordMediaOpcode.SessionDescription:
+                        var description = message.Data.ToObject<DiscordSessionDescription>();
 
-                    Task.Run(() => StartListener());
+                        SecretKey = description.SecretKey;
 
-                    Holepunch();
-                    break;
-                case DiscordMediaOpcode.SessionDescription:
-                    var description = message.Data.ToObject<DiscordSessionDescription>();
+                        State = MediaConnectionState.Ready;
+                        OnReady?.Invoke(this);
+                        break;
+                    case DiscordMediaOpcode.Hello:
+                        Send(DiscordMediaOpcode.Identify, new DiscordMediaIdentify()
+                        {
+                            ServerId = _serverId,
+                            UserId = _parentClient.User.Id,
+                            SessionId = _parentClient.SessionId,
+                            Token = _server.Token,
+                            Video = true
+                        });
 
-                    SecretKey = description.SecretKey;
-
-                    State = MediaConnectionState.Ready;
-                    OnReady?.Invoke(this);
-                    break;
-                case DiscordMediaOpcode.Hello:
-                    Send(DiscordMediaOpcode.Identify, new DiscordMediaIdentify()
-                    {
-                        ServerId = _serverId,
-                        UserId = _parentClient.User.Id,
-                        SessionId = _parentClient.SessionId,
-                        Token = _server.Token,
-                        Video = true
-                    });
-
-                    StartHeartbeaterAsync(message.Data.Value<int>("heartbeat_interval"));
-                    break;
-                default:
-                    OnMessage?.Invoke(this, message);
-                    break;
+                        StartHeartbeaterAsync(message.Data.Value<int>("heartbeat_interval"));
+                        break;
+                    default:
+                        OnMessage?.Invoke(this, message);
+                        break;
+                }
             }
+            catch (InvalidOperationException) { }
         }
 
         public new void Connect()
@@ -214,24 +222,15 @@ namespace Discord.Media
                     {
                         while (SecretKey == null) { Thread.Sleep(100); }
 
-                        //Console.WriteLine($"{received[0]} {received[1]} {received[2]} {received[3]} {received[4]} {received[5]} {received[6]} {received[7]} {received[8]} {received[9]} {received[10]} {received[11]}");
-                        /*
-                        var ok = RTPPacketHeader.Read(SecretKey, received, out var _);
-
-                        Console.WriteLine($"{ok.Type} {ok.Flags} {ok.Sequence} {ok.Timestamp} {ok.SSRC} {ok.HasExtensions}");
-                        */
                         // not much point in doing this rn since the decryption fails
-                        
-                        if (_parentClient.Config.ParseIncomingRTPData)
-                        {
-                            try
-                            {
-                                var header = RTPPacketHeader.Read(SecretKey, received, out byte[] payload);
 
-                                OnUdpPacket?.Invoke(this, new MediaPacketEventArgs(header, payload));
-                            }
-                            catch (SodiumException) { }
+                        try
+                        {
+                            var header = RTPPacketHeader.Read(SecretKey, received, out byte[] payload);
+
+                            OnUdpPacket?.Invoke(this, new MediaPacketEventArgs(header, payload));
                         }
+                        catch (SodiumException) { }
                     }
                 }
             }

@@ -67,7 +67,7 @@ namespace Discord.Gateway
         public event ClientEventHandler<MinimalTextChannel> OnCallEnded;
 
         public event ClientEventHandler<VoiceStateEventArgs> OnVoiceStateUpdated;
-        internal event ClientEventHandler<DiscordMediaServer> OnMediaServer;
+        public event ClientEventHandler<DiscordMediaServer> OnMediaServer;
 
         public event ClientEventHandler<UserTypingEventArgs> OnUserTyping;
         public event ClientEventHandler<MessageEventArgs> OnMessageReceived;
@@ -934,9 +934,6 @@ namespace Discord.Gateway
                                 if (OnThreadMembersUpdated != null)
                                     Task.Run(() => OnThreadMembersUpdated.Invoke(this, ev));
                             }
-                            break;
-                        default:
-                            Console.WriteLine(message.EventName);
                             break;
                     }
                     break;

@@ -4,6 +4,7 @@
     {
         NotConnected,
         Connecting,
+        Connected,
         Ready
     }
 }

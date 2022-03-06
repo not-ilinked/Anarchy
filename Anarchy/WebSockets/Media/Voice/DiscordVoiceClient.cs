@@ -5,6 +5,7 @@ using System;
 using System.Collections.Concurrent;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace Discord.Media
@@ -16,7 +17,8 @@ namespace Discord.Media
 
         public MediaConnectionState State => Connection == null ? MediaConnectionState.NotConnected : Connection.State;
 
-        private string _sessionId;
+        public string SessionId { get; private set; }
+        public DiscordMediaServer Server { get; private set; }
 
         private readonly ulong? _guildId;
         public MinimalGuild Guild => _guildId.HasValue ? new MinimalGuild(_guildId.Value).SetClient(_client) : null;
@@ -38,10 +40,12 @@ namespace Discord.Media
             _guildId = guildId;
         }
 
-        internal void SetSessionId(string newSessionId) => _sessionId = newSessionId;
+        internal void SetSessionId(string newSessionId) => SessionId = newSessionId;
 
         internal void SetServer(DiscordMediaServer server)
         {
+            Server = server;
+
             _ssrcToUserDictionary.Clear();
             _receivers.Clear();
             if (_guildId.HasValue) Livestream = new DiscordLivestreamClient(_client, _guildId.Value, _channelId.Value);
@@ -170,5 +174,7 @@ namespace Discord.Media
                 Connection.Close(1000, "Closed by user");
             }
         }
+
+        public void SetSSRC(uint audioSsrc) => Connection.SetSSRC(audioSsrc);
     }
 }

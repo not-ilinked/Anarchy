@@ -192,9 +192,9 @@ namespace Discord
         }
 
 
-        public static async Task<GuildInvite> JoinGuildAsync(this DiscordClient client, string invCode)
+        public static async Task<GuildInvite> JoinGuildAsync(this DiscordClient client, string invCode, string captchaKey = null)
         {
-            return (await client.HttpClient.PostAsync($"/invites/{invCode}"))
+            return (await client.HttpClient.PostAsync($"/invites/{invCode}", captchaKey != null ? $"{{\"captcha_key\":\"{captchaKey}\"}}" : null))
                                 .Deserialize<GuildInvite>().SetClient(client);
         }
 

@@ -74,14 +74,14 @@ headers: " + "{";
         }
 
 
-        public static async Task<GuildInvite> JoinGuildAsync(DiscordClient client, string invCode)
+        public static async Task<GuildInvite> JoinGuildAsync(DiscordClient client, string invCode, string captchaKey = null)
         {
-            return (await CallAsync<GuildInvite>(client, "POST", client.HttpClient.BaseUrl + "/invites/" + invCode)).SetClient(client);
+            return (await CallAsync<GuildInvite>(client, "POST", client.HttpClient.BaseUrl + "/invites/" + invCode, captchaKey != null ? $"{{\"captcha_key\":\"{captchaKey}\"}}" : null)).SetClient(client);
         }
 
-        public static GuildInvite JoinGuild(DiscordClient client, string invCode)
+        public static GuildInvite JoinGuild(DiscordClient client, string invCode, string captchaKey = null)
         {
-            return JoinGuildAsync(client, invCode).GetAwaiter().GetResult();
+            return JoinGuildAsync(client, invCode, captchaKey).GetAwaiter().GetResult();
         }
     }
 }

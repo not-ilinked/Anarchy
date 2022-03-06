@@ -19,6 +19,6 @@ namespace Discord
         public bool Locked { get; private set; }
 
         [JsonProperty("create_timestamp")]
-        public DateTime CreatedAt { get; private set; }
+        public DateTime? CreatedAt { get; private set; }
     }
 }
