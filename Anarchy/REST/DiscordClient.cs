@@ -54,16 +54,16 @@ namespace Discord
         }
 
 
-        public DiscordClient(DiscordConfig config = null) : this()
+        public DiscordClient(ApiConfig config = null) : this()
         {
             if (config == null)
-                config = new DiscordConfig();
+                config = new ApiConfig();
 
             Config = new LockedDiscordConfig(config);
             FinishConfig();
         }
 
-        public DiscordClient(string token, DiscordConfig config = null) : this(config)
+        public DiscordClient(string token, ApiConfig config = null) : this(config)
         {
             Token = token;
         }

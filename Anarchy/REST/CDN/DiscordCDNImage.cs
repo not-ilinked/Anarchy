@@ -23,7 +23,6 @@ namespace Discord
             AllowedFormats = endpoint.AllowedFormats;
         }
 
-
         public DiscordImage Download(DiscordCDNImageFormat format = DiscordCDNImageFormat.Any)
         {
             if (format != DiscordCDNImageFormat.Any && !AllowedFormats.Contains(format))
@@ -34,7 +33,9 @@ namespace Discord
             if (format != DiscordCDNImageFormat.Any)
                 url += "." + format.ToString().ToLower();
 
-            return new DiscordImage((Bitmap)new ImageConverter().ConvertFrom(_client.GetByteArrayAsync(url).Result));
+            var httpResponse = _client.GetAsync(url).Result;
+            ImageType type = Enum.Parse<ImageType>(httpResponse.Content.Headers.First(x => x.Key == "Content-Type").Value.First().Replace("image/", string.Empty), true);
+            return new DiscordImage(httpResponse.Content.ReadAsByteArrayAsync().Result, type);
         }
     }
 }

@@ -48,7 +48,7 @@ namespace Discord
         public string SystemLocale { get; set; } = "da-DK";
 
         [JsonProperty("browser_user_agent")]
-        public string UserAgent { get; set; } = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.106 Safari/537.36";
+        public string UserAgent { get; set; } = "Discord/31433 CFNetwork/1331.0.7 Darwin/21.4.0";
 
         [JsonProperty("browser_version")]
         public string BrowserVersion { get; set; } = "91.0.4472.106";
@@ -92,7 +92,7 @@ namespace Discord
 
         public string ToBase64()
         {
-            return Convert.ToBase64String(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(this)));
+            return "eyJvcyI6ImlPUyIsImJyb3dzZXIiOiJEaXNjb3JkIGlPUyIsImRldmljZSI6ImlQaG9uZTEwLDMiLCJzeXN0ZW1fbG9jYWxlIjoiamEtSlAiLCJjbGllbnRfdmVyc2lvbiI6IjEyMC4wIiwicmVsZWFzZV9jaGFubmVsIjoic3RhYmxlIiwiZGV2aWNlX2FkdmVydGlzZXJfaWQiOiIwMDAwMDAwMC0wMDAwLTAwMDAtMDAwMC0wMDAwMDAwMDAwMDAiLCJkZXZpY2VfdmVuZG9yX2lkIjoiRURERDZEMDctMkU3OS00ODJGLUFDRDMtRjUxNDNGODY3NzhEIiwiYnJvd3Nlcl91c2VyX2FnZW50IjoiIiwiYnJvd3Nlcl92ZXJzaW9uIjoiIiwib3NfdmVyc2lvbiI6IjE1LjQiLCJjbGllbnRfYnVpbGRfbnVtYmVyIjozMTU2NSwiY2xpZW50X2V2ZW50X3NvdXJjZSI6bnVsbH0=";
         }
 
 

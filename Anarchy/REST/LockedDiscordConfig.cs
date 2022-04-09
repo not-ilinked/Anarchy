@@ -8,7 +8,7 @@
         public uint ApiVersion { get; private set; }
         public bool RetryOnRateLimit { get; private set; }
 
-        public LockedDiscordConfig(DiscordConfig config)
+        public LockedDiscordConfig(ApiConfig config)
         {
             Proxy = config.Proxy;
             SuperProperties = config.SuperProperties;
