@@ -28,7 +28,7 @@ namespace Discord
     [JsonConverter(typeof(ImageJsonConverter))]
     public class DiscordImage
     {
-        public Image Image { get; private set; }
+        public Image Image { get; }
 
         public DiscordImage(Image image)
         {

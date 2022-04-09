@@ -2,7 +2,7 @@
 using Newtonsoft.Json;
 using System;
 using WebSocketSharp;
-
+    
 namespace Discord.WebSockets
 {
     public class DiscordWebSocket<TOpcode> : IDisposable where TOpcode : Enum
