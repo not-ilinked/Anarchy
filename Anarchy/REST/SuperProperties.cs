@@ -92,7 +92,7 @@ namespace Discord
 
         public string ToBase64()
         {
-            return "eyJvcyI6ImlPUyIsImJyb3dzZXIiOiJEaXNjb3JkIGlPUyIsImRldmljZSI6ImlQaG9uZTEwLDMiLCJzeXN0ZW1fbG9jYWxlIjoiamEtSlAiLCJjbGllbnRfdmVyc2lvbiI6IjEyMC4wIiwicmVsZWFzZV9jaGFubmVsIjoic3RhYmxlIiwiZGV2aWNlX2FkdmVydGlzZXJfaWQiOiIwMDAwMDAwMC0wMDAwLTAwMDAtMDAwMC0wMDAwMDAwMDAwMDAiLCJkZXZpY2VfdmVuZG9yX2lkIjoiRURERDZEMDctMkU3OS00ODJGLUFDRDMtRjUxNDNGODY3NzhEIiwiYnJvd3Nlcl91c2VyX2FnZW50IjoiIiwiYnJvd3Nlcl92ZXJzaW9uIjoiIiwib3NfdmVyc2lvbiI6IjE1LjQiLCJjbGllbnRfYnVpbGRfbnVtYmVyIjozMTU2NSwiY2xpZW50X2V2ZW50X3NvdXJjZSI6bnVsbH0=";
+            return Convert.ToBase64String(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(this)));
         }
 
 
