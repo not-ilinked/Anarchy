@@ -1,5 +1,5 @@
-﻿using Anarchy;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Anarchy;
 
 namespace Discord.Gateway
 {

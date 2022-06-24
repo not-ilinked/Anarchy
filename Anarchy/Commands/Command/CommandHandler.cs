@@ -1,9 +1,9 @@
-﻿using Discord.Gateway;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using Discord.Gateway;
 
 namespace Discord.Commands
 {
@@ -66,8 +66,8 @@ namespace Discord.Commands
 
                                 param.Property.SetValue(inst, value);
                             }
-                            catch (Exception ex) 
-                            { 
+                            catch (Exception ex)
+                            {
                                 inst.HandleError(param.Name, parts[i], ex);
 
                                 return;
@@ -96,7 +96,7 @@ namespace Discord.Commands
             // Get the object's ID (always last thing in the sequence)
 
             MatchCollection matches = Regex.Matches(value, @"\d{18,}");
-            if (matches.Count > 0) 
+            if (matches.Count > 0)
             {
                 Match match = matches[matches.Count - 1];
 
@@ -161,23 +161,23 @@ namespace Discord.Commands
                         return anyId;
                 }
             }
-            
+
             throw new ArgumentException("Invalid reference");
         }
 
-            internal static bool TryGetAttribute<TAttr>(IEnumerable<object> attributes, out TAttr attr) where TAttr : Attribute
+        internal static bool TryGetAttribute<TAttr>(IEnumerable<object> attributes, out TAttr attr) where TAttr : Attribute
+        {
+            foreach (var attribute in attributes)
             {
-                foreach (var attribute in attributes)
+                if (attribute.GetType() == typeof(TAttr))
                 {
-                    if (attribute.GetType() == typeof(TAttr))
-                    {
-                        attr = (TAttr)attribute;
-                        return true;
-                    }
+                    attr = (TAttr)attribute;
+                    return true;
                 }
-
-                attr = null;
-                return false;
             }
+
+            attr = null;
+            return false;
+        }
     }
 }

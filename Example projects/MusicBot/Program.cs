@@ -34,18 +34,18 @@ namespace MusicBot
             Console.Write("Token: ");
             string token = Console.ReadLine();
 
-            DiscordSocketClient client = new DiscordSocketClient(new DiscordSocketConfig() 
-            { 
-                VoiceChannelConnectTimeout = 5000, 
-                HandleIncomingMediaData = false, 
-                Intents = DiscordGatewayIntent.Guilds | DiscordGatewayIntent.GuildMessages | DiscordGatewayIntent.GuildVoiceStates 
+            DiscordSocketClient client = new DiscordSocketClient(new DiscordSocketConfig()
+            {
+                VoiceChannelConnectTimeout = 5000,
+                HandleIncomingMediaData = false,
+                Intents = DiscordGatewayIntent.Guilds | DiscordGatewayIntent.GuildMessages | DiscordGatewayIntent.GuildVoiceStates
             });
 
             client.CreateCommandHandler(";");
             client.OnLoggedIn += Client_OnLoggedIn;
             client.OnJoinedVoiceChannel += Client_OnJoinedVoiceChannel;
             client.Login(token);
-            
+
             Thread.Sleep(-1);
         }
 

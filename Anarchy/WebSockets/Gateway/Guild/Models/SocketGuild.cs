@@ -1,17 +1,17 @@
-﻿using Anarchy;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Anarchy;
+using Newtonsoft.Json;
 
 namespace Discord.Gateway
-{    
+{
     public class SocketGuild : DiscordGuild, IDisposable
     {
         public SocketGuild()
         {
-            OnClientUpdated += (sender, e) => 
+            OnClientUpdated += (sender, e) =>
             {
                 if (!Unavailable)
                 {

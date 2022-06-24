@@ -1,6 +1,6 @@
-﻿using Newtonsoft.Json;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace Discord
 {
@@ -29,7 +29,7 @@ namespace Discord
             Options = updated.Options;
         }
 
-        
+
         public async Task UpdateAsync() => Update(await Client.GetGlobalCommandAsync(ApplicationId, Id));
         public void Update() => UpdateAsync().GetAwaiter().GetResult();
 

@@ -1,8 +1,8 @@
-﻿using Newtonsoft.Json.Linq;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
 
 namespace Discord
 {
@@ -11,11 +11,11 @@ namespace Discord
         #region management
         public static async Task<DiscordGuild> CreateGuildAsync(this DiscordClient client, string name, DiscordImage icon = null, string region = null)
         {
-            return (await client.HttpClient.PostAsync("/guilds", new GuildCreationProperties() 
-            { 
-                Name = name, 
-                Icon = icon, 
-                Region = region 
+            return (await client.HttpClient.PostAsync("/guilds", new GuildCreationProperties()
+            {
+                Name = name,
+                Icon = icon,
+                Region = region
             })).Deserialize<DiscordGuild>().SetClient(client);
         }
 

@@ -1,16 +1,15 @@
-﻿using Discord.Commands;
-using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using WebSocketSharp;
-using System.IO;
+using Anarchy;
+using Discord.Commands;
 using Discord.Media;
 using Discord.WebSockets;
-using Anarchy;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using WebSocketSharp;
 
 namespace Discord.Gateway
 {
@@ -27,7 +26,7 @@ namespace Discord.Gateway
         public event ClientEventHandler<DiscordSessionsEventArgs> OnSessionsUpdated;
 
         public event ClientEventHandler<UserEventArgs> OnUserUpdated;
-        public event ClientEventHandler<DiscordSettingsEventArgs> OnSettingsUpdated;        
+        public event ClientEventHandler<DiscordSettingsEventArgs> OnSettingsUpdated;
 
         public event ClientEventHandler<SocketGuildEventArgs> OnJoinedGuild;
         public event ClientEventHandler<GuildEventArgs> OnGuildUpdated;
@@ -209,10 +208,10 @@ namespace Discord.Gateway
         {
             if (Token != token)
                 Token = token;
-            
+
             if (User.Type == DiscordUserType.Bot && Config.ApiVersion >= 8 && !Config.Intents.HasValue)
                 throw new ArgumentNullException("Gateway intents must be provided as of API v8");
-            
+
             State = GatewayConnectionState.Connecting;
 
             WebSocket.SetProxy(Proxy);
@@ -922,7 +921,7 @@ namespace Discord.Gateway
                                                         foreach (var added in ev.AddedMembers)
                                                             members.Add(added.UserId);
                                                     }
-                                                    
+
                                                     if (ev.RemovedMembers != null)
                                                         members.RemoveAll(id => ev.RemovedMembers.Contains(id));
                                                 }

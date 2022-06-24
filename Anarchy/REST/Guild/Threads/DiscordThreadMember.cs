@@ -1,5 +1,5 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
+using Newtonsoft.Json;
 
 namespace Discord
 {
@@ -14,7 +14,7 @@ namespace Discord
 
         [JsonProperty("join_timestamp")]
         public DateTime JoinedAt { get; private set; }
-        
+
         [JsonProperty("flags")]
         public int Flags { get; private set; }
     }

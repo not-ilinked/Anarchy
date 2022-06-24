@@ -1,8 +1,4 @@
 ﻿using Leaf.xNet;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
-using System.Text;
 
 namespace Discord
 {
@@ -26,7 +22,7 @@ namespace Discord
                 string previousToken = Token;
 
                 _token = value;
-                
+
                 try
                 {
                     this.GetClientUser();

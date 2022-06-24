@@ -113,7 +113,7 @@ namespace Discord.Media
                 Timestamp = BitConverter.ToUInt32(new byte[] { rawHeader[7], rawHeader[6], rawHeader[5], rawHeader[4] }, 0),
                 SSRC = BitConverter.ToUInt32(new byte[] { rawHeader[11], rawHeader[10], rawHeader[9], rawHeader[8] }, 0)
             };
-            
+
             byte[] decrypted = new byte[packet.Length - HeaderLength - Sodium.LengthDifference];
 
             Sodium.Decrypt(packet, HeaderLength, packet.Length - HeaderLength, decrypted, 0, CreateNonce(rawHeader), secretKey);
@@ -139,7 +139,7 @@ namespace Discord.Media
             }
             else
                 payload = decrypted;
-            
+
             return header;
         }
     }

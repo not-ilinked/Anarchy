@@ -1,7 +1,7 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace Discord
 {
@@ -221,7 +221,7 @@ namespace Discord
         }
         #endregion
 
-        
+
         public async Task<ulong> FollowAsync(ulong crosspostChannelId)
         {
             return await Client.FollowChannelAsync(Id, crosspostChannelId);

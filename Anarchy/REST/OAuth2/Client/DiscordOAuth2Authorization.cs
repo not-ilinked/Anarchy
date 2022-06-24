@@ -1,5 +1,5 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
+using Newtonsoft.Json;
 
 namespace Discord
 {
@@ -12,8 +12,8 @@ namespace Discord
         public string AccessToken { get; private set; }
 
         [JsonProperty("expires_in")]
-        private int _expiresIn 
-        { 
+        private int _expiresIn
+        {
             set => ExpiresAt = DateTimeOffset.UtcNow.AddSeconds(value);
         }
 

@@ -1,12 +1,8 @@
-﻿using Discord.Gateway;
+﻿using System.IO;
+using System.Linq;
+using Discord.Gateway;
 using Discord.WebSockets;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Concurrent;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
 
 namespace Discord.Media
 {
@@ -51,7 +47,7 @@ namespace Discord.Media
             if (_guildId.HasValue) Livestream = new DiscordLivestreamClient(_client, _guildId.Value, _channelId.Value);
 
             Connection = new DiscordMediaConnection(_client, server.Guild == null ? _channelId.Value : server.Guild.Id, server);
-            
+
             Connection.OnReady += (c) =>
             {
                 Microphone = new DiscordVoiceInput(this);

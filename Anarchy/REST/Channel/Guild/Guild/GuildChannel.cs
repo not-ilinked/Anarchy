@@ -1,7 +1,7 @@
-﻿using Newtonsoft.Json;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace Discord
 {
@@ -28,7 +28,7 @@ namespace Discord
 
         [JsonProperty("position")]
         public uint Position { get; protected set; }
-        
+
 
         [JsonProperty("parent_id")]
         public ulong? ParentId { get; protected set; }

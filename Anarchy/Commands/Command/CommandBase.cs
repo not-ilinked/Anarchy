@@ -1,6 +1,5 @@
-﻿using Discord.Gateway;
-using System;
-using System.Collections.Generic;
+﻿using System;
+using Discord.Gateway;
 
 namespace Discord.Commands
 {

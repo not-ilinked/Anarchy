@@ -40,7 +40,7 @@ namespace Discord
                 else
                     return null;
             }
-            set 
+            set
             {
                 if (value.HasValue)
                 {

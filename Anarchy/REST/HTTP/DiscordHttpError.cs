@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System.Collections.Generic;
 
 namespace Discord
 {
@@ -12,7 +11,7 @@ namespace Discord
 
         [JsonProperty("errors")]
         public JObject Fields { get; private set; }
-        
+
 
         [JsonProperty("message")]
         public string Message { get; private set; }

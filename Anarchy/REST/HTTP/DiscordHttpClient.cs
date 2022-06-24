@@ -1,12 +1,11 @@
-﻿using Newtonsoft.Json.Linq;
-using System.Threading;
-using Newtonsoft.Json;
-using System;
-using System.Text;
-using System.Net.Http;
-using Leaf.xNet;
+﻿using System;
 using System.Net;
+using System.Net.Http;
+using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using Leaf.xNet;
+using Newtonsoft.Json;
 
 namespace Discord
 {
@@ -30,7 +29,7 @@ namespace Discord
         /// <param name="payload">JSON content</param>
         private async Task<DiscordHttpResponse> SendAsync(Leaf.xNet.HttpMethod method, string endpoint, object payload = null)
         {
-            if (!endpoint.StartsWith("https")) 
+            if (!endpoint.StartsWith("https"))
                 endpoint = DiscordHttpUtil.BuildBaseUrl(_discordClient.Config.ApiVersion, _discordClient.Config.SuperProperties.ReleaseChannel) + endpoint;
 
             string json = "{}";
@@ -65,11 +64,11 @@ namespace Discord
                             client.DefaultRequestHeaders.Add("X-Super-Properties", _discordClient.Config.SuperProperties.ToBase64());
                         }
 
-                        var response = await client.SendAsync(new HttpRequestMessage() 
-                        { 
-                            Content = hasData ? new System.Net.Http.StringContent(json, Encoding.UTF8, "application/json") : null, 
-                            Method = new System.Net.Http.HttpMethod(method.ToString()), 
-                            RequestUri = new Uri(endpoint) 
+                        var response = await client.SendAsync(new HttpRequestMessage()
+                        {
+                            Content = hasData ? new System.Net.Http.StringContent(json, Encoding.UTF8, "application/json") : null,
+                            Method = new System.Net.Http.HttpMethod(method.ToString()),
+                            RequestUri = new Uri(endpoint)
                         });
 
                         resp = new DiscordHttpResponse((int)response.StatusCode, response.Content.ReadAsStringAsync().Result);

@@ -1,12 +1,12 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Discord
 {
@@ -24,7 +24,7 @@ namespace Discord
         public static DiscordMessage SendMessage(this DiscordClient client, ulong channelId, MessageProperties properties)
         {
             return client.SendMessageAsync(channelId, properties).GetAwaiter().GetResult();
-        } 
+        }
 
         public static async Task<DiscordMessage> SendMessageAsync(this DiscordClient client, ulong channelId, string message, bool tts = false, DiscordEmbed embed = null)
         {
@@ -204,7 +204,7 @@ namespace Discord
                 if (filters.MentioningUserId.HasValue) parameters += $"mentions={filters.MentioningUserId}&";
                 if (filters.Has.HasValue) parameters += $"has={filters.Has.ToString().ToLower()}&";
                 if (!string.IsNullOrEmpty(filters.Content)) parameters += $"content={filters.Content}";
-                
+
                 var newMessages = (await client.HttpClient.GetAsync($"/channels/{channelId}/messages?{parameters}"))
                                                           .Deserialize<IReadOnlyList<DiscordMessage>>().SetClientsInList(client);
 
@@ -224,7 +224,7 @@ namespace Discord
             return client.GetChannelMessagesAsync(channelId, filters).GetAwaiter().GetResult();
         }
 
-        
+
         /// <summary>
         /// Gets a list of messages from a channel
         /// </summary>

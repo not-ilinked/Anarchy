@@ -1,13 +1,12 @@
-﻿using Discord.Gateway;
-using Discord.WebSockets;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Discord.Gateway;
+using Discord.WebSockets;
 using WebSocketSharp;
 
 namespace Discord.Media
@@ -47,7 +46,7 @@ namespace Discord.Media
 
         private readonly DiscordSocketClient _parentClient;
 
-        public DiscordMediaConnection(DiscordSocketClient parentClient, ulong serverId, DiscordMediaServer server) : base("wss://" + server.Endpoint + "?v=4") 
+        public DiscordMediaConnection(DiscordSocketClient parentClient, ulong serverId, DiscordMediaServer server) : base("wss://" + server.Endpoint + "?v=4")
         {
             SSRC = new DiscordSSRC();
 

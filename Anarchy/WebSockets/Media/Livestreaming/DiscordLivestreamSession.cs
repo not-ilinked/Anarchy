@@ -1,7 +1,7 @@
-﻿using Discord.Gateway;
-using Newtonsoft.Json.Linq;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using Discord.Gateway;
+using Newtonsoft.Json.Linq;
 
 namespace Discord.Media
 {
@@ -69,7 +69,7 @@ namespace Discord.Media
             Client.EndGoLive(_streamKey.Serialize());
             _connection.Close(1000, "Closed by client");
         }
-             
+
         private void HandleMessage(DiscordMediaConnection connection, WebSockets.DiscordWebSocketMessage<DiscordMediaOpcode> message)
         {
             if (message.Opcode == DiscordMediaOpcode.SSRCUpdate)

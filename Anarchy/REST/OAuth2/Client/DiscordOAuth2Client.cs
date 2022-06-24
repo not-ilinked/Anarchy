@@ -1,12 +1,12 @@
-﻿using Discord.Gateway;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using Discord.Gateway;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Discord
 {
@@ -91,7 +91,7 @@ namespace Discord
         public DiscordUser GetUser()
         {
             if (!_auth.Scopes.Contains("identify") && !_auth.Scopes.Contains("email")) throw new InvalidOperationException("You must have the 'identify' or 'email' scope to make this request");
-            
+
             var user = Request<DiscordUser>("GET", "/users/@me");
             if (_botClient != null) user.SetClient(_botClient);
 
@@ -101,7 +101,7 @@ namespace Discord
         public IReadOnlyList<ConnectedAccount> GetConnectedAccounts()
         {
             if (!_auth.Scopes.Contains("connections")) throw new InvalidOperationException("You must have the 'connections' scope to make this request");
-            
+
             var connections = Request<List<ConnectedAccount>>("GET", "/users/@me/connections");
             if (_botClient != null) connections.SetClientsInList(_botClient);
 
@@ -111,13 +111,13 @@ namespace Discord
         public IReadOnlyList<PartialGuild> GetGuilds()
         {
             if (!_auth.Scopes.Contains("guilds")) throw new InvalidOperationException("You must have the 'guilds' scope to make this request");
-            
+
             var guilds = Request<List<PartialGuild>>("GET", "/users/@me/guilds");
             if (_botClient != null) guilds.SetClientsInList(_botClient);
 
             return guilds;
         }
- 
+
         public GuildMember JoinGuild(ulong guildId, OAuth2GuildJoinProperties properties = null)
         {
             if (!_auth.Scopes.Contains("guilds.join")) throw new InvalidOperationException("You must have the 'guilds.join' scope to make this request");

@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Discord
 {
@@ -18,7 +16,7 @@ namespace Discord
         public DiscordCDNImage(CDNEndpoint endpoint, params object[] assets)
         {
             _client = new HttpClient();
-            Url = "https://cdn.discordapp.com/" +  string.Format(endpoint.Template, assets);
+            Url = "https://cdn.discordapp.com/" + string.Format(endpoint.Template, assets);
             Particles = assets;
             AllowedFormats = endpoint.AllowedFormats;
         }
