@@ -27,8 +27,8 @@ namespace Discord.Media
         public DiscordLivestreamClient Livestream { get; private set; }
 
         private OpusDecoder _decoder;
-        private readonly Anarchy.ConcurrentDictionary<ulong, IncomingVoiceStream> _receivers = new Anarchy.ConcurrentDictionary<ulong, IncomingVoiceStream>();
-        private readonly Anarchy.ConcurrentDictionary<uint, ulong> _ssrcToUserDictionary = new Anarchy.ConcurrentDictionary<uint, ulong>();
+        private readonly Anarchy.ConcurrentDictionary<ulong, IncomingVoiceStream> _receivers = new();
+        private readonly Anarchy.ConcurrentDictionary<uint, ulong> _ssrcToUserDictionary = new();
         private static readonly byte[] _silenceFrame = new byte[] { 0xF8, 0xFF, 0xFE };
 
         public DiscordVoiceClient(DiscordSocketClient client, ulong? guildId)

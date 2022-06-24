@@ -163,7 +163,7 @@ namespace Discord.Commands
                         if (cmd.Options.Count > 0 && cmd.Options[0].Type == CommandOptionType.SubCommand)
                         {
                             var subCommand = args.Interaction.Data.CommandArguments[0];
-                            Handle($"{cmd.Name}.{subCommand.Name}", args.Interaction, subCommand.Options == null ? null : subCommand.Options.ToList());
+                            Handle($"{cmd.Name}.{subCommand.Name}", args.Interaction, subCommand.Options?.ToList());
                         }
                         else Handle(cmd.Name, args.Interaction, args.Interaction.Data.CommandArguments.ToList());
 

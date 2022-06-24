@@ -24,7 +24,7 @@ namespace Discord
 
                     if (content.Contains(findThis))
                     {
-                        string buildNumber = content.Substring(content.IndexOf(findThis) + findThis.Length).Split('"')[0];
+                        string buildNumber = content[(content.IndexOf(findThis) + findThis.Length)..].Split('"')[0];
 
                         _versionCache = int.Parse(buildNumber);
                         break;
