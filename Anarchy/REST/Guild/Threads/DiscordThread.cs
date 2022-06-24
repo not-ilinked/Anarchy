@@ -52,7 +52,7 @@ namespace Discord
             Metadata = thread.Metadata;
         }
 
-        public new async Task UpdateAsync()
+        public new Task UpdateAsync()
         {
             throw new InvalidOperationException("Object is unfit for UpdateAsync");
         }
