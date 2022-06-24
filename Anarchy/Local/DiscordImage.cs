@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Drawing;
-using System.Drawing.Imaging;
 using Newtonsoft.Json;
 
 namespace Discord
@@ -25,38 +23,42 @@ namespace Discord
         }
     }
 
+    public enum ImageType
+    {
+        Png,
+        Gif,
+        Jpeg,
+    }
+
     [JsonConverter(typeof(ImageJsonConverter))]
     public class DiscordImage
     {
-        public Image Image { get; private set; }
+        public byte[] Bytes { get; }
 
-        public DiscordImage(Image image)
+        public ImageType Type { get; }
+
+        public DiscordImage(byte[] bytes, ImageType imageType)
         {
-            Image = image;
+            Bytes = bytes;
+            Type = imageType;
         }
 
         public override string ToString()
         {
-            if (Image == null)
+            if (Bytes == null || Bytes.Length == 0)
+            {
                 return null;
+            }
 
-            string type;
+            string type = Type switch
+            {
+                ImageType.Jpeg => "jpeg",
+                ImageType.Png => "png",
+                ImageType.Gif => "gif",
+                _ => throw new NotSupportedException("File extension not supported")
+            };
 
-            if (ImageFormat.Jpeg.Equals(Image.RawFormat))
-                type = "jpeg";
-            else if (ImageFormat.Png.Equals(Image.RawFormat))
-                type = "png";
-            else if (ImageFormat.Gif.Equals(Image.RawFormat))
-                type = "gif";
-            else
-                throw new NotSupportedException("File extension not supported");
-
-            return $"data:image/{type};base64,{Convert.ToBase64String((byte[])new ImageConverter().ConvertTo(Image, typeof(byte[])))}";
-        }
-
-        public static implicit operator DiscordImage(Image instance)
-        {
-            return new DiscordImage(instance);
+            return $"data:image/{type};base64,{Convert.ToBase64String(Bytes)}";
         }
     }
 }

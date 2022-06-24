@@ -48,7 +48,7 @@ namespace Discord
         public string SystemLocale { get; set; } = "da-DK";
 
         [JsonProperty("browser_user_agent")]
-        public string UserAgent { get; set; } = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.106 Safari/537.36";
+        public string UserAgent { get; set; } = "Discord/31433 CFNetwork/1331.0.7 Darwin/21.4.0";
 
         [JsonProperty("browser_version")]
         public string BrowserVersion { get; set; } = "91.0.4472.106";
