@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-    <RootNamespace>Zenly.APIClient</RootNamespace>
+    <RootNamespace>Anarchy</RootNamespace>
 	  <DebugSymbols>true</DebugSymbols>
 	  <DebugType>full</DebugType>
 	  <Optimize>false</Optimize>
