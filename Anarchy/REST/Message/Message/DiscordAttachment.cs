@@ -12,6 +12,14 @@ namespace Discord
         public string FileName { get; private set; }
 
 
+        [JsonProperty("description")]
+        public string Description { get; private set; }
+
+
+        [JsonProperty("content_type")]
+        public string ContentType { get; private set; }
+
+
         [JsonProperty("url")]
         public string Url { get; private set; }
 

@@ -239,7 +239,6 @@ namespace Discord
             client.AcknowledgeGuildMessagesAsync(guildId).GetAwaiter().GetResult();
         }
 
-
         public static async Task<IImage> GetGoLivePreviewAsync(this DiscordClient client, ulong guildId, ulong channelId, ulong userId)
         {
             return PlatformImage.FromStream(

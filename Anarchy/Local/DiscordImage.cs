@@ -1,5 +1,8 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
+using System.Net.Http;
+using System.Threading.Tasks;
 using Microsoft.Maui.Graphics;
 using Microsoft.Maui.Graphics.Platform;
 using Newtonsoft.Json;
@@ -26,52 +29,54 @@ namespace Discord
         }
     }
 
-    public enum ImageType
-    {
-        Png,
-        Gif,
-        Jpeg,
-    }
-
     [JsonConverter(typeof(ImageJsonConverter))]
     public class DiscordImage
     {
-        public PlatformImage Image { get; }
+        public PlatformImage PlatformImage { get; }
 
-        public ImageType Type { get; }
+        public ImageFormat ImageFormat { get; }
 
-        public DiscordImage(IImage image, ImageType type)
+        public DiscordImage(IImage image, ImageFormat type)
         {
             if (image != null)
             {
-                Image = image.ToPlatformImage() as PlatformImage;
-                Type = type;
+                PlatformImage = image.ToPlatformImage() as PlatformImage;
+                ImageFormat = type;
             }
         }
 
-        public DiscordImage(byte[] bytes, ImageType type)
+        public static DiscordImage CreateFrom(byte[] bytes, ImageFormat format)
         {
-            if (bytes.Length > 0)
-            {
-                Image = PlatformImage.FromStream(new MemoryStream(bytes)) as PlatformImage;
-                Type = type;
-            }
+            return new DiscordImage(
+                PlatformImage.FromStream(new MemoryStream(bytes)) as PlatformImage,
+                format
+            );
+        }
+
+        public static async Task<DiscordImage> CreateFrom(string url)
+        {
+            using HttpClient hc = new();
+            using var response = await hc.GetAsync(url);
+            response.EnsureSuccessStatusCode();
+            using var stream = await response.Content.ReadAsStreamAsync();
+            ImageFormat imageFormat = Enum.Parse<ImageFormat>(response.Content.Headers.First(x => x.Key == "Content-Type").Value.First().Replace("image/", string.Empty), true);
+            return DiscordImage.CreateFrom(response.Content.ReadAsByteArrayAsync().Result, imageFormat);
         }
 
         public override string ToString()
         {
-            if (Image == null)
+            if (PlatformImage == null)
                 return null;
 
-            string type = Type switch
+            string type = ImageFormat switch
             {
-                ImageType.Jpeg => "jpeg",
-                ImageType.Png => "png",
-                ImageType.Gif => "gif",
+                ImageFormat.Jpeg => "jpeg",
+                ImageFormat.Png => "png",
+                ImageFormat.Gif => "gif",
                 _ => throw new NotSupportedException("File extension not supported")
             };
 
-            return $"data:image/{type};base64,{Convert.ToBase64String(Image.Bytes)}";
+            return $"data:image/{type};base64,{Convert.ToBase64String(PlatformImage.Bytes)}";
         }
     }
 }

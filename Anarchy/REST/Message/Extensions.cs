@@ -205,8 +205,9 @@ namespace Discord
                 if (filters.Has.HasValue) parameters += $"has={filters.Has.ToString().ToLower()}&";
                 if (!string.IsNullOrEmpty(filters.Content)) parameters += $"content={filters.Content}";
 
-                var newMessages = (await client.HttpClient.GetAsync($"/channels/{channelId}/messages?{parameters}"))
-                                                          .Deserialize<IReadOnlyList<DiscordMessage>>().SetClientsInList(client);
+                var s = await client.HttpClient.GetAsync($"/channels/{channelId}/messages?{parameters}");
+
+                var newMessages = s.Deserialize<IReadOnlyList<DiscordMessage>>().SetClientsInList(client);
 
                 messages.AddRange(newMessages);
 

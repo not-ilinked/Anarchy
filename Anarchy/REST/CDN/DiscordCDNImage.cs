@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using Microsoft.Maui.Graphics;
 
 namespace Discord
 {
@@ -31,8 +32,8 @@ namespace Discord
                 url += "." + format.ToString().ToLower();
 
             var httpResponse = _client.GetAsync(url).Result;
-            ImageType type = Enum.Parse<ImageType>(httpResponse.Content.Headers.First(x => x.Key == "Content-Type").Value.First().Replace("image/", string.Empty), true);
-            return new DiscordImage(httpResponse.Content.ReadAsByteArrayAsync().Result, type);
+            ImageFormat imageFormat = Enum.Parse<ImageFormat>(httpResponse.Content.Headers.First(x => x.Key == "Content-Type").Value.First().Replace("image/", string.Empty), true);
+            return DiscordImage.CreateFrom(httpResponse.Content.ReadAsByteArrayAsync().Result, imageFormat);
         }
     }
 }
