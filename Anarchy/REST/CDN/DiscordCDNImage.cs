@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.Maui.Graphics;
 
 namespace Discord
 {
@@ -18,11 +16,10 @@ namespace Discord
         public DiscordCDNImage(CDNEndpoint endpoint, params object[] assets)
         {
             _client = new HttpClient();
-            Url = "https://cdn.discordapp.com/" +  string.Format(endpoint.Template, assets);
+            Url = "https://cdn.discordapp.com/" + string.Format(endpoint.Template, assets);
             Particles = assets;
             AllowedFormats = endpoint.AllowedFormats;
         }
-
 
         public DiscordImage Download(DiscordCDNImageFormat format = DiscordCDNImageFormat.Any)
         {
@@ -34,7 +31,9 @@ namespace Discord
             if (format != DiscordCDNImageFormat.Any)
                 url += "." + format.ToString().ToLower();
 
-            return new DiscordImage((Bitmap)new ImageConverter().ConvertFrom(_client.GetByteArrayAsync(url).Result));
+            var httpResponse = _client.GetAsync(url).Result;
+            ImageFormat imageFormat = Enum.Parse<ImageFormat>(httpResponse.Content.Headers.First(x => x.Key == "Content-Type").Value.First().Replace("image/", string.Empty), true);
+            return DiscordImage.CreateFrom(httpResponse.Content.ReadAsByteArrayAsync().Result, imageFormat);
         }
     }
 }

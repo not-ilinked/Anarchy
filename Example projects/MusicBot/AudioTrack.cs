@@ -16,7 +16,7 @@ namespace MusicBot
 
             var video = Program.YouTubeClient.Videos.GetAsync(id).Result;
             Title = video.Title;
-            ChannelName = video.Author.Title;
+            ChannelName = video.Author.ChannelTitle;
 
             CancellationTokenSource = new CancellationTokenSource();
         }

@@ -1,5 +1,5 @@
-﻿using Newtonsoft.Json;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace Discord.Gateway
 {
@@ -7,7 +7,7 @@ namespace Discord.Gateway
     {
         public EmojiContainer()
         {
-            OnClientUpdated += (sender, e) => 
+            OnClientUpdated += (sender, e) =>
             {
                 Emojis.SetClientsInList(Client);
 

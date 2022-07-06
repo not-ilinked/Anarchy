@@ -8,7 +8,7 @@ namespace Discord
     {
         public DiscordProfile()
         {
-            OnClientUpdated += (sender, e) => 
+            OnClientUpdated += (sender, e) =>
             {
                 User.SetClient(Client);
                 MutualGuilds.SetClientsInList(Client);

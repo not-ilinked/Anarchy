@@ -1,12 +1,12 @@
-﻿using Newtonsoft.Json.Linq;
-using System.Threading;
-using Newtonsoft.Json;
-using System;
-using System.Text;
-using System.Net.Http;
-using Leaf.xNet;
+﻿using System;
+using System.Linq;
 using System.Net;
+using System.Net.Http;
+using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using Leaf.xNet;
+using Newtonsoft.Json;
 
 namespace Discord
 {
@@ -30,7 +30,7 @@ namespace Discord
         /// <param name="payload">JSON content</param>
         private async Task<DiscordHttpResponse> SendAsync(Leaf.xNet.HttpMethod method, string endpoint, object payload = null)
         {
-            if (!endpoint.StartsWith("https")) 
+            if (!endpoint.StartsWith("https"))
                 endpoint = DiscordHttpUtil.BuildBaseUrl(_discordClient.Config.ApiVersion, _discordClient.Config.SuperProperties.ReleaseChannel) + endpoint;
 
             string json = "{}";
@@ -39,7 +39,7 @@ namespace Discord
                 if (payload.GetType() == typeof(string))
                     json = (string)payload;
                 else
-                    json = JsonConvert.SerializeObject(payload);
+                    json = JsonConvert.SerializeObject(payload, new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore });
             }
 
             uint retriesLeft = _discordClient.Config.RestConnectionRetries;
@@ -53,7 +53,7 @@ namespace Discord
 
                     if (_discordClient.Proxy == null || _discordClient.Proxy.Type == ProxyType.HTTP)
                     {
-                        HttpClient client = new HttpClient(new HttpClientHandler() { Proxy = _discordClient.Proxy == null ? null : new WebProxy(_discordClient.Proxy.Host, _discordClient.Proxy.Port) });
+                        HttpClient client = new(new HttpClientHandler() { Proxy = _discordClient.Proxy == null ? null : new WebProxy(_discordClient.Proxy.Host, _discordClient.Proxy.Port) });
                         if (_discordClient.Token != null)
                             client.DefaultRequestHeaders.Add("Authorization", _discordClient.Token);
 
@@ -65,18 +65,25 @@ namespace Discord
                             client.DefaultRequestHeaders.Add("X-Super-Properties", _discordClient.Config.SuperProperties.ToBase64());
                         }
 
-                        var response = await client.SendAsync(new HttpRequestMessage() 
-                        { 
-                            Content = hasData ? new System.Net.Http.StringContent(json, Encoding.UTF8, "application/json") : null, 
-                            Method = new System.Net.Http.HttpMethod(method.ToString()), 
-                            RequestUri = new Uri(endpoint) 
+                        using System.Net.Http.HttpContent content =
+                        !hasData
+                            ? null
+                            : payload != null && Attribute.GetCustomAttributes(payload.GetType()).Any(attr => attr is MultipartFormDataProviderAttribute)
+                                ? Extensions.MultipartFormData(payload as dynamic, json)
+                                : new System.Net.Http.StringContent(json, Encoding.UTF8, "application/json");
+
+                        var response = await client.SendAsync(new HttpRequestMessage()
+                        {
+                            Content = content,
+                            Method = new System.Net.Http.HttpMethod(method.ToString()),
+                            RequestUri = new Uri(endpoint)
                         });
 
                         resp = new DiscordHttpResponse((int)response.StatusCode, response.Content.ReadAsStringAsync().Result);
                     }
                     else
                     {
-                        HttpRequest msg = new HttpRequest
+                        HttpRequest msg = new()
                         {
                             IgnoreProtocolErrors = true,
                             UserAgent = _discordClient.User != null && _discordClient.User.Type == DiscordUserType.Bot ? "Anarchy/0.8.1.2" : _discordClient.Config.SuperProperties.UserAgent,

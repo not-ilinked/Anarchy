@@ -1,9 +1,9 @@
-﻿using Anarchy;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Anarchy;
+using Newtonsoft.Json;
 
 namespace Discord
 {
@@ -34,12 +34,12 @@ namespace Discord
 
         public DiscordCDNImage DiscoverySplash
         {
-            get 
+            get
             {
                 if (_discoverySplashHash == null)
                     return null;
                 else
-                    return new DiscordCDNImage(CDNEndpoints.DiscoverySplash, Id, _discoverySplashHash); 
+                    return new DiscordCDNImage(CDNEndpoints.DiscoverySplash, Id, _discoverySplashHash);
             }
         }
 
@@ -108,7 +108,7 @@ namespace Discord
 
         [JsonProperty("roles")]
         internal ConcurrentList<DiscordRole> _roles;
-        
+
         public IReadOnlyList<DiscordRole> Roles
         {
             get { return _roles; }
@@ -125,7 +125,7 @@ namespace Discord
 
         [JsonProperty("emojis")]
         internal List<DiscordEmoji> _emojis;
-        
+
         public IReadOnlyList<DiscordEmoji> Emojis
         {
             get
@@ -135,7 +135,7 @@ namespace Discord
                     foreach (var emoji in _emojis)
                         emoji.GuildId = Id;
                 }
-                
+
                 return _emojis;
             }
         }
@@ -150,7 +150,7 @@ namespace Discord
 
 
         [JsonProperty("system_channel_id")]
-        private ulong? _sysChannelId; 
+        private ulong? _sysChannelId;
 
 
         [JsonProperty("system_channel_flags")]

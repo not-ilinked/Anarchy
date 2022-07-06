@@ -1,5 +1,4 @@
-﻿using Discord.Media;
-using System;
+﻿using System;
 using System.Runtime.InteropServices;
 
 namespace Discord.Media

@@ -1,8 +1,6 @@
-﻿using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Discord.Gateway
@@ -162,7 +160,7 @@ namespace Discord.Gateway
                         membersAccordingToRoles += group.Count;
 
                     try
-                    { 
+                    {
                         var syncOps = e.Operations.Where(o => o.Type == "SYNC").ToList();
 
                         for (int i = syncOps.Count - 1; i >= 0; i--)

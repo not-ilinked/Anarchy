@@ -7,7 +7,7 @@ namespace Discord
         // cba to implement this rn lol
         [JsonProperty("mute_config")]
 #pragma warning disable IDE0052
-        private readonly GuildMuteConfig _muteConfig = new GuildMuteConfig() 
+        private readonly GuildMuteConfig _muteConfig = new GuildMuteConfig()
         {
             EndTime = null,
             SelectedTimeWindow = -1

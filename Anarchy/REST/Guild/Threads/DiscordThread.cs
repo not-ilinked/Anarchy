@@ -1,7 +1,7 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace Discord
 {
@@ -52,12 +52,12 @@ namespace Discord
             Metadata = thread.Metadata;
         }
 
-        public new async Task UpdateAsync()
+        public new static Task UpdateAsync()
         {
             throw new InvalidOperationException("Object is unfit for UpdateAsync");
         }
 
-        public new void Update()
+        public new static void Update()
         {
             UpdateAsync().GetAwaiter().GetResult();
         }

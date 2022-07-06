@@ -8,7 +8,7 @@ namespace MusicBot
     {
         [Parameter("action", true)]
         public string Action { get; private set; }
-        
+
         public override void Execute()
         {
             if (Action == "clear")

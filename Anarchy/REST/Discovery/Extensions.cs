@@ -1,5 +1,5 @@
-﻿using Discord.Gateway;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using Discord.Gateway;
 
 namespace Discord
 {

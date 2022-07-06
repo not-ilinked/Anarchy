@@ -51,7 +51,7 @@ namespace Discord
         [JsonProperty("member")]
         private GuildMember _authorMember;
 
-        
+
         public MessageAuthor Author
         {
             get
@@ -62,7 +62,7 @@ namespace Discord
                 return new MessageAuthor(_authorUser, _authorMember);
             }
         }
-        
+
 
         [JsonProperty("attachments")]
         private readonly IReadOnlyList<DiscordAttachment> _attachments;
@@ -194,7 +194,7 @@ namespace Discord
             EditAsync(properties).GetAwaiter().GetResult();
         }
 
-        
+
         public async Task DeleteAsync()
         {
             await Client.DeleteMessageAsync(Channel.Id, Id);

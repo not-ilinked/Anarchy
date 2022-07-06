@@ -1,7 +1,7 @@
-﻿using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
 
 namespace Discord
 {
@@ -19,7 +19,7 @@ namespace Discord
                 Type = ChannelType.GuildPublicThread
             })).Deserialize<DiscordThread>().SetClient(client);
         }
-         
+
         public static Task<DiscordThread> CreateThreadAsync(this DiscordClient client, ulong channelId, ulong messageId, string name, TimeSpan ttl)
                 => client.createThreadAsync(channelId, name, ttl, messageId);
 
@@ -59,7 +59,7 @@ namespace Discord
         public static async Task<IReadOnlyList<DiscordThread>> GetChannelActiveThreadsAsync(this DiscordClient client, ulong channelId)
                 => (await client.HttpClient.GetAsync($"/channels/{channelId}/threads/active")).Body.Value<JToken>("threads").ToObject<List<DiscordThread>>();
 
-        public static IReadOnlyList<DiscordThread> GetChannelActiveThreads(this DiscordClient client, ulong channelId) 
+        public static IReadOnlyList<DiscordThread> GetChannelActiveThreads(this DiscordClient client, ulong channelId)
                 => client.GetChannelActiveThreadsAsync(channelId).GetAwaiter().GetResult();
     }
 }

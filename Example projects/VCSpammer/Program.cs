@@ -1,13 +1,12 @@
-﻿using Discord;
-using Discord.Gateway;
-using Discord.Media;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Discord;
+using Discord.Gateway;
+using Discord.Media;
 
 namespace VCSpammer
 {

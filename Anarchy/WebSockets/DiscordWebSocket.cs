@@ -1,6 +1,6 @@
-﻿using Leaf.xNet;
+﻿using System;
+using Leaf.xNet;
 using Newtonsoft.Json;
-using System;
 using WebSocketSharp;
 
 namespace Discord.WebSockets

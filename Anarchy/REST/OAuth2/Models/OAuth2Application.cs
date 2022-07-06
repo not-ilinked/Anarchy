@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
@@ -36,7 +34,7 @@ namespace Discord
                 if (_iconHash == null)
                     return null;
                 else
-                    return new DiscordCDNImage(CDNEndpoints.AppIcon, Id, _iconHash); 
+                    return new DiscordCDNImage(CDNEndpoints.AppIcon, Id, _iconHash);
             }
         }
 

@@ -1,9 +1,9 @@
-﻿using Discord;
-using Discord.Gateway;
-using Discord.Commands;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Discord;
+using Discord.Commands;
+using Discord.Gateway;
 
 namespace TicTacToe
 {
@@ -26,16 +26,16 @@ namespace TicTacToe
             if (Target.Id == Caller.Id) return new InteractionResponseProperties() { Content = "You cannot challenge yourself", Ephemeral = true };
 
             var game = new Game(Client, CallerMember.User, Target);
-            
+
             var deny = new ComponentFormButton(MessageButtonStyle.Secondary, "Deny");
             deny.OnClick += (s, e) =>
             {
                 if (e.Member.User.Id == Target.Id)
                 {
-                    e.Respond(InteractionCallbackType.UpdateMessage, new InteractionResponseProperties() 
+                    e.Respond(InteractionCallbackType.UpdateMessage, new InteractionResponseProperties()
                     {
-                        Components = new List<MessageComponent>(), 
-                        Content = $"{Target.AsMessagable()} declined {CallerMember.User.AsMessagable()}'s challenge" 
+                        Components = new List<MessageComponent>(),
+                        Content = $"{Target.AsMessagable()} declined {CallerMember.User.AsMessagable()}'s challenge"
                     });
                 }
             };

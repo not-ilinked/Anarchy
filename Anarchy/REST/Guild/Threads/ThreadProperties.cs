@@ -1,5 +1,5 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
+using Newtonsoft.Json;
 
 namespace Discord
 {
@@ -11,8 +11,8 @@ namespace Discord
 
         public TimeSpan? TTL
         {
-            get 
-            { 
+            get
+            {
                 if (_durationParam.Set) return new TimeSpan(0, _durationParam.Value, 0);
                 return null;
             }

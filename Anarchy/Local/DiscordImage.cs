@@ -1,7 +1,11 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Drawing;
-using System.Drawing.Imaging;
+﻿using System;
+using System.IO;
+using System.Linq;
+using System.Net.Http;
+using System.Threading.Tasks;
+using Microsoft.Maui.Graphics;
+using Microsoft.Maui.Graphics.Platform;
+using Newtonsoft.Json;
 
 namespace Discord
 {
@@ -28,35 +32,51 @@ namespace Discord
     [JsonConverter(typeof(ImageJsonConverter))]
     public class DiscordImage
     {
-        public Image Image { get; private set; }
+        public PlatformImage PlatformImage { get; }
 
-        public DiscordImage(Image image)
+        public ImageFormat ImageFormat { get; }
+
+        public DiscordImage(IImage image, ImageFormat type)
         {
-            Image = image;
+            if (image != null)
+            {
+                PlatformImage = image.ToPlatformImage() as PlatformImage;
+                ImageFormat = type;
+            }
+        }
+
+        public static DiscordImage CreateFrom(byte[] bytes, ImageFormat format)
+        {
+            return new DiscordImage(
+                PlatformImage.FromStream(new MemoryStream(bytes)) as PlatformImage,
+                format
+            );
+        }
+
+        public static async Task<DiscordImage> CreateFrom(string url)
+        {
+            using HttpClient hc = new();
+            using var response = await hc.GetAsync(url);
+            response.EnsureSuccessStatusCode();
+            using var stream = await response.Content.ReadAsStreamAsync();
+            ImageFormat imageFormat = Enum.Parse<ImageFormat>(response.Content.Headers.First(x => x.Key == "Content-Type").Value.First().Replace("image/", string.Empty), true);
+            return DiscordImage.CreateFrom(response.Content.ReadAsByteArrayAsync().Result, imageFormat);
         }
 
         public override string ToString()
         {
-            if (Image == null)
+            if (PlatformImage == null)
                 return null;
 
-            string type;
+            string type = ImageFormat switch
+            {
+                ImageFormat.Jpeg => "jpeg",
+                ImageFormat.Png => "png",
+                ImageFormat.Gif => "gif",
+                _ => throw new NotSupportedException("File extension not supported")
+            };
 
-            if (ImageFormat.Jpeg.Equals(Image.RawFormat))
-                type = "jpeg";
-            else if (ImageFormat.Png.Equals(Image.RawFormat))
-                type = "png";
-            else if (ImageFormat.Gif.Equals(Image.RawFormat))
-                type = "gif";
-            else
-                throw new NotSupportedException("File extension not supported");
-
-            return $"data:image/{type};base64,{Convert.ToBase64String((byte[])new ImageConverter().ConvertTo(Image, typeof(byte[])))}";
-        }
-
-        public static implicit operator DiscordImage(Image instance)
-        {
-            return new DiscordImage(instance);
+            return $"data:image/{type};base64,{Convert.ToBase64String(PlatformImage.Bytes)}";
         }
     }
 }

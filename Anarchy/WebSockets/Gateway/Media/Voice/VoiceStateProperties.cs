@@ -15,7 +15,7 @@ namespace Discord.Gateway
 
         internal readonly DiscordParameter<ulong?> ChannelProperty = new DiscordParameter<ulong?>();
         [JsonProperty("channel_id")]
-        public ulong? ChannelId 
+        public ulong? ChannelId
         {
             get { return ChannelProperty; }
             set { ChannelProperty.Value = value; }

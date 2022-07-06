@@ -1,9 +1,11 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
+using Newtonsoft.Json;
 
 namespace Discord
 {
+    [MultipartFormDataProvider]
     public class MessageProperties
     {
         public MessageProperties()
@@ -38,6 +40,15 @@ namespace Discord
         public List<MessageComponent> Components { get; set; }
 
 
+        [JsonProperty("attachments")]
+        public List<PartialDiscordAttachment> Attachments { get; set; }
+
+
+        public bool ShouldSerializeAttachments()
+        {
+            return Attachments != null;
+        }
+
         public bool ShouldSerializeReplyTo()
         {
             return ReplyTo != null;
@@ -51,6 +62,13 @@ namespace Discord
         public bool ShouldSerializeComponents()
         {
             return Components != null;
+        }
+
+        [OnSerializing]
+        internal void OnSerializingMethod(StreamingContext context)
+        {
+            if (ShouldSerializeAttachments())
+                for (byte i = 0; i < Attachments.Count; ++i) Attachments[i].Id = i;
         }
     }
 }

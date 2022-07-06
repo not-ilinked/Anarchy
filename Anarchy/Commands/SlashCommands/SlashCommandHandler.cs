@@ -1,10 +1,8 @@
-﻿using Discord.Gateway;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+using Discord.Gateway;
 
 namespace Discord.Commands
 {
@@ -138,8 +136,10 @@ namespace Discord.Commands
                 }
             }
 
-            if (guildId.HasValue) _client.HttpClient.PutAsync($"/applications/{appId}/guilds/{guildId.Value}/commands", _commands).GetAwaiter().GetResult();
-            else _client.SetGlobalApplicationCommands(appId, _commands);
+            if (guildId.HasValue)
+                _client.HttpClient.PutAsync($"/applications/{appId}/guilds/{guildId.Value}/commands", _commands).GetAwaiter().GetResult();
+            else
+                _client.SetGlobalApplicationCommands(appId, _commands);
 
             client.OnInteraction += Client_OnInteraction;
         }
@@ -163,7 +163,7 @@ namespace Discord.Commands
                         if (cmd.Options.Count > 0 && cmd.Options[0].Type == CommandOptionType.SubCommand)
                         {
                             var subCommand = args.Interaction.Data.CommandArguments[0];
-                            Handle($"{cmd.Name}.{subCommand.Name}", args.Interaction, subCommand.Options == null ? null : subCommand.Options.ToList());
+                            Handle($"{cmd.Name}.{subCommand.Name}", args.Interaction, subCommand.Options?.ToList());
                         }
                         else Handle(cmd.Name, args.Interaction, args.Interaction.Data.CommandArguments.ToList());
 

@@ -68,7 +68,7 @@ namespace GuildDuplicator
                     }
                     catch (RateLimitException)
                     {
-                        break; // Discord likes to throw this after us after duping most of a guild's emojis, and it's so big that we might as well stop trying.
+                        break; // Discord likes to throw this at us after duping most of a guild's emojis, and it's so big that we might as well stop trying.
                     }
                 }
 

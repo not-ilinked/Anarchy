@@ -1,5 +1,5 @@
-﻿using Newtonsoft.Json;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace Discord
 {
@@ -66,7 +66,7 @@ namespace Discord
         {
             JoinAsync().GetAwaiter().GetResult();
         }
-        
+
 
         public override string ToString()
         {
