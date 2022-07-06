@@ -1,37 +1,47 @@
 ﻿using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text;
 
 namespace Discord
 {
     internal static class Extensions
     {
-        internal static MultipartFormDataContent MultipartFormData(this MessageProperties _this, string json)
+        internal static HttpContent MultipartFormData(this MessageProperties _this, string json)
         {
-            var mpfd = new MultipartFormDataContent();
+            HttpContent content;
 
-            for (int i = 0; i < _this.Attachments.Count; ++i)
+            if (_this.Attachments != null && _this.Attachments.Count > 0)
             {
-                var a = _this.Attachments[i];
+                var mpfc = new MultipartFormDataContent();
 
-                var ms = new MemoryStream();
-                a.Image.PlatformImage.Save(ms, a.Image.ImageFormat);
-                ms.Position = 0;
+                for (int i = 0; i < _this.Attachments.Count; ++i)
+                {
+                    var a = _this.Attachments[i];
 
-                var fileContent = new StreamContent(ms);
-                fileContent.Headers.ContentType = new MediaTypeHeaderValue("image/" + a.Image.ImageFormat);
+                    var ms = new MemoryStream();
+                    a.Image.PlatformImage.Save(ms, a.Image.ImageFormat);
+                    ms.Position = 0;
 
-                mpfd.Add(fileContent, "files[0]", a.FileName);
+                    var fileContent = new StreamContent(ms);
+                    fileContent.Headers.ContentType = new MediaTypeHeaderValue("image/" + a.Image.ImageFormat);
+
+                    mpfc.Add(fileContent, "files[0]", a.FileName);
+                }
+
+                if (!string.IsNullOrEmpty(json))
+                {
+                    var jsonContent = new StringContent(json, null, null);
+                    jsonContent.Headers.Remove("Content-Type");
+                    mpfc.Add(jsonContent, "\"" + "payload_json" + "\"");
+                }
+
+                content = mpfc;
             }
+            else
+                content = new System.Net.Http.StringContent(json, Encoding.UTF8, "application/json");
 
-            if (!string.IsNullOrEmpty(json))
-            {
-                var jsonContent = new StringContent(json, null, null);
-                jsonContent.Headers.Remove("Content-Type");
-                mpfd.Add(jsonContent, "\"" + "payload_json" + "\"");
-            }
-
-            return mpfd;
+            return content;
         }
     }
 }
