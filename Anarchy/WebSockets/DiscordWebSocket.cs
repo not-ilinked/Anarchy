@@ -55,7 +55,8 @@ namespace Discord.WebSockets
         {
             lock (_socketLock)
             {
-                _socket.Send(JsonConvert.SerializeObject(new DiscordWebSocketRequest<T, TOpcode>(op, data)));
+				if (_socket != null) _socket.Send(JsonConvert.SerializeObject(new DiscordWebSocketRequest<T, TOpcode>(op, data)));
+                else throw new InvalidOperationException("Socket is disposed of");
             }
         }
 
