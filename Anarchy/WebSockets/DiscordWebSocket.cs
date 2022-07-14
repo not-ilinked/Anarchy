@@ -1,6 +1,6 @@
-using System;
 using Leaf.xNet;
 using Newtonsoft.Json;
+using System;
 using WebSocketSharp;
 
 namespace Discord.WebSockets
@@ -55,7 +55,7 @@ namespace Discord.WebSockets
         {
             lock (_socketLock)
             {
-                if (_socket != null) _socket.Send(JsonConvert.SerializeObject(new DiscordWebSocketRequest<T, TOpcode>(op, data)));
+				if (_socket != null) _socket.Send(JsonConvert.SerializeObject(new DiscordWebSocketRequest<T, TOpcode>(op, data)));
                 else throw new InvalidOperationException("Socket is disposed of");
             }
         }
