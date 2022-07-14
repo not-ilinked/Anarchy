@@ -3,11 +3,10 @@ using Newtonsoft.Json;
 using System;
 using WebSocketSharp;
 
-namespace Discord.WebSockets
+namespace DiscordAnarchy.WebSockets
 {
     public class DiscordWebSocket<TOpcode> : IDisposable where TOpcode : Enum
     {
-        private object _socketLock;
         private WebSocket _socket;
 
         public delegate void MessageHandler(object sender, DiscordWebSocketMessage<TOpcode> message);
@@ -18,12 +17,11 @@ namespace Discord.WebSockets
 
         public DiscordWebSocket(string url)
         {
-            _socketLock = new object();
-
             _socket = new WebSocket(url)
             {
-                Origin = "https://discordapp.com"
+                Origin = "https://discord.com", // "https://discordapp.com"
             };
+            _socket.SslConfiguration.EnabledSslProtocols = System.Security.Authentication.SslProtocols.Tls12;
             _socket.OnMessage += OnMessage;
             _socket.OnClose += OnClose;
         }
@@ -36,27 +34,17 @@ namespace Discord.WebSockets
 
         public void Connect()
         {
-            lock (_socketLock)
-            {
-                _socket.Connect();
-            }
+            _socket.Connect();
         }
 
         public void Close(ushort error, string reason)
         {
-            lock (_socketLock)
-            {
-                _socket.Close(error, reason);
-            }
+            _socket.Close(error, reason);
         }
 
         public void Send<T>(TOpcode op, T data)
         {
-            lock (_socketLock)
-            {
-                if (_socket != null) _socket.Send(JsonConvert.SerializeObject(new DiscordWebSocketRequest<T, TOpcode>(op, data)));
-                else throw new InvalidOperationException("Socket is disposed of");
-            }
+            _socket.Send(JsonConvert.SerializeObject(new DiscordWebSocketRequest<T, TOpcode>(op, data)));
         }
 
         private void OnClose(object sender, CloseEventArgs e)
@@ -71,10 +59,7 @@ namespace Discord.WebSockets
 
         public void Dispose()
         {
-            lock (_socketLock)
-            {
-                _socket = null;
-            }
+            _socket = null;
         }
     }
 }
