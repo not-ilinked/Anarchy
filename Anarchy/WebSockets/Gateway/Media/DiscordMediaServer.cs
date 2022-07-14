@@ -29,14 +29,14 @@ namespace Discord.Gateway
         public string Endpoint
         {
             get { return _endpoint; }
-            set 
-            { 
+            set
+            {
                 if (value != null)
-                    _endpoint = value.Split(':')[0]; 
+                    _endpoint = value.Split(':')[0];
             }
         }
 
-        
+
         [JsonProperty("stream_key")]
         internal string StreamKey { get; private set; }
     }

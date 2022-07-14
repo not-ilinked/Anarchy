@@ -22,8 +22,8 @@ namespace Discord.Gateway
 
         [JsonProperty("intents")]
         public DiscordGatewayIntent? Intents { get; set; }
-        
-        
+
+
         public bool ShouldSerializeIntents()
         {
             return Intents.HasValue;

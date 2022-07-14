@@ -1,7 +1,8 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Drawing;
-using System.Drawing.Imaging;
+﻿using System;
+using System.IO;
+using Microsoft.Maui.Graphics;
+using Microsoft.Maui.Graphics.Platform;
+using Newtonsoft.Json;
 
 namespace Discord
 {
@@ -25,14 +26,36 @@ namespace Discord
         }
     }
 
+    public enum ImageType
+    {
+        Png,
+        Gif,
+        Jpeg,
+    }
+
     [JsonConverter(typeof(ImageJsonConverter))]
     public class DiscordImage
     {
-        public Image Image { get; private set; }
+        public PlatformImage Image { get; }
 
-        public DiscordImage(Image image)
+        public ImageType Type { get; }
+
+        public DiscordImage(IImage image, ImageType type)
         {
-            Image = image;
+            if (image != null)
+            {
+                Image = image.ToPlatformImage() as PlatformImage;
+                Type = type;
+            }
+        }
+
+        public DiscordImage(byte[] bytes, ImageType type)
+        {
+            if (bytes.Length > 0)
+            {
+                Image = PlatformImage.FromStream(new MemoryStream(bytes)) as PlatformImage;
+                Type = type;
+            }
         }
 
         public override string ToString()
@@ -40,23 +63,15 @@ namespace Discord
             if (Image == null)
                 return null;
 
-            string type;
+            string type = Type switch
+            {
+                ImageType.Jpeg => "jpeg",
+                ImageType.Png => "png",
+                ImageType.Gif => "gif",
+                _ => throw new NotSupportedException("File extension not supported")
+            };
 
-            if (ImageFormat.Jpeg.Equals(Image.RawFormat))
-                type = "jpeg";
-            else if (ImageFormat.Png.Equals(Image.RawFormat))
-                type = "png";
-            else if (ImageFormat.Gif.Equals(Image.RawFormat))
-                type = "gif";
-            else
-                throw new NotSupportedException("File extension not supported");
-
-            return $"data:image/{type};base64,{Convert.ToBase64String((byte[])new ImageConverter().ConvertTo(Image, typeof(byte[])))}";
-        }
-
-        public static implicit operator DiscordImage(Image instance)
-        {
-            return new DiscordImage(instance);
+            return $"data:image/{type};base64,{Convert.ToBase64String(Image.Bytes)}";
         }
     }
 }

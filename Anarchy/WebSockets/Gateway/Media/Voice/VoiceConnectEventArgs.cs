@@ -1,5 +1,5 @@
-﻿using Discord.Media;
-using System;
+﻿using System;
+using Discord.Media;
 
 namespace Discord.Gateway
 {

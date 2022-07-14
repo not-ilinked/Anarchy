@@ -14,12 +14,12 @@ namespace Discord
 
         public DiscordCDNImage Icon
         {
-            get 
+            get
             {
                 if (_iconHash == null)
                     return null;
                 else
-                    return new DiscordCDNImage(CDNEndpoints.GuildIcon, Id, _iconHash); 
+                    return new DiscordCDNImage(CDNEndpoints.GuildIcon, Id, _iconHash);
             }
         }
 

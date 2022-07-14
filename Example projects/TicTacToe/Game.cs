@@ -1,7 +1,7 @@
-﻿using Discord;
-using Discord.Gateway;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using Discord;
+using Discord.Gateway;
 
 namespace TicTacToe
 {
@@ -47,13 +47,13 @@ namespace TicTacToe
         {
             foreach (var row in Grid)
             {
-                if (row.All(s => s == targetState)) 
+                if (row.All(s => s == targetState))
                     return true;
             }
 
             for (int i = 0; i < 3; i++)
             {
-                if (Grid.All(row => row[i] == targetState)) 
+                if (Grid.All(row => row[i] == targetState))
                     return true;
             }
 

@@ -1,6 +1,6 @@
-﻿using Newtonsoft.Json;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
 
 namespace Discord.Gateway
 {
@@ -10,7 +10,7 @@ namespace Discord.Gateway
         {
             OnClientUpdated += (s, e) =>
             {
-                if (Channels != null) 
+                if (Channels != null)
                     Channels.Values.ToList().SetClientsInList(Client);
 
                 if (Users != null)

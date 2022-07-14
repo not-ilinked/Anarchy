@@ -1,5 +1,4 @@
-﻿using Discord.Gateway;
-using Discord.Commands;
+﻿using Discord.Commands;
 
 namespace MusicBot
 {

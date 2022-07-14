@@ -1,6 +1,6 @@
 ﻿namespace Discord
 {
-    public class DiscordConfig
+    public class ApiConfig
     {
         public AnarchyProxy Proxy { get; set; }
         public SuperProperties SuperProperties { get; set; } = new SuperProperties();

@@ -1,5 +1,5 @@
-﻿using Newtonsoft.Json;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace Discord.Gateway
 {
@@ -7,7 +7,7 @@ namespace Discord.Gateway
     {
         public DiscordInteraction()
         {
-            OnClientUpdated += (s, e) => 
+            OnClientUpdated += (s, e) =>
             {
                 Message.SetClient(Client);
                 Data.SetClient(Client);
@@ -27,7 +27,7 @@ namespace Discord.Gateway
                     }
                 }
 
-                
+
                 if (Member != null)
                 {
                     User = Member.User;

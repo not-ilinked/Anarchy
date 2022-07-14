@@ -4,7 +4,7 @@ namespace Discord
 {
     public class DiscordNitroGift : DiscordGift
     {
-        public new ulong GifterId
+        public ulong GifterId
         {
             get
             {
@@ -13,6 +13,6 @@ namespace Discord
         }
 
         [JsonProperty("user")]
-        public DiscordUser Gifter { get; private set; }
+        public new DiscordUser Gifter { get; private set; }
     }
 }

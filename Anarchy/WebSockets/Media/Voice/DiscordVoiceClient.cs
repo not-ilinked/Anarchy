@@ -1,12 +1,9 @@
-﻿using Discord.Gateway;
-using Discord.WebSockets;
-using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Concurrent;
+﻿using System;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
+using Discord.Gateway;
+using Discord.WebSockets;
+using Newtonsoft.Json.Linq;
 
 namespace Discord.Media
 {
@@ -30,8 +27,8 @@ namespace Discord.Media
         public DiscordLivestreamClient Livestream { get; private set; }
 
         private OpusDecoder _decoder;
-        private readonly Anarchy.ConcurrentDictionary<ulong, IncomingVoiceStream> _receivers = new Anarchy.ConcurrentDictionary<ulong, IncomingVoiceStream>();
-        private readonly Anarchy.ConcurrentDictionary<uint, ulong> _ssrcToUserDictionary = new Anarchy.ConcurrentDictionary<uint, ulong>();
+        private readonly Anarchy.ConcurrentDictionary<ulong, IncomingVoiceStream> _receivers = new();
+        private readonly Anarchy.ConcurrentDictionary<uint, ulong> _ssrcToUserDictionary = new();
         private static readonly byte[] _silenceFrame = new byte[] { 0xF8, 0xFF, 0xFE };
 
         public DiscordVoiceClient(DiscordSocketClient client, ulong? guildId)
@@ -51,7 +48,7 @@ namespace Discord.Media
             if (_guildId.HasValue) Livestream = new DiscordLivestreamClient(_client, _guildId.Value, _channelId.Value);
 
             Connection = new DiscordMediaConnection(_client, server.Guild == null ? _channelId.Value : server.Guild.Id, server);
-            
+
             Connection.OnReady += (c) =>
             {
                 Microphone = new DiscordVoiceInput(this);

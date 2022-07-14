@@ -1,5 +1,5 @@
-﻿using Leaf.xNet;
-using System;
+﻿using System;
+using Leaf.xNet;
 
 namespace Discord
 {

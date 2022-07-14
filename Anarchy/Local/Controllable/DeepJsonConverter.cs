@@ -1,8 +1,8 @@
-﻿using Discord.Gateway;
+﻿using System;
+using System.Collections.Generic;
+using Discord.Gateway;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
 
 namespace Discord
 {
@@ -96,7 +96,7 @@ namespace Discord
                 throw new JsonException("Invalid use of DeepJsonConverter");
         }
 
-        public override void WriteJson(JsonWriter writer,  object value, JsonSerializer serializer)
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
             throw new NotImplementedException();
         }

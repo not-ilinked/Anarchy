@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace Discord
 {
@@ -56,7 +55,7 @@ namespace Discord
 
         [JsonProperty("serialized_source_guild")]
         private DiscordTemplateGuild _guild;
-        
+
         public DiscordTemplateGuild Snapshot
         {
             get

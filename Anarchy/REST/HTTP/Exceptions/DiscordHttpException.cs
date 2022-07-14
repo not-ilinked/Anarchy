@@ -1,7 +1,6 @@
-﻿using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using Newtonsoft.Json.Linq;
 
 namespace Discord
 {
@@ -9,14 +8,14 @@ namespace Discord
     {
         public DiscordError Code { get; private set; }
         public string ErrorMessage { get; private set; }
-        
+
         public FieldErrorDictionary InvalidFields { get; private set; }
-        
+
         public DiscordHttpException(DiscordHttpError error) : base($"{(int)error.Code} {error.Message}")
         {
             Code = error.Code;
             ErrorMessage = error.Message;
-            
+
             if (error.Fields != null)
                 InvalidFields = FindErrors(error.Fields);
         }

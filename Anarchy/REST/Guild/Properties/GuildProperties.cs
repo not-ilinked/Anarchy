@@ -1,6 +1,5 @@
-﻿using Newtonsoft.Json;
-using System.Collections.Generic;
-using System.Drawing;
+﻿using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace Discord
 {
@@ -62,7 +61,7 @@ namespace Discord
             set { OwnerProperty.Value = value; }
         }
 
-        
+
         public bool ShouldSerializeOwnerId()
         {
             return OwnerProperty.Set;

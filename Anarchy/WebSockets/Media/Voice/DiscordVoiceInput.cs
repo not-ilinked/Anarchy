@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace Discord.Media
 {
@@ -36,8 +34,8 @@ namespace Discord.Media
         public AudioApplication AudioApplication
         {
             get { return _audioApp; }
-            set 
-            { 
+            set
+            {
                 _audioApp = value;
                 UpdateEncoder();
             }

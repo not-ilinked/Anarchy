@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using System.Drawing;
 
 namespace Discord
 {
@@ -88,7 +87,7 @@ namespace Discord
         }
 
         public bool ShouldSerializeBanner() => _bannerParam.Set;
-        
+
 
 
         [JsonProperty("password")]

@@ -1,8 +1,10 @@
-﻿using Newtonsoft.Json.Linq;
-using System.Collections.Generic;
-using System.Drawing;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.Maui.Graphics;
+using Microsoft.Maui.Graphics.Platform;
+using Newtonsoft.Json.Linq;
 
 namespace Discord
 {
@@ -11,11 +13,11 @@ namespace Discord
         #region management
         public static async Task<DiscordGuild> CreateGuildAsync(this DiscordClient client, string name, DiscordImage icon = null, string region = null)
         {
-            return (await client.HttpClient.PostAsync("/guilds", new GuildCreationProperties() 
-            { 
-                Name = name, 
-                Icon = icon, 
-                Region = region 
+            return (await client.HttpClient.PostAsync("/guilds", new GuildCreationProperties()
+            {
+                Name = name,
+                Icon = icon,
+                Region = region
             })).Deserialize<DiscordGuild>().SetClient(client);
         }
 
@@ -238,12 +240,19 @@ namespace Discord
         }
 
 
-        public static async Task<Image> GetGoLivePreviewAsync(this DiscordClient client, ulong guildId, ulong channelId, ulong userId)
+        public static async Task<IImage> GetGoLivePreviewAsync(this DiscordClient client, ulong guildId, ulong channelId, ulong userId)
         {
-            return (Bitmap)new ImageConverter().ConvertFrom(await new HttpClient().GetByteArrayAsync((await client.HttpClient.GetAsync($"https://discordapp.com/api/v6/streams/guild:{guildId}:{channelId}:{userId}/preview?version=1589053944368")).Deserialize<JObject>().Value<string>("url")));
+            return PlatformImage.FromStream(
+                new MemoryStream(
+                    await new HttpClient().GetByteArrayAsync(
+                        (await client.HttpClient.GetAsync($"https://discordapp.com/api/v6/streams/guild:{guildId}:{channelId}:{userId}/preview?version=1589053944368"))
+                            .Deserialize<JObject>().Value<string>("url")
+                    )
+                )
+            );
         }
 
-        public static Image GetGoLivePreview(this DiscordClient client, ulong guildId, ulong channelId, ulong userId)
+        public static IImage GetGoLivePreview(this DiscordClient client, ulong guildId, ulong channelId, ulong userId)
         {
             return client.GetGoLivePreviewAsync(guildId, channelId, userId).GetAwaiter().GetResult();
         }

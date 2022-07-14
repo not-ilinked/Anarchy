@@ -1,7 +1,6 @@
-﻿using Newtonsoft.Json.Linq;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
 
 namespace Discord
 {
@@ -105,7 +104,7 @@ namespace Discord
         public static Task DeleteStageInstanceAsync(this DiscordClient client, ulong channelId) => client.HttpClient.DeleteAsync("/stage-instances/" + channelId);
         public static void DeleteStageInstance(this DiscordClient client, ulong channelId) => client.DeleteStageInstanceAsync(channelId).GetAwaiter().GetResult();
 
-        private static Task setStageSpeakingAsync(this DiscordClient client, ulong guildId, ulong channelId, string user, bool speaker) => 
+        private static Task setStageSpeakingAsync(this DiscordClient client, ulong guildId, ulong channelId, string user, bool speaker) =>
             client.HttpClient.PatchAsync($"/guilds/{guildId}/voice-states/" + user, new { channel_id = channelId, suppress = !speaker });
 
         public static Task SetClientStageSpeakingAsync(this DiscordClient client, ulong guildId, ulong channelId, bool speaker) => client.setStageSpeakingAsync(guildId, channelId, "@me", speaker);

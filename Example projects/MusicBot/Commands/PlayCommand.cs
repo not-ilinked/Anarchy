@@ -1,13 +1,7 @@
-﻿using Discord.Commands;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Discord;
+﻿using Discord;
+using Discord.Commands;
 using Discord.Gateway;
 using Discord.Media;
-using System.Threading;
-using YoutubeExplode.Videos.Streams;
-using System.IO;
 
 namespace MusicBot
 {
@@ -61,7 +55,7 @@ namespace MusicBot
 
                 if (voiceClient.State < MediaConnectionState.Ready || voiceClient.Channel.Id != channel.Id)
                     voiceClient.Connect(channel.Id, new VoiceConnectionProperties() { Deafened = true });
-                else if (!list.Running) 
+                else if (!list.Running)
                     list.Start();
             }
             else Message.Channel.SendMessage("Please enter a valid YouTube video URL");

@@ -1,10 +1,10 @@
-﻿using Newtonsoft.Json;
-using PuppeteerSharp;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using PuppeteerSharp;
 
 namespace Discord
 {
@@ -40,7 +40,7 @@ namespace Discord
             if (method == "POST")
             {
                 headers["Content-Type"] = "application/json";
-                
+
                 if (url.Contains("/invites/"))
                 {
                     string invCode = url.Split('/').Last();
@@ -61,7 +61,7 @@ headers: " + "{";
             if (data != null)
                 expression += $"body: '{JsonConvert.SerializeObject(data)}',";
             expression += "}); return {status: req.status, body: await req.json()};}";
-            
+
             var result = await _page.EvaluateFunctionAsync<DiscordResponse>(expression);
 
             if (result.Status >= 400)

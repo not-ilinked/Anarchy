@@ -1,7 +1,5 @@
-﻿using Discord.Commands;
+﻿using System.Threading.Tasks;
 using Newtonsoft.Json;
-using System;
-using System.Threading.Tasks;
 
 namespace Discord
 {

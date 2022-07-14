@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Discord.Media
 {
@@ -58,7 +56,7 @@ namespace Discord.Media
                     else
                         continue; // don't wanna reset till we're done lel
                 }
-                
+
                 currentStartCodeChar = 0;
             }
 

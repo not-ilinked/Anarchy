@@ -1,6 +1,6 @@
 ﻿namespace Discord.Gateway
 {
-    public class DiscordSocketConfig : DiscordConfig
+    public class DiscordSocketConfig : ApiConfig
     {
         public bool Cache { get; set; } = true;
         public DiscordGatewayIntent? Intents { get; set; }
