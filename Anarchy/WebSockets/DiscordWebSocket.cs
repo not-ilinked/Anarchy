@@ -1,4 +1,4 @@
-﻿using Leaf.xNet;
+using Leaf.xNet;
 using Newtonsoft.Json;
 using System;
 using WebSocketSharp;
@@ -7,8 +7,8 @@ namespace Discord.WebSockets
 {
     public class DiscordWebSocket<TOpcode> : IDisposable where TOpcode : Enum
     {
-        private object _socketLock;
         private WebSocket _socket;
+        private object _socketLock;
 
         public delegate void MessageHandler(object sender, DiscordWebSocketMessage<TOpcode> message);
         public event MessageHandler OnMessageReceived;
@@ -22,8 +22,9 @@ namespace Discord.WebSockets
 
             _socket = new WebSocket(url)
             {
-                Origin = "https://discordapp.com"
+                Origin = "https://discord.com", // "https://discordapp.com"
             };
+            _socket.SslConfiguration.EnabledSslProtocols = System.Security.Authentication.SslProtocols.Tls12;
             _socket.OnMessage += OnMessage;
             _socket.OnClose += OnClose;
         }
@@ -54,7 +55,7 @@ namespace Discord.WebSockets
         {
             lock (_socketLock)
             {
-                if (_socket != null) _socket.Send(JsonConvert.SerializeObject(new DiscordWebSocketRequest<T, TOpcode>(op, data)));
+				if (_socket != null) _socket.Send(JsonConvert.SerializeObject(new DiscordWebSocketRequest<T, TOpcode>(op, data)));
                 else throw new InvalidOperationException("Socket is disposed of");
             }
         }
