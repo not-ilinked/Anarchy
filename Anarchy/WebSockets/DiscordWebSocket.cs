@@ -1,9 +1,9 @@
-﻿using Leaf.xNet;
+using Leaf.xNet;
 using Newtonsoft.Json;
 using System;
 using WebSocketSharp;
 
-namespace DiscordAnarchy.WebSockets
+namespace Discord.WebSockets
 {
     public class DiscordWebSocket<TOpcode> : IDisposable where TOpcode : Enum
     {
