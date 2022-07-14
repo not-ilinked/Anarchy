@@ -8,6 +8,7 @@ namespace Discord.WebSockets
     public class DiscordWebSocket<TOpcode> : IDisposable where TOpcode : Enum
     {
         private WebSocket _socket;
+        private object _socketLock;
 
         public delegate void MessageHandler(object sender, DiscordWebSocketMessage<TOpcode> message);
         public event MessageHandler OnMessageReceived;
@@ -17,6 +18,8 @@ namespace Discord.WebSockets
 
         public DiscordWebSocket(string url)
         {
+            _socketLock = new object();
+
             _socket = new WebSocket(url)
             {
                 Origin = "https://discord.com", // "https://discordapp.com"
@@ -34,17 +37,26 @@ namespace Discord.WebSockets
 
         public void Connect()
         {
-            _socket.Connect();
+            lock (_socketLock)
+            {
+                _socket.Connect();
+            }
         }
 
         public void Close(ushort error, string reason)
         {
-            _socket.Close(error, reason);
+            lock (_socketLock)
+            {
+                _socket.Close(error, reason);
+            }
         }
 
         public void Send<T>(TOpcode op, T data)
         {
-            _socket.Send(JsonConvert.SerializeObject(new DiscordWebSocketRequest<T, TOpcode>(op, data)));
+            lock (_socketLock)
+            {
+                _socket.Send(JsonConvert.SerializeObject(new DiscordWebSocketRequest<T, TOpcode>(op, data)));
+            }
         }
 
         private void OnClose(object sender, CloseEventArgs e)
@@ -59,7 +71,10 @@ namespace Discord.WebSockets
 
         public void Dispose()
         {
-            _socket = null;
+            lock (_socketLock)
+            {
+                _socket = null;
+            }
         }
     }
 }
