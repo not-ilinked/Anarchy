@@ -1,0 +1,6 @@
+﻿<Project>
+	<PropertyGroup>
+		<BaseIntermediateOutputPath>..\..\.obj\AntiRaidt</BaseIntermediateOutputPath>
+		<MSBuildProjectExtensionsPath>..\..\.obj\AntiRaid</MSBuildProjectExtensionsPath>
+	</PropertyGroup>
+</Project>

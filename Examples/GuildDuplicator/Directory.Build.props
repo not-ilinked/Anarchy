@@ -1,0 +1,6 @@
+﻿<Project>
+	<PropertyGroup>
+		<BaseIntermediateOutputPath>..\..\.obj\GuildDuplicator</BaseIntermediateOutputPath>
+		<MSBuildProjectExtensionsPath>..\..\.obj\GuildDuplicator</MSBuildProjectExtensionsPath>
+	</PropertyGroup>
+</Project>

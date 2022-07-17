@@ -65,11 +65,7 @@ namespace Discord
 
 
         [JsonProperty("attachments")]
-        private readonly IReadOnlyList<DiscordAttachment> _attachments;
-        public DiscordAttachment Attachment
-        {
-            get { return _attachments == null || _attachments.Count == 0 ? null : _attachments[0]; }
-        }
+        public IReadOnlyList<DiscordAttachment> Attachments { get; private set; }
 
 
         [JsonProperty("embeds")]

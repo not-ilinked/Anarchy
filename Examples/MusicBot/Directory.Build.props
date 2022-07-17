@@ -1,0 +1,6 @@
+﻿<Project>
+	<PropertyGroup>
+		<BaseIntermediateOutputPath>..\..\.obj\MusicBot</BaseIntermediateOutputPath>
+		<MSBuildProjectExtensionsPath>..\..\.obj\MusicBot</MSBuildProjectExtensionsPath>
+	</PropertyGroup>
+</Project>

@@ -5,16 +5,35 @@
     <RootNamespace>Anarchy</RootNamespace>
 	  <DebugSymbols>true</DebugSymbols>
 	  <DebugType>full</DebugType>
-	  <Optimize>false</Optimize>
-	  <OutputPath>bin\Debug\</OutputPath>
-	  <DefineConstants>DEBUG;TRACE</DefineConstants>
 	  <ErrorReport>prompt</ErrorReport>
 	  <WarningLevel>4</WarningLevel>
-	  <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 	  <PlatformTarget>AnyCPU</PlatformTarget>
 	  <NoWarn>IDE1006, CS0649, CS0414, IDE0051</NoWarn>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <BaseOutputPath>..\.bin\$(MSBuildProjectName)</BaseOutputPath>
+    <Description>The superior Discord API wrapper.</Description>
+    <Copyright>Copyright ©iLinked  2022</Copyright>
+    <VersionPrefix>0.8.2</VersionPrefix>
+    <VersionSuffix></VersionSuffix>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageId>Anarchy-Wrapper</PackageId>
+    <PackageIcon>nuget-logo.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageReleaseNotes>See the changelog on github (https://github.com/not-ilinked/Anarchy/blob/master/Changelog.md)</PackageReleaseNotes>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="nuget-logo.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Leaf.xNet" Version="5.2.10" />

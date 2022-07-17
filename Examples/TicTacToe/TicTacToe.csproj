@@ -3,11 +3,9 @@
     <TargetFramework>net6.0</TargetFramework>
     <OutputType>Exe</OutputType>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <BaseOutputPath>..\..\.bin\$(MSBuildProjectName)</BaseOutputPath>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Anarchy\Anarchy.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="YoutubeExplode" Version="6.1.2" />
   </ItemGroup>
 </Project>
