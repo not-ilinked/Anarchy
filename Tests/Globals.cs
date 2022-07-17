@@ -6,11 +6,13 @@ namespace Discord
     [TestClass]
     public static class Globals
     {
-        internal static AppSettings Settings { get; private set; } =
-            JsonSerializer.Deserialize<AppSettings>(File.ReadAllText(@"./appsettings.json"))!;
+        internal static AppSettings Settings { get; private set; } = GetAppSettings();
 
         public static class FileNames
         {
+            public const string Setting = @".\appsettings.json";
+            public const string SettingDevelopment = @".\appsettings.Development.json";
+
             public const string Image1 = @".\Resources\image1.png";
             public const string Image2 = @".\Resources\image2.jpg";
             public const string PoetryTxt = @".\Resources\poetry.txt";
@@ -36,6 +38,15 @@ namespace Discord
             autoResetEvent.WaitOne();
 
             Client = client;
+        }
+
+        private static AppSettings GetAppSettings()
+        {
+            var path = File.Exists(FileNames.SettingDevelopment)
+                ? FileNames.SettingDevelopment
+                : FileNames.Setting;
+
+            return JsonSerializer.Deserialize<AppSettings>(File.ReadAllText(path))!;
         }
     }
 }
