@@ -5,23 +5,18 @@ using Newtonsoft.Json;
 
 namespace Discord
 {
-    class ImageJsonConverter : JsonConverter
+    class ImageJsonConverter : JsonConverter<DiscordImage>
     {
         public override bool CanRead => false;
 
-        public override bool CanConvert(Type objectType)
+        public override DiscordImage ReadJson(JsonReader reader, Type objectType, DiscordImage existingValue, bool hasExistingValue, JsonSerializer serializer)
         {
-            return true;
+            throw new NotImplementedException();
         }
 
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        public override void WriteJson(JsonWriter writer, DiscordImage image, JsonSerializer serializer)
         {
-            throw new NotSupportedException();
-        }
-
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
-        {
-            writer.WriteValue(value.ToString());
+            writer.WriteValue($"data:{image.ImageFormat.ToMediaType()};base64,{Convert.ToBase64String(image.PlatformImage.Bytes)}");
         }
     }
 
@@ -40,23 +35,7 @@ namespace Discord
 
         public static implicit operator DiscordAttachmentFile(DiscordImage image)
         {
-            return new DiscordAttachmentFile(image.PlatformImage.Bytes, "image/" + image.ImageFormat);
-        }
-
-        public override string ToString()
-        {
-            if (PlatformImage == null)
-                return null;
-
-            string type = ImageFormat switch
-            {
-                ImageFormat.Jpeg => "jpeg",
-                ImageFormat.Png => "png",
-                ImageFormat.Gif => "gif",
-                _ => throw new NotSupportedException("File extension not supported")
-            };
-
-            return $"data:image/{type};base64,{Convert.ToBase64String(PlatformImage.Bytes)}";
+            return new DiscordAttachmentFile(image.PlatformImage.Bytes, image.ImageFormat);
         }
     }
 }

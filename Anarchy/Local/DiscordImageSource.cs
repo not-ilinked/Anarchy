@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -15,9 +14,14 @@ namespace Discord
             using var hc = new HttpClient();
             using var response = await hc.GetAsync(url);
             response.EnsureSuccessStatusCode();
-            using var stream = await response.Content.ReadAsStreamAsync();
-            ImageFormat format = Enum.Parse<ImageFormat>(response.Content.Headers.First(x => x.Key == "Content-Type").Value.First().Replace("image/", string.Empty), true);
-            return FromStream(response.Content.ReadAsStreamAsync().Result, format);
+            return FromStream(
+                await response.Content.ReadAsStreamAsync(),
+                DiscordImageMediaType.ToImageFormat(response.Content.Headers.First(x => x.Key == "Content-Type").Value.First()));
+        }
+
+        public static DiscordImage FromFile(DiscordAttachmentFile file)
+        {
+            return FromBytes(file.Bytes, DiscordImageMediaType.ToImageFormat(file.MediaType));
         }
 
         public static DiscordImage FromStream(Stream stream, ImageFormat format)
