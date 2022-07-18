@@ -1,0 +1,6 @@
+﻿<Project>
+	<PropertyGroup>
+		<BaseIntermediateOutputPath>..\..\.obj\VCSpammer</BaseIntermediateOutputPath>
+		<MSBuildProjectExtensionsPath>..\..\.obj\VCSpammer</MSBuildProjectExtensionsPath>
+	</PropertyGroup>
+</Project>

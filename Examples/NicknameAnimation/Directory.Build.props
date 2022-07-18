@@ -1,0 +1,6 @@
+﻿<Project>
+	<PropertyGroup>
+		<BaseIntermediateOutputPath>..\..\.obj\NicknameAnimation</BaseIntermediateOutputPath>
+		<MSBuildProjectExtensionsPath>..\..\.obj\NicknameAnimation</MSBuildProjectExtensionsPath>
+	</PropertyGroup>
+</Project>

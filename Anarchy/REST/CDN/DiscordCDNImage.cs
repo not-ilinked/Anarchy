@@ -1,20 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 
 namespace Discord
 {
     public class DiscordCDNImage
     {
-        private readonly HttpClient _client;
         public string Url { get; private set; }
         public object[] Particles { get; private set; }
         public IReadOnlyList<DiscordCDNImageFormat> AllowedFormats { get; private set; }
 
         public DiscordCDNImage(CDNEndpoint endpoint, params object[] assets)
         {
-            _client = new HttpClient();
             Url = "https://cdn.discordapp.com/" + string.Format(endpoint.Template, assets);
             Particles = assets;
             AllowedFormats = endpoint.AllowedFormats;
@@ -30,9 +27,7 @@ namespace Discord
             if (format != DiscordCDNImageFormat.Any)
                 url += "." + format.ToString().ToLower();
 
-            var httpResponse = _client.GetAsync(url).Result;
-            ImageType type = Enum.Parse<ImageType>(httpResponse.Content.Headers.First(x => x.Key == "Content-Type").Value.First().Replace("image/", string.Empty), true);
-            return new DiscordImage(httpResponse.Content.ReadAsByteArrayAsync().Result, type);
+            return DiscordImageSource.FromUrl(url).Result;
         }
     }
 }

@@ -1,8 +1,9 @@
-## [TBD]
+## 0.8.2
 ### Improvements
+- Ported to .NET 6.0!
+- `MessageProperties` supports 1..n file attachments, which can be any file from the file system, a `DiscordImage`, or anything that can be converted to a `DiscordAttachmentFile`
 - Uses latest standard Visual Studio .gitignore from:
   https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
-- Targets .NET 6.0 rather than .Net Framework 4.7 (applied #3302)
 - Dependency changes:
   - System.Drawing.Common > Microsoft.Maui.Graphics
   - websocket-sharp > websocketsharp.core

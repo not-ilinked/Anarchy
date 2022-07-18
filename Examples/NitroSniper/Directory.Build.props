@@ -1,0 +1,6 @@
+﻿<Project>
+	<PropertyGroup>
+		<BaseIntermediateOutputPath>..\..\.obj\NitroSniper</BaseIntermediateOutputPath>
+		<MSBuildProjectExtensionsPath>..\..\.obj\NitroSniper</MSBuildProjectExtensionsPath>
+	</PropertyGroup>
+</Project>

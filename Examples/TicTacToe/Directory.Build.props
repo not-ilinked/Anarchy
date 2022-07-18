@@ -1,0 +1,6 @@
+﻿<Project>
+	<PropertyGroup>
+		<BaseIntermediateOutputPath>..\..\.obj\TicTacToe</BaseIntermediateOutputPath>
+		<MSBuildProjectExtensionsPath>..\..\.obj\TicTacToe</MSBuildProjectExtensionsPath>
+	</PropertyGroup>
+</Project>

@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -53,27 +51,19 @@ namespace Discord
             return client.SendMessageAsync(channelId, embed).GetAwaiter().GetResult();
         }
 
-
         public static async Task<DiscordMessage> SendFileAsync(this DiscordClient client, ulong channelId, string fileName, byte[] fileData, string message = null, bool tts = false)
         {
-            HttpClient httpClient = new HttpClient(new HttpClientHandler() { Proxy = client.Config.Proxy != null && client.Config.Proxy.Type == AnarchyProxyType.HTTP ? new WebProxy(client.Config.Proxy.Host + client.Config.Proxy.Port, false, new string[] { }, new NetworkCredential() { UserName = client.Config.Proxy.Username, Password = client.Config.Proxy.Password }) : null });
-            httpClient.DefaultRequestHeaders.Add("Authorization", client.Token);
-
-            MultipartFormDataContent content = new MultipartFormDataContent
+            var props = new MessageProperties()
             {
+                Content = message,
+                Attachments = new List<PartialDiscordAttachment>()
                 {
-                    new StringContent(JsonConvert.SerializeObject(new MessageProperties()
-                    {
-                        Content = message,
-                        Tts = tts
-                    })),
-                    "payload_json"
+                    new PartialDiscordAttachment(fileData, fileName)
                 },
-                { new ByteArrayContent(fileData), "file", fileName }
+                Tts = tts
             };
 
-            return JsonConvert.DeserializeObject<DiscordMessage>(await httpClient.PostAsync(DiscordHttpUtil.BuildBaseUrl(client.Config.ApiVersion, client.Config.SuperProperties.ReleaseChannel) + $"/channels/{channelId}/messages", content)
-                                                                            .GetAwaiter().GetResult().Content.ReadAsStringAsync()).SetClient(client);
+            return await SendMessageAsync(client, channelId, props);
         }
 
         /// <summary>
@@ -92,7 +82,7 @@ namespace Discord
 
         public static async Task<DiscordMessage> SendFileAsync(this DiscordClient client, ulong channelId, string filePath, string message = null, bool tts = false)
         {
-            return await client.SendFileAsync(channelId, new FileInfo(filePath).Name, File.ReadAllBytes(filePath), message, tts);
+            return await client.SendFileAsync(channelId, Path.GetFileName(filePath), File.ReadAllBytes(filePath), message, tts);
         }
 
         /// <summary>
@@ -191,7 +181,7 @@ namespace Discord
 
             const int messagesPerRequest = 100;
 
-            List<DiscordMessage> messages = new List<DiscordMessage>();
+            var messages = new List<DiscordMessage>();
 
             while (true)
             {

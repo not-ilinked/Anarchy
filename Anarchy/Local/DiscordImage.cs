@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using Microsoft.Maui.Graphics;
 using Microsoft.Maui.Graphics.Platform;
 using Newtonsoft.Json;
@@ -26,52 +25,38 @@ namespace Discord
         }
     }
 
-    public enum ImageType
-    {
-        Png,
-        Gif,
-        Jpeg,
-    }
-
     [JsonConverter(typeof(ImageJsonConverter))]
     public class DiscordImage
     {
-        public PlatformImage Image { get; }
-
-        public ImageType Type { get; }
-
-        public DiscordImage(IImage image, ImageType type)
+        public DiscordImage(IImage image, ImageFormat type)
         {
-            if (image != null)
-            {
-                Image = image.ToPlatformImage() as PlatformImage;
-                Type = type;
-            }
+            PlatformImage = image.ToPlatformImage() as PlatformImage;
+            ImageFormat = type;
         }
 
-        public DiscordImage(byte[] bytes, ImageType type)
+        public PlatformImage PlatformImage { get; }
+
+        public ImageFormat ImageFormat { get; }
+
+        public static implicit operator DiscordAttachmentFile(DiscordImage image)
         {
-            if (bytes.Length > 0)
-            {
-                Image = PlatformImage.FromStream(new MemoryStream(bytes)) as PlatformImage;
-                Type = type;
-            }
+            return new DiscordAttachmentFile(image.PlatformImage.Bytes, "image/" + image.ImageFormat);
         }
 
         public override string ToString()
         {
-            if (Image == null)
+            if (PlatformImage == null)
                 return null;
 
-            string type = Type switch
+            string type = ImageFormat switch
             {
-                ImageType.Jpeg => "jpeg",
-                ImageType.Png => "png",
-                ImageType.Gif => "gif",
+                ImageFormat.Jpeg => "jpeg",
+                ImageFormat.Png => "png",
+                ImageFormat.Gif => "gif",
                 _ => throw new NotSupportedException("File extension not supported")
             };
 
-            return $"data:image/{type};base64,{Convert.ToBase64String(Image.Bytes)}";
+            return $"data:image/{type};base64,{Convert.ToBase64String(PlatformImage.Bytes)}";
         }
     }
 }
