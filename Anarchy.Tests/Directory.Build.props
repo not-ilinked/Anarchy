@@ -1,0 +1,6 @@
+﻿<Project>
+	<PropertyGroup>
+		<BaseIntermediateOutputPath>..\.obj\Anarchy.Tests</BaseIntermediateOutputPath>
+		<MSBuildProjectExtensionsPath>..\.obj\Anarchy.Tests</MSBuildProjectExtensionsPath>
+	</PropertyGroup>
+</Project>

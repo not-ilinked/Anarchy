@@ -6,7 +6,7 @@ namespace Discord
     [TestClass]
     public static class Globals
     {
-        internal static AppSettings Settings { get; private set; } = GetAppSettings();
+        internal static Settings.App Settings { get; private set; } = GetAppSettings();
 
         public static class FileNames
         {
@@ -25,7 +25,18 @@ namespace Discord
         {
             var autoResetEvent = new AutoResetEvent(false);
 
-            var client = new DiscordSocketClient();
+            // All tests will use the proxy specified in appsettings.json, which can be added like so:
+            //  ,
+            //  "Proxy": {
+            //    "Host": "127.0.0.1",
+            //    "Port": 8888
+            //  }
+
+            var client = new DiscordSocketClient(new DiscordSocketConfig()
+            {
+                Proxy = Settings.Proxy?.CreateProxy()
+            });
+
             client.OnLoggedIn += OnLoggedIn;
             client.Login(Settings.Token);
 
@@ -40,13 +51,13 @@ namespace Discord
             Client = client;
         }
 
-        private static AppSettings GetAppSettings()
+        private static Settings.App GetAppSettings()
         {
             var path = File.Exists(FileNames.SettingDevelopment)
                 ? FileNames.SettingDevelopment
                 : FileNames.Setting;
 
-            return JsonSerializer.Deserialize<AppSettings>(File.ReadAllText(path))!;
+            return JsonSerializer.Deserialize<Settings.App>(File.ReadAllText(path))!;
         }
     }
 }

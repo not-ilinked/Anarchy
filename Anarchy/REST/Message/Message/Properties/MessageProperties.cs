@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 
 namespace Discord
 {
-    public class MessageProperties : IDiscordAttachmentFileProvider
+    public class MessageProperties
     {
         public MessageProperties()
         {
@@ -69,7 +69,7 @@ namespace Discord
                 for (byte i = 0; i < Attachments.Count; ++i) Attachments[i].Id = i;
         }
 
-        IEnumerable<(string FileName, DiscordAttachmentFile File, int Id)> IDiscordAttachmentFileProvider.GetAttachmentFiles()
+        internal IEnumerable<(string FileName, DiscordAttachmentFile File, int Id)> GetAttachmentFiles()
         {
             return ShouldSerializeAttachments()
                 ? Attachments.Select((a, index) => (a.FileName, a.File, index))

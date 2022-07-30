@@ -1,11 +1,12 @@
 ﻿using System;
-using System.Net;
+using System.IO;
+using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Leaf.xNet;
 using Newtonsoft.Json;
 
 namespace Discord
@@ -21,6 +22,7 @@ namespace Discord
             _discordClient = discordClient;
         }
 
+
         private string _anarchyVersion;
         private string AnarchyVersion
         {
@@ -35,89 +37,55 @@ namespace Discord
             }
         }
 
+
         /// <summary>
         /// Sends an HTTP request and checks for errors
         /// </summary>
         /// <param name="method">HTTP method to use</param>
         /// <param name="endpoint">API endpoint (fx. /users/@me)</param>
         /// <param name="payload">JSON content</param>
-        private async Task<DiscordHttpResponse> SendAsync(Leaf.xNet.HttpMethod method, string endpoint, object payload = null)
+        private async Task<DiscordHttpResponse> SendAsync(HttpMethod method, string endpoint, HttpContent content = null)
         {
             if (!endpoint.StartsWith("https"))
                 endpoint = DiscordHttpUtil.BuildBaseUrl(_discordClient.Config.ApiVersion, _discordClient.Config.SuperProperties.ReleaseChannel) + endpoint;
 
-            string json = "{}";
-            if (payload != null)
-            {
-                if (payload.GetType() == typeof(string))
-                    json = (string)payload;
-                else
-                    json = JsonConvert.SerializeObject(payload, new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore });
-            }
-
             uint retriesLeft = _discordClient.Config.RestConnectionRetries;
-            bool hasData = method == Leaf.xNet.HttpMethod.POST || method == Leaf.xNet.HttpMethod.PATCH || method == Leaf.xNet.HttpMethod.PUT || method == Leaf.xNet.HttpMethod.DELETE;
 
             while (true)
             {
                 try
                 {
-                    DiscordHttpResponse resp;
+                    var client = _discordClient.Config.Proxy != null
+                        ? new HttpClient(new HttpClientHandler() { Proxy = _discordClient.Config.Proxy })
+                        : new HttpClient();
 
-                    if (_discordClient.Proxy == null || _discordClient.Proxy.Type == ProxyType.HTTP)
-                    {
-                        var client = new HttpClient(new HttpClientHandler() { Proxy = _discordClient.Proxy == null ? null : new WebProxy(_discordClient.Proxy.Host, _discordClient.Proxy.Port) });
-                        if (_discordClient.Token != null)
-                            client.DefaultRequestHeaders.Add("Authorization", _discordClient.Token);
+                    if (_discordClient.Token != null)
+                        client.DefaultRequestHeaders.Add("Authorization", _discordClient.Token);
 
-                        if (_discordClient.User != null && _discordClient.User.Type == DiscordUserType.Bot)
-                            client.DefaultRequestHeaders.Add("User-Agent", $"Anarchy/{AnarchyVersion}");
-                        else
-                        {
-                            client.DefaultRequestHeaders.Add("User-Agent", _discordClient.Config.SuperProperties.UserAgent);
-                            client.DefaultRequestHeaders.Add("X-Super-Properties", _discordClient.Config.SuperProperties.ToBase64());
-                        }
-
-                        using System.Net.Http.HttpContent content =
-                        !hasData
-                            ? null
-                            : payload is IDiscordAttachmentFileProvider provider
-                                ? provider.MultipartFormData(json)
-                                : new System.Net.Http.StringContent(json, Encoding.UTF8, "application/json");
-
-                        var response = await client.SendAsync(new HttpRequestMessage()
-                        {
-                            Content = content,
-                            Method = new System.Net.Http.HttpMethod(method.ToString()),
-                            RequestUri = new Uri(endpoint)
-                        });
-
-                        resp = new DiscordHttpResponse((int)response.StatusCode, response.Content.ReadAsStringAsync().Result);
-                    }
+                    if (_discordClient.User != null && _discordClient.User.Type == DiscordUserType.Bot)
+                        client.DefaultRequestHeaders.Add("User-Agent", $"Anarchy/{AnarchyVersion}");
                     else
                     {
-                        var msg = new HttpRequest()
-                        {
-                            IgnoreProtocolErrors = true,
-                            UserAgent = _discordClient.User != null && _discordClient.User.Type == DiscordUserType.Bot ? $"Anarchy/{AnarchyVersion}" : _discordClient.Config.SuperProperties.UserAgent,
-                            Authorization = _discordClient.Token
-                        };
-
-                        if (hasData)
-                            msg.AddHeader(HttpHeader.ContentType, "application/json");
-
-                        if (_discordClient.User == null || _discordClient.User.Type == DiscordUserType.User) msg.AddHeader("X-Super-Properties", _discordClient.Config.SuperProperties.ToBase64());
-                        if (_discordClient.Proxy != null) msg.Proxy = _discordClient.Proxy;
-
-                        var response = msg.Raw(method, endpoint, hasData ? new Leaf.xNet.StringContent(json) : null);
-
-                        resp = new DiscordHttpResponse((int)response.StatusCode, response.ToString());
+                        client.DefaultRequestHeaders.Add("User-Agent", _discordClient.Config.SuperProperties.UserAgent);
+                        client.DefaultRequestHeaders.Add("X-Super-Properties", _discordClient.Config.SuperProperties.ToBase64());
                     }
 
-                    DiscordHttpUtil.ValidateResponse(resp.StatusCode, resp.Body);
-                    return resp;
+                    var response = await client.SendAsync(new HttpRequestMessage()
+                    {
+                        Content = content,
+                        Method = new HttpMethod(method.ToString()),
+                        RequestUri = new Uri(endpoint)
+                    });
+
+                    var discordResponse = new DiscordHttpResponse(
+                        (int)response.StatusCode,
+                        await response.Content.ReadAsStringAsync()
+                    );
+                    DiscordHttpUtil.ValidateResponse(response, discordResponse.Body);
+
+                    return discordResponse;
                 }
-                catch (Exception ex) when (ex is HttpException || ex is HttpRequestException || ex is TaskCanceledException)
+                catch (Exception ex) when (ex is HttpRequestException || ex is TaskCanceledException)
                 {
                     if (retriesLeft == 0)
                         throw new DiscordConnectionException();
@@ -134,34 +102,87 @@ namespace Discord
             }
         }
 
-
         public async Task<DiscordHttpResponse> GetAsync(string endpoint)
         {
-            return await SendAsync(Leaf.xNet.HttpMethod.GET, endpoint);
+            return await SendAsync(HttpMethod.Get, endpoint);
         }
-
 
         public async Task<DiscordHttpResponse> PostAsync(string endpoint, object payload = null)
         {
-            return await SendAsync(Leaf.xNet.HttpMethod.POST, endpoint, payload);
+            return await SendAsync(HttpMethod.Post, endpoint, MakeStringContent(payload));
         }
 
+        public async Task<DiscordHttpResponse> PostAsync(string endpoint, MessageProperties props)
+        {
+            return await SendAsync(HttpMethod.Post, endpoint, MakeMultipartFormDataContent(props));
+        }
 
         public async Task<DiscordHttpResponse> DeleteAsync(string endpoint, object payload = null)
         {
-            return await SendAsync(Leaf.xNet.HttpMethod.DELETE, endpoint, payload);
+            return await SendAsync(HttpMethod.Delete, endpoint, MakeStringContent(payload));
         }
-
 
         public async Task<DiscordHttpResponse> PutAsync(string endpoint, object payload = null)
         {
-            return await SendAsync(Leaf.xNet.HttpMethod.PUT, endpoint, payload);
+            return await SendAsync(HttpMethod.Put, endpoint, MakeStringContent(payload));
         }
-
 
         public async Task<DiscordHttpResponse> PatchAsync(string endpoint, object payload = null)
         {
-            return await SendAsync(Leaf.xNet.HttpMethod.PATCH, endpoint, payload);
+            return await SendAsync(HttpMethod.Patch, endpoint, MakeStringContent(payload));
+        }
+
+        private static HttpContent MakeStringContent(object payload)
+        {
+            return new StringContent(MakeJson(payload), Encoding.UTF8, "application/json");
+        }
+
+        private static HttpContent MakeMultipartFormDataContent(MessageProperties props)
+        {
+            string json = MakeJson(props);
+            HttpContent content;
+
+            var attachments = props.GetAttachmentFiles();
+
+            if (attachments != null && attachments.Any())
+            {
+                var mpfc = new MultipartFormDataContent();
+
+                foreach (var a in attachments)
+                {
+                    var sc = new StreamContent(new MemoryStream(a.File.Bytes));
+                    if (!string.IsNullOrEmpty(a.File.MediaType))
+                        sc.Headers.ContentType = new MediaTypeHeaderValue(a.File.MediaType);
+
+                    mpfc.Add(sc, $"files[{a.Id}]", Path.GetFileName(a.FileName));
+                }
+
+                if (!string.IsNullOrEmpty(json))
+                {
+                    var jsonContent = new StringContent(json, null, null);
+                    jsonContent.Headers.Remove("Content-Type");
+                    mpfc.Add(jsonContent, "\"payload_json\"");
+                }
+
+                content = mpfc;
+            }
+            else
+                content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            return content;
+        }
+
+        private static string MakeJson(object payload)
+        {
+            string json = "{}";
+            if (payload != null)
+            {
+                if (payload.GetType() == typeof(string))
+                    json = (string)payload;
+                else
+                    json = JsonConvert.SerializeObject(payload, new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore });
+            }
+            return json;
         }
     }
 }
