@@ -2,11 +2,12 @@
 ### Improvements
 - Ported to .NET 6.0!
 - `MessageProperties` supports 1..n file attachments, which can be any file from the file system, a `DiscordImage`, or anything that can be converted to a `DiscordAttachmentFile`
-- Uses latest standard Visual Studio .gitignore from:
+- Uses standard Visual Studio .gitignore from:
   https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
 - Dependency changes:
-  - System.Drawing.Common > Microsoft.Maui.Graphics
-  - websocket-sharp > websocketsharp.core
+  - Leaf.xNet removed (SOCK proxy supported by .NET 6.0)
+  - System.Drawing.Common replaced by Microsoft.Maui.Graphics
+  - websocket-sharp replaced by websocketsharp.core
 - Dependency upgrades:
   - Newtonsoft.Json 12.0.3 > 13.0.1
   - YoutubeExplode 6.0.2 > 6.1.2
