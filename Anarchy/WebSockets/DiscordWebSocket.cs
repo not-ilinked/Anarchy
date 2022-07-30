@@ -1,5 +1,4 @@
 using System;
-using Leaf.xNet;
 using Newtonsoft.Json;
 using WebSocketSharp;
 
@@ -22,17 +21,11 @@ namespace Discord.WebSockets
 
             _socket = new WebSocket(url)
             {
-                Origin = "https://discord.com", // "https://discordapp.com"
+                Origin = "https://discord.com",
             };
             _socket.SslConfiguration.EnabledSslProtocols = System.Security.Authentication.SslProtocols.Tls12;
             _socket.OnMessage += OnMessage;
             _socket.OnClose += OnClose;
-        }
-
-        public void SetProxy(ProxyClient client)
-        {
-            if (client != null && client.Type == ProxyType.HTTP)
-                _socket.SetProxy($"http://{client.Host}:{client.Port}", client.Username, client.Password);
         }
 
         public void Connect()
@@ -55,8 +48,10 @@ namespace Discord.WebSockets
         {
             lock (_socketLock)
             {
-                if (_socket != null) _socket.Send(JsonConvert.SerializeObject(new DiscordWebSocketRequest<T, TOpcode>(op, data)));
-                else throw new InvalidOperationException("Socket is disposed of");
+                if (_socket != null)
+                    _socket.Send(JsonConvert.SerializeObject(new DiscordWebSocketRequest<T, TOpcode>(op, data)));
+                else
+                    throw new InvalidOperationException("Socket is disposed of");
             }
         }
 

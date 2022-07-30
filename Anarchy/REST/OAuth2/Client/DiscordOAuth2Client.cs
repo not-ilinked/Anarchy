@@ -79,12 +79,12 @@ namespace Discord
 
             req.Headers.Add("Authorization", $"{_auth.TokenType} {_auth.AccessToken}");
 
-            var resp = _httpClient.SendAsync(req).GetAwaiter().GetResult();
-            var bodyObj = JToken.Parse(resp.Content.ReadAsStringAsync().Result);
+            var response = _httpClient.SendAsync(req).GetAwaiter().GetResult();
+            var body = JToken.Parse(response.Content.ReadAsStringAsync().Result);
 
-            DiscordHttpUtil.ValidateResponse((int)resp.StatusCode, bodyObj);
+            DiscordHttpUtil.ValidateResponse(response, body);
 
-            return bodyObj.ToObject<T>();
+            return body.ToObject<T>();
         }
 
 

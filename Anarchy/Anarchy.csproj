@@ -35,7 +35,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Leaf.xNet" Version="5.2.10" />
     <PackageReference Include="Microsoft.Maui.Graphics" Version="6.0.403" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="websocketsharp.core" Version="1.0.0" />

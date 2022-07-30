@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using System.Net.Http;
+using Newtonsoft.Json.Linq;
 
 namespace Discord
 {
@@ -7,8 +8,18 @@ namespace Discord
         public static string BuildBaseUrl(uint apiVersion, DiscordReleaseChannel releaseChannel) =>
             $"https://{(releaseChannel == DiscordReleaseChannel.Stable ? "" : releaseChannel.ToString().ToLower() + ".")}discord.com/api/v{apiVersion}";
 
-        public static void ValidateResponse(int statusCode, JToken body)
+        public static void ValidateResponse(HttpResponseMessage response)
         {
+            string content = response.Content.ReadAsStringAsync().Result;
+            JToken body = (content != null && content.Length != 0) ? JToken.Parse(content) : null;
+
+            ValidateResponse(response, body);
+        }
+
+        public static void ValidateResponse(HttpResponseMessage response, JToken body)
+        {
+            int statusCode = (int)response.StatusCode;
+
             if (statusCode >= 400)
             {
                 if (statusCode == 429)

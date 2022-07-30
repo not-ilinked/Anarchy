@@ -1,8 +1,10 @@
-﻿namespace Discord
+﻿using System.Net;
+
+namespace Discord
 {
     public class LockedDiscordConfig
     {
-        public AnarchyProxy Proxy { get; private set; }
+        public IWebProxy Proxy { get; private set; }
         public SuperProperties SuperProperties { get; private set; }
         public uint RestConnectionRetries { get; private set; }
         public uint ApiVersion { get; private set; }
