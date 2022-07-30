@@ -1,5 +1,8 @@
 ﻿using System;
+using System.IO;
+using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Reflection;
 using System.Text;
 using System.Threading;
@@ -19,6 +22,7 @@ namespace Discord
             _discordClient = discordClient;
         }
 
+
         private string _anarchyVersion;
         private string AnarchyVersion
         {
@@ -33,28 +37,19 @@ namespace Discord
             }
         }
 
+
         /// <summary>
         /// Sends an HTTP request and checks for errors
         /// </summary>
         /// <param name="method">HTTP method to use</param>
         /// <param name="endpoint">API endpoint (fx. /users/@me)</param>
         /// <param name="payload">JSON content</param>
-        private async Task<DiscordHttpResponse> SendAsync(HttpMethod method, string endpoint, object payload = null)
+        private async Task<DiscordHttpResponse> SendAsync(HttpMethod method, string endpoint, HttpContent content = null)
         {
             if (!endpoint.StartsWith("https"))
                 endpoint = DiscordHttpUtil.BuildBaseUrl(_discordClient.Config.ApiVersion, _discordClient.Config.SuperProperties.ReleaseChannel) + endpoint;
 
-            string json = "{}";
-            if (payload != null)
-            {
-                if (payload.GetType() == typeof(string))
-                    json = (string)payload;
-                else
-                    json = JsonConvert.SerializeObject(payload, new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore });
-            }
-
             uint retriesLeft = _discordClient.Config.RestConnectionRetries;
-            bool hasData = method == HttpMethod.Post || method == HttpMethod.Patch || method == HttpMethod.Put || method == HttpMethod.Delete;
 
             while (true)
             {
@@ -74,13 +69,6 @@ namespace Discord
                         client.DefaultRequestHeaders.Add("User-Agent", _discordClient.Config.SuperProperties.UserAgent);
                         client.DefaultRequestHeaders.Add("X-Super-Properties", _discordClient.Config.SuperProperties.ToBase64());
                     }
-
-                    using HttpContent content =
-                    !hasData
-                        ? null
-                        : payload is IDiscordAttachmentFileProvider provider
-                            ? provider.MultipartFormData(json)
-                            : new StringContent(json, Encoding.UTF8, "application/json");
 
                     var response = await client.SendAsync(new HttpRequestMessage()
                     {
@@ -114,34 +102,87 @@ namespace Discord
             }
         }
 
-
         public async Task<DiscordHttpResponse> GetAsync(string endpoint)
         {
             return await SendAsync(HttpMethod.Get, endpoint);
         }
 
-
         public async Task<DiscordHttpResponse> PostAsync(string endpoint, object payload = null)
         {
-            return await SendAsync(HttpMethod.Post, endpoint, payload);
+            return await SendAsync(HttpMethod.Post, endpoint, MakeStringContent(payload));
         }
 
+        public async Task<DiscordHttpResponse> PostAsync(string endpoint, MessageProperties props)
+        {
+            return await SendAsync(HttpMethod.Post, endpoint, MakeMultipartFormDataContent(props));
+        }
 
         public async Task<DiscordHttpResponse> DeleteAsync(string endpoint, object payload = null)
         {
-            return await SendAsync(HttpMethod.Delete, endpoint, payload);
+            return await SendAsync(HttpMethod.Delete, endpoint, MakeStringContent(payload));
         }
-
 
         public async Task<DiscordHttpResponse> PutAsync(string endpoint, object payload = null)
         {
-            return await SendAsync(HttpMethod.Put, endpoint, payload);
+            return await SendAsync(HttpMethod.Put, endpoint, MakeStringContent(payload));
         }
-
 
         public async Task<DiscordHttpResponse> PatchAsync(string endpoint, object payload = null)
         {
-            return await SendAsync(HttpMethod.Patch, endpoint, payload);
+            return await SendAsync(HttpMethod.Patch, endpoint, MakeStringContent(payload));
+        }
+
+        private static HttpContent MakeStringContent(object payload)
+        {
+            return new StringContent(MakeJson(payload), Encoding.UTF8, "application/json");
+        }
+
+        private static HttpContent MakeMultipartFormDataContent(MessageProperties props)
+        {
+            string json = MakeJson(props);
+            HttpContent content;
+
+            var attachments = props.GetAttachmentFiles();
+
+            if (attachments != null && attachments.Any())
+            {
+                var mpfc = new MultipartFormDataContent();
+
+                foreach (var a in attachments)
+                {
+                    var sc = new StreamContent(new MemoryStream(a.File.Bytes));
+                    if (!string.IsNullOrEmpty(a.File.MediaType))
+                        sc.Headers.ContentType = new MediaTypeHeaderValue(a.File.MediaType);
+
+                    mpfc.Add(sc, $"files[{a.Id}]", Path.GetFileName(a.FileName));
+                }
+
+                if (!string.IsNullOrEmpty(json))
+                {
+                    var jsonContent = new StringContent(json, null, null);
+                    jsonContent.Headers.Remove("Content-Type");
+                    mpfc.Add(jsonContent, "\"payload_json\"");
+                }
+
+                content = mpfc;
+            }
+            else
+                content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            return content;
+        }
+
+        private static string MakeJson(object payload)
+        {
+            string json = "{}";
+            if (payload != null)
+            {
+                if (payload.GetType() == typeof(string))
+                    json = (string)payload;
+                else
+                    json = JsonConvert.SerializeObject(payload, new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore });
+            }
+            return json;
         }
     }
 }

@@ -20,7 +20,7 @@ namespace Discord
         {
             return Enum.Parse<ImageFormat>(mediaType.Replace("image/", string.Empty), true);
         }
-            
+
         public static bool IsSupportedImageFormat(string mediaType)
         {
             string[] supportedImageTypes = { MediaTypeNames.Image.Png, MediaTypeNames.Image.Jpeg, MediaTypeNames.Image.Gif };
