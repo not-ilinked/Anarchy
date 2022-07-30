@@ -9,7 +9,7 @@
 
     <RootNamespace>Discord</RootNamespace>
 
-    <BaseOutputPath>..\.bin\Tests</BaseOutputPath>
+    <BaseOutputPath>..\.bin\$(MSBuildProjectName)</BaseOutputPath>
   </PropertyGroup>
 
   <ItemGroup>

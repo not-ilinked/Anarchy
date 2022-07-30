@@ -1,6 +1,0 @@
-﻿<Project>
-	<PropertyGroup>
-		<BaseIntermediateOutputPath>..\.obj\Tests</BaseIntermediateOutputPath>
-		<MSBuildProjectExtensionsPath>..\.obj\Tests</MSBuildProjectExtensionsPath>
-	</PropertyGroup>
-</Project>
