@@ -61,7 +61,7 @@ namespace Discord.Media
             if (_client.State < MediaConnectionState.Ready)
                 throw new InvalidOperationException("Client is not currently connected");
 
-            _client.Connection.Send(DiscordMediaOpcode.Speaking, new DiscordSpeakingRequest()
+            _client.Connection.SendMessage(DiscordMediaOpcode.Speaking, new DiscordSpeakingRequest()
             {
                 State = flags,
                 Delay = 0,

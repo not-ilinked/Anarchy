@@ -9,7 +9,6 @@ using Discord.Media;
 using Discord.WebSockets;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using WebSocketSharp;
 
 namespace Discord.Gateway
 {
@@ -119,7 +118,7 @@ namespace Discord.Gateway
         public DiscordUserSettings UserSettings { get; private set; }
 
         // websocket connection
-        internal DiscordWebSocket<GatewayOpcode> WebSocket { get; private set; }
+        internal IWebSocketClient<GatewayOpcode> WebSocket { get; private set; }
         public GatewayConnectionState State { get; private set; }
         public bool LoggedIn { get; private set; }
         internal uint? Sequence { get; set; }
@@ -153,7 +152,7 @@ namespace Discord.Gateway
                 ClientMembers = new ConcurrentDictionary<ulong, GuildMember>();
             }
 
-            WebSocket = new DiscordWebSocket<GatewayOpcode>($"wss://gateway.discord.gg/?v={Config.ApiVersion}&encoding=json");
+            WebSocket = DiscordWebSocket<GatewayOpcode>.CreateNew($"wss://gateway.discord.gg/?v={Config.ApiVersion}&encoding=json");
 
             WebSocket.OnClosed += (s, args) =>
             {
@@ -161,7 +160,7 @@ namespace Discord.Gateway
 
                 Reset();
 
-                bool lostConnection = args.Code == 1006 || args.Code == 1001;
+                bool lostConnection = 1006 == args.Code || 1001 == args.Code;
 
                 if (lostConnection)
                     Thread.Sleep(200);
@@ -174,7 +173,9 @@ namespace Discord.Gateway
                     Login(Token);
                 }
                 else
+                {
                     OnLoggedOut?.Invoke(this, new LogoutEventArgs(err, args.Reason));
+                }
             };
 
             WebSocket.OnMessageReceived += WebSocket_OnMessageReceived;
@@ -208,11 +209,11 @@ namespace Discord.Gateway
                 Token = token;
 
             if (User.Type == DiscordUserType.Bot && Config.ApiVersion >= 8 && !Config.Intents.HasValue)
-                throw new ArgumentNullException("Gateway intents must be provided as of API v8");
+                throw new ArgumentNullException(nameof(token), "Gateway intents must be provided as of API v8");
 
             State = GatewayConnectionState.Connecting;
 
-            WebSocket.Connect();
+            WebSocket.ConnectAsync().GetAwaiter().GetResult();
         }
 
 
@@ -223,7 +224,7 @@ namespace Discord.Gateway
                 if (Cooldown > DateTime.Now)
                     Thread.Sleep(Cooldown - DateTime.Now);
 
-                WebSocket.Send(op, requestData);
+                WebSocket.SendMessage(op, requestData);
 
                 Cooldown = DateTime.Now + new TimeSpan(0, 0, 0, 0, 500);
             }
@@ -258,7 +259,7 @@ namespace Discord.Gateway
                 Task.Run(() => OnJoinedVoiceChannel.Invoke(this, new VoiceConnectEventArgs(client)));
         }
 
-        internal void TriggerVCDisconnect(ulong? guildId, ulong channelId, CloseEventArgs args)
+        internal void TriggerVCDisconnect(ulong? guildId, ulong channelId, DiscordWebSocketCloseEventArgs args)
         {
             if (OnLeftVoiceChannel != null)
                 Task.Run(() => OnLeftVoiceChannel.Invoke(this, new VoiceDisconnectEventArgs(this, guildId, channelId, args)));
@@ -966,7 +967,7 @@ namespace Discord.Gateway
             {
                 LoggedIn = false;
 
-                WebSocket.Close((ushort)GatewayCloseCode.ClosedByClient, "Closed by client");
+                WebSocket.DisconnectAsync((int)GatewayCloseCode.ClosedByClient, "Closed by client").GetAwaiter().GetResult();
             }
         }
 

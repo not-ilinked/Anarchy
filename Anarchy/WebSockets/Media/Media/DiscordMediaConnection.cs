@@ -7,7 +7,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Discord.Gateway;
 using Discord.WebSockets;
-using WebSocketSharp;
 
 namespace Discord.Media
 {
@@ -22,7 +21,7 @@ namespace Discord.Media
         public delegate void ReadyHandler(DiscordMediaConnection connection);
         public event ReadyHandler OnReady;
 
-        public delegate void KillHandler(DiscordMediaConnection connection, CloseEventArgs args);
+        public delegate void KillHandler(DiscordMediaConnection connection, DiscordWebSocketCloseEventArgs args);
         public event KillHandler OnDead;
 
         internal static readonly Dictionary<string, MediaCodec> SupportedCodecs = new Dictionary<string, MediaCodec>()
@@ -59,14 +58,14 @@ namespace Discord.Media
             OnClosed += HandleClose;
         }
 
-        private void HandleClose(object sender, CloseEventArgs args)
+        private void HandleClose(object sender, DiscordWebSocketCloseEventArgs args)
         {
             State = MediaConnectionState.NotConnected;
 
             if (args.Code == 1006)
             {
                 Thread.Sleep(200);
-                Task.Run(() => Connect());
+                _ = ConnectAsync().ConfigureAwait(false);
                 return;
             }
             else if (args.Code >= 4000)
@@ -75,7 +74,7 @@ namespace Discord.Media
 
                 if (discordCode == DiscordMediaCloseCode.SessionTimeout || discordCode == DiscordMediaCloseCode.ServerCrashed)
                 {
-                    Task.Run(() => Connect());
+                    _ = ConnectAsync().ConfigureAwait(false);
                     return;
                 }
             }
@@ -115,7 +114,7 @@ namespace Discord.Media
                         OnReady?.Invoke(this);
                         break;
                     case DiscordMediaOpcode.Hello:
-                        Send(DiscordMediaOpcode.Identify, new DiscordMediaIdentify()
+                        SendMessage(DiscordMediaOpcode.Identify, new DiscordMediaIdentify()
                         {
                             ServerId = _serverId,
                             UserId = _parentClient.User.Id,
@@ -123,7 +122,6 @@ namespace Discord.Media
                             Token = _server.Token,
                             Video = true
                         });
-
                         StartHeartbeaterAsync(message.Data.Value<int>("heartbeat_interval"));
                         break;
                     default:
@@ -134,17 +132,18 @@ namespace Discord.Media
             catch (InvalidOperationException) { }
         }
 
-        public new void Connect()
+
+        public new async Task ConnectAsync()
         {
             State = MediaConnectionState.Connecting;
-            base.Connect();
+            await base.ConnectAsync();
         }
 
 
         public void SetSSRC(uint audioSsrc)
         {
             SSRC = new DiscordSSRC() { Audio = audioSsrc, Video = audioSsrc + 1, Rtx = audioSsrc + 2 };
-            Send(DiscordMediaOpcode.SSRCUpdate, SSRC);
+            SendMessage(DiscordMediaOpcode.SSRCUpdate, SSRC);
         }
 
 
@@ -154,7 +153,7 @@ namespace Discord.Media
             {
                 while (true)
                 {
-                    Send(DiscordMediaOpcode.Heartbeat, DateTimeOffset.UtcNow.ToUnixTimeMilliseconds());
+                    SendMessage(DiscordMediaOpcode.Heartbeat, DateTimeOffset.UtcNow.ToUnixTimeMilliseconds());
                     await Task.Delay(interval);
                 }
             }
@@ -179,7 +178,7 @@ namespace Discord.Media
 
         private void SelectProtocol(IPEndPoint localEndpoint)
         {
-            Send(DiscordMediaOpcode.SelectProtocol, new MediaProtocolSelection()
+            SendMessage(DiscordMediaOpcode.SelectProtocol, new MediaProtocolSelection()
             {
                 Protocol = "udp",
                 ProtocolData = new MediaProtocolData()
