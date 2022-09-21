@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -18,7 +19,10 @@ namespace Discord
                 string appPage = client.GetStringAsync("https://discord.com/app").Result;
                 const string findThis = "build_number:\"";
 
-                foreach (var asset in Regex.Matches(appPage, "/assets/.{20}.js"))
+                var assets = new List<Match>(Regex.Matches(appPage, "/assets/.{20}.js"));
+                assets.Reverse();
+
+                foreach (var asset in assets)
                 {
                     var content = client.GetStringAsync("https://discord.com" + asset).Result;
 
