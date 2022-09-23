@@ -5,11 +5,11 @@ using Discord.Gateway;
 
 namespace MessageLogger
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main()
         {
-            DiscordSocketClient client = new DiscordSocketClient();
+            var client = new DiscordSocketClient();
             client.OnLoggedIn += OnLoggedIn;
             client.OnMessageReceived += OnMessageReceived;
 
@@ -19,12 +19,10 @@ namespace MessageLogger
             Thread.Sleep(-1);
         }
 
-
         private static void OnLoggedIn(DiscordSocketClient client, LoginEventArgs args)
         {
             Console.WriteLine($"Logged into {args.User}");
         }
-
 
         private static void OnMessageReceived(DiscordSocketClient client, MessageEventArgs args)
         {
@@ -33,10 +31,10 @@ namespace MessageLogger
             DiscordChannel channel = client.GetChannel(args.Message.Channel.Id);
 
             if (channel.InGuild)
-                from = $"#{channel.Name} / {client.GetCachedGuild(((TextChannel)channel).Guild.Id).Name}";
+                from = $"#{channel.Name} / {client.GetCachedGuild(((TextChannel) channel).Guild.Id).Name}";
             else
             {
-                var privChannel = (PrivateChannel)channel;
+                var privChannel = (PrivateChannel) channel;
                 from = privChannel.Name ?? privChannel.Recipients[0].ToString();
             }
 

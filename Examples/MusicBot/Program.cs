@@ -8,11 +8,11 @@ using YoutubeExplode;
 
 namespace MusicBot
 {
-    class Program
+    internal class Program
     {
         public static YoutubeClient YouTubeClient { get; private set; } = new YoutubeClient();
 
-        public static Dictionary<ulong, TrackQueue> TrackLists = new Dictionary<ulong, TrackQueue>();
+        public static Dictionary<ulong, TrackQueue> TrackLists = new();
 
         public static bool CanModifyList(DiscordSocketClient client, DiscordMessage message)
         {
@@ -29,12 +29,12 @@ namespace MusicBot
             return false;
         }
 
-        static void Main(string[] args)
+        private static void Main()
         {
             Console.Write("Token: ");
             string token = Console.ReadLine();
 
-            DiscordSocketClient client = new DiscordSocketClient(new DiscordSocketConfig()
+            var client = new DiscordSocketClient(new DiscordSocketConfig()
             {
                 VoiceChannelConnectTimeout = 5000,
                 HandleIncomingMediaData = false,

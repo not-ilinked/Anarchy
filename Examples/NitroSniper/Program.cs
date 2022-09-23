@@ -5,9 +5,9 @@ using Discord.Gateway;
 
 namespace NitroSniper
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             Console.Write("Token: ");
             string token = Console.ReadLine();

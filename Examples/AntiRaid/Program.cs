@@ -7,22 +7,25 @@ using Discord.Gateway;
 
 namespace AntiRaid
 {
-    class Program
+    internal class Program
     {
-        public static Dictionary<ulong, List<DiscordMessage>> Messages = new Dictionary<ulong, List<DiscordMessage>>();
-        public static BanQueue BanQueue = new BanQueue();
+        public static Dictionary<ulong, List<DiscordMessage>> Messages = new();
+        public static BanQueue BanQueue = new();
 
         public static readonly int MaxMessages = 7;
-        public static readonly TimeSpan MessageExpiration = new TimeSpan(0, 0, 10);
+        public static readonly TimeSpan MessageExpiration = new(0, 0, 10);
 
-        static void Main(string[] args)
+        private static void Main()
         {
             Console.WriteLine("Token: ");
             string token = Console.ReadLine();
 
             BanQueue.Start();
 
-            DiscordSocketClient client = new DiscordSocketClient(new DiscordSocketConfig() { Intents = GatewayIntentBundles.Guilds | GatewayIntentBundles.GuildMessages | GatewayIntentBundles.GuildAdministration });
+            var client = new DiscordSocketClient(new DiscordSocketConfig()
+            {
+                Intents = GatewayIntentBundles.Guilds | GatewayIntentBundles.GuildMessages | GatewayIntentBundles.GuildAdministration
+            });
             client.OnLoggedIn += Client_OnLoggedIn;
             client.OnMessageReceived += Client_OnMessageReceived;
             client.OnJoinedGuild += (s, e) => Messages[e.Guild.Id] = new List<DiscordMessage>();
