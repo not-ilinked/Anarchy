@@ -23,7 +23,7 @@ namespace MusicBot
                 return;
             }
 
-            var channel = (VoiceChannel)Client.GetChannel(theirState.Channel.Id);
+            var channel = (VoiceChannel) Client.GetChannel(theirState.Channel.Id);
             var voiceClient = Client.GetVoiceClient(Message.Guild.Id);
 
             if (voiceClient.State < MediaConnectionState.Ready || voiceClient.Channel.Id != channel.Id)

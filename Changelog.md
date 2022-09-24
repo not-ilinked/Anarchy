@@ -1,3 +1,12 @@
+## 0.8.3
+### Improvements
+- Fixes #3330.
+- library initialization is much faster.
+- Dependency changes:
+  - WebSocketSharp.Core removed (replaced by .NET 6.0 ClientWebSocket)
+
+
+
 ## 0.8.2
 ### Improvements
 - Ported to .NET 6.0!
@@ -5,7 +14,7 @@
 - Uses standard Visual Studio .gitignore from:
   https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
 - Dependency changes:
-  - Leaf.xNet removed (SOCK proxy supported by .NET 6.0)
+  - Leaf.xNet removed (.NET 6.0 includes native SOCK proxy support)
   - System.Drawing.Common replaced by Microsoft.Maui.Graphics
   - websocket-sharp replaced by websocketsharp.core
 - Dependency upgrades:

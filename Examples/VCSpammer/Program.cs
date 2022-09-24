@@ -10,7 +10,7 @@ using Discord.Media;
 
 namespace VCSpammer
 {
-    class Program
+    internal class Program
     {
         public static GuildInvite Invite { get; private set; }
         public static string AudioPath { get; private set; }
@@ -18,13 +18,13 @@ namespace VCSpammer
         public static object ChannelLookupLock = new object();
         public static List<DiscordSocketClient> BotAccounts = new List<DiscordSocketClient>();
 
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             Console.WriteLine("Loading puppeteer...");
             DiscordPuppeteer.Start();
 
             Console.Write("Guild invite: ");
-            Invite = (GuildInvite)new DiscordClient().GetInvite(Console.ReadLine());
+            Invite = (GuildInvite) new DiscordClient().GetInvite(Console.ReadLine());
 
             Console.Write("Audio file path: ");
             AudioPath = Console.ReadLine();
@@ -62,7 +62,7 @@ namespace VCSpammer
             Console.WriteLine(client.User.ToString() + " has joined " + args.Client.Channel.Id);
 
             // exploit that lets you speak while muted (https://www.youtube.com/watch?v=PWzPa_BIv9s)
-            args.Client.Microphone.Bitrate = ((VoiceChannel)client.GetChannel(args.Client.Channel.Id)).Bitrate;
+            args.Client.Microphone.Bitrate = ((VoiceChannel) client.GetChannel(args.Client.Channel.Id)).Bitrate;
             args.Client.Microphone.SetSpeakingState(DiscordSpeakingFlags.Soundshare);
 
             CancellationTokenSource source = new CancellationTokenSource();
@@ -119,7 +119,7 @@ namespace VCSpammer
                     return voiceClient.Channel != null && voiceClient.Channel.Id == c.Id;
                 })).OrderBy(c => GetParticipantCount(client, c.Id)).Reverse())
                 {
-                    var voiceChannel = (VoiceChannel)ch;
+                    var voiceChannel = (VoiceChannel) ch;
 
                     var perms = guild.ClientMember.GetPermissions(voiceChannel.PermissionOverwrites);
 

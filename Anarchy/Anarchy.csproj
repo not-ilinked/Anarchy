@@ -13,7 +13,7 @@
     <BaseOutputPath>..\.bin\$(MSBuildProjectName)</BaseOutputPath>
     <Description>The superior Discord API wrapper.</Description>
     <Copyright>Copyright ©iLinked  2022</Copyright>
-    <VersionPrefix>0.8.2</VersionPrefix>
+    <VersionPrefix>0.8.3</VersionPrefix>
     <VersionSuffix></VersionSuffix>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -37,7 +37,6 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Maui.Graphics" Version="6.0.403" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="websocketsharp.core" Version="1.0.0" />
   </ItemGroup>
 
 </Project>

@@ -41,7 +41,7 @@ namespace MusicBot
 
                     if (_stream == null)
                     {
-                        VoiceChannel currentChannel = (VoiceChannel)_client.GetChannel(voiceClient.Channel.Id);
+                        var currentChannel = (VoiceChannel) _client.GetChannel(voiceClient.Channel.Id);
                         _stream = DiscordVoiceUtils.GetAudioStream(GetVideoUrl(currentSong.Id, currentChannel.Bitrate));
                     }
 

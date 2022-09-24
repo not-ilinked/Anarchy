@@ -4,9 +4,9 @@ using Discord;
 
 namespace NicknameAnimation
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main()
         {
             //create client
             Console.Write("Token: ");

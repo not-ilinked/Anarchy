@@ -7,14 +7,17 @@ using Discord.Gateway;
 
 namespace GuildDuplicator
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main()
         {
             Console.Write("Token: ");
             string token = Console.ReadLine();
 
-            DiscordSocketClient client = new DiscordSocketClient(new DiscordSocketConfig() { RetryOnRateLimit = false });
+            var client = new DiscordSocketClient(new DiscordSocketConfig()
+            {
+                RetryOnRateLimit = false
+            });
             client.OnLoggedIn += Client_OnLoggedIn;
             client.Login(token);
 
@@ -38,10 +41,10 @@ namespace GuildDuplicator
                 var targetGuild = client.GetCachedGuild(guildId);
 
                 Console.WriteLine("Creating guild...");
-                var guild = client.CreateGuild(targetGuild.Name, targetGuild.Icon == null ? null : targetGuild.Icon.Download(), targetGuild.Region);
+                var guild = client.CreateGuild(targetGuild.Name, targetGuild.Icon?.Download(), targetGuild.Region);
 
                 Console.WriteLine("Creating roles...");
-                Dictionary<ulong, ulong> dupedRoles = new Dictionary<ulong, ulong>();
+                var dupedRoles = new Dictionary<ulong, ulong>();
                 foreach (var role in targetGuild.Roles.OrderBy(r => r.Position).Reverse())
                 {
                     var properties = new RoleProperties() { Name = role.Name, Color = role.Color, Mentionable = role.Mentionable, Permissions = role.Permissions, Seperated = role.Seperated };
@@ -77,21 +80,21 @@ namespace GuildDuplicator
                     channel.Delete();
 
                 Console.WriteLine("Creating channels...");
-                Dictionary<ulong, ulong> dupedChannels = new Dictionary<ulong, ulong>();
+                var dupedChannels = new Dictionary<ulong, ulong>();
                 foreach (var channel in targetGuild.Channels.OrderBy(c => c.Type != ChannelType.Category))
                 {
-                    var ourChannel = guild.CreateChannel(channel.Name, TranslateChannelType(channel), channel.ParentId.HasValue ? dupedChannels[channel.ParentId.Value] : (ulong?)null);
+                    var ourChannel = guild.CreateChannel(channel.Name, TranslateChannelType(channel), channel.ParentId.HasValue ? dupedChannels[channel.ParentId.Value] : (ulong?) null);
                     ourChannel.Modify(new GuildChannelProperties() { Position = channel.Position });
 
                     if (ourChannel.Type == ChannelType.Text)
                     {
-                        var channelAsText = (TextChannel)channel;
-                        ((TextChannel)ourChannel).Modify(new TextChannelProperties() { Nsfw = channelAsText.Nsfw, SlowMode = channelAsText.SlowMode, Topic = channelAsText.Topic });
+                        var channelAsText = (TextChannel) channel;
+                        ((TextChannel) ourChannel).Modify(new TextChannelProperties() { Nsfw = channelAsText.Nsfw, SlowMode = channelAsText.SlowMode, Topic = channelAsText.Topic });
                     }
                     else if (ourChannel.Type == ChannelType.Voice)
                     {
-                        var channelAsVoice = (VoiceChannel)channel;
-                        ((VoiceChannel)ourChannel).Modify(new VoiceChannelProperties() { Bitrate = Math.Min(96000, channelAsVoice.Bitrate), UserLimit = Math.Min(99, channelAsVoice.UserLimit) });
+                        var channelAsVoice = (VoiceChannel) channel;
+                        ((VoiceChannel) ourChannel).Modify(new VoiceChannelProperties() { Bitrate = Math.Min(96000, channelAsVoice.Bitrate), UserLimit = Math.Min(99, channelAsVoice.UserLimit) });
                     }
 
                     foreach (var overwrite in channel.PermissionOverwrites)
@@ -123,7 +126,7 @@ namespace GuildDuplicator
 
                     if (hasWelcomeScreen)
                     {
-                        List<WelcomeChannelProperties> channels = new List<WelcomeChannelProperties>();
+                        var channels = new List<WelcomeChannelProperties>();
 
                         foreach (var channel in welcomeScreen.Channels)
                         {
@@ -218,7 +221,7 @@ namespace GuildDuplicator
                 {
                     if (channel.IsText && guild.ClientMember.GetPermissions(channel.PermissionOverwrites).Has(DiscordPermission.CreateInstantInvite))
                     {
-                        code = ((TextChannel)channel).CreateInvite().Code;
+                        code = ((TextChannel) channel).CreateInvite().Code;
                         return true;
                     }
                 }

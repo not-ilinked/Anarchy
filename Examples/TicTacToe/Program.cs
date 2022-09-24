@@ -5,11 +5,11 @@ using Discord.Gateway;
 
 namespace TicTacToe
 {
-    class Program
+    internal class Program
     {
         public static Dictionary<string, Game> Games = new Dictionary<string, Game>();
 
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             Console.Write("Bot token: ");
             string token = Console.ReadLine();

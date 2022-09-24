@@ -61,10 +61,10 @@ namespace Discord.Media
             Connection.OnUdpPacket += Connection_OnUdpPacket;
             Connection.OnDead += Connection_OnDead;
 
-            Connection.Connect();
+            Connection.ConnectAsync().GetAwaiter().GetResult();
         }
 
-        private void Connection_OnDead(DiscordMediaConnection connection, WebSocketSharp.CloseEventArgs args)
+        private void Connection_OnDead(DiscordMediaConnection connection, DiscordWebSocketCloseEventArgs args)
         {
             ulong prevChannel = _channelId.Value;
             _channelId = null;
@@ -168,7 +168,7 @@ namespace Discord.Media
             if (Connection != null && Connection.State > MediaConnectionState.NotConnected)
             {
                 _client.ChangeVoiceState(new VoiceStateProperties() { GuildId = _guildId, ChannelId = null });
-                Connection.Close(1000, "Closed by user");
+                Connection.DisconnectAsync(1000, "Closed by user").GetAwaiter().GetResult();
             }
         }
 

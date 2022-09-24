@@ -61,13 +61,13 @@ namespace Discord.Media
 
             _connection.OnMessage += HandleMessage;
 
-            _connection.Connect();
+            _connection.ConnectAsync().GetAwaiter().GetResult();
         }
 
         public void Disconnect()
         {
             Client.EndGoLive(_streamKey.Serialize());
-            _connection.Close(1000, "Closed by client");
+            _connection.DisconnectAsync(1000, "Closed by client").GetAwaiter().GetResult();
         }
 
         private void HandleMessage(DiscordMediaConnection connection, WebSockets.DiscordWebSocketMessage<DiscordMediaOpcode> message)
