@@ -8,16 +8,13 @@ namespace Discord
         [JsonProperty("created_at")]
         public DateTime SubmittedAt { get; private set; }
 
-
         [JsonProperty("rejection_reason")]
         public string RejectionReason { get; private set; }
-
 
         [JsonProperty("application_status")]
         public string ApplicationStatus { get; private set; }
 
         public bool Approved => ApplicationStatus == "APPROVED";
-
 
         [JsonProperty("guild_id")]
         private ulong _guildId;

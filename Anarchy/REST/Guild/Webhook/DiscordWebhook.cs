@@ -8,14 +8,11 @@ namespace Discord
         [JsonProperty("id")]
         public ulong Id { get; private set; }
 
-
         [JsonProperty("type")]
         public DiscordWebhookType Type { get; private set; }
 
-
         [JsonProperty("name")]
         public string Name { get; private set; }
-
 
         [JsonProperty("avatar")]
         private string _avatarHash;
@@ -31,24 +28,19 @@ namespace Discord
             }
         }
 
-
         [JsonProperty("user")]
         public DiscordUser Creator { get; private set; }
-
 
         [JsonProperty("channel_id")]
         public ulong ChannelId { get; private set; }
 
-
         [JsonProperty("guild_id")]
         public ulong GuildId { get; private set; }
-
 
         public DiscordWebhook()
         {
             OnClientUpdated += (s, e) => Creator.SetClient(Client);
         }
-
 
         protected void Update(DiscordWebhook hook)
         {
@@ -60,7 +52,6 @@ namespace Discord
             ChannelId = hook.ChannelId;
             GuildId = hook.GuildId;
         }
-
 
         public async Task UpdateAsync()
         {
@@ -89,7 +80,6 @@ namespace Discord
             ModifyAsync(properties).GetAwaiter().GetResult();
         }
 
-
         public async Task DeleteAsync()
         {
             await Client.DeleteWebhookAsync(Id);
@@ -102,7 +92,6 @@ namespace Discord
         {
             DeleteAsync().GetAwaiter().GetResult();
         }
-
 
         public override string ToString()
         {

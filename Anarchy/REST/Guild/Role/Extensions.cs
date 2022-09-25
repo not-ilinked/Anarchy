@@ -27,7 +27,6 @@ namespace Discord
             return client.CreateRoleAsync(guildId, properties).GetAwaiter().GetResult();
         }
 
-
         public static async Task<DiscordRole> ModifyRoleAsync(this DiscordClient client, ulong guildId, ulong roleId, RoleProperties properties)
         {
             DiscordRole changed = (await client.HttpClient.PatchAsync($"/guilds/{guildId}/roles/{roleId}", properties)).Deserialize<DiscordRole>().SetClient(client);
@@ -47,7 +46,6 @@ namespace Discord
             return client.ModifyRoleAsync(guildId, roleId, properties).GetAwaiter().GetResult();
         }
 
-
         public static async Task DeleteRoleAsync(this DiscordClient client, ulong guildId, ulong roleId)
         {
             await client.HttpClient.DeleteAsync($"/guilds/{guildId}/roles/{roleId}");
@@ -63,7 +61,6 @@ namespace Discord
             client.DeleteRoleAsync(guildId, roleId).GetAwaiter().GetResult();
         }
 
-
         public static async Task<IReadOnlyList<DiscordRole>> SetRolePositionsAsync(this DiscordClient client, ulong guildId, List<RolePositionUpdate> roles)
         {
             var result = (await client.HttpClient.PatchAsync($"/guilds/{guildId}/roles", roles))
@@ -78,7 +75,6 @@ namespace Discord
             return client.SetRolePositionsAsync(guildId, roles).GetAwaiter().GetResult();
         }
         #endregion
-
 
         public static async Task AddRoleToUserAsync(this DiscordClient client, ulong guildId, ulong roleId, ulong userId)
         {
@@ -96,7 +92,6 @@ namespace Discord
             client.AddRoleToUserAsync(guildId, roleId, userId).GetAwaiter().GetResult();
         }
 
-
         public static async Task RemoveRoleFromUserAsync(this DiscordClient client, ulong guildId, ulong roleId, ulong userId)
         {
             await client.HttpClient.DeleteAsync($"/guilds/{guildId}/members/{userId}/roles/{roleId}");
@@ -112,7 +107,6 @@ namespace Discord
         {
             client.RemoveRoleFromUserAsync(guildId, roleId, userId).GetAwaiter().GetResult();
         }
-
 
         public static async Task<IReadOnlyList<DiscordRole>> GetGuildRolesAsync(this DiscordClient client, ulong guildId)
         {

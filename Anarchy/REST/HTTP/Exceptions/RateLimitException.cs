@@ -11,7 +11,6 @@ namespace Discord
             RetryAfter = retryAfter;
         }
 
-
         public override string ToString()
         {
             return RetryAfter.ToString();

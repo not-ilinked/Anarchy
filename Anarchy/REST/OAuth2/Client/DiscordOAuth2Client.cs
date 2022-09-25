@@ -12,7 +12,7 @@ namespace Discord
 {
     public class DiscordOAuth2Client
     {
-        readonly ulong _clientId;
+        private readonly ulong _clientId;
         private readonly string _clientSecret;
         private DiscordOAuth2Authorization _auth;
 
@@ -58,13 +58,11 @@ namespace Discord
         public void Refresh(string refreshToken) => authorize("refresh_token", new Dictionary<string, string>() { { "refresh_token", refreshToken } });
         public void Authorize(string code, string redirectUri) => authorize("authorization_code", new Dictionary<string, string>() { { "code", code }, { "redirect_uri", redirectUri } });
 
-
         private void EnsureAuth()
         {
             if (_auth == null) throw new InvalidOperationException("You must authenticate before making this request");
             else if (_auth.ExpiresAt < DateTime.UtcNow) Refresh(_auth.RefreshToken);
         }
-
 
         private T Request<T>(string method, string endpoint, object data = null)
         {
@@ -86,7 +84,6 @@ namespace Discord
 
             return body.ToObject<T>();
         }
-
 
         public DiscordUser GetUser()
         {

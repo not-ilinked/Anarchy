@@ -25,7 +25,6 @@ namespace Discord
 
         public bool ShouldSerializeGuildId() => _guildParam.Set;
 
-
         private readonly DiscordParameter<ulong> _channelParam = new DiscordParameter<ulong>();
         [JsonProperty("channel_id")]
         public ulong ChannelId
@@ -35,7 +34,6 @@ namespace Discord
         }
 
         public bool ShouldSerializeChannelId() => _channelParam.Set;
-
 
         private readonly DiscordParameter<ulong> _messageParam = new DiscordParameter<ulong>();
         [JsonProperty("message_id")]

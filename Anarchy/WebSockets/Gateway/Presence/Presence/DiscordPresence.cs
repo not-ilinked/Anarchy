@@ -15,7 +15,6 @@ namespace Discord.Gateway
             };
         }
 
-
         [JsonProperty("user")]
         private readonly JObject _user;
 
@@ -23,7 +22,6 @@ namespace Discord.Gateway
         {
             get { return _user["id"].ToObject<ulong>(); }
         }
-
 
         private readonly DiscordParameter<List<DiscordActivity>> _activitiesParam = new DiscordParameter<List<DiscordActivity>>();
         [JsonProperty("activities")]
@@ -44,7 +42,6 @@ namespace Discord.Gateway
             get { return _activitiesParam.Set; }
         }
 
-
         private readonly DiscordParameter<UserStatus> _statusParam = new DiscordParameter<UserStatus>();
         [JsonProperty("status")]
         public UserStatus Status
@@ -57,7 +54,6 @@ namespace Discord.Gateway
         {
             get { return _statusParam.Set; }
         }
-
 
         private readonly DiscordParameter<ActiveSessionPlatforms> _platformsParam = new DiscordParameter<ActiveSessionPlatforms>();
         [JsonProperty("client_status")]
@@ -72,7 +68,6 @@ namespace Discord.Gateway
             get { return _platformsParam.Set; }
         }
 
-
         internal void Update(DiscordPresence presence)
         {
             if (presence.ActivePlatformsSet)
@@ -82,7 +77,6 @@ namespace Discord.Gateway
             if (presence.StatusSet)
                 Status = presence.Status;
         }
-
 
         public override string ToString()
         {

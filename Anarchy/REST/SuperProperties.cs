@@ -77,7 +77,7 @@ namespace Discord
 
         public DiscordReleaseChannel ReleaseChannel
         {
-            get => (DiscordReleaseChannel)Enum.Parse(typeof(DiscordReleaseChannel), _relChannel, true);
+            get => (DiscordReleaseChannel) Enum.Parse(typeof(DiscordReleaseChannel), _relChannel, true);
             set => _relChannel = value.ToString().ToLower();
         }
 
@@ -87,18 +87,15 @@ namespace Discord
         [JsonProperty("client_event_source")]
         public string EventSource { get; set; }
 
-
         public static SuperProperties FromBase64(string base64)
         {
             return JsonConvert.DeserializeObject<SuperProperties>(Encoding.UTF8.GetString(Convert.FromBase64String(base64)));
         }
 
-
         public string ToBase64()
         {
             return Convert.ToBase64String(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(this)));
         }
-
 
         public override string ToString()
         {

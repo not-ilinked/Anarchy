@@ -15,7 +15,6 @@ namespace Discord
             set { NameProperty.Value = value; }
         }
 
-
         public bool ShouldSerializeName()
         {
             return NameProperty.Set;
@@ -28,7 +27,6 @@ namespace Discord
             get { return IconProperty; }
             set { IconProperty.Value = value; }
         }
-
 
         public bool ShouldSerializeIcon()
         {

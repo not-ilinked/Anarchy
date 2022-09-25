@@ -22,7 +22,6 @@ namespace Discord
             return client.JoinGroupAsync(inviteCode).GetAwaiter().GetResult();
         }
 
-
         public static async Task<DiscordGroup> CreateGroupAsync(this DiscordClient client, List<ulong> recipients)
         {
             return (await client.HttpClient.PostAsync($"/users/@me/channels", new JObject()
@@ -41,17 +40,15 @@ namespace Discord
             return client.CreateGroupAsync(recipients).GetAwaiter().GetResult();
         }
 
-
         public static async Task<DiscordGroup> LeaveGroupAsync(this DiscordClient client, ulong groupId)
         {
-            return (DiscordGroup)await client.DeleteChannelAsync(groupId);
+            return (DiscordGroup) await client.DeleteChannelAsync(groupId);
         }
 
         public static DiscordGroup LeaveGroup(this DiscordClient client, ulong groupId)
         {
             return client.LeaveGroupAsync(groupId).GetAwaiter().GetResult();
         }
-
 
         public static async Task AddUserToGroupAsync(this DiscordClient client, ulong groupId, ulong userId)
         {
@@ -67,7 +64,6 @@ namespace Discord
         {
             client.AddUserToGroupAsync(groupId, userId).GetAwaiter().GetResult();
         }
-
 
         public static async Task RemoveUserFromGroupAsync(this DiscordClient client, ulong groupId, ulong userId)
         {

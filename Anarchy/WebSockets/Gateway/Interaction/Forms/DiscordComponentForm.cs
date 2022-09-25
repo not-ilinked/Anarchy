@@ -65,7 +65,7 @@ namespace Discord.Gateway
                 {
                     if (input.GetType() == typeof(ComponentFormSelectMenu))
                     {
-                        var asSelect = (ComponentFormSelectMenu)input;
+                        var asSelect = (ComponentFormSelectMenu) input;
                         inputs.Add(new SelectMenuComponent()
                         {
                             Id = $"{instance.Id}-{asSelect.Id}",
@@ -78,7 +78,7 @@ namespace Discord.Gateway
                     }
                     else
                     {
-                        var asButton = (ComponentFormButton)input;
+                        var asButton = (ComponentFormButton) input;
 
                         inputs.Add(new ButtonComponent()
                         {

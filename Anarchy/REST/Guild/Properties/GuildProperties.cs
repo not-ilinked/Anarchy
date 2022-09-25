@@ -16,12 +16,10 @@ namespace Discord
             set { NameProperty.Value = value; }
         }
 
-
         public bool ShouldSerializeName()
         {
             return NameProperty.Set;
         }
-
 
         private readonly DiscordParameter<string> RegionProperty = new DiscordParameter<string>();
         [JsonProperty("region")]
@@ -31,12 +29,10 @@ namespace Discord
             set { RegionProperty.Value = value; }
         }
 
-
         public bool ShouldSerializeRegion()
         {
             return RegionProperty.Set;
         }
-
 
         internal readonly DiscordParameter<DiscordImage> IconProperty = new DiscordParameter<DiscordImage>();
         [JsonProperty("icon")]
@@ -46,12 +42,10 @@ namespace Discord
             set { IconProperty.Value = value; }
         }
 
-
         public bool ShouldSerializeIcon()
         {
             return IconProperty.Set;
         }
-
 
         private readonly DiscordParameter<ulong> OwnerProperty = new DiscordParameter<ulong>();
         [JsonProperty("owner_id")]
@@ -61,12 +55,10 @@ namespace Discord
             set { OwnerProperty.Value = value; }
         }
 
-
         public bool ShouldSerializeOwnerId()
         {
             return OwnerProperty.Set;
         }
-
 
         private readonly DiscordParameter<GuildVerificationLevel> VerificationProperty = new DiscordParameter<GuildVerificationLevel>();
         [JsonProperty("verification_level")]
@@ -76,12 +68,10 @@ namespace Discord
             set { VerificationProperty.Value = value; }
         }
 
-
         public bool ShouldSerializeVerificationLevel()
         {
             return VerificationProperty.Set;
         }
-
 
         private readonly DiscordParameter<GuildDefaultNotifications> NotificationsProperty = new DiscordParameter<GuildDefaultNotifications>();
         [JsonProperty("default_message_notifications")]
@@ -91,12 +81,10 @@ namespace Discord
             set { NotificationsProperty.Value = value; }
         }
 
-
         public bool ShouldSerializeDefaultNotifications()
         {
             return NotificationsProperty.Set;
         }
-
 
         private readonly DiscordParameter<List<string>> FeatureProperty = new DiscordParameter<List<string>>();
         [JsonProperty("features")]
@@ -111,7 +99,6 @@ namespace Discord
             return FeatureProperty.Set;
         }
 
-
         private readonly DiscordParameter<ulong?> _updatesChannel = new DiscordParameter<ulong?>();
         [JsonProperty("public_updates_channel_id")]
         public ulong? PublicUpdatesChannelId
@@ -124,7 +111,6 @@ namespace Discord
         {
             return _updatesChannel.Set;
         }
-
 
         private readonly DiscordParameter<ulong?> _rulesChannel = new DiscordParameter<ulong?>();
         [JsonProperty("rules_channel_id")]
@@ -139,7 +125,6 @@ namespace Discord
             return _rulesChannel.Set;
         }
 
-
         private readonly DiscordParameter<DiscordLanguage?> _preferredLocale = new DiscordParameter<DiscordLanguage?>();
         [JsonProperty("preferred_locale")]
         public DiscordLanguage? PreferredLanguage
@@ -153,14 +138,12 @@ namespace Discord
             return _preferredLocale.Set;
         }
 
-
         internal readonly DiscordParameter<string> VanityProperty = new DiscordParameter<string>();
         public string VanityUrlCode
         {
             get { return VanityProperty; }
             set { VanityProperty.Value = value; }
         }
-
 
         private readonly DiscordParameter<ExplicitContentFilter> _contentFilterParam = new DiscordParameter<ExplicitContentFilter>();
         [JsonProperty("explicit_content_filter")]
@@ -171,7 +154,6 @@ namespace Discord
         }
 
         public bool ShouldSerializeExplicitContentFilter() => _contentFilterParam.Set;
-
 
         private readonly DiscordParameter<string> _descParam = new DiscordParameter<string>();
         [JsonProperty("description")]

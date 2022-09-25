@@ -12,7 +12,6 @@ namespace Discord.Gateway
         [JsonProperty("user")]
         public DiscordUser User { get; private set; }
 
-
         [JsonProperty("channel_id")]
         private readonly ulong _channelId;
 

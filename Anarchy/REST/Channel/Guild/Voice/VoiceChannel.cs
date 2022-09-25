@@ -11,10 +11,8 @@ namespace Discord
         [JsonProperty("bitrate")]
         public uint Bitrate { get; private set; }
 
-
         [JsonProperty("user_limit")]
         public uint UserLimit { get; private set; }
-
 
         protected void Update(VoiceChannel channel)
         {
@@ -23,10 +21,9 @@ namespace Discord
             UserLimit = channel.UserLimit;
         }
 
-
         public new async Task UpdateAsync()
         {
-            Update((VoiceChannel)await Client.GetChannelAsync(Id));
+            Update((VoiceChannel) await Client.GetChannelAsync(Id));
         }
 
         /// <summary>
@@ -36,7 +33,6 @@ namespace Discord
         {
             UpdateAsync().GetAwaiter().GetResult();
         }
-
 
         public async Task ModifyAsync(VoiceChannelProperties properties)
         {
@@ -51,7 +47,6 @@ namespace Discord
         {
             ModifyAsync(properties).GetAwaiter().GetResult();
         }
-
 
         public async Task<DiscordInvite> CreateInviteAsync(InviteProperties properties = null)
         {

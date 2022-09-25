@@ -7,10 +7,8 @@ namespace Discord.Media
         [JsonProperty("speaking")]
         public DiscordSpeakingFlags State { get; set; }
 
-
         [JsonProperty("delay")]
         public int Delay { get; set; }
-
 
         [JsonProperty("ssrc")]
         public uint SSRC { get; set; }

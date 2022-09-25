@@ -10,7 +10,6 @@ namespace Discord
         [JsonProperty("guild_ids")]
         private readonly IReadOnlyList<ulong> _guilds;
 
-
         public IReadOnlyList<MinimalGuild> Guilds
         {
             get
@@ -23,14 +22,11 @@ namespace Discord
             }
         }
 
-
         [JsonProperty("id")]
         public long? Id { get; private set; }
 
-
         [JsonProperty("name")]
         public string Name { get; private set; }
-
 
         [JsonProperty("color")]
         private readonly int? _color;
@@ -46,12 +42,10 @@ namespace Discord
             }
         }
 
-
         public bool Folder
         {
             get { return Id.HasValue; }
         }
-
 
         public DiscordGuildFolderUpdate ToUpdate()
         {

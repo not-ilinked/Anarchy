@@ -14,7 +14,6 @@ namespace Discord.Gateway
             client.Send(GatewayOpcode.VoiceStateUpdate, properties.Fill(client));
         }
 
-
         public static DiscordVoiceStateContainer GetVoiceStates(this DiscordSocketClient client, ulong userId)
         {
             if (!client.Config.Cache)
@@ -23,7 +22,6 @@ namespace Discord.Gateway
             return client.VoiceStates[userId, true];
         }
 
-
         public static IReadOnlyList<DiscordVoiceState> GetGuildVoiceStates(this DiscordSocketClient client, ulong guildId)
         {
             if (!client.Config.Cache)
@@ -31,7 +29,6 @@ namespace Discord.Gateway
 
             return client.GetCachedGuild(guildId).VoiceStates;
         }
-
 
         public static IReadOnlyList<DiscordVoiceState> GetChannelVoiceStates(this DiscordSocketClient client, ulong channelId)
         {
@@ -64,7 +61,6 @@ namespace Discord.Gateway
 
             return states;
         }
-
 
         internal static void EndGoLive(this DiscordSocketClient client, string streamKey)
         {

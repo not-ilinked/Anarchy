@@ -7,7 +7,6 @@ namespace Discord.Gateway
         [JsonProperty("sku_id")]
         public ulong SkuId { get; private set; }
 
-
         [JsonProperty("code")]
         public string Code { get; private set; }
     }

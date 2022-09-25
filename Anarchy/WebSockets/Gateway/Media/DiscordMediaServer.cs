@@ -7,10 +7,8 @@ namespace Discord.Gateway
         [JsonProperty("token")]
         public string Token { get; private set; }
 
-
         [JsonProperty("guild_id")]
         internal ulong? GuildId { get; set; }
-
 
         public MinimalGuild Guild
         {
@@ -23,7 +21,6 @@ namespace Discord.Gateway
             }
         }
 
-
         private string _endpoint;
         [JsonProperty("endpoint")]
         public string Endpoint
@@ -35,7 +32,6 @@ namespace Discord.Gateway
                     _endpoint = value.Split(':')[0];
             }
         }
-
 
         [JsonProperty("stream_key")]
         internal string StreamKey { get; private set; }

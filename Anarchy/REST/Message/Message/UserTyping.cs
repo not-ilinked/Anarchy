@@ -16,7 +16,6 @@ namespace Discord.Gateway
             }
         }
 
-
         [JsonProperty("guild_id")]
         private readonly ulong? _guildId;
 
@@ -31,10 +30,8 @@ namespace Discord.Gateway
             }
         }
 
-
         [JsonProperty("user_id")]
         public ulong UserId { get; private set; }
-
 
         [JsonProperty("timestamp")]
 #pragma warning disable CS0649
@@ -44,9 +41,8 @@ namespace Discord.Gateway
         [JsonIgnore]
         public DateTimeOffset Timestamp
         {
-            get { return DateTimeOffset.FromUnixTimeSeconds((long)_timestamp); }
+            get { return DateTimeOffset.FromUnixTimeSeconds((long) _timestamp); }
         }
-
 
         public override string ToString()
         {

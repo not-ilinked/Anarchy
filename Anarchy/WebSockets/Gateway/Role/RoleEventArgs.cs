@@ -9,7 +9,6 @@
             Role = role;
         }
 
-
         public override string ToString()
         {
             return Role.ToString();

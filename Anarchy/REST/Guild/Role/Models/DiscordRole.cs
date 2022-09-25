@@ -10,7 +10,6 @@ namespace Discord
         [JsonProperty("id")]
         public ulong Id { get; private set; }
 
-
         internal ulong GuildId { get; set; }
 
         public MinimalGuild Guild
@@ -18,35 +17,28 @@ namespace Discord
             get { return new MinimalGuild(GuildId).SetClient(Client); }
         }
 
-
         [JsonProperty("name")]
         public string Name { get; private set; }
-
 
         [JsonProperty("color")]
         private uint _color;
         public Color Color
         {
-            get { return Color.FromArgb((int)_color); }
-            private set { _color = (uint)Color.FromArgb(0, value.R, value.G, value.B).ToArgb(); }
+            get { return Color.FromArgb((int) _color); }
+            private set { _color = (uint) Color.FromArgb(0, value.R, value.G, value.B).ToArgb(); }
         }
-
 
         [JsonProperty("position")]
         public int Position { get; private set; }
 
-
         [JsonProperty("hoist")]
         public bool Seperated { get; private set; }
-
 
         [JsonProperty("mentionable")]
         public bool Mentionable { get; private set; }
 
-
         [JsonProperty("permissions")]
         public DiscordPermission Permissions { get; private set; }
-
 
         public async Task<DiscordRole> ModifyAsync(RoleProperties properties)
         {
@@ -62,7 +54,6 @@ namespace Discord
             return ModifyAsync(properties).GetAwaiter().GetResult();
         }
 
-
         public async Task DeleteAsync()
         {
             await Client.DeleteRoleAsync(GuildId, Id);
@@ -76,18 +67,15 @@ namespace Discord
             DeleteAsync().GetAwaiter().GetResult();
         }
 
-
         public string AsMessagable()
         {
             return $"<@&{Id}>";
         }
 
-
         public override string ToString()
         {
             return Name;
         }
-
 
         public static implicit operator ulong(DiscordRole instance)
         {

@@ -14,16 +14,14 @@ namespace Discord
         public DiscordDefaultWebhook(ulong webhookId, string token) : this()
         {
             Client = new DiscordClient();
-            Update((DiscordDefaultWebhook)Client.GetWebhook(webhookId, token));
+            Update((DiscordDefaultWebhook) Client.GetWebhook(webhookId, token));
         }
-
 
         private void Update(DiscordDefaultWebhook hook)
         {
             Token = hook.Token;
             base.Update(hook);
         }
-
 
         public new async Task UpdateAsync()
         {
@@ -38,7 +36,6 @@ namespace Discord
             UpdateAsync().GetAwaiter().GetResult();
         }
 
-
         public new async Task DeleteAsync()
         {
             await Client.DeleteWebhookAsync(Id, Token);
@@ -51,7 +48,6 @@ namespace Discord
         {
             DeleteAsync().GetAwaiter().GetResult();
         }
-
 
         public async Task SendMessageAsync(string content, DiscordEmbed embed = null, DiscordWebhookProfile profile = null)
         {

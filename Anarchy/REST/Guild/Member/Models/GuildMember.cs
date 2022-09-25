@@ -13,18 +13,14 @@ namespace Discord
         [JsonProperty("nick")]
         public string Nickname { get; private set; }
 
-
         [JsonProperty("roles")]
         public IReadOnlyList<ulong> Roles { get; private set; }
-
 
         [JsonProperty("joined_at")]
         public DateTime JoinedAt { get; internal set; }
 
-
         [JsonProperty("premium_since")]
         public DateTime? BoostingSince { get; private set; }
-
 
         /// <summary>
         /// Updates the member's information
@@ -41,7 +37,6 @@ namespace Discord
         {
             Update(await Client.GetGuildMemberAsync(GuildId, User.Id));
         }
-
 
         public async Task ModifyAsync(GuildMemberProperties properties)
         {
@@ -63,7 +58,6 @@ namespace Discord
             ModifyAsync(properties).GetAwaiter().GetResult();
         }
 
-
         public async Task AddRoleAsync(ulong roleId)
         {
             await Client.AddRoleToUserAsync(GuildId, roleId, User.Id);
@@ -77,7 +71,6 @@ namespace Discord
         {
             AddRoleAsync(roleId).GetAwaiter().GetResult();
         }
-
 
         public async Task RemoveRoleAsync(ulong roleId)
         {
@@ -93,12 +86,11 @@ namespace Discord
             RemoveRoleAsync(roleId).GetAwaiter().GetResult();
         }
 
-
         private async Task<DiscordGuild> SeekGuildAsync()
         {
             if (Client.GetType() == typeof(DiscordSocketClient))
             {
-                var socketClient = (DiscordSocketClient)Client;
+                var socketClient = (DiscordSocketClient) Client;
 
                 if (socketClient.Config.Cache)
                     return socketClient.GetCachedGuild(GuildId);
@@ -139,8 +131,6 @@ namespace Discord
             return GetPermissionsAsync().GetAwaiter().GetResult();
         }
 
-
-
         public async Task<DiscordPermission> GetPermissionsAsync(IEnumerable<DiscordPermissionOverwrite> affectedBy)
         {
             var guild = await SeekGuildAsync();
@@ -164,7 +154,6 @@ namespace Discord
             return GetPermissionsAsync(affectedBy).GetAwaiter().GetResult();
         }
 
-
         public async Task KickAsync()
         {
             await Client.KickGuildMemberAsync(GuildId, User.Id);
@@ -177,7 +166,6 @@ namespace Discord
         {
             KickAsync().GetAwaiter().GetResult();
         }
-
 
         public async Task BanAsync(string reason = null, uint deleteMessageDays = 0)
         {
@@ -194,7 +182,6 @@ namespace Discord
             BanAsync(reason, deleteMessageDays).GetAwaiter().GetResult();
         }
 
-
         public async Task UnbanAsync()
         {
             await Client.UnbanGuildMemberAsync(GuildId, User.Id);
@@ -208,24 +195,20 @@ namespace Discord
             UnbanAsync().GetAwaiter().GetResult();
         }
 
-
         public string AsMessagable()
         {
             return User.AsMessagable();
         }
-
 
         public override string ToString()
         {
             return User.ToString();
         }
 
-
         public static implicit operator ulong(GuildMember instance)
         {
             return instance.User.Id;
         }
-
 
         public new void Dispose()
         {

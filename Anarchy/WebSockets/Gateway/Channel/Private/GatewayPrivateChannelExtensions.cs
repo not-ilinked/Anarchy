@@ -12,7 +12,7 @@ namespace Discord.Gateway
             if (client.Config.Cache)
                 return client.PrivateChannels;
             else
-                return ((DiscordClient)client).GetPrivateChannels();
+                return ((DiscordClient) client).GetPrivateChannels();
         }
     }
 }

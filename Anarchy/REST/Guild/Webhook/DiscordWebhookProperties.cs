@@ -15,12 +15,10 @@ namespace Discord
             set { NameProperty.Value = value; }
         }
 
-
         public bool ShouldSerializeName()
         {
             return NameProperty.Set;
         }
-
 
         private readonly DiscordParameter<DiscordImage> AvatarProperty = new DiscordParameter<DiscordImage>();
         [JsonProperty("avatar")]
@@ -30,12 +28,10 @@ namespace Discord
             set { AvatarProperty.Value = value; }
         }
 
-
         public bool ShouldSeriaizeAvatar()
         {
             return AvatarProperty.Set;
         }
-
 
         private readonly DiscordParameter<ulong> ChannelProperty = new DiscordParameter<ulong>();
         [JsonProperty("channel_id")]
@@ -45,12 +41,10 @@ namespace Discord
             set { ChannelProperty.Value = value; }
         }
 
-
         public bool ShouldSerializeChannelId()
         {
             return ChannelProperty.Set;
         }
-
 
         public override string ToString()
         {

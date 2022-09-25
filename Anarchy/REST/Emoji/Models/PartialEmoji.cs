@@ -21,14 +21,11 @@ namespace Discord
         [JsonProperty("id")]
         public ulong? Id { get; private set; }
 
-
         [JsonProperty("name")]
         public string Name { get; protected set; }
 
-
         [JsonProperty("animated")]
         public bool Animated { get; private set; }
-
 
         public DiscordCDNImage Icon
         {
@@ -41,12 +38,10 @@ namespace Discord
             }
         }
 
-
         public bool Custom
         {
             get { return Id != null; }
         }
-
 
         public string AsMessagable()
         {
@@ -55,7 +50,6 @@ namespace Discord
             else
                 throw new NotSupportedException("Emoji must be custom to be converted. To convert standard emojis, get their unicode character");
         }
-
 
         public override string ToString()
         {

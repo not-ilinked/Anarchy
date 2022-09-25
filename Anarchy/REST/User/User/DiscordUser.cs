@@ -12,18 +12,14 @@ namespace Discord
         [JsonProperty("id")]
         public ulong Id { get; private set; }
 
-
         [JsonProperty("username")]
         public string Username { get; private set; }
-
 
         [JsonProperty("discriminator")]
         public uint Discriminator { get; private set; }
 
-
         [JsonProperty("avatar")]
         protected string _avatarHash;
-
 
         public DiscordCDNImage Avatar
         {
@@ -36,11 +32,9 @@ namespace Discord
             }
         }
 
-
         // understanding what public flags are is difficult because of the lack of documentation
         [JsonProperty("public_flags")]
         private DiscordBadge _publicFlags;
-
 
         [JsonProperty("flags")]
         private DiscordBadge _flags;
@@ -60,10 +54,8 @@ namespace Discord
             }
         }
 
-
         [JsonProperty("bot")]
         private readonly bool _bot;
-
 
         public DiscordUserType Type
         {
@@ -75,8 +67,6 @@ namespace Discord
                     return _bot ? DiscordUserType.Bot : DiscordUserType.User;
             }
         }
-
-
 
         public Hypesquad Hypesquad
         {
@@ -96,12 +86,10 @@ namespace Discord
             }
         }
 
-
         public DateTimeOffset CreatedAt
         {
-            get { return DateTimeOffset.FromUnixTimeMilliseconds((long)((Id >> 22) + 1420070400000UL)); }
+            get { return DateTimeOffset.FromUnixTimeMilliseconds((long) ((Id >> 22) + 1420070400000UL)); }
         }
-
 
         internal void Update(DiscordUser user)
         {
@@ -111,7 +99,6 @@ namespace Discord
             Badges = user.Badges;
             _publicFlags = user._publicFlags;
         }
-
 
         public async Task UpdateAsync()
         {
@@ -126,7 +113,6 @@ namespace Discord
             UpdateAsync().GetAwaiter().GetResult();
         }
 
-
         public async Task<DiscordProfile> GetProfileAsync()
         {
             return await Client.GetProfileAsync(Id);
@@ -139,7 +125,6 @@ namespace Discord
         {
             return GetProfileAsync().GetAwaiter().GetResult();
         }
-
 
         public async Task SendFriendRequestAsync()
         {
@@ -157,7 +142,6 @@ namespace Discord
             SendFriendRequestAsync().GetAwaiter().GetResult();
         }
 
-
         public async Task BlockAsync()
         {
             if (Id == Client.User.Id)
@@ -173,7 +157,6 @@ namespace Discord
         {
             BlockAsync().GetAwaiter().GetResult();
         }
-
 
         public async Task RemoveRelationshipAsync()
         {
@@ -191,18 +174,15 @@ namespace Discord
             RemoveRelationshipAsync().GetAwaiter().GetResult();
         }
 
-
         public string AsMessagable()
         {
             return $"<@{Id}>";
         }
 
-
         public override string ToString()
         {
             return $"{Username}#{"0000".Remove(4 - Discriminator.ToString().Length) + Discriminator.ToString()}";
         }
-
 
         public static implicit operator ulong(DiscordUser instance)
         {

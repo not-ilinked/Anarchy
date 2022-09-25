@@ -7,10 +7,8 @@ namespace Discord
         [JsonProperty("name")]
         public string Name { get; private set; }
 
-
         [JsonProperty("icon")]
         private string _iconHash;
-
 
         public DiscordCDNImage Icon
         {
@@ -23,13 +21,11 @@ namespace Discord
             }
         }
 
-
         protected void Update(BaseGuild guild)
         {
             Name = guild.Name;
             _iconHash = guild._iconHash;
         }
-
 
         public override string ToString()
         {

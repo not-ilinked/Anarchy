@@ -10,7 +10,6 @@ namespace Discord.Gateway
             get { return ActivityType.Streaming; }
         }
 
-
         [JsonProperty("url")]
         public string Url { get; set; }
     }

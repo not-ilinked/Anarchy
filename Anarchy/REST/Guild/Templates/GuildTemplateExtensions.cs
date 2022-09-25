@@ -22,7 +22,6 @@ namespace Discord
             return client.CreateTemplatedGuildAsync(templateCode, name, icon).GetAwaiter().GetResult();
         }
 
-
         public static async Task<DiscordGuildTemplate> CreateGuildTemplateAsync(this DiscordClient client, ulong guildId, string name, string description)
         {
             return (await client.HttpClient.PostAsync($"/guilds/{guildId}/templates", $"{{\"name\":\"{name}\",\"description\":\"{description}\"}}")).Deserialize<DiscordGuildTemplate>().SetClient(client);
@@ -35,7 +34,6 @@ namespace Discord
         {
             return client.CreateGuildTemplateAsync(guildId, name, description).GetAwaiter().GetResult();
         }
-
 
         public static async Task<DiscordGuildTemplate> DeleteGuildTemplateAsync(this DiscordClient client, ulong guildId, string templateCode)
         {
@@ -50,7 +48,6 @@ namespace Discord
             return client.DeleteGuildTemplateAsync(guildId, templateCode).GetAwaiter().GetResult();
         }
 
-
         public static async Task<IReadOnlyList<DiscordGuildTemplate>> GetGuildTemplatesAsync(this DiscordClient client, ulong guildId)
         {
             return (await client.HttpClient.GetAsync($"/guilds/{guildId}/templates")).Deserialize<List<DiscordGuildTemplate>>().SetClientsInList(client);
@@ -63,7 +60,6 @@ namespace Discord
         {
             return client.GetGuildTemplatesAsync(guildId).GetAwaiter().GetResult();
         }
-
 
         public static async Task<DiscordGuildTemplate> GetGuildTemplateAsync(this DiscordClient client, string code)
         {

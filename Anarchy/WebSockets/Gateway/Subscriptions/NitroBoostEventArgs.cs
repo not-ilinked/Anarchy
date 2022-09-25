@@ -6,7 +6,6 @@ namespace Discord.Gateway
     {
         public DiscordBoostSlot Slot { get; private set; }
 
-
         internal NitroBoostEventArgs(DiscordBoostSlot boost)
         {
             Slot = boost;

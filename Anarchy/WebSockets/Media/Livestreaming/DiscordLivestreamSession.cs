@@ -16,7 +16,6 @@ namespace Discord.Media
         public delegate void UserDisconnectHandler(DiscordLivestreamSession session, ulong userId);
         public event UserDisconnectHandler OnUserDisconnected;
 
-
         private readonly StreamKey _streamKey;
         private readonly ulong _rtcServerId;
         private readonly string _sessionId;

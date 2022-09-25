@@ -9,7 +9,6 @@ namespace Discord.Gateway
         [JsonProperty("application_id")]
         public string ApplicationId { get; private set; }
 
-
         [JsonProperty("timestamps")]
         private readonly JObject _obj;
 

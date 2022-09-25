@@ -17,12 +17,10 @@
             }
         }
 
-
         public static implicit operator T(DiscordParameter<T> instance)
         {
             return instance.Value;
         }
-
 
         public override string ToString()
         {

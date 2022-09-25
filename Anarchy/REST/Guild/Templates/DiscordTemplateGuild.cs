@@ -17,18 +17,14 @@ namespace Discord
         [JsonProperty("region")]
         public string Region { get; private set; }
 
-
         [JsonProperty("verification_level")]
         public GuildVerificationLevel VerificationLevel { get; private set; }
-
 
         [JsonProperty("explicit_content_filter")]
         public ExplicitContentFilter ExplicitContentFilter { get; private set; }
 
-
         [JsonProperty("roles")]
         public IReadOnlyList<DiscordRole> Roles { get; private set; }
-
 
         [JsonProperty("channels")]
         [JsonConverter(typeof(DeepJsonConverter<GuildChannel>))]
@@ -38,7 +34,6 @@ namespace Discord
         {
             get { return _channels; }
         }
-
 
         internal void SetGuildId(ulong guildId)
         {

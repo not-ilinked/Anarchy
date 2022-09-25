@@ -13,7 +13,6 @@ namespace Discord
             GuildFolders.SetClientsInList(Client);
         }
 
-
         // Privacy & Safety
         [JsonProperty("explicit_content_filter")]
         public ExplicitContentFilter ExplicitContentFilter { get; private set; }
@@ -27,16 +26,14 @@ namespace Discord
         [JsonProperty("friend_source_flags")]
         public FriendRequestFlags FriendRequestFlags { get; private set; }
 
-
         // Appearance
         [JsonProperty("theme")]
         private string _theme;
 
-        public DiscordTheme Theme => (DiscordTheme)Enum.Parse(typeof(DiscordTheme), _theme, true);
+        public DiscordTheme Theme => (DiscordTheme) Enum.Parse(typeof(DiscordTheme), _theme, true);
 
         [JsonProperty("message_display_compact")]
         public bool CompactMessages { get; private set; }
-
 
         // Accessability
         [JsonProperty("gif_auto_play")]
@@ -50,7 +47,6 @@ namespace Discord
 
         [JsonProperty("enable_tts_playback")]
         public bool EnableTts { get; private set; }
-
 
         // Text and images
         [JsonProperty("inline_embed_media")]
@@ -68,16 +64,13 @@ namespace Discord
         [JsonProperty("convert_emoticons")]
         public bool ConvertEmoticons { get; private set; }
 
-
         // Language
         [JsonProperty("locale")]
         public DiscordLanguage Language { get; private set; }
 
-
         // Advanced
         [JsonProperty("developer_mode")]
         public bool DeveloperMode { get; private set; }
-
 
         // Other
         [JsonProperty("custom_status")]
@@ -93,7 +86,6 @@ namespace Discord
         private readonly List<ulong> _restrictedGuilds;
         public IReadOnlyList<MinimalGuild> RestrictedGuilds => _restrictedGuilds.Select(id => new MinimalGuild(id).SetClient(Client)).ToList();
 
-
         internal void Update(JObject jObj)
         {
             foreach (var property in this.GetType().GetProperties())
@@ -102,7 +94,7 @@ namespace Discord
                 {
                     if (attr.GetType() == typeof(JsonPropertyAttribute))
                     {
-                        var jsonAttr = (JsonPropertyAttribute)attr;
+                        var jsonAttr = (JsonPropertyAttribute) attr;
 
                         if (jObj.TryGetValue(jsonAttr.PropertyName, out JToken value))
                             property.SetValue(this, value.ToObject(property.PropertyType));

@@ -12,7 +12,6 @@ namespace Discord.Gateway
             get { return new MinimalGuild(_guildId).SetClient(Client); }
         }
 
-
         [JsonProperty("role_id")]
         public ulong Id { get; private set; }
     }

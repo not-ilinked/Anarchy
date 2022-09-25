@@ -18,7 +18,7 @@ namespace Discord
 
         public static void ValidateResponse(HttpResponseMessage response, JToken body)
         {
-            int statusCode = (int)response.StatusCode;
+            int statusCode = (int) response.StatusCode;
 
             if (statusCode >= 400)
             {

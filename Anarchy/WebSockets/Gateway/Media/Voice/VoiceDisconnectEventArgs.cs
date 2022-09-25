@@ -18,7 +18,7 @@ namespace Discord.Gateway
             if (guildId.HasValue) Guild = new MinimalGuild(guildId.Value).SetClient(client);
             Channel = new MinimalChannel(channelId).SetClient(client);
 
-            Code = (DiscordMediaCloseCode)close.Code;
+            Code = (DiscordMediaCloseCode) close.Code;
             Reason = close.Reason;
         }
     }

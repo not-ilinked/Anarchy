@@ -7,10 +7,8 @@ namespace Discord.Gateway
         [JsonProperty("id")]
         public ulong Id { get; private set; }
 
-
         [JsonProperty("unavailable")]
         public bool Unavailable { get; private set; }
-
 
         public bool Removed
         {

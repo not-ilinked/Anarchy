@@ -8,14 +8,11 @@ namespace Discord
         [JsonProperty("code")]
         public DiscordError Code { get; private set; }
 
-
         [JsonProperty("errors")]
         public JObject Fields { get; private set; }
 
-
         [JsonProperty("message")]
         public string Message { get; private set; }
-
 
         public DiscordHttpError() { }
 

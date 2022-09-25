@@ -70,7 +70,7 @@ namespace Discord.Media
             }
             else if (args.Code >= 4000)
             {
-                var discordCode = (DiscordMediaCloseCode)args.Code;
+                var discordCode = (DiscordMediaCloseCode) args.Code;
 
                 if (discordCode == DiscordMediaCloseCode.SessionTimeout || discordCode == DiscordMediaCloseCode.ServerCrashed)
                 {
@@ -132,20 +132,17 @@ namespace Discord.Media
             catch (InvalidOperationException) { }
         }
 
-
         public new async Task ConnectAsync()
         {
             State = MediaConnectionState.Connecting;
             await base.ConnectAsync();
         }
 
-
         public void SetSSRC(uint audioSsrc)
         {
             SSRC = new DiscordSSRC() { Audio = audioSsrc, Video = audioSsrc + 1, Rtx = audioSsrc + 2 };
             SendMessage(DiscordMediaOpcode.SSRCUpdate, SSRC);
         }
-
 
         private async void StartHeartbeaterAsync(int interval)
         {
@@ -167,14 +164,13 @@ namespace Discord.Media
             payload[1] = 1 >> 0;
             payload[2] = 0x46 >> 8;
             payload[3] = 0x46 >> 0;
-            payload[4] = (byte)(SSRC.Audio >> 24);
-            payload[5] = (byte)(SSRC.Audio >> 16);
-            payload[6] = (byte)(SSRC.Audio >> 8);
-            payload[7] = (byte)(SSRC.Audio >> 0);
+            payload[4] = (byte) (SSRC.Audio >> 24);
+            payload[5] = (byte) (SSRC.Audio >> 16);
+            payload[6] = (byte) (SSRC.Audio >> 8);
+            payload[7] = (byte) (SSRC.Audio >> 0);
 
             UdpClient.Send(payload, payload.Length);
         }
-
 
         private void SelectProtocol(IPEndPoint localEndpoint)
         {
@@ -192,7 +188,6 @@ namespace Discord.Media
             });
         }
 
-
         private void StartListener()
         {
             try
@@ -209,7 +204,7 @@ namespace Discord.Media
                             if (received[i] == 0)
                                 break;
                             else
-                                ip += (char)received[i];
+                                ip += (char) received[i];
                         }
 
                         _localEndpoint = new IPEndPoint(IPAddress.Parse(ip), BitConverter.ToUInt16(new byte[] { received[received.Length - 1], received[received.Length - 2] }, 0));

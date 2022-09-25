@@ -11,7 +11,7 @@ namespace Discord.Gateway
             if (client.Config.Cache)
                 return client.GetCachedGuild(guildId).Roles;
             else
-                return await ((DiscordClient)client).GetGuildRolesAsync(guildId);
+                return await ((DiscordClient) client).GetGuildRolesAsync(guildId);
         }
 
         /// <summary>
@@ -22,7 +22,6 @@ namespace Discord.Gateway
         {
             return client.GetGuildRolesAsync(guildId).GetAwaiter().GetResult();
         }
-
 
         public static DiscordRole GetGuildRole(this DiscordSocketClient client, ulong roleId)
         {

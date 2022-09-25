@@ -25,10 +25,8 @@ namespace Discord
             Description = description;
         }
 
-
         [JsonProperty("id")]
         internal ulong Id { get; set; }
-
 
         private string _fileName;
         [JsonProperty("filename")]
@@ -38,10 +36,8 @@ namespace Discord
             set { _fileName = Path.GetFileName(value); }
         }
 
-
         [JsonProperty("description")]
         public string Description { get; set; }
-
 
         [JsonIgnore]
         public DiscordAttachmentFile File { get; set; }

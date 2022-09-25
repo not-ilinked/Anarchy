@@ -8,10 +8,8 @@ namespace Discord
         [JsonProperty("visibility")]
         public bool Visible { get; private set; }
 
-
         [JsonProperty("show_activity")]
         public bool ShowAsActivity { get; private set; }
-
 
         public async Task ModifyAsync(ConnectionProperties properties)
         {
@@ -27,7 +25,6 @@ namespace Discord
         {
             ModifyAsync(properties).GetAwaiter().GetResult();
         }
-
 
         public async Task RemoveAsync()
         {

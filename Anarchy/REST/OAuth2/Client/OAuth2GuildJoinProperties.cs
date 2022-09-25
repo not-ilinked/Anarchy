@@ -18,7 +18,6 @@ namespace Discord
 
         public bool ShouldSerializeNickname() => _nickParam.Set;
 
-
         private DiscordParameter<List<ulong>> _roleParam = new DiscordParameter<List<ulong>>();
         [JsonProperty("roles")]
         public List<ulong> Roles
@@ -29,7 +28,6 @@ namespace Discord
 
         public bool ShouldSerializeRoles() => _roleParam.Set;
 
-
         private DiscordParameter<bool> _muteParam = new DiscordParameter<bool>();
         [JsonProperty("mute")]
         public bool Mute
@@ -39,7 +37,6 @@ namespace Discord
         }
 
         public bool ShouldSerializeMute() => _muteParam.Set;
-
 
         private DiscordParameter<bool> _deafParam = new DiscordParameter<bool>();
         [JsonProperty("deaf")]

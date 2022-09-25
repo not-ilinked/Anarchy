@@ -16,7 +16,6 @@ namespace Discord
             return client.GetConnectedAccountsAsync().GetAwaiter().GetResult();
         }
 
-
         public static async Task<ClientConnectedAccount> ModifyConnectedAccountAsync(this DiscordClient client, ConnectedAccountType type, string connectionId, ConnectionProperties properties)
         {
             return (await client.HttpClient.PatchAsync($"/users/@me/connections/{type.ToString().ToLower()}/{connectionId}", properties))
@@ -27,7 +26,6 @@ namespace Discord
         {
             return client.ModifyConnectedAccountAsync(type, connectionId, properties).GetAwaiter().GetResult();
         }
-
 
         public static async Task RemoveConnectedAccountAsync(this DiscordClient client, ConnectedAccountType type, string id)
         {

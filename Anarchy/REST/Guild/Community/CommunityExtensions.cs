@@ -16,7 +16,6 @@ namespace Discord
             return client.GetWelcomeScreenAsync(guildId).GetAwaiter().GetResult();
         }
 
-
         public static async Task<WelcomeScreen> ModifyWelcomeScreenAsync(this DiscordClient client, ulong guildId, WelcomeScreenProperties properties)
         {
             return (await client.HttpClient.PatchAsync($"/guilds/{guildId}/welcome-screen", properties))
@@ -27,7 +26,6 @@ namespace Discord
         {
             return client.ModifyWelcomeScreenAsync(guildId, properties).GetAwaiter().GetResult();
         }
-
 
         public static async Task<GuildVerificationForm> GetGuildVerificationFormAsync(this DiscordClient client, ulong guildId, string inviteCode)
         {
@@ -40,13 +38,11 @@ namespace Discord
             return client.GetGuildVerificationFormAsync(guildId, inviteCode).GetAwaiter().GetResult();
         }
 
-
         public static async Task<GuildVerificationForm> ModifyGuildVerificationFormAsync(this DiscordClient client, ulong guildId, VerificationFormProperties properties) =>
             (await client.HttpClient.PatchAsync($"/guilds/{guildId}/member-verification", properties)).Deserialize<GuildVerificationForm>();
 
         public static GuildVerificationForm ModifyGuildVerificationForm(this DiscordClient client, ulong guildId, VerificationFormProperties properties) =>
             client.ModifyGuildVerificationFormAsync(guildId, properties).GetAwaiter().GetResult();
-
 
         public static async Task<VerificationFormResponse> SubmitGuildVerificationFormAsync(this DiscordClient client, ulong guildId, string formVersion, List<GuildVerificationFormField> fields)
         {

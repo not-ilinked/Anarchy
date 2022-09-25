@@ -80,7 +80,6 @@ namespace Discord
             return client.SendFileAsync(channelId, fileName, fileData, message, tts).GetAwaiter().GetResult();
         }
 
-
         public static async Task<DiscordMessage> SendFileAsync(this DiscordClient client, ulong channelId, string filePath, string message = null, bool tts = false)
         {
             return await client.SendFileAsync(channelId, Path.GetFileName(filePath), File.ReadAllBytes(filePath), message, tts);
@@ -97,7 +96,6 @@ namespace Discord
         {
             return client.SendFileAsync(channelId, filePath, message, tts).GetAwaiter().GetResult();
         }
-
 
         public static async Task<DiscordMessage> EditMessageAsync(this DiscordClient client, ulong channelId, ulong messageId, MessageEditProperties properties)
         {
@@ -117,7 +115,6 @@ namespace Discord
             return client.EditMessageAsync(channelId, messageId, properties).GetAwaiter().GetResult();
         }
 
-
         public static async Task DeleteMessageAsync(this DiscordClient client, ulong channelId, ulong messageId)
         {
             await client.HttpClient.DeleteAsync($"/channels/{channelId}/messages/{messageId}");
@@ -132,7 +129,6 @@ namespace Discord
         {
             client.DeleteMessageAsync(channelId, messageId).GetAwaiter().GetResult();
         }
-
 
         public static async Task DeleteMessagesAsync(this DiscordClient client, ulong channelId, List<ulong> messages)
         {
@@ -150,7 +146,6 @@ namespace Discord
         }
         #endregion
 
-
         public static async Task TriggerTypingAsync(this DiscordClient client, ulong channelId)
         {
             var resp = await client.HttpClient.PostAsync($"/channels/{channelId}/typing");
@@ -167,7 +162,6 @@ namespace Discord
         {
             client.TriggerTypingAsync(channelId).GetAwaiter().GetResult();
         }
-
 
         /// <summary>
         /// Gets a list of messages from a channel.
@@ -187,7 +181,7 @@ namespace Discord
             while (true)
             {
                 string parameters = "";
-                if (filters.Limit.HasValue) parameters += $"limit={(uint)Math.Min(messagesPerRequest, filters.Limit.Value - messages.Count)}&";
+                if (filters.Limit.HasValue) parameters += $"limit={(uint) Math.Min(messagesPerRequest, filters.Limit.Value - messages.Count)}&";
                 else parameters += $"limit={messagesPerRequest}&";
                 if (filters.BeforeId.HasValue) parameters += $"before={filters.BeforeId.Value}&";
                 if (filters.AfterId.HasValue) parameters += $"after={filters.AfterId.Value}&";
@@ -215,7 +209,6 @@ namespace Discord
             return client.GetChannelMessagesAsync(channelId, filters).GetAwaiter().GetResult();
         }
 
-
         /// <summary>
         /// Gets a list of messages from a channel
         /// </summary>
@@ -230,7 +223,6 @@ namespace Discord
         {
             return client.GetChannelMessagesAsync(channelId, limit).GetAwaiter().GetResult();
         }
-
 
         public static async Task<IReadOnlyList<DiscordUser>> GetMessageReactionsAsync(this DiscordClient client, ulong channelId, ulong messageId, ReactionQuery query)
         {
@@ -251,7 +243,6 @@ namespace Discord
             return client.GetMessageReactionsAsync(channelId, messageId, query).GetAwaiter().GetResult();
         }
 
-
         public static async Task AddMessageReactionAsync(this DiscordClient client, ulong channelId, ulong messageId, string reactionName, ulong? reactionId = null)
         {
             await client.HttpClient.PutAsync($"/channels/{channelId}/messages/{messageId}/reactions/{reactionName}{(reactionId.HasValue ? ":" + reactionId.Value : "")}/@me");
@@ -268,12 +259,10 @@ namespace Discord
             client.AddMessageReactionAsync(channelId, messageId, reactionName, reactionId).GetAwaiter().GetResult();
         }
 
-
         private static async Task removeReactionAsync(this DiscordClient client, ulong channelId, ulong messageId, string user, string reactionName, ulong? reactionId = null)
         {
             await client.HttpClient.DeleteAsync($"/channels/{channelId}/messages/{messageId}/reactions/{reactionName}{(reactionId.HasValue ? ":" + reactionId.Value : "")}/{user}");
         }
-
 
         public static async Task RemoveMessageReactionAsync(this DiscordClient client, ulong channelId, ulong messageId, string reactionName, ulong? reactionId = null)
         {
@@ -285,7 +274,6 @@ namespace Discord
             client.RemoveMessageReactionAsync(channelId, messageId, reactionName, reactionId).GetAwaiter().GetResult();
         }
 
-
         public static async Task RemoveMessageReactionAsync(this DiscordClient client, ulong channelId, ulong messageId, ulong userId, string reactionName, ulong? reactionId = null)
         {
             await client.removeReactionAsync(channelId, messageId, userId.ToString(), reactionName, reactionId);
@@ -295,7 +283,6 @@ namespace Discord
         {
             client.RemoveMessageReactionAsync(channelId, messageId, userId, reactionName, reactionId).GetAwaiter().GetResult();
         }
-
 
         #region pins
         [Obsolete("GetChannelPinnedMessagesAsync is depricated. Call GetPinnedMessagesAsync instead", true)]
@@ -325,7 +312,6 @@ namespace Discord
             return client.GetPinnedMessagesAsync(channelId).GetAwaiter().GetResult();
         }
 
-
         [Obsolete("PinChannelMessageAsync is depricated. Call PinMessageAsync instead", true)]
         public static Task PinChannelMessageAsync(this DiscordClient client, ulong channelId, ulong messageId)
         {
@@ -353,7 +339,6 @@ namespace Discord
             client.PinMessageAsync(channelId, messageId).GetAwaiter().GetResult();
         }
 
-
         public static async Task UnpinChannelMessageAsync(this DiscordClient client, ulong channelId, ulong messageId)
         {
             await client.HttpClient.DeleteAsync($"/channels/{channelId}/pins/{messageId}");
@@ -370,7 +355,6 @@ namespace Discord
         }
         #endregion
 
-
         public static async Task<DiscordMessage> CrosspostMessageAsync(this DiscordClient client, ulong channelId, ulong messageId)
         {
             return (await client.HttpClient.PostAsync($"/channels/{channelId}/messages/{messageId}/crosspost")).Deserialize<DiscordMessage>().SetClient(client);
@@ -381,7 +365,6 @@ namespace Discord
             return client.CrosspostMessageAsync(channelId, messageId).GetAwaiter().GetResult();
         }
 
-
         public static async Task AcknowledgeMessageAsync(this DiscordClient client, ulong channelId, ulong messageId)
         {
             await client.HttpClient.PostAsync($"/channels/{channelId}/messages/{messageId}/ack", "{\"token\":null}");
@@ -391,7 +374,6 @@ namespace Discord
         {
             client.AcknowledgeMessageAsync(channelId, messageId).GetAwaiter().GetResult();
         }
-
 
         public static async Task<DiscordAttachmentFile> GetAttachmentFile(this DiscordAttachment _this)
         {

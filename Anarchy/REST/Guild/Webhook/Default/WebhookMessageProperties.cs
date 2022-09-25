@@ -11,7 +11,6 @@ namespace Discord
         [JsonProperty("content")]
         public string Content { get; set; }
 
-
         [JsonProperty("embeds")]
         private List<DiscordEmbed> _embeds;
         public DiscordEmbed Embed
@@ -29,7 +28,6 @@ namespace Discord
             }
         }
 
-
         internal DiscordParameter<string> NameProperty = new DiscordParameter<string>();
         [JsonProperty("username")]
         public string Username
@@ -38,12 +36,10 @@ namespace Discord
             set { NameProperty.Value = value; }
         }
 
-
         public bool ShouldSerializeUsername()
         {
             return NameProperty.Set;
         }
-
 
         internal DiscordParameter<string> AvatarProperty = new DiscordParameter<string>();
         [JsonProperty("avatar_url")]
@@ -52,7 +48,6 @@ namespace Discord
             get { return AvatarProperty; }
             set { AvatarProperty.Value = value; }
         }
-
 
         public bool ShouldSerializeAvatarUrl()
         {

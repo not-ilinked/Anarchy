@@ -30,7 +30,6 @@ namespace Discord.Commands
             }
         }
 
-
         private void Client_OnMessageReceived(DiscordSocketClient client, MessageEventArgs args)
         {
             if (args.Message.Content.StartsWith(Prefix))
@@ -41,7 +40,7 @@ namespace Discord.Commands
                 {
                     parts.RemoveAt(0);
 
-                    CommandBase inst = (CommandBase)Activator.CreateInstance(command.Type);
+                    CommandBase inst = (CommandBase) Activator.CreateInstance(command.Type);
                     inst.Prepare(_client, args.Message);
 
                     for (int i = 0; i < command.Parameters.Count; i++)
@@ -171,7 +170,7 @@ namespace Discord.Commands
             {
                 if (attribute.GetType() == typeof(TAttr))
                 {
-                    attr = (TAttr)attribute;
+                    attr = (TAttr) attribute;
                     return true;
                 }
             }

@@ -29,14 +29,12 @@ namespace Discord.Media
             UserId = userId;
         }
 
-
         internal void Enqueue(DiscordVoicePacket packet)
         {
             SilenceFramesReceived = 0;
             _packets.Enqueue(packet);
             _newPacket?.Invoke(this, new EventArgs());
         }
-
 
         internal void Close()
         {
@@ -46,7 +44,6 @@ namespace Discord.Media
                 _onClose?.Invoke(this, new EventArgs());
             }
         }
-
 
         public Task<DiscordVoicePacket> ReadAsync()
         {

@@ -15,7 +15,6 @@ namespace Discord
 
         public bool ShouldSerializeTts() => _ttsParam.Set;
 
-
         private readonly DiscordParameter<string> _contentParam = new DiscordParameter<string>();
         [JsonProperty("content")]
         public string Content
@@ -25,7 +24,6 @@ namespace Discord
         }
 
         public bool ShouldSerializeContent() => _contentParam.Set;
-
 
         private readonly DiscordParameter<List<DiscordEmbed>> _embedParam = new DiscordParameter<List<DiscordEmbed>>();
         [JsonProperty("embeds")]
@@ -47,7 +45,6 @@ namespace Discord
 
         public bool ShouldSerialize_embeds() => _embedParam.Set;
 
-
         private readonly DiscordParameter<List<MessageComponent>> _componentParam = new DiscordParameter<List<MessageComponent>>();
         [JsonProperty("components")]
         public List<MessageComponent> Components
@@ -57,7 +54,6 @@ namespace Discord
         }
 
         public bool ShouldSerializeComponents() => _componentParam.Set;
-
 
         [JsonProperty("flags")]
         private int _flags

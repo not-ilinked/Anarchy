@@ -13,7 +13,6 @@ namespace Discord
             return hook;
         }
 
-
         /// <summary>
         /// Creates a webhook
         /// </summary>
@@ -25,7 +24,6 @@ namespace Discord
             return client.CreateWebhookAsync(channelId, properties).Result;
         }
 
-
         public static async Task<DiscordWebhook> ModifyWebhookAsync(this DiscordClient client, ulong webhookId, DiscordWebhookProperties properties)
         {
             return (await client.HttpClient.PatchAsync($"/webhooks/{webhookId}", properties)).ParseDeterministic<DiscordWebhook>().SetClient(client);
@@ -35,7 +33,6 @@ namespace Discord
         {
             return client.ModifyWebhookAsync(webhookId, properties).Result;
         }
-
 
         public static async Task SendWebhookMessageAsync(this DiscordClient client, ulong webhookId, string webhookToken, string content, DiscordEmbed embed = null, DiscordWebhookProfile profile = null)
         {
@@ -65,7 +62,6 @@ namespace Discord
             client.SendWebhookMessageAsync(webhookId, webhookToken, content, embed, profile).GetAwaiter().GetResult();
         }
 
-
         public static async Task DeleteWebhookAsync(this DiscordClient client, ulong webhookId, string token = null)
         {
             await client.HttpClient.DeleteAsync($"/webhooks/{webhookId}/{token}");
@@ -79,7 +75,6 @@ namespace Discord
         {
             client.DeleteWebhookAsync(webhookId, token).GetAwaiter().GetResult();
         }
-
 
         public static async Task<DiscordWebhook> GetWebhookAsync(this DiscordClient client, ulong webhookId, string token = null)
         {
@@ -101,7 +96,6 @@ namespace Discord
             return client.GetWebhookAsync(webhookId, token).GetAwaiter().GetResult();
         }
 
-
         public static async Task<IReadOnlyList<DiscordWebhook>> GetGuildWebhooksAsync(this DiscordClient client, ulong guildId)
         {
             return (await client.HttpClient.GetAsync($"/guilds/{guildId}/webhooks"))
@@ -116,7 +110,6 @@ namespace Discord
         {
             return client.GetGuildWebhooksAsync(guildId).Result;
         }
-
 
         public static async Task<IReadOnlyList<DiscordWebhook>> GetChannelWebhooksAsync(this DiscordClient client, ulong channelId)
         {

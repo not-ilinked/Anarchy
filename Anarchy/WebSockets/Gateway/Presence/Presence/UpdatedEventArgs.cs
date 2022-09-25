@@ -9,7 +9,6 @@
             Presence = presence;
         }
 
-
         public override string ToString()
         {
             return Presence.ToString();

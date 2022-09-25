@@ -19,30 +19,23 @@ namespace Discord
         [JsonProperty("code")]
         public string Code { get; private set; }
 
-
         [JsonProperty("name")]
         public string Name { get; private set; }
-
 
         [JsonProperty("description")]
         public string Description { get; private set; }
 
-
         [JsonProperty("usage_count")]
         public int Usages { get; private set; }
-
 
         [JsonProperty("creator")]
         public DiscordUser Creator { get; private set; }
 
-
         [JsonProperty("created_at")]
         public DateTime CreatedAt { get; private set; }
 
-
         [JsonProperty("updated_at")]
         public DateTime UpdatedAt { get; private set; }
-
 
         [JsonProperty("source_guild_id")]
         private ulong _guildId;
@@ -51,7 +44,6 @@ namespace Discord
         {
             get { return new MinimalGuild(_guildId).SetClient(Client); }
         }
-
 
         [JsonProperty("serialized_source_guild")]
         private DiscordTemplateGuild _guild;
@@ -70,7 +62,6 @@ namespace Discord
             }
         }
 
-
         [JsonProperty("is_dirty")]
         private readonly bool? _dirty;
 
@@ -78,7 +69,6 @@ namespace Discord
         {
             get { return _dirty.HasValue; }
         }
-
 
         public async Task UpdateAsync()
         {

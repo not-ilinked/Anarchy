@@ -17,11 +17,10 @@ namespace Discord
                 return null;
             }
 
-            set { _durationParam.Value = (int)value.Value.TotalMinutes; }
+            set { _durationParam.Value = (int) value.Value.TotalMinutes; }
         }
 
         public bool ShouldSerialize_duration() => _durationParam.Set;
-
 
         private readonly DiscordParameter<bool> _archiveParam = new DiscordParameter<bool>();
         [JsonProperty("archived")]
@@ -32,7 +31,6 @@ namespace Discord
         }
 
         public bool ShouldSerializeArchived() => _archiveParam.Set;
-
 
         private readonly DiscordParameter<string> _nameParam = new DiscordParameter<string>();
         [JsonProperty("name")]

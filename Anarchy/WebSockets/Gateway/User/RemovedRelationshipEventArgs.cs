@@ -8,7 +8,6 @@ namespace Discord
         [JsonProperty("id")]
         public ulong UserId { get; private set; }
 
-
         [JsonProperty("type")]
         public RelationshipType PreviousType { get; private set; }
     }

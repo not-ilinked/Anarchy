@@ -16,7 +16,6 @@ namespace Discord
             return client.GetPaymentsAsync(limit).GetAwaiter().GetResult();
         }
 
-
         public static async Task<IReadOnlyList<PaymentMethod>> GetPaymentMethodsAsync(this DiscordClient client)
         {
             return (await client.HttpClient.GetAsync("/users/@me/billing/payment-sources"))

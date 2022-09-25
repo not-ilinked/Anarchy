@@ -6,7 +6,8 @@
 	  <DebugSymbols>true</DebugSymbols>
 	  <DebugType>full</DebugType>
 	  <ErrorReport>prompt</ErrorReport>
-	  <WarningLevel>4</WarningLevel>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <WarningLevel>4</WarningLevel>
 	  <PlatformTarget>AnyCPU</PlatformTarget>
 	  <NoWarn>IDE1006, CS0649, CS0414, IDE0051</NoWarn>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>

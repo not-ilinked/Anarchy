@@ -8,10 +8,8 @@ namespace Discord
         [JsonProperty("id")]
         public ulong Id { get; private set; }
 
-
         [JsonProperty("user_id")]
         public ulong UserId { get; private set; }
-
 
         [JsonProperty("guild_id")]
 #pragma warning disable CS0649
@@ -26,10 +24,8 @@ namespace Discord
             }
         }
 
-
         [JsonProperty("ended")]
         public bool Ended { get; private set; }
-
 
         public async Task RemoveAsync()
         {

@@ -16,7 +16,6 @@ namespace Discord.Gateway
                 return client.GuildCache.Values.ToList();
         }
 
-
         public static SocketGuild GetCachedGuild(this DiscordSocketClient client, ulong guildId)
         {
             if (!client.Config.Cache)
@@ -32,7 +31,6 @@ namespace Discord.Gateway
             }
         }
 
-
         public static ClientGuildSettings GetGuildSettings(this DiscordSocketClient client, ulong guildId)
         {
             client.GetCachedGuild(guildId);
@@ -46,7 +44,6 @@ namespace Discord.Gateway
                 return null;
             }
         }
-
 
         public static DiscordChannelSettings GetChannelSettings(this DiscordSocketClient client, ulong channelId)
         {
@@ -67,7 +64,6 @@ namespace Discord.Gateway
 
             return null;
         }
-
 
         public static Task<IReadOnlyList<GuildMember>> GetGuildMembersAsync(this DiscordSocketClient client, ulong guildId, uint limit = 0)
         {
@@ -101,13 +97,11 @@ namespace Discord.Gateway
             return client.GetGuildMembersAsync(guildId, limit).GetAwaiter().GetResult();
         }
 
-
         private static void SetGuildSubscriptions(this DiscordSocketClient client, ulong guildId, GuildSubscriptionProperties properties)
         {
             properties.GuildId = guildId;
             client.Send(GatewayOpcode.GuildSubscriptions, properties);
         }
-
 
         private static int[][] CreateChunks(int from, bool more)
         {
@@ -127,9 +121,7 @@ namespace Discord.Gateway
             return results;
         }
 
-
         public static void SubscribeToGuildEvents(this DiscordSocketClient client, ulong guildId) => SetGuildSubscriptions(client, guildId, new GuildSubscriptionProperties() { Typing = true, Activities = true, Threads = true });
-
 
         public static Task<IReadOnlyList<GuildMember>> GetGuildChannelMembersAsync(this DiscordSocketClient client, ulong guildId, ulong channelId, uint limit = 0)
         {
@@ -175,7 +167,7 @@ namespace Discord.Gateway
                                 {
                                     client.OnMemberListUpdate -= handler;
                                     client.OnLoggedIn -= loginHandler;
-                                    completionSource.SetResult(limit > 0 ? members.Take((int)limit).ToList() : members);
+                                    completionSource.SetResult(limit > 0 ? members.Take((int) limit).ToList() : members);
                                     break;
                                 }
                                 else if (i == 0)

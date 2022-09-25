@@ -134,7 +134,6 @@ namespace Discord
             return SendMessageAsync(embed).GetAwaiter().GetResult();
         }
 
-
         public async Task<DiscordMessage> SendFileAsync(string fileName, byte[] fileData, string message = null, bool tts = false)
         {
             return await Client.SendFileAsync(Id, fileName, fileData, message, tts);
@@ -145,7 +144,6 @@ namespace Discord
             return SendFileAsync(fileName, fileData, message, tts).Result;
         }
 
-
         public async Task<DiscordMessage> SendFileAsync(string filePath, string message = null, bool tts = false)
         {
             return await Client.SendFileAsync(Id, filePath, message, tts);
@@ -155,7 +153,6 @@ namespace Discord
         {
             return SendFileAsync(filePath, message, tts).Result;
         }
-
 
         public async Task DeleteMessagesAsync(List<ulong> messages)
         {
@@ -172,7 +169,6 @@ namespace Discord
             DeleteMessagesAsync(messages).GetAwaiter().GetResult();
         }
 
-
         public async Task<IReadOnlyList<DiscordMessage>> GetMessagesAsync(MessageFilters filters = null)
         {
             return await Client.GetChannelMessagesAsync(Id, filters);
@@ -187,7 +183,6 @@ namespace Discord
             return GetMessagesAsync(filters).GetAwaiter().GetResult();
         }
 
-
         public async Task<IReadOnlyList<DiscordMessage>> GetPinnedMessagesAsync()
         {
             return await Client.GetPinnedMessagesAsync(Id);
@@ -200,7 +195,6 @@ namespace Discord
         {
             return GetPinnedMessagesAsync().Result;
         }
-
 
         public async Task PinMessageAsync(ulong messageId)
         {
@@ -215,7 +209,6 @@ namespace Discord
         {
             PinMessageAsync(messageId).GetAwaiter().GetResult();
         }
-
 
         public async Task UnpinMessageAsync(ulong messageId)
         {

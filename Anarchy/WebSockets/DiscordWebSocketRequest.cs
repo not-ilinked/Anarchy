@@ -17,7 +17,6 @@ namespace Discord.WebSockets
         [JsonProperty("op")]
         public TOpcode Opcode { get; private set; }
 
-
         [JsonProperty("d")]
         public TData Data { get; private set; }
     }

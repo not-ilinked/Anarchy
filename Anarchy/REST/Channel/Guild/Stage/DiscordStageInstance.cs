@@ -28,7 +28,6 @@ namespace Discord
         [JsonProperty("invite_code")]
         public string InviteCode { get; private set; }
 
-
         public Task SetClientSpeakingAsync(bool speaker) => Client.SetClientStageSpeakingAsync(_guildId, _channelId, speaker);
         public void SetClientSpeaking(bool speaker) => SetClientSpeakingAsync(speaker).GetAwaiter().GetResult();
 

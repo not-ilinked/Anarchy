@@ -10,14 +10,11 @@ namespace Discord
             OnClientUpdated += (sender, e) => Creator.SetClient(Client);
         }
 
-
         [JsonProperty("user")]
         public DiscordUser Creator { get; private set; }
 
-
         [JsonProperty("available")]
         public bool Available { get; private set; }
-
 
         internal ulong GuildId { get; set; }
 
@@ -36,7 +33,7 @@ namespace Discord
 
         public async Task UpdateAsync()
         {
-            Update(await Client.GetGuildEmojiAsync(GuildId, (ulong)Id));
+            Update(await Client.GetGuildEmojiAsync(GuildId, (ulong) Id));
         }
 
         /// <summary>
@@ -47,10 +44,9 @@ namespace Discord
             UpdateAsync().GetAwaiter().GetResult();
         }
 
-
         public async Task ModifyAsync(string name)
         {
-            Update(await Client.ModifyEmojiAsync(GuildId, (ulong)Id, name));
+            Update(await Client.ModifyEmojiAsync(GuildId, (ulong) Id, name));
         }
 
         /// <summary>
@@ -62,10 +58,9 @@ namespace Discord
             ModifyAsync(name).GetAwaiter().GetResult();
         }
 
-
         public async Task DeleteAsync()
         {
-            await Client.DeleteEmojiAsync(GuildId, (ulong)Id);
+            await Client.DeleteEmojiAsync(GuildId, (ulong) Id);
         }
 
         /// <summary>

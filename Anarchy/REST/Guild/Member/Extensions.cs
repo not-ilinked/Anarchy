@@ -23,7 +23,6 @@ namespace Discord
             return client.GetGuildMemberAsync(guildId, userId).GetAwaiter().GetResult();
         }
 
-
         public static async Task ModifyGuildMemberAsync(this DiscordClient client, ulong guildId, ulong userId, GuildMemberProperties properties)
         {
             await client.HttpClient.PatchAsync($"/guilds/{guildId}/members/{userId}", properties);
@@ -34,7 +33,6 @@ namespace Discord
             client.ModifyGuildMemberAsync(guildId, userId, properties).GetAwaiter().GetResult();
         }
 
-
         public static async Task SetClientNicknameAsync(this DiscordClient client, ulong guildId, string nickname)
         {
             await client.HttpClient.PatchAsync($"/guilds/{guildId}/members/@me/nick", $"{{\"nick\":\"{nickname}\"}}");
@@ -44,7 +42,6 @@ namespace Discord
         {
             client.SetClientNicknameAsync(guildId, nickname).GetAwaiter().GetResult();
         }
-
 
         public static async Task KickGuildMemberAsync(this DiscordClient client, ulong guildId, ulong userId)
         {
@@ -61,7 +58,6 @@ namespace Discord
             client.KickGuildMemberAsync(guildId, userId).GetAwaiter().GetResult();
         }
 
-
         public static async Task<uint> GetGuildPrunableMembersAsync(this DiscordClient client, ulong guildId, MemberPruneProperties properties)
         {
             string url = $"/guilds/{guildId}/prune?days={properties.Days}";
@@ -77,7 +73,6 @@ namespace Discord
             return client.GetGuildPrunableMembersAsync(guildId, properties).GetAwaiter().GetResult();
         }
 
-
         public static async Task<uint> PruneGuildMembersAsync(this DiscordClient client, ulong guildId, MemberPruneProperties properties)
         {
             return (await client.HttpClient.PostAsync($"/guilds/{guildId}/prune", properties))
@@ -88,7 +83,6 @@ namespace Discord
         {
             return client.PruneGuildMembersAsync(guildId, properties).GetAwaiter().GetResult();
         }
-
 
         public static async Task BanGuildMemberAsync(this DiscordClient client, ulong guildId, ulong userId, string reason = null, uint deleteMessageDays = 0)
         {

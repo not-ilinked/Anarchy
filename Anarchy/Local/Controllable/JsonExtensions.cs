@@ -24,7 +24,7 @@ namespace Discord
             if (TryFindTypes(typeof(T), out Dictionary<int, Type> types))
             {
                 int type = obj.Value<int>("type");
-                return (T)obj.ToObject(types.TryGetValue(type, out var t) ? t : typeof(T));
+                return (T) obj.ToObject(types.TryGetValue(type, out var t) ? t : typeof(T));
             }
             else
                 throw new InvalidCastException("Unable to find any implementations for T");

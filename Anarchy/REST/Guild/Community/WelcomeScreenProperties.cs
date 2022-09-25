@@ -18,7 +18,6 @@ namespace Discord
             return _enabled.Set;
         }
 
-
         private readonly DiscordParameter<List<WelcomeChannelProperties>> _channels = new DiscordParameter<List<WelcomeChannelProperties>>();
         [JsonProperty("welcome_channels")]
         public List<WelcomeChannelProperties> Channels
@@ -31,7 +30,6 @@ namespace Discord
         {
             return _channels.Set;
         }
-
 
         private readonly DiscordParameter<string> _description = new DiscordParameter<string>();
         [JsonProperty("description")]

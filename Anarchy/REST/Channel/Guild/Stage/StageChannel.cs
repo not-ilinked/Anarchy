@@ -17,6 +17,5 @@ namespace Discord
         public DiscordStageInstance CreateInstance(string topic, StagePrivacyLevel privacyLevel = StagePrivacyLevel.GuildOnly) =>
             CreateInstanceAsync(topic, privacyLevel).GetAwaiter().GetResult();
 
-
     }
 }

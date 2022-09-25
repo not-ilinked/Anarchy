@@ -9,7 +9,6 @@
             set { UserIdProperty.Value = value; }
         }
 
-
         internal DiscordParameter<AuditLogActionType> ActionTypeProperty = new DiscordParameter<AuditLogActionType>();
         public AuditLogActionType ActionType
         {
@@ -17,14 +16,12 @@
             set { ActionTypeProperty.Value = value; }
         }
 
-
         internal DiscordParameter<ulong> BeforeIdProperty = new DiscordParameter<ulong>();
         public ulong BeforeId
         {
             get { return BeforeIdProperty; }
             set { BeforeIdProperty.Value = value; }
         }
-
 
         internal DiscordParameter<uint> LimitProperty = new DiscordParameter<uint>();
         public uint Limit

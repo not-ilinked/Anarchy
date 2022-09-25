@@ -9,7 +9,6 @@
             set { NameProperty.Value = value; }
         }
 
-
         internal DiscordParameter<string> AvatarProperty = new DiscordParameter<string>();
         public string AvatarUrl
         {

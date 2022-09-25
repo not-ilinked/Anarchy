@@ -7,10 +7,8 @@ namespace Discord.Gateway
         [JsonProperty("name")]
         public string Name { get; set; }
 
-
         [JsonProperty("type")]
         public ActivityType Type { get; set; }
-
 
         public override string ToString()
         {

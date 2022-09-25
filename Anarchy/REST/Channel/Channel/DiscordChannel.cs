@@ -8,10 +8,8 @@ namespace Discord
         [JsonProperty("name")]
         public string Name { get; private set; }
 
-
         [JsonProperty("type")]
         public ChannelType Type { get; protected set; }
-
 
         public bool InGuild
         {
@@ -27,7 +25,6 @@ namespace Discord
         {
             get { return Type == ChannelType.Voice || Type == ChannelType.DM || Type == ChannelType.Group || Type == ChannelType.Stage; }
         }
-
 
         protected void Update(DiscordChannel channel)
         {
@@ -47,16 +44,13 @@ namespace Discord
             UpdateAsync().GetAwaiter().GetResult();
         }
 
-
         // retarded solution but it's the best i could come up with
         internal virtual void SetLastMessageId(ulong id) { }
-
 
         public override string ToString()
         {
             return Name;
         }
-
 
         public static implicit operator ulong(DiscordChannel instance)
         {

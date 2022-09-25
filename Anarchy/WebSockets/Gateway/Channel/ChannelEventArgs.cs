@@ -9,7 +9,6 @@
             Channel = channel;
         }
 
-
         public override string ToString()
         {
             return Channel.ToString();
