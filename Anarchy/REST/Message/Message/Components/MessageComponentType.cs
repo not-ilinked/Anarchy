@@ -4,6 +4,7 @@
     {
         Row = 1,
         Button,
-        Select
+        Select,
+        TextInput
     }
 }
