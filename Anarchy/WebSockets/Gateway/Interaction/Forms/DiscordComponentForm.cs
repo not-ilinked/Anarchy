@@ -76,7 +76,7 @@ namespace Discord.Gateway
                             Options = asSelect.Options
                         });
                     }
-                    else
+                    else if (input.GetType() == typeof(ComponentFormButton))
                     {
                         var asButton = (ComponentFormButton)input;
 
@@ -89,8 +89,21 @@ namespace Discord.Gateway
                             Emoji = asButton.Emoji,
                             RedirectUrl = asButton.RedirectUrl
                         });
-                    }
+                    } else if (input.GetType() == typeof(ComponentFormTextInput))
+                    {
+                        var asTextInput = (ComponentFormTextInput) input;
 
+                        inputs.Add(new TextInputComponent()
+                        {
+                            Id = $"{instance.Id}-{asTextInput.Id}",
+                            Text = asTextInput.Text,
+                            Style = asTextInput.Style,
+                            Placeholder = asTextInput.Placeholder,
+                            MaxLength = asTextInput.MaxLength,
+                            MinLength = asTextInput.MinLength,
+                            Required = asTextInput.Required,
+                        });
+                    }
                 }
 
                 components.Add(new RowComponent(inputs));

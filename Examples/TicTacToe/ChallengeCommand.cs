@@ -10,7 +10,7 @@ namespace TicTacToe
     [SlashCommand("challenge", "Challenges a user to a game of Tic Tac Toe")]
     public class ChallengeCommand : SlashCommand
     {
-        [SlashParameter("user", "The user you wish to challenge")]
+        [SlashParameter("user", "The user you wish to challenge", true)]
         public DiscordUser Target { get; private set; }
 
         private static Random random = new Random();

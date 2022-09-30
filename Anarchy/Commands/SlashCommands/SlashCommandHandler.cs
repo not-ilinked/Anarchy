@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using Discord.Gateway;
+using Microsoft.VisualBasic;
+using Newtonsoft.Json;
 
 namespace Discord.Commands
 {
@@ -12,6 +15,7 @@ namespace Discord.Commands
         {
             public Type HandlerType { get; set; }
             public Dictionary<string, PropertyInfo> Parameters { get; set; }
+            public Dictionary<string, PropertyInfo> ModalParameters { get; set; }
             public bool Delayed { get; set; }
         }
 
@@ -37,6 +41,7 @@ namespace Discord.Commands
                     {
                         List<ApplicationCommandOption> parameters = new List<ApplicationCommandOption>();
                         Dictionary<string, PropertyInfo> properties = new Dictionary<string, PropertyInfo>();
+                        Dictionary<string, PropertyInfo> modalProperties = new Dictionary<string, PropertyInfo>();
 
                         foreach (var property in type.GetProperties())
                         {
@@ -50,7 +55,7 @@ namespace Discord.Commands
                                     {
                                         if (choices == null) choices = new List<CommandOptionChoice>();
 
-                                        var choiceAttr = (SlashParameterChoiceAttribute)ok;
+                                        var choiceAttr = (SlashParameterChoiceAttribute) ok;
 
                                         if (choiceAttr.Value.GetType() != typeof(string) && !IsInteger(choiceAttr.Value.GetType()))
                                             throw new InvalidOperationException("All choice values must either be strings or integers");
@@ -67,59 +72,91 @@ namespace Discord.Commands
                                 {
                                     Name = paramAttr.Name,
                                     Description = paramAttr.Description,
-                                    Required = paramAttr.Required,
+                                    Required = paramAttr.Required ? true : null,
+                                    Autocomplete = (property.PropertyType == typeof(string) || IsInteger(property.PropertyType)) && paramAttr.AutoComplete ? true : null,
                                     Choices = choices,
                                     Type = ResolveType(property.PropertyType)
                                 });
 
                                 properties[paramAttr.Name] = property;
                             }
+                            else if (TryGetAttribute<ModalParameterAttribute>(property.GetCustomAttributes(), out var paramModal)){
+                                modalProperties[paramModal.Id] = property;
+                            }
                         }
 
-                        string category = TryGetAttribute<SlashCommandCategoryAttribute>(type.GetCustomAttributes(), out var catAttr) ? catAttr.Category : null;
+                        TryGetAttribute<SlashCommandCategoryAttribute>(type.GetCustomAttributes(), out var catAttr);
 
-                        var handler = _handlerDict[category == null ? attr.Name : $"{category}.{attr.Name}"] = new LocalCommandInfo()
+                        string category =  catAttr?.Category;
+                        string subcommandgroup =  catAttr?.SubcommandGroup;
+                        string sName = "";
+                        if(category != null)
+                        {
+                            sName += category + ".";
+                            if(subcommandgroup != null) sName += subcommandgroup + ".";
+                        }
+                        sName += attr.Name + ".";
+
+                        var handler = _handlerDict[sName.Trim('.')] = new LocalCommandInfo()
                         {
                             HandlerType = type,
                             Delayed = attr.Delayed,
-                            Parameters = properties
+                            Parameters = properties,
+                            ModalParameters = modalProperties
                         };
 
                         if (category != null)
                         {
+                            var Opt = new ApplicationCommandOption()
+                            {
+                                Type = CommandOptionType.SubCommand,
+                                Name = attr.Name,
+                                Description = attr.Description,
+                                Options = parameters
+                            };
+                            ApplicationCommandOption subOpt = null;
+                            if (subcommandgroup != null)
+                            {
+                                subOpt = new ApplicationCommandOption()
+                                {
+                                    Type = CommandOptionType.SubCommandGroup,
+                                    Name = subcommandgroup,
+                                    Description = "SubCommand Group",
+                                    Options = new List<ApplicationCommandOption>()
+                                    {
+                                        Opt
+                                    }
+                                };
+                            }
+
                             var existing = _commands.Find(c => c.Name == category);
+                            var existingSub = existing?.Options.Find(c => c.Name == subcommandgroup);
 
                             if (existing == null)
                             {
                                 _commands.Add(new ApplicationCommandProperties()
                                 {
                                     Name = category,
-                                    Description = "choose an action",
+                                    Description = "Category",
                                     Options = new List<ApplicationCommandOption>()
                                     {
-                                        new ApplicationCommandOption()
-                                        {
-                                            Type = CommandOptionType.SubCommand,
-                                            Name = attr.Name,
-                                            Description = attr.Description,
-                                            Options = parameters
-                                        }
+                                        subOpt ?? Opt
                                     }
                                 });
                             }
                             else
                             {
                                 var options = existing.Options.ToList();
-
-                                options.Add(new ApplicationCommandOption()
+                                if(existingSub != null)
                                 {
-                                    Type = CommandOptionType.SubCommand,
-                                    Name = attr.Name,
-                                    Description = attr.Description,
-                                    Options = parameters
-                                });
-
-                                existing.Options = options;
+                                    options = existingSub.Options.ToList();
+                                    options.Add(Opt);
+                                    existingSub.Options = options;
+                                } else
+                                {
+                                    options.Add(subOpt);
+                                    existing.Options = options;
+                                }
                             }
                         }
                         else
@@ -137,7 +174,7 @@ namespace Discord.Commands
             }
 
             if (guildId.HasValue)
-                _client.HttpClient.PutAsync($"/applications/{appId}/guilds/{guildId.Value}/commands", _commands).GetAwaiter().GetResult();
+                _client.SetGuildApplicationCommands(appId, guildId.Value, _commands);
             else
                 _client.SetGlobalApplicationCommands(appId, _commands);
 
@@ -154,23 +191,30 @@ namespace Discord.Commands
 
         private void Client_OnInteraction(DiscordSocketClient client, DiscordInteractionEventArgs args)
         {
-            if (args.Interaction.Type == DiscordInteractionType.ApplicationCommand && args.Interaction.ApplicationId == ApplicationId)
+            if ((args.Interaction.Type != DiscordInteractionType.ApplicationCommand && args.Interaction.Type != DiscordInteractionType.ApplicationCommandAutocomplete && args.Interaction.Type != DiscordInteractionType.ModalSubmit) || args.Interaction.ApplicationId != ApplicationId.ToString())
             {
-                foreach (var cmd in _commands)
-                {
-                    if (cmd.Name == args.Interaction.Data.CommandName)
-                    {
-                        if (cmd.Options.Count > 0 && cmd.Options[0].Type == CommandOptionType.SubCommand)
-                        {
-                            var subCommand = args.Interaction.Data.CommandArguments[0];
-                            Handle($"{cmd.Name}.{subCommand.Name}", args.Interaction, subCommand.Options?.ToList());
-                        }
-                        else Handle(cmd.Name, args.Interaction, args.Interaction.Data.CommandArguments.ToList());
+                return;
+            }
 
-                        break;
-                    }
+            if (args.Interaction.Type == DiscordInteractionType.ModalSubmit)
+            {
+                Handle(args.Interaction.Data.ComponentId, args.Interaction, null);
+                return;
+            }
+
+            string cmdName = $"{args.Interaction.Data.CommandName}.";
+            var opts = args.Interaction.Data.CommandArguments;
+
+            if(opts != null && opts.Count > 0)
+            {
+                while (opts != null && opts.Count > 0 && opts[0].Options != null)
+                {
+                    cmdName += opts[0].Name + ".";
+                    opts = opts[0].Options;
                 }
             }
+
+            Handle(cmdName.Trim('.'), args.Interaction, opts?.ToList());
         }
 
         private void Handle(string cmdName, DiscordInteraction interaction, List<SlashCommandArgument> arguments)
@@ -211,12 +255,43 @@ namespace Discord.Commands
                 }
             }
 
+            InteractionResponseProperties prop = null;
+            if (interaction.Type == DiscordInteractionType.ApplicationCommand)
+            {
+                prop = handler.Handle();
+            } else if (interaction.Type == DiscordInteractionType.ApplicationCommandAutocomplete)
+            {
+                prop = handler.HandleAutoComplete();
+            }
+            else if (interaction.Type == DiscordInteractionType.ModalSubmit)
+            {
+                foreach (RowComponent row in interaction.Data.Components)
+                {
+                    foreach (MessageInputComponent input in row.Components)
+                    {
+                        var property = localCommand.ModalParameters[input.Id];
+                        object value = input.Value;
+                        value = Convert.ChangeType(value, property.PropertyType);
+                        property.SetValue(handler, value);
+                    }
+                }
+                prop = handler.HandleModalSubmit();
+            }
+
+            if (prop == null)
+            {
+                return;
+            }
+
             if (localCommand.Delayed)
             {
                 interaction.Respond(InteractionCallbackType.DelayedMessage);
-                interaction.ModifyResponse(handler.Handle());
+                interaction.ModifyResponse(prop);
             }
-            else interaction.Respond(InteractionCallbackType.RespondWithMessage, handler.Handle());
+            else
+            {
+                interaction.Respond(InteractionCallbackType.RespondWithMessage, prop);
+            }
         }
 
         private bool IsInteger(Type type) => type == typeof(int) || type == typeof(uint) || type == typeof(long) || type == typeof(ulong);

@@ -7,7 +7,7 @@ namespace Discord
         [JsonProperty("custom_id")]
         public string Id { get; set; }
 
-        [JsonProperty("disabled")]
-        public bool Disabled { get; set; }
+        [JsonProperty("value")]
+        public string Value { get; set; }
     }
 }

@@ -6,6 +6,8 @@
         RespondWithMessage = 4,
         DelayedMessage,
         DelayedMessageUpdate,
-        UpdateMessage
+        UpdateMessage,
+        ApplicationCommandAutocompleteResult,
+        Modal
     }
 }

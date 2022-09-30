@@ -4,6 +4,8 @@
     {
         Ping = 1,
         ApplicationCommand,
-        MessageComponent
+        MessageComponent,
+        ApplicationCommandAutocomplete,
+        ModalSubmit
     }
 }

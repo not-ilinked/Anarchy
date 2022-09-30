@@ -21,5 +21,8 @@ namespace Discord
 
         [JsonProperty("placeholder")]
         public string Placeholder { get; set; }
+
+        [JsonProperty("disabled")]
+        public bool Disabled { get; set; }
     }
 }

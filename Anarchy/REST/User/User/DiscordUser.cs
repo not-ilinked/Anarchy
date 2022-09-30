@@ -200,7 +200,7 @@ namespace Discord
 
         public override string ToString()
         {
-            return $"{Username}#{"0000".Remove(4 - Discriminator.ToString().Length) + Discriminator.ToString()}";
+            return $"{Username}#{Discriminator:0000}";
         }
 
 

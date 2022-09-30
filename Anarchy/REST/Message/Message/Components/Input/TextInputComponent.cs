@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace Discord
@@ -13,6 +12,9 @@ namespace Discord
         [JsonProperty("label")]
         public string Text { get; set; }
 
+        [JsonProperty("style")]
+        public TextInputStyle Style { get; set; }
+
         [JsonProperty("min_length")]
         public uint? MinLength { get; set; }
 
@@ -24,5 +26,6 @@ namespace Discord
 
         [JsonProperty("required")]
         public bool Required { get; set; }
+
     }
 }

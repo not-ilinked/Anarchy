@@ -20,5 +20,8 @@ namespace Discord
 
         [JsonProperty("url")]
         public string RedirectUrl { get; set; }
+
+        [JsonProperty("disabled")]
+        public bool Disabled { get; set; }
     }
 }

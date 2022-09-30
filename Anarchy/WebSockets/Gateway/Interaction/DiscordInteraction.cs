@@ -1,4 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.VisualBasic;
 using Newtonsoft.Json;
 
 namespace Discord.Gateway
@@ -17,13 +20,13 @@ namespace Discord.Gateway
                     if (Data.Resolved.Members != null)
                     {
                         foreach (var member in Data.Resolved.Members.Values)
-                            member.GuildId = _guildId.Value;
+                            member.GuildId = ulong.Parse(GuildId);
                     }
 
                     if (Data.Resolved.Roles != null)
                     {
                         foreach (var role in Data.Resolved.Roles.Values)
-                            role.GuildId = _guildId.Value;
+                            role.GuildId = ulong.Parse(GuildId);
                     }
                 }
 
@@ -32,7 +35,7 @@ namespace Discord.Gateway
                 {
                     User = Member.User;
                     Member.SetClient(Client);
-                    Member.GuildId = _guildId.Value;
+                    Member.GuildId = ulong.Parse(GuildId);
                 }
 
                 User.SetClient(Client);
@@ -40,43 +43,66 @@ namespace Discord.Gateway
         }
 
         [JsonProperty("id")]
-        public ulong Id { get; private set; }
+        public ulong Id { get; set; }
 
         [JsonProperty("application_id")]
-        public ulong ApplicationId { get; private set; }
+        public string ApplicationId { get; set; }
 
         [JsonProperty("type")]
-        public DiscordInteractionType Type { get; private set; }
+        public DiscordInteractionType Type { get; set; }
 
         [JsonProperty("data")]
-        public DiscordInteractionData Data { get; private set; }
+        public DiscordInteractionData Data { get; set; }
 
         [JsonProperty("guild_id")]
-        private readonly ulong? _guildId;
+        public string GuildId;
 
-        public MinimalGuild Guild => _guildId.HasValue ? new MinimalGuild(_guildId.Value).SetClient(Client) : null;
+        public MinimalGuild Guild => GuildId != "" ? new MinimalGuild(ulong.Parse(GuildId)).SetClient(Client) : null;
 
         [JsonProperty("channel_id")]
-        private readonly ulong? _channelId;
+        public string ChannelId;
 
-        public MinimalTextChannel Channel => _channelId.HasValue ? new MinimalTextChannel(_channelId.Value).SetClient(Client) : null;
+        public MinimalTextChannel Channel => ChannelId != "" ? new MinimalTextChannel(ulong.Parse(ChannelId)).SetClient(Client) : null;
 
         [JsonProperty("token")]
-        public string Token { get; private set; }
+        public string Token { get; set; }
+
+        [JsonProperty("session_id")]
+        public string SessionId { get; set; }
+
+        [JsonProperty("message_id")]
+        public string MessageId { get; set; }
 
         [JsonProperty("member")]
-        public GuildMember Member { get; private set; }
+        public GuildMember Member { get; set; }
 
         [JsonProperty("user")]
-        public DiscordUser User { get; private set; }
+        public DiscordUser User { get; set; }
 
         [JsonProperty("message")]
-        public DiscordMessage Message { get; private set; }
+        public DiscordMessage Message { get; set; }
+
+        public DateTimeOffset CreatedAt
+        {
+            get { return DateTimeOffset.FromUnixTimeMilliseconds((long) ((Id >> 22) + 1420070400000UL)); }
+        }
 
         public Task RespondAsync(InteractionCallbackType callbackType, InteractionResponseProperties properties = null) => Client.RespondToInteractionAsync(Id, Token, callbackType, properties);
-        public void Respond(InteractionCallbackType callbackType, InteractionResponseProperties properties = null) => RespondAsync(callbackType, properties).GetAwaiter().GetResult();
 
-        public Task ModifyResponseAsync(InteractionResponseProperties changes) => Client.ModifyInteractionResponseAsync(ApplicationId, Token, changes);
+        public DiscordInteraction Respond(InteractionCallbackType callbackType, InteractionResponseProperties properties = null, bool bRespond = false)
+        {
+            RespondAsync(callbackType, properties).GetAwaiter().GetResult();
+
+            if (!bRespond)
+            {
+                return null;
+            }
+
+            return Client.GetRespondInteraction(ulong.Parse(ApplicationId), Token);
+        }
+
+        public Task ModifyResponseAsync(InteractionResponseProperties changes) => Client.ModifyInteractionResponseAsync(ulong.Parse(ApplicationId), Token, changes);
         public void ModifyResponse(InteractionResponseProperties changes) => ModifyResponseAsync(changes).GetAwaiter().GetResult();
+
     }
 }

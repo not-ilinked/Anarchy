@@ -6,15 +6,18 @@ namespace Discord.Gateway
     public class SlashCommandArgument
     {
         [JsonProperty("type")]
-        public CommandOptionType Type { get; private set; }
+        public CommandOptionType Type { get; set; }
 
         [JsonProperty("name")]
-        public string Name { get; private set; }
+        public string Name { get; set; }
 
         [JsonProperty("value")]
-        public string Value { get; private set; }
+        public string Value { get; set; }
+
+        [JsonProperty("focused")]
+        public bool Focused { get; set; }
 
         [JsonProperty("options")]
-        public IReadOnlyList<SlashCommandArgument> Options { get; private set; }
+        public List<SlashCommandArgument> Options { get; set; }
     }
 }

@@ -15,7 +15,10 @@ namespace Discord
         public string Description { get; set; }
 
         [JsonProperty("required")]
-        public bool Required { get; set; }
+        public bool? Required { get; set; }
+
+        [JsonProperty("autocomplete")]
+        public bool? Autocomplete { get; set; }
 
         [JsonProperty("choices")]
         public IReadOnlyList<CommandOptionChoice> Choices { get; set; }

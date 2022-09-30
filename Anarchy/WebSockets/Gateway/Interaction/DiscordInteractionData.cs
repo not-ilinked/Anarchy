@@ -11,24 +11,31 @@ namespace Discord.Gateway
         }
 
         [JsonProperty("id")]
-        public ulong CommandId { get; private set; }
+        public string CommandId { get; set; }
 
         [JsonProperty("name")]
-        public string CommandName { get; private set; }
+        public string CommandName { get; set; }
+
+        [JsonProperty("version")]
+        public string Version { get; set; }
 
         [JsonProperty("options")]
-        public IReadOnlyList<SlashCommandArgument> CommandArguments { get; private set; }
+        public List<SlashCommandArgument> CommandArguments { get; set; }
 
         [JsonProperty("resolved")]
-        public ResolvedInteractionData Resolved { get; private set; }
+        public ResolvedInteractionData Resolved { get; set; }
+
+        [JsonProperty("components")]
+        [JsonConverter(typeof(DeepJsonConverter<MessageComponent>))]
+        public List<MessageComponent> Components { get; set; }
 
         [JsonProperty("custom_id")]
-        public string ComponentId { get; private set; }
+        public string ComponentId { get; set; }
 
         [JsonProperty("component_type")]
-        public MessageComponentType ComponentType { get; private set; }
+        public MessageComponentType ComponentType { get; set; }
 
         [JsonProperty("values")]
-        public string[] SelectMenuValues { get; private set; }
+        public string[] SelectMenuValues { get; set; }
     }
 }

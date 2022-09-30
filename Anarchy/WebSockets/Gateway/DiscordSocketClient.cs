@@ -125,6 +125,9 @@ namespace Discord.Gateway
         public string SessionId { get; set; }
 
         internal DateTime Cooldown { get; set; }
+        internal DateTime lastPingTimestamp { get; set; }
+        public int ping = 0;
+        internal bool lastHeartbeatAcked = false;
         internal object RequestLock { get; private set; }
         internal ulong? Lurking { get; set; }
 
@@ -942,21 +945,13 @@ namespace Discord.Gateway
                 case GatewayOpcode.Connected:
                     this.LoginToGateway();
 
-                    Task.Run(() =>
-                    {
-                        int interval = message.Data.ToObject<JObject>().GetValue("heartbeat_interval").ToObject<int>() - 1000;
+                    int interval = message.Data.ToObject<JObject>().GetValue("heartbeat_interval").ToObject<int>() - 1000;
+                    this.SendHeartbeatInterval(interval);
 
-                        try
-                        {
-                            while (true)
-                            {
-                                this.Send(GatewayOpcode.Heartbeat, this.Sequence);
-                                Thread.Sleep(interval);
-                            }
-                        }
-                        catch { }
-                    });
-
+                    break;
+                case GatewayOpcode.HeartbeatAck:
+                    this.lastHeartbeatAcked = false;
+                    this.ping = Convert.ToInt32(Math.Round((DateTime.Now - lastPingTimestamp).TotalMilliseconds, 0));
                     break;
             }
         }
@@ -971,6 +966,30 @@ namespace Discord.Gateway
             }
         }
 
+        private Timer intervalTimer;
+
+        private void SendHeartbeatInterval(int interval)
+        {
+            if(interval <= 0 && this.intervalTimer != null)
+            {
+                this.intervalTimer.Dispose();
+                return;
+            } else if (interval <= 0)
+            {
+                return;
+            }
+            this.intervalTimer = new Timer(_ => SendHeartbeat(), null, 0, interval);
+        }
+
+        private void SendHeartbeat()
+        {
+            if (!this.lastHeartbeatAcked)
+            {
+                this.lastHeartbeatAcked = true;
+                this.lastPingTimestamp = DateTime.Now;
+                this.Send(GatewayOpcode.Heartbeat, this.Sequence);
+            }
+        }
 
         public void CreateCommandHandler(string prefix)
         {
@@ -992,6 +1011,7 @@ namespace Discord.Gateway
         private void Reset()
         {
             SessionId = null;
+            this.SendHeartbeatInterval(-1);
 
             if (Config.Cache)
             {

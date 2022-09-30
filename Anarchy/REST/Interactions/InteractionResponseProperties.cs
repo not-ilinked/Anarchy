@@ -13,6 +13,22 @@ namespace Discord
             set { _ttsParam.Value = value; }
         }
 
+        private readonly DiscordParameter<string> _titleParam = new DiscordParameter<string>();
+        [JsonProperty("title")]
+        public string Title
+        {
+            get { return _titleParam; }
+            set { _titleParam.Value = value; }
+        }
+
+        private readonly DiscordParameter<string> _customidParam = new DiscordParameter<string>();
+        [JsonProperty("custom_id")]
+        public string CustomID
+        {
+            get { return _customidParam; }
+            set { _customidParam.Value = value; }
+        }
+
         public bool ShouldSerializeTts() => _ttsParam.Set;
 
 
@@ -44,6 +60,9 @@ namespace Discord
                 else _embedParam.Value = new List<DiscordEmbed>() { value };
             }
         }
+
+        [JsonProperty("choices")]
+        public IReadOnlyList<CommandOptionChoice> Choices { get; set; }
 
         public bool ShouldSerialize_embeds() => _embedParam.Set;
 

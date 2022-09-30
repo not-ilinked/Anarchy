@@ -19,6 +19,10 @@ namespace Discord.Gateway
         GuildMessageTyping = 1 << 11,
         DirectMessages = 1 << 12,
         DirectMessageReactions = 1 << 13,
-        DirectMessageTyping = 1 << 14
+        DirectMessageTyping = 1 << 14,
+        MessageContent = 1 << 15,
+        GuildScheduledEvents = 1 << 16,
+        AutoModerationConfiguration = 1 << 20,
+        AutoModerationExecution = 1 << 21
     }
 }

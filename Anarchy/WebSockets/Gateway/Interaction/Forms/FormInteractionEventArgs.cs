@@ -14,7 +14,7 @@ namespace Discord.Gateway
         {
             _client = client;
             _id = interaction.Id;
-            _appId = interaction.ApplicationId;
+            _appId = ulong.Parse(interaction.ApplicationId);
             _token = interaction.Token;
 
             Member = interaction.Member;
