@@ -12,6 +12,9 @@ namespace Discord
         [JsonProperty("application_id")]
         public ulong ApplicationId { get; private set; }
 
+        [JsonProperty("version")]
+        public ulong Version { get; private set; }
+
         [JsonProperty("name")]
         public string Name { get; private set; }
 

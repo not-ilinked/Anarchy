@@ -144,6 +144,11 @@ namespace Discord
         [JsonProperty("message_reference")]
         public MessageReference MessageReference { get; private set; }
 
+        [JsonProperty("title")]
+        public string Title { get; private set; }
+
+        [JsonProperty("custom_id")]
+        public string CustomID { get; private set; }
 
         [JsonProperty("components")]
         [JsonConverter(typeof(DeepJsonConverter<MessageComponent>))]

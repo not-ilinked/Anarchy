@@ -10,6 +10,8 @@
         User,
         Channel,
         Role,
-        Mentionable
+        Mentionable,
+        Number,
+        Attachment
     }
 }

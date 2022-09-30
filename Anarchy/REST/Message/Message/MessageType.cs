@@ -24,6 +24,7 @@
         ChatInputCommand,
         ThreadStarterMessage,
         GuildInviteReminder,
-        ContextMenuCommand
+        ContextMenuCommand,
+        AutoModerationAction
     }
 }

@@ -13,6 +13,7 @@
         GuildPublicThread,
         GuildPrivateThread,
         Stage,
-        Event = 14
+        Event = 14,
+        GuildForum
     }
 }
