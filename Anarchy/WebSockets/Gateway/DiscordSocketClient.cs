@@ -972,6 +972,7 @@ namespace Discord.Gateway
         {
             if(interval <= 0 && this.intervalTimer != null)
             {
+                this.lastHeartbeatAcked = false;
                 this.intervalTimer.Dispose();
                 return;
             } else if (interval <= 0)
