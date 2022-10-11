@@ -41,6 +41,7 @@ namespace Discord.Gateway
         }
 
         [JsonProperty("id")]
+        [JsonIgnore]
         public ulong Id { get; set; }
 
         [JsonProperty("application_id")]
@@ -55,11 +56,13 @@ namespace Discord.Gateway
         [JsonProperty("guild_id")]
         public string GuildId;
 
+        [JsonIgnore]
         public MinimalGuild Guild => GuildId != "" ? new MinimalGuild(ulong.Parse(GuildId)).SetClient(Client) : null;
 
         [JsonProperty("channel_id")]
         public string ChannelId;
 
+        [JsonIgnore]
         public MinimalTextChannel Channel => ChannelId != "" ? new MinimalTextChannel(ulong.Parse(ChannelId)).SetClient(Client) : null;
 
         [JsonProperty("token")]
@@ -80,6 +83,7 @@ namespace Discord.Gateway
         [JsonProperty("message")]
         public DiscordMessage Message { get; set; }
 
+        [JsonIgnore]
         public DateTimeOffset CreatedAt
         {
             get { return DateTimeOffset.FromUnixTimeMilliseconds((long) ((Id >> 22) + 1420070400000UL)); }

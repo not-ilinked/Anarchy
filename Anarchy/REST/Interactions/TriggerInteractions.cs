@@ -84,7 +84,7 @@ namespace Discord
                 }
             };
 
-            Client.SendInteractionAsync(dataInteraction);
+            Client.SendInteractionAsync(dataInteraction).GetAwaiter().GetResult();
         }
 
         public void SelectValue(DiscordMessage msg, string sSelectLabel)
@@ -142,7 +142,7 @@ namespace Discord
                 }
             };
 
-            Client.SendInteractionAsync(dataInteraction);
+            Client.SendInteractionAsync(dataInteraction).GetAwaiter().GetResult();
         }
 
         public void SendSlash(string sCmd, params string[] args)
@@ -169,7 +169,7 @@ namespace Discord
                 Data = listDataSlash
             };
 
-            Client.SendInteractionAsync(dataInteraction);
+            Client.SendInteractionAsync(dataInteraction).GetAwaiter().GetResult();
         }
 
         private static dynamic GetDataSlash(IReadOnlyList<ApplicationCommand> ListSlash, string sName, params string[] args)
@@ -250,6 +250,7 @@ namespace Discord
                                     Value = DynamicValue(option.Type, args[iCount])
                                 };
                                 SlashDataOptions.Add(cOptionSlash);
+                                iCount++;
                             }
                         }
                     }

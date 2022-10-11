@@ -12,9 +12,10 @@ namespace Discord.Gateway
         public string Name { get; set; }
 
         [JsonProperty("value")]
-        public string Value { get; set; }
+        public dynamic Value { get; set; }
 
         [JsonProperty("focused")]
+        [JsonIgnore]
         public bool Focused { get; set; }
 
         [JsonProperty("options")]
