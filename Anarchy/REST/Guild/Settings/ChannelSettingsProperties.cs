@@ -14,12 +14,10 @@ namespace Discord
         };
 #pragma warning restore
 
-
         public bool ShouldSerialize_muteConfig()
         {
             return Muted;
         }
-
 
         private readonly DiscordParameter<bool> _mutedProperty = new DiscordParameter<bool>();
         [JsonProperty("muted")]
@@ -29,12 +27,10 @@ namespace Discord
             set { _mutedProperty.Value = value; }
         }
 
-
         public bool ShouldSerializeMuted()
         {
             return _mutedProperty.Set;
         }
-
 
         private readonly DiscordParameter<ClientNotificationLevel> _notifsProperty = new DiscordParameter<ClientNotificationLevel>();
         [JsonProperty("message_notifications")]
@@ -43,7 +39,6 @@ namespace Discord
             get { return _notifsProperty; }
             set { _notifsProperty.Value = value; }
         }
-
 
         public bool ShouldSerializeNotifications()
         {

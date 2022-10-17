@@ -20,7 +20,6 @@ namespace Discord
             return ExplicityProperty.Set;
         }
 
-
         private readonly DiscordParameter<bool> _defaultGuildRestrictParam = new DiscordParameter<bool>();
         [JsonProperty("default_guilds_restricted")]
         public bool RestrictGuildsByDefault
@@ -30,7 +29,6 @@ namespace Discord
         }
 
         public bool ShouldSerializeRestrictGuildsByDefault() => _defaultGuildRestrictParam.Set;
-
 
         private readonly DiscordParameter<bool> _nsfwGuildParam = new DiscordParameter<bool>();
         [JsonProperty("view_nsfw_guilds")]
@@ -42,7 +40,6 @@ namespace Discord
 
         public bool ShouldSerializeViewNsfwGuilds() => _nsfwGuildParam.Set;
 
-
         private readonly DiscordParameter<FriendRequestFlags> _friendFlags = new DiscordParameter<FriendRequestFlags>();
         [JsonProperty("friend_source_flags")]
         public FriendRequestFlags FriendRequestFlags
@@ -52,7 +49,6 @@ namespace Discord
         }
 
         public bool ShouldSerializeFriendRequestFlags() => _friendFlags.Set;
-
 
         // Appearance
         private readonly DiscordParameter<string> ThemeProperty = new DiscordParameter<string>();
@@ -64,7 +60,7 @@ namespace Discord
 
         public DiscordTheme Theme
         {
-            get { return (DiscordTheme)Enum.Parse(typeof(DiscordTheme), _theme, true); }
+            get { return (DiscordTheme) Enum.Parse(typeof(DiscordTheme), _theme, true); }
             set { ThemeProperty.Value = value.ToString().ToLower(); }
         }
 
@@ -72,7 +68,6 @@ namespace Discord
         {
             return ThemeProperty.Set;
         }
-
 
         private readonly DiscordParameter<bool> CompactProperty = new DiscordParameter<bool>();
         [JsonProperty("message_display_compact")]
@@ -87,7 +82,6 @@ namespace Discord
             return CompactProperty.Set;
         }
 
-
         // Accessability
         private readonly DiscordParameter<bool> GifProperty = new DiscordParameter<bool>();
         [JsonProperty("gif_auto_play")]
@@ -97,12 +91,10 @@ namespace Discord
             set { GifProperty.Value = value; }
         }
 
-
         public bool ShouldSerializePlayGifsAutomatically()
         {
             return GifProperty.Set;
         }
-
 
         private readonly DiscordParameter<bool> _emojiProperty = new DiscordParameter<bool>();
         [JsonProperty("animate_emoji")]
@@ -114,7 +106,6 @@ namespace Discord
 
         public bool ShouldSerializePlayAnimatedEmojis() => _emojiProperty.Set;
 
-
         private readonly DiscordParameter<StickerAnimationAvailability> _stickerProperty = new DiscordParameter<StickerAnimationAvailability>();
         [JsonProperty("animate_stickers")]
         public StickerAnimationAvailability StickerAnimation
@@ -125,7 +116,6 @@ namespace Discord
 
         public bool ShouldSerializeStickerAnimation() => _stickerProperty.Set;
 
-
         private readonly DiscordParameter<bool> TtsProperty = new DiscordParameter<bool>();
         [JsonProperty("enable_tts_playback")]
         public bool EnableTts
@@ -134,12 +124,10 @@ namespace Discord
             set { TtsProperty.Value = value; }
         }
 
-
         public bool ShouldSerializeEnableTts()
         {
             return TtsProperty.Set;
         }
-
 
         // Text and images
         private readonly DiscordParameter<bool> _mediaParam = new DiscordParameter<bool>();
@@ -152,7 +140,6 @@ namespace Discord
 
         public bool ShouldSerializeEmbedMedia() => _mediaParam.Set;
 
-
         private readonly DiscordParameter<bool> _attachmentParam = new DiscordParameter<bool>();
         [JsonProperty("inline_attachment_media")]
         public bool EmbedAttachments
@@ -162,7 +149,6 @@ namespace Discord
         }
 
         public bool ShouldSerializeEmbedAttachments() => _attachmentParam.Set;
-
 
         private readonly DiscordParameter<bool> _embedParam = new DiscordParameter<bool>();
         [JsonProperty("render_embeds")]
@@ -174,7 +160,6 @@ namespace Discord
 
         public bool ShouldSerializeEmbedLinks() => _embedParam.Set;
 
-
         private readonly DiscordParameter<bool> _reactionParam = new DiscordParameter<bool>();
         [JsonProperty("render_reactions")]
         public bool ShowReactions
@@ -184,7 +169,6 @@ namespace Discord
         }
 
         public bool ShouldSerializeShowReactions() => _reactionParam.Set;
-
 
         private readonly DiscordParameter<bool> _emoticonParam = new DiscordParameter<bool>();
         [JsonProperty("convert_emoticons")]
@@ -196,7 +180,6 @@ namespace Discord
 
         public bool ShouldSerializeConvertEmoticons() => _emoticonParam.Set;
 
-
         // Language
         private readonly DiscordParameter<DiscordLanguage> LocaleProperty = new DiscordParameter<DiscordLanguage>();
         [JsonProperty("locale")]
@@ -206,12 +189,10 @@ namespace Discord
             set { LocaleProperty.Value = value; }
         }
 
-
         public bool ShouldSerializeLanguage()
         {
             return LocaleProperty.Set;
         }
-
 
         // Advanced
         private readonly DiscordParameter<bool> DevProperty = new DiscordParameter<bool>();
@@ -222,12 +203,10 @@ namespace Discord
             set { DevProperty.Value = value; }
         }
 
-
         public bool ShouldSerializeDeveloperMode()
         {
             return DevProperty.Set;
         }
-
 
         // Other
         private readonly DiscordParameter<CustomStatus> StatusProperty = new DiscordParameter<CustomStatus>();
@@ -238,12 +217,10 @@ namespace Discord
             set { StatusProperty.Value = value; }
         }
 
-
         public bool ShouldSerializeCustomStatus()
         {
             return StatusProperty.Set;
         }
-
 
         private readonly DiscordParameter<List<DiscordGuildFolderUpdate>> _folderProperty = new DiscordParameter<List<DiscordGuildFolderUpdate>>();
         [JsonProperty("guild_folders")]
@@ -252,7 +229,6 @@ namespace Discord
             get { return _folderProperty; }
             set { _folderProperty.Value = value; }
         }
-
 
         private readonly DiscordParameter<List<ulong>> _guildRestrictParam = new DiscordParameter<List<ulong>>();
         [JsonProperty("restricted_guilds")]

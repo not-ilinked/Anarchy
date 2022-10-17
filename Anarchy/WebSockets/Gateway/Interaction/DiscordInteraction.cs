@@ -27,7 +27,6 @@ namespace Discord.Gateway
                     }
                 }
 
-
                 if (Member != null)
                 {
                     User = Member.User;

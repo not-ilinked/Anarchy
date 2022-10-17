@@ -14,7 +14,7 @@ namespace Discord.Commands
 
         internal void Prepare(DiscordInteraction interaction)
         {
-            Client = (DiscordSocketClient)interaction.Client;
+            Client = (DiscordSocketClient) interaction.Client;
 
             Caller = interaction.User;
             CallerMember = interaction.Member;

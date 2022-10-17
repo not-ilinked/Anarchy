@@ -50,7 +50,7 @@ namespace Discord.Commands
                                     {
                                         if (choices == null) choices = new List<CommandOptionChoice>();
 
-                                        var choiceAttr = (SlashParameterChoiceAttribute)ok;
+                                        var choiceAttr = (SlashParameterChoiceAttribute) ok;
 
                                         if (choiceAttr.Value.GetType() != typeof(string) && !IsInteger(choiceAttr.Value.GetType()))
                                             throw new InvalidOperationException("All choice values must either be strings or integers");
@@ -177,7 +177,7 @@ namespace Discord.Commands
         {
             var localCommand = _handlerDict[cmdName];
 
-            var handler = (SlashCommand)Activator.CreateInstance(localCommand.HandlerType);
+            var handler = (SlashCommand) Activator.CreateInstance(localCommand.HandlerType);
             handler.Prepare(interaction);
 
             if (arguments != null)
@@ -239,7 +239,7 @@ namespace Discord.Commands
             {
                 if (attribute.GetType() == typeof(TAttr))
                 {
-                    attr = (TAttr)attribute;
+                    attr = (TAttr) attribute;
                     return true;
                 }
             }

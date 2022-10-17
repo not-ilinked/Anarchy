@@ -11,34 +11,26 @@ namespace Discord
         [JsonProperty("token")]
         internal string Token { get; private set; }
 
-
         [JsonProperty("email")]
         public string Email { get; private set; }
-
 
         [JsonProperty("verified")]
         public bool EmailVerified { get; private set; }
 
-
         [JsonProperty("mfa_enabled")]
         public bool TwoFactorAuth { get; private set; }
-
 
         [JsonProperty("nsfw_allowed")]
         public bool? NsfwAllowed { get; private set; }
 
-
         [JsonProperty("phone")]
         public string PhoneNumber { get; private set; }
-
 
         [JsonProperty("explicit_content_filter")]
         public ExplicitContentFilter ExplicitContentFilter { get; private set; }
 
-
         [JsonProperty("locale")]
         public DiscordLanguage RegistrationLanguage { get; private set; }
-
 
         [JsonProperty("premium_type")]
         private DiscordNitroType? _nitro;
@@ -47,7 +39,6 @@ namespace Discord
         {
             get { return _nitro ?? DiscordNitroType.None; }
         }
-
 
         internal void Update(DiscordClientUser user)
         {
@@ -60,7 +51,6 @@ namespace Discord
             _nitro = user._nitro;
         }
 
-
         /// <summary>
         /// Updates the user's info
         /// </summary>
@@ -68,7 +58,6 @@ namespace Discord
         {
             Update(Client.GetClientUser());
         }
-
 
         public async Task ChangeProfileAsync(UserProfileUpdate settings)
         {
@@ -96,7 +85,6 @@ namespace Discord
             ChangeProfileAsync(settings).GetAwaiter().GetResult();
         }
 
-
         public async Task<DiscordUserSettings> GetSettingsAsync()
         {
             return (await Client.HttpClient.GetAsync("/users/@me/settings"))
@@ -110,7 +98,6 @@ namespace Discord
         {
             return GetSettingsAsync().GetAwaiter().GetResult();
         }
-
 
         public async Task<DiscordUserSettings> ChangeSettingsAsync(UserSettingsProperties settings)
         {
@@ -126,7 +113,6 @@ namespace Discord
             return ChangeSettingsAsync(settings).GetAwaiter().GetResult();
         }
 
-
         public async Task DeleteAsync(string password)
         {
             await Client.HttpClient.PostAsync("/users/@me/delete", $"{{\"password\":\"{password}\"}}");
@@ -140,7 +126,6 @@ namespace Discord
         {
             DeleteAsync(password).GetAwaiter().GetResult();
         }
-
 
         public async Task DisableAsync(string password)
         {
@@ -156,13 +141,12 @@ namespace Discord
             DisableAsync(password).GetAwaiter().GetResult();
         }
 
-
         public async Task SetHypesquadAsync(Hypesquad house)
         {
             if (house == Hypesquad.None)
                 await Client.HttpClient.DeleteAsync("/hypesquad/online");
             else
-                await Client.HttpClient.PostAsync("/hypesquad/online", $"{{\"house_id\":{(int)house}}}");
+                await Client.HttpClient.PostAsync("/hypesquad/online", $"{{\"house_id\":{(int) house}}}");
         }
 
         /// <summary>

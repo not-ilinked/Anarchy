@@ -13,12 +13,10 @@ namespace Discord
             set { _nameProperty.Value = value; }
         }
 
-
         public bool ShouldSerializeName()
         {
             return _nameProperty.Set;
         }
-
 
         private readonly DiscordParameter<string> _descriptionProperty = new DiscordParameter<string>();
         [JsonProperty("description")]
@@ -28,12 +26,10 @@ namespace Discord
             set { _descriptionProperty.Value = value; }
         }
 
-
         public bool ShouldSerializeDescription()
         {
             return _descriptionProperty.Set;
         }
-
 
         private readonly DiscordParameter<DiscordImage> IconProperty = new DiscordParameter<DiscordImage>();
         [JsonProperty("icon")]
@@ -48,7 +44,6 @@ namespace Discord
             return IconProperty.Set;
         }
 
-
         private readonly DiscordParameter<bool> _publicProperty = new DiscordParameter<bool>();
         [JsonProperty("bot_public")]
         public bool PublicBot
@@ -57,12 +52,10 @@ namespace Discord
             set { _publicProperty.Value = value; }
         }
 
-
         public bool ShouldSerializePublicBot()
         {
             return _publicProperty.Set;
         }
-
 
         private readonly DiscordParameter<bool> _codeGrantProperty = new DiscordParameter<bool>();
         [JsonProperty("bot_require_code_grant")]
@@ -72,12 +65,10 @@ namespace Discord
             set { _codeGrantProperty.Value = value; }
         }
 
-
         public bool ShouldSerializeBotRequireCodeGrant()
         {
             return _codeGrantProperty.Set;
         }
-
 
         private readonly DiscordParameter<List<string>> _redirectsProperty = new DiscordParameter<List<string>>();
         [JsonProperty("redirect_urls")]
@@ -86,7 +77,6 @@ namespace Discord
             get { return _redirectsProperty; }
             set { _redirectsProperty.Value = value; }
         }
-
 
         public bool ShouldSerializeRedirectUrls()
         {

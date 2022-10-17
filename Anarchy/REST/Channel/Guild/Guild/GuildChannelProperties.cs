@@ -20,7 +20,6 @@ namespace Discord
             return NameProperty.Set;
         }
 
-
         private readonly DiscordParameter<ulong?> ParentProperty = new DiscordParameter<ulong?>();
         [JsonProperty("parent_id")]
         public ulong? ParentId
@@ -34,7 +33,6 @@ namespace Discord
             return ParentProperty.Set;
         }
 
-
         private readonly DiscordParameter<uint> PositionProperty = new DiscordParameter<uint>();
         [JsonProperty("position")]
         public uint Position
@@ -42,7 +40,6 @@ namespace Discord
             get { return PositionProperty; }
             set { PositionProperty.Value = value; }
         }
-
 
         public bool ShouldSerializePosition()
         {

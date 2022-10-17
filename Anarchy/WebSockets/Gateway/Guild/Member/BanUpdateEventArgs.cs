@@ -23,10 +23,8 @@ namespace Discord.Gateway
             }
         }
 
-
         [JsonProperty("user")]
         public DiscordUser User { get; private set; }
-
 
         public override string ToString()
         {

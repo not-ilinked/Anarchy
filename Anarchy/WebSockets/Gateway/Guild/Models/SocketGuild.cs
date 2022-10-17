@@ -39,14 +39,11 @@ namespace Discord.Gateway
             };
         }
 
-
         [JsonProperty("large")]
         public bool Large { get; private set; }
 
-
         [JsonProperty("member_count")]
         public uint MemberCount { get; internal set; }
-
 
         // i'm not 100% sure of how this functions yet. All i have so far is https://discord.com/developers/docs/topics/gateway#request-guild-members, but it doesn't seem like that applies to users.
         [JsonProperty("members")]
@@ -58,13 +55,12 @@ namespace Discord.Gateway
             {
                 GuildMember member;
 
-                while (!((DiscordSocketClient)Client).ClientMembers.TryGetValue(Id, out member))
+                while (!((DiscordSocketClient) Client).ClientMembers.TryGetValue(Id, out member))
                     Thread.Sleep(100);
 
                 return member;
             }
         }
-
 
         [JsonProperty("channels")]
         [JsonConverter(typeof(DeepJsonConverter<GuildChannel>))]
@@ -84,10 +80,8 @@ namespace Discord.Gateway
         [JsonProperty("threads")]
         public IReadOnlyList<DiscordThread> Threads { get; internal set; }
 
-
         [JsonProperty("presences")]
         public IReadOnlyList<DiscordPresence> Presences { get; private set; }
-
 
         [JsonProperty("voice_states")]
         internal ConcurrentList<DiscordVoiceState> _voiceStates;
@@ -103,13 +97,11 @@ namespace Discord.Gateway
             }
         }
 
-
-        public Task<IReadOnlyList<GuildMember>> GetMembersAsync(uint limit = 0) => ((DiscordSocketClient)Client).GetGuildMembersAsync(Id, limit);
+        public Task<IReadOnlyList<GuildMember>> GetMembersAsync(uint limit = 0) => ((DiscordSocketClient) Client).GetGuildMembersAsync(Id, limit);
         public IReadOnlyList<GuildMember> GetMembers(uint limit = 0) => GetMembersAsync(limit).GetAwaiter().GetResult();
 
-        public Task<IReadOnlyList<GuildMember>> GetChannelMembersAsync(ulong channelId, uint limit = 0) => ((DiscordSocketClient)Client).GetGuildChannelMembersAsync(Id, channelId, limit);
+        public Task<IReadOnlyList<GuildMember>> GetChannelMembersAsync(ulong channelId, uint limit = 0) => ((DiscordSocketClient) Client).GetGuildChannelMembersAsync(Id, channelId, limit);
         public IReadOnlyList<GuildMember> GetChannelMembers(ulong channelId, uint limit = 0) => GetChannelMembersAsync(channelId, limit).GetAwaiter().GetResult();
-
 
         public new void Dispose()
         {

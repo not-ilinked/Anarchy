@@ -8,7 +8,6 @@ namespace Discord.Media
         [JsonProperty("name")]
         public string Name { get; set; }
 
-
         [JsonProperty("type")]
         private string _type;
 
@@ -16,7 +15,7 @@ namespace Discord.Media
         {
             get
             {
-                return (CodecType)Enum.Parse(typeof(CodecType), _type, true);
+                return (CodecType) Enum.Parse(typeof(CodecType), _type, true);
             }
             set
             {
@@ -24,10 +23,8 @@ namespace Discord.Media
             }
         }
 
-
         [JsonProperty("priority")]
         public int Priority { get; set; } = 1000;
-
 
         [JsonProperty("payload_type")]
         public byte PayloadType { get; set; }

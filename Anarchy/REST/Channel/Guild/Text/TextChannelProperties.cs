@@ -33,12 +33,10 @@ namespace Discord
             set { TopicProperty.Value = value; }
         }
 
-
         public bool ShouldSerializeTopic()
         {
             return TopicProperty.Set;
         }
-
 
         private readonly DiscordParameter<bool> NsfwProperty = new DiscordParameter<bool>();
         [JsonProperty("nsfw")]
@@ -48,12 +46,10 @@ namespace Discord
             set { NsfwProperty.Value = value; }
         }
 
-
         public bool ShouldSerializeNsfw()
         {
             return NsfwProperty.Set;
         }
-
 
         private readonly DiscordParameter<int> SlowModeProperty = new DiscordParameter<int>();
         [JsonProperty("rate_limit_per_user")]
@@ -62,7 +58,6 @@ namespace Discord
             get { return SlowModeProperty; }
             set { SlowModeProperty.Value = value; }
         }
-
 
         public bool ShouldSerializeSlowMode()
         {

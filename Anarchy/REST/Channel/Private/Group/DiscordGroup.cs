@@ -22,10 +22,8 @@ namespace Discord
             }
         }
 
-
         [JsonProperty("owner_id")]
         public ulong OwnerId { get; private set; }
-
 
         protected void Update(DiscordGroup group)
         {
@@ -34,10 +32,9 @@ namespace Discord
             OwnerId = group.OwnerId;
         }
 
-
         public new async Task UpdateAsync()
         {
-            Update((DiscordGroup)await Client.GetChannelAsync(Id));
+            Update((DiscordGroup) await Client.GetChannelAsync(Id));
         }
 
         /// <summary>
@@ -47,7 +44,6 @@ namespace Discord
         {
             UpdateAsync().GetAwaiter().GetResult();
         }
-
 
         public async Task ModifyAsync(GroupProperties properties)
         {
@@ -63,7 +59,6 @@ namespace Discord
             ModifyAsync(properties).GetAwaiter().GetResult();
         }
 
-
         public async Task AddRecipientAsync(ulong userId)
         {
             await Client.AddUserToGroupAsync(Id, userId);
@@ -78,7 +73,6 @@ namespace Discord
             AddRecipientAsync(userId).GetAwaiter().GetResult();
         }
 
-
         public async Task RemoveRecipientAsync(ulong userId)
         {
             await Client.RemoveUserFromGroupAsync(Id, userId);
@@ -92,7 +86,6 @@ namespace Discord
         {
             RemoveRecipientAsync(userId).GetAwaiter().GetResult();
         }
-
 
         public async Task<DiscordInvite> CreateInviteAsync()
         {

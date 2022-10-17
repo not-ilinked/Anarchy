@@ -291,10 +291,10 @@ namespace Discord.WebSockets
         }
 
         /// <summary>
-        /// Creates a new instance of <see cref="WebSocketClient"/>.
+        /// Creates a new instance of <see cref="DiscordWebSocket"/>.
         /// </summary>
         /// <param name="proxy">Proxy to use for this client instance.</param>
-        /// <returns>An instance of <see cref="WebSocketClient"/>.</returns>
+        /// <returns>An instance of <see cref="DiscordWebSocket"/>.</returns>
         public static IWebSocketClient<TOpcode> CreateNew(string url, IWebProxy proxy = null)
             => new DiscordWebSocket<TOpcode>(url, proxy);
     }

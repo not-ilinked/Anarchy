@@ -10,10 +10,8 @@ namespace Discord
             OnClientUpdated += (sender, e) => User.SetClient(Client);
         }
 
-
         [JsonProperty("guild_id")]
         internal ulong GuildId { get; set; }
-
 
         public MinimalGuild Guild
         {
@@ -23,10 +21,8 @@ namespace Discord
             }
         }
 
-
         [JsonProperty("user")]
         public DiscordUser User { get; internal set; }
-
 
         public new void Dispose()
         {

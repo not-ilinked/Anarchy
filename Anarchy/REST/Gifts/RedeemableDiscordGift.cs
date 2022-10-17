@@ -9,22 +9,17 @@ namespace Discord
         [JsonProperty("code")]
         public string Code { get; private set; }
 
-
         [JsonProperty("expires_at")]
         public DateTime ExpiresAt { get; private set; }
-
 
         [JsonProperty("redeemed")]
         public bool Redeemed { get; private set; }
 
-
         [JsonProperty("uses")]
         public uint Uses { get; private set; }
 
-
         [JsonProperty("max_uses")]
         public uint MaxUses { get; private set; }
-
 
         public async Task RedeemAsync(ulong? channelId = null)
         {
@@ -35,7 +30,6 @@ namespace Discord
         {
             RedeemAsync(channelId).GetAwaiter().GetResult();
         }
-
 
         public async Task RevokeAsync()
         {

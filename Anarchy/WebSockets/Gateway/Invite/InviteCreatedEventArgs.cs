@@ -8,7 +8,6 @@ namespace Discord.Gateway
         [JsonProperty("code")]
         public string Code { get; private set; }
 
-
         [JsonProperty("channel_id")]
         private readonly ulong _channelId;
 
@@ -17,10 +16,8 @@ namespace Discord.Gateway
             get { return new MinimalTextChannel(_channelId).SetClient(Client); }
         }
 
-
         [JsonProperty("created_at")]
         public DateTime CreatedAt { get; private set; }
-
 
         [JsonProperty("guild_id")]
         private readonly ulong? _guildId;
@@ -36,18 +33,14 @@ namespace Discord.Gateway
             }
         }
 
-
         [JsonProperty("inviter")]
         public DiscordUser Inviter { get; private set; }
-
 
         [JsonProperty("max_age")]
         public uint MaxAge { get; private set; }
 
-
         [JsonProperty("max_uses")]
         public uint MaxUses { get; private set; }
-
 
         [JsonProperty("temporary")]
         public bool Temporary { get; private set; }

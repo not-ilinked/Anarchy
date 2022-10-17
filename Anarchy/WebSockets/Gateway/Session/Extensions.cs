@@ -16,7 +16,6 @@
             });
         }
 
-
         internal static void Resume(this DiscordSocketClient client)
         {
             client.Send(GatewayOpcode.Resume, new GatewayResume(client));

@@ -17,10 +17,8 @@ namespace Discord
         [JsonProperty("source_guild")]
         public BaseGuild SourceGuild { get; private set; }
 
-
         [JsonProperty("source_channel")]
         public CrosspostChannel SourceChannel { get; private set; }
-
 
         private void Update(DiscordCrosspostWebhook hook)
         {
@@ -28,7 +26,6 @@ namespace Discord
             SourceChannel = hook.SourceChannel;
             base.Update(hook);
         }
-
 
         public new async Task UpdateAsync()
         {
@@ -42,7 +39,6 @@ namespace Discord
         {
             UpdateAsync().GetAwaiter().GetResult();
         }
-
 
         public new async Task ModifyAsync(DiscordWebhookProperties properties)
         {

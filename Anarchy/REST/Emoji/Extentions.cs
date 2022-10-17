@@ -24,7 +24,6 @@ namespace Discord
             return client.CreateEmojiAsync(guildId, properties).GetAwaiter().GetResult();
         }
 
-
         public static async Task<DiscordEmoji> ModifyEmojiAsync(this DiscordClient client, ulong guildId, ulong emojiId, string name)
         {
             return (await client.HttpClient.PatchAsync($"/guilds/{guildId}/emojis/{emojiId}", $"{{\"name\":\"{name}\"}}"))
@@ -43,7 +42,6 @@ namespace Discord
             return client.ModifyEmojiAsync(guildId, emojiId, name).GetAwaiter().GetResult();
         }
 
-
         public static async Task DeleteEmojiAsync(this DiscordClient client, ulong guildId, ulong emojiId)
         {
             await client.HttpClient.DeleteAsync($"/guilds/{guildId}/emojis/{emojiId}");
@@ -59,7 +57,6 @@ namespace Discord
             client.DeleteEmojiAsync(guildId, emojiId).GetAwaiter().GetResult();
         }
         #endregion
-
 
         public static async Task<IReadOnlyList<DiscordEmoji>> GetGuildEmojisAsync(this DiscordClient client, ulong guildId)
         {
@@ -77,7 +74,6 @@ namespace Discord
         {
             return client.GetGuildEmojisAsync(guildId).GetAwaiter().GetResult();
         }
-
 
         public static async Task<DiscordEmoji> GetGuildEmojiAsync(this DiscordClient client, ulong guildId, ulong emojiId)
         {

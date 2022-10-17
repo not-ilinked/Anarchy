@@ -25,7 +25,6 @@ namespace Discord.Gateway
         public string RedirectUrl { get; set; }
         public bool Disabled { get; set; }
 
-
         internal override void Handle(DiscordSocketClient client, DiscordInteraction interaction)
         {
             if (OnClick != null)

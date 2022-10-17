@@ -16,10 +16,8 @@ namespace Discord.Gateway
             };
         }
 
-
         [JsonProperty("guild_id")]
         public ulong GuildId { get; private set; }
-
 
         [JsonProperty("emojis")]
         public IReadOnlyList<DiscordEmoji> Emojis { get; private set; }

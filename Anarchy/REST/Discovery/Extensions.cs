@@ -16,7 +16,7 @@ namespace Discord
                 query += "&query=" + options.Query;
 
             if (options.Category.HasValue)
-                query += "&categories=" + (int)options.Category;
+                query += "&categories=" + (int) options.Category;
 
             return (await client.HttpClient.GetAsync($"/discoverable-guilds" + query)).Deserialize<GuildQueryResult>().SetClient(client);
         }
@@ -28,7 +28,6 @@ namespace Discord
         {
             return client.QueryGuildsAsync(options).GetAwaiter().GetResult();
         }
-
 
         public static async Task<DiscordGuild> LurkGuildAsync(this DiscordSocketClient client, ulong guildId)
         {
@@ -53,7 +52,6 @@ namespace Discord
         {
             return client.LurkGuildAsync(guildId).GetAwaiter().GetResult();
         }
-
 
         public static async Task<DiscordGuild> JoinGuildAsync(this DiscordClient client, ulong guildId)
         {

@@ -36,7 +36,7 @@ namespace Discord.Gateway
                 throw new DiscordHttpException(new DiscordHttpError(DiscordError.UnknownChannel, "Channel was not found in cache"));
             }
             else
-                return await ((DiscordClient)client).GetChannelAsync(channelId);
+                return await ((DiscordClient) client).GetChannelAsync(channelId);
         }
 
         /// <summary>
@@ -48,13 +48,12 @@ namespace Discord.Gateway
             return client.GetChannelAsync(channelId).GetAwaiter().GetResult();
         }
 
-
         public static async Task<IReadOnlyList<GuildChannel>> GetGuildChannelsAsync(this DiscordSocketClient client, ulong guildId)
         {
             if (client.Config.Cache)
                 return client.GetCachedGuild(guildId).Channels;
             else
-                return await ((DiscordClient)client).GetGuildChannelsAsync(guildId);
+                return await ((DiscordClient) client).GetGuildChannelsAsync(guildId);
         }
 
         /// <summary>
@@ -66,10 +65,9 @@ namespace Discord.Gateway
             return client.GetGuildChannelsAsync(guildId).GetAwaiter().GetResult();
         }
 
-
         public static async Task<IReadOnlyList<DiscordMessage>> GetChannelMessagesAsync(this DiscordSocketClient client, ulong channelId, MessageFilters filters = null)
         {
-            var messages = await ((DiscordClient)client).GetChannelMessagesAsync(channelId, filters);
+            var messages = await ((DiscordClient) client).GetChannelMessagesAsync(channelId, filters);
 
             if (client.Config.Cache)
             {
@@ -77,7 +75,7 @@ namespace Discord.Gateway
 
                 if (channel.InGuild)
                 {
-                    GuildChannel guildChannel = (GuildChannel)channel;
+                    GuildChannel guildChannel = (GuildChannel) channel;
 
                     foreach (var message in messages)
                         message.GuildId = guildChannel.GuildId;
@@ -97,7 +95,6 @@ namespace Discord.Gateway
         {
             return client.GetChannelMessagesAsync(channelId, filters).GetAwaiter().GetResult();
         }
-
 
         public static async Task<IReadOnlyList<DiscordMessage>> GetChannelMessagesAsync(this DiscordSocketClient client, ulong channelId, uint limit)
         {
@@ -131,7 +128,7 @@ namespace Discord.Gateway
                 }
             }
 
-            return ((DiscordClient)client).CreateDM(recipientId);
+            return ((DiscordClient) client).CreateDM(recipientId);
         }
     }
 }

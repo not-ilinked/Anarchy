@@ -31,26 +31,20 @@ namespace Discord
             };
         }
 
-
         [JsonProperty("id")]
         public ulong Id { get; private set; }
-
 
         [JsonProperty("content")]
         public string Content { get; private set; }
 
-
         [JsonProperty("tts")]
         public bool Tts { get; private set; }
-
 
         [JsonProperty("author")]
         private DiscordUser _authorUser;
 
-
         [JsonProperty("member")]
         private GuildMember _authorMember;
-
 
         public MessageAuthor Author
         {
@@ -63,10 +57,8 @@ namespace Discord
             }
         }
 
-
         [JsonProperty("attachments")]
         public IReadOnlyList<DiscordAttachment> Attachments { get; private set; }
-
 
         [JsonProperty("embeds")]
         private IReadOnlyList<DiscordEmbed> _embeds;
@@ -76,44 +68,34 @@ namespace Discord
             private set { _embeds = new List<DiscordEmbed>() { value }; }
         }
 
-
         [JsonProperty("reactions")]
         public IReadOnlyList<MessageReaction> Reactions { get; private set; }
-
 
         [JsonProperty("mentions")]
         public IReadOnlyList<DiscordUser> Mentions { get; private set; }
 
-
         [JsonProperty("mention_roles")]
         public IReadOnlyList<ulong> MentionedRoles { get; private set; }
-
 
         [JsonProperty("mention_everyone")]
         public bool MentionedEveryone { get; private set; }
 
-
         [JsonProperty("timestamp")]
         public DateTime SentAt { get; private set; }
-
 
         [JsonProperty("edited_timestamp")]
         public DateTime? EditedAt { get; private set; }
 
-
         [JsonProperty("pinned")]
         public bool Pinned { get; private set; }
-
 
         [JsonProperty("channel_id")]
         private readonly ulong _channelId;
 
         public MinimalTextChannel Channel => new MinimalTextChannel(_channelId).SetClient(Client);
 
-
         [JsonProperty("guild_id")]
         internal ulong? GuildId { get; set; }
-
 
         /// <summary>
         /// This is sometimes null, even when it has been sent through a guild
@@ -129,14 +111,11 @@ namespace Discord
             }
         }
 
-
         [JsonProperty("type")]
         public MessageType Type { get; private set; }
 
-
         [JsonProperty("flags")]
         public MessageFlags Flags { get; private set; }
-
 
         [JsonProperty("referenced_message")]
         public DiscordMessage ReferencedMessage { get; private set; }
@@ -144,15 +123,12 @@ namespace Discord
         [JsonProperty("message_reference")]
         public MessageReference MessageReference { get; private set; }
 
-
         [JsonProperty("components")]
         [JsonConverter(typeof(DeepJsonConverter<MessageComponent>))]
         public List<MessageComponent> Components { get; private set; }
 
-
         [JsonProperty("sticker_items")]
         public IReadOnlyList<DiscordSticker> Stickers { get; private set; }
-
 
         private void Update(DiscordMessage updated)
         {
@@ -172,7 +148,6 @@ namespace Discord
             _authorUser = updated.Author.User;
         }
 
-
         public async Task EditAsync(MessageEditProperties properties)
         {
             if (Type != MessageType.Default)
@@ -190,7 +165,6 @@ namespace Discord
             EditAsync(properties).GetAwaiter().GetResult();
         }
 
-
         public async Task DeleteAsync()
         {
             await Client.DeleteMessageAsync(Channel.Id, Id);
@@ -204,7 +178,6 @@ namespace Discord
             DeleteAsync().GetAwaiter().GetResult();
         }
 
-
         public async Task AcknowledgeAsync()
         {
             await Client.AcknowledgeMessageAsync(Channel.Id, Id);
@@ -214,7 +187,6 @@ namespace Discord
         {
             AcknowledgeAsync().GetAwaiter().GetResult();
         }
-
 
         public async Task<IReadOnlyList<DiscordUser>> GetReactionsAsync(ReactionQuery query)
         {
@@ -232,7 +204,6 @@ namespace Discord
             return GetReactionsAsync(query).GetAwaiter().GetResult();
         }
 
-
         public async Task AddReactionAsync(string reactionName, ulong? reactionId = null)
         {
             await Client.AddMessageReactionAsync(Channel.Id, Id, reactionName, reactionId);
@@ -246,7 +217,6 @@ namespace Discord
             AddReactionAsync(reactionName, reactionId).GetAwaiter().GetResult();
         }
 
-
         public async Task RemoveClientReactionAsync(string reactionName, ulong? reactionId = null)
         {
             await Client.RemoveMessageReactionAsync(Channel.Id, Id, reactionName, reactionId);
@@ -256,7 +226,6 @@ namespace Discord
         {
             RemoveClientReactionAsync(reactionName, reactionId).GetAwaiter().GetResult();
         }
-
 
         public async Task RemoveReactionAsync(ulong userId, string reactionName, ulong? reactionId = null)
         {
@@ -268,7 +237,6 @@ namespace Discord
             RemoveReactionAsync(userId, reactionName, reactionId).GetAwaiter().GetResult();
         }
 
-
         public async Task PinAsync()
         {
             await Channel.PinMessageAsync(Id);
@@ -279,7 +247,6 @@ namespace Discord
             PinAsync().GetAwaiter().GetResult();
         }
 
-
         public async Task CrosspostAsync()
         {
             Update(await Client.CrosspostMessageAsync(Channel.Id, Id));
@@ -289,7 +256,6 @@ namespace Discord
         {
             CrosspostAsync().GetAwaiter().GetResult();
         }
-
 
         public static implicit operator ulong(DiscordMessage instance)
         {

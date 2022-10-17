@@ -6,12 +6,10 @@ namespace Discord.Gateway
     {
         public UserTyping Typing { get; private set; }
 
-
         internal UserTypingEventArgs(UserTyping typing)
         {
             Typing = typing;
         }
-
 
         public override string ToString()
         {

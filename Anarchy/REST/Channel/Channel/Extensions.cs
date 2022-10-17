@@ -19,7 +19,6 @@ namespace Discord
             return client.GetChannelAsync(channelId).GetAwaiter().GetResult();
         }
 
-
         public static async Task<DiscordGroup> ModifyGroupAsync(this DiscordClient client, ulong groupId, GroupProperties properties)
         {
             return (await client.HttpClient.PatchAsync($"/channels/{groupId}", properties))
@@ -31,7 +30,6 @@ namespace Discord
             return client.ModifyGroupAsync(groupId, properties).GetAwaiter().GetResult();
         }
 
-
         public static async Task<GuildChannel> ModifyGuildChannelAsync(this DiscordClient client, ulong channelId, GuildChannelProperties properties)
         {
             return (await client.HttpClient.PatchAsync($"/channels/{channelId}", properties))
@@ -42,7 +40,6 @@ namespace Discord
         {
             return client.ModifyGuildChannelAsync(channelId, properties).GetAwaiter().GetResult();
         }
-
 
         public static async Task<DiscordChannel> DeleteChannelAsync(this DiscordClient client, ulong channelId)
         {

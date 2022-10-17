@@ -10,7 +10,6 @@ namespace Discord.WebSockets
         [JsonProperty("t")]
         public string EventName { get; private set; }
 
-
         [JsonProperty("s")]
         public uint? Sequence { get; private set; }
     }

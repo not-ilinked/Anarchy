@@ -9,14 +9,11 @@ namespace Discord
         [JsonProperty("owner")]
         public bool Owner { get; private set; }
 
-
         [JsonProperty("permissions")]
         public DiscordPermission Permissions { get; private set; }
 
-
         [JsonProperty("features")]
         public IReadOnlyList<string> Features { get; private set; }
-
 
         public async Task<DiscordGuild> GetGuildAsync()
         {

@@ -16,7 +16,6 @@ namespace Discord
         [JsonProperty("description")]
         public string Description { get; private set; }
 
-
         [JsonProperty("welcome_channels")]
         public IReadOnlyList<WelcomeChannel> Channels { get; private set; }
     }

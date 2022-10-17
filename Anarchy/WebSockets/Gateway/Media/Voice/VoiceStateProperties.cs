@@ -12,7 +12,6 @@ namespace Discord.Gateway
             set { GuildProperty.Value = value; }
         }
 
-
         internal readonly DiscordParameter<ulong?> ChannelProperty = new DiscordParameter<ulong?>();
         [JsonProperty("channel_id")]
         public ulong? ChannelId
@@ -20,7 +19,6 @@ namespace Discord.Gateway
             get { return ChannelProperty; }
             set { ChannelProperty.Value = value; }
         }
-
 
         internal readonly DiscordParameter<bool> MutedProperty = new DiscordParameter<bool>();
         [JsonProperty("self_mute")]
@@ -30,7 +28,6 @@ namespace Discord.Gateway
             set { MutedProperty.Value = value; }
         }
 
-
         internal readonly DiscordParameter<bool> DeafProperty = new DiscordParameter<bool>();
         [JsonProperty("self_deaf")]
         public bool Deafened
@@ -38,7 +35,6 @@ namespace Discord.Gateway
             get { return DeafProperty; }
             set { DeafProperty.Value = value; }
         }
-
 
         internal readonly DiscordParameter<bool> VideoProperty = new DiscordParameter<bool>();
         [JsonProperty("self_video")]
@@ -76,7 +72,7 @@ namespace Discord.Gateway
                         state = states.PrivateChannelVoiceState;
 
                     if (state != null && !ChannelProperty.Set)
-                        ChannelId = state.Channel == null ? null : (ulong?)state.Channel.Id;
+                        ChannelId = state.Channel == null ? null : (ulong?) state.Channel.Id;
                 }
                 else if (ChannelProperty.Set && ChannelId.HasValue)
                 {
@@ -84,7 +80,7 @@ namespace Discord.Gateway
 
                     if (channel.Type != ChannelType.Group && channel.Type != ChannelType.DM)
                     {
-                        GuildId = ((GuildChannel)channel).GuildId;
+                        GuildId = ((GuildChannel) channel).GuildId;
 
                         if (states.GuildVoiceStates.TryGetValue(GuildId.Value, out DiscordVoiceState oldState))
                             state = oldState;

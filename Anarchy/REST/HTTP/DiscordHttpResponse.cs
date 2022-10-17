@@ -15,21 +15,19 @@ namespace Discord
                 Body = JToken.Parse(content);
         }
 
-
         public T Deserialize<T>()
         {
             return Body.ToObject<T>();
         }
 
-
         public T ParseDeterministic<T>()
         {
-            return ((JObject)Body).ParseDeterministic<T>();
+            return ((JObject) Body).ParseDeterministic<T>();
         }
 
         public List<T> MultipleDeterministic<T>()
         {
-            return ((JArray)Body).MultipleDeterministic<T>();
+            return ((JArray) Body).MultipleDeterministic<T>();
         }
     }
 }

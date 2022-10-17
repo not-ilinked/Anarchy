@@ -25,7 +25,6 @@ namespace Discord
             return client.CreateInviteAsync(channelId, properties).GetAwaiter().GetResult();
         }
 
-
         public static async Task<DiscordInvite> DeleteInviteAsync(this DiscordClient client, string invCode)
         {
             return (await client.HttpClient.DeleteAsync($"/invites/{invCode}"))
@@ -42,7 +41,6 @@ namespace Discord
             return client.DeleteInviteAsync(invCode).GetAwaiter().GetResult();
         }
 
-
         public static async Task<DiscordInvite> GetInviteAsync(this DiscordClient client, string invCode)
         {
             return (await client.HttpClient.GetAsync($"/invites/{invCode}?with_counts=true"))
@@ -56,7 +54,6 @@ namespace Discord
         {
             return client.GetInviteAsync(invCode).GetAwaiter().GetResult();
         }
-
 
         public static async Task<IReadOnlyList<GuildInvite>> GetGuildInvitesAsync(this DiscordClient client, ulong guildId)
         {

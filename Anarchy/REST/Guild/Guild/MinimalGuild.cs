@@ -17,7 +17,6 @@ namespace Discord
             Id = guildId;
         }
 
-
         public async Task ModifyAsync(GuildProperties properties)
         {
             await Client.ModifyGuildAsync(Id, properties);
@@ -32,7 +31,6 @@ namespace Discord
             ModifyAsync(properties).GetAwaiter().GetResult();
         }
 
-
         public async Task DeleteAsync()
         {
             await Client.DeleteGuildAsync(Id);
@@ -45,7 +43,6 @@ namespace Discord
         {
             DeleteAsync().GetAwaiter().GetResult();
         }
-
 
         public async Task LeaveAsync(bool lurking = false)
         {
@@ -60,7 +57,6 @@ namespace Discord
             LeaveAsync(lurking).GetAwaiter().GetResult();
         }
 
-
         public async Task SetNicknameAsync(string nickname)
         {
             await Client.SetClientNicknameAsync(Id, nickname);
@@ -70,7 +66,6 @@ namespace Discord
         {
             SetNicknameAsync(nickname).GetAwaiter().GetResult();
         }
-
 
         public async Task AcknowledgeMessagesAsync()
         {
@@ -85,7 +80,6 @@ namespace Discord
             AcknowledgeMessagesAsync().GetAwaiter().GetResult();
         }
 
-
         public async Task<ClientGuildSettings> ModifyClientSettingsAsync(GuildSettingsProperties properties)
         {
             return await Client.ModifyGuildSettingsAsync(Id, properties);
@@ -95,7 +89,6 @@ namespace Discord
         {
             return ModifyClientSettingsAsync(properties).GetAwaiter().GetResult();
         }
-
 
         public async Task<IReadOnlyList<DiscordGuildTemplate>> GetTemplatesAsync()
         {
@@ -110,7 +103,6 @@ namespace Discord
             return GetTemplatesAsync().GetAwaiter().GetResult();
         }
 
-
         public async Task<DiscordGuildTemplate> CreateTemplateAsync(string name, string description)
         {
             return await Client.CreateGuildTemplateAsync(Id, name, description);
@@ -124,7 +116,6 @@ namespace Discord
             return CreateTemplateAsync(name, description).GetAwaiter().GetResult();
         }
 
-
         public async Task<DiscordGuildTemplate> DeleteTemplateAsync(string templateCode)
         {
             return await Client.DeleteGuildTemplateAsync(Id, templateCode);
@@ -134,7 +125,6 @@ namespace Discord
         {
             return DeleteTemplateAsync(templateCode).GetAwaiter().GetResult();
         }
-
 
         public async Task SetVanityUrlAsync(string vanityCode)
         {
@@ -146,7 +136,6 @@ namespace Discord
             SetVanityUrlAsync(vanityCode).GetAwaiter().GetResult();
         }
 
-
         public Task<WelcomeScreen> GetWelcomeScreenAsync()
         {
             return Client.GetWelcomeScreenAsync(Id);
@@ -156,7 +145,6 @@ namespace Discord
         {
             return GetWelcomeScreenAsync().GetAwaiter().GetResult();
         }
-
 
         public Task<WelcomeScreen> ModifyWelcomeScreenAsync(WelcomeScreenProperties properties)
         {
@@ -168,13 +156,11 @@ namespace Discord
             return ModifyWelcomeScreenAsync(properties).GetAwaiter().GetResult();
         }
 
-
         public Task<GuildVerificationForm> GetVerificationFormAsync(string inviteCode) => Client.GetGuildVerificationFormAsync(Id, inviteCode);
         public GuildVerificationForm GetVerificationForm(string inviteCode) => GetVerificationFormAsync(inviteCode).GetAwaiter().GetResult();
 
         public Task<GuildVerificationForm> ModifyVerificationFormAsync(VerificationFormProperties properties) => Client.ModifyGuildVerificationFormAsync(Id, properties);
         public GuildVerificationForm ModifyVerificationForm(VerificationFormProperties properties) => ModifyVerificationFormAsync(properties).GetAwaiter().GetResult();
-
 
         public virtual async Task<IReadOnlyList<GuildChannel>> GetChannelsAsync()
         {
@@ -188,7 +174,6 @@ namespace Discord
         {
             return GetChannelsAsync().GetAwaiter().GetResult();
         }
-
 
         public async Task<GuildChannel> CreateChannelAsync(string name, ChannelType type, ulong? parentId = null)
         {
@@ -205,7 +190,6 @@ namespace Discord
             return CreateChannelAsync(name, type, parentId).GetAwaiter().GetResult();
         }
 
-
         public virtual async Task<IReadOnlyList<DiscordEmoji>> GetEmojisAsync()
         {
             return await Client.GetGuildEmojisAsync(Id);
@@ -218,7 +202,6 @@ namespace Discord
         {
             return GetEmojisAsync().GetAwaiter().GetResult();
         }
-
 
         public async Task<DiscordEmoji> GetEmojiAsync(ulong emojiId)
         {
@@ -234,7 +217,6 @@ namespace Discord
             return GetEmojiAsync(emojiId).GetAwaiter().GetResult();
         }
 
-
         public async Task<DiscordEmoji> CreateEmojiAsync(EmojiProperties properties)
         {
             return await Client.CreateEmojiAsync(Id, properties);
@@ -249,7 +231,6 @@ namespace Discord
             return CreateEmojiAsync(properties).GetAwaiter().GetResult();
         }
 
-
         public virtual async Task<IReadOnlyList<DiscordRole>> GetRolesAsync()
         {
             return await Client.GetGuildRolesAsync(Id);
@@ -262,7 +243,6 @@ namespace Discord
         {
             return GetRolesAsync().GetAwaiter().GetResult();
         }
-
 
         public async Task<DiscordRole> CreateRoleAsync(RoleProperties properties = null)
         {
@@ -279,7 +259,6 @@ namespace Discord
             return CreateRoleAsync(properties).GetAwaiter().GetResult();
         }
 
-
         public virtual async Task<IReadOnlyList<DiscordRole>> SetRolePositionsAsync(List<RolePositionUpdate> roles)
         {
             return await Client.SetRolePositionsAsync(Id, roles);
@@ -289,7 +268,6 @@ namespace Discord
         {
             return SetRolePositionsAsync(roles).GetAwaiter().GetResult();
         }
-
 
         public async Task<IReadOnlyList<GuildInvite>> GetInvitesAsync()
         {
@@ -301,7 +279,6 @@ namespace Discord
             return GetInvitesAsync().GetAwaiter().GetResult();
         }
 
-
         public async Task<IReadOnlyList<DiscordWebhook>> GetWebhooksAsync()
         {
             return await Client.GetGuildWebhooksAsync(Id);
@@ -311,7 +288,6 @@ namespace Discord
         {
             return GetWebhooksAsync().GetAwaiter().GetResult();
         }
-
 
         public async Task<IReadOnlyList<AuditLogEntry>> GetAuditLogAsync(AuditLogFilters filters = null)
         {
@@ -326,7 +302,6 @@ namespace Discord
         {
             return GetAuditLogAsync(filters).GetAwaiter().GetResult();
         }
-
 
         public async Task<GuildMember> GetMemberAsync(ulong userId)
         {
@@ -343,7 +318,6 @@ namespace Discord
             return GetMemberAsync(userId).GetAwaiter().GetResult();
         }
 
-
         public async Task<IReadOnlyList<DiscordBan>> GetBansAsync()
         {
             return await Client.GetGuildBansAsync(Id);
@@ -356,7 +330,6 @@ namespace Discord
         {
             return GetBansAsync().GetAwaiter().GetResult();
         }
-
 
         public async Task<DiscordBan> GetBanAsync(ulong userId)
         {
@@ -372,7 +345,6 @@ namespace Discord
             return GetBanAsync(userId).GetAwaiter().GetResult();
         }
 
-
         public async Task BanMemberAsync(ulong userId, string reason = null, uint deleteMessageDays = 0)
         {
             await Client.BanGuildMemberAsync(Id, userId, reason, deleteMessageDays);
@@ -382,7 +354,6 @@ namespace Discord
         {
             BanMemberAsync(userId, reason, deleteMessageDays).GetAwaiter().GetResult();
         }
-
 
         public static implicit operator ulong(MinimalGuild instance)
         {

@@ -31,7 +31,6 @@ namespace Discord
             return client.CreateGuildAsync(name, icon, region).GetAwaiter().GetResult();
         }
 
-
         public static async Task<DiscordGuild> ModifyGuildAsync(this DiscordClient client, ulong guildId, GuildProperties properties)
         {
             if (properties.VanityProperty.Set)
@@ -51,7 +50,6 @@ namespace Discord
             return client.ModifyGuildAsync(guildId, properties).GetAwaiter().GetResult();
         }
 
-
         public static async Task DeleteGuildAsync(this DiscordClient client, ulong guildId)
         {
             await client.HttpClient.DeleteAsync($"/guilds/{guildId}");
@@ -66,7 +64,6 @@ namespace Discord
             client.DeleteGuildAsync(guildId).GetAwaiter().GetResult();
         }
 
-
         public static async Task SetGuildVanityUrlAsync(this DiscordClient client, ulong guildId, string vanityCode)
         {
             await client.HttpClient.PatchAsync($"/guilds/{guildId}/vanity-url", $"{{\"code\":\"{vanityCode}\"}}");
@@ -76,7 +73,6 @@ namespace Discord
         {
             client.SetGuildVanityUrlAsync(guildId, vanityCode).GetAwaiter().GetResult();
         }
-
 
         public static async Task<IReadOnlyList<DiscordBan>> GetGuildBansAsync(this DiscordClient client, ulong guildId)
         {
@@ -95,7 +91,6 @@ namespace Discord
         {
             return client.GetGuildBansAsync(guildId).GetAwaiter().GetResult();
         }
-
 
         public static async Task<DiscordBan> GetGuildBanAsync(this DiscordClient client, ulong guildId, ulong userId)
         {
@@ -116,7 +111,6 @@ namespace Discord
             return client.GetGuildBanAsync(guildId, userId).GetAwaiter().GetResult();
         }
 
-
         public static async Task UnbanGuildMemberAsync(this DiscordClient client, ulong guildId, ulong userId)
         {
             await client.HttpClient.DeleteAsync($"/guilds/{guildId}/bans/{userId}");
@@ -133,7 +127,6 @@ namespace Discord
         }
         #endregion
 
-
         public static async Task<ClientGuildSettings> ModifyGuildSettingsAsync(this DiscordClient client, ulong guildId, GuildSettingsProperties properties)
         {
             return (await client.HttpClient.PatchAsync($"/users/@me/guilds/{guildId}/settings", properties)).Deserialize<ClientGuildSettings>().SetClient(client);
@@ -143,7 +136,6 @@ namespace Discord
         {
             return client.ModifyGuildSettingsAsync(guildId, properties).GetAwaiter().GetResult();
         }
-
 
         public static async Task<IReadOnlyList<DiscordChannelSettings>> SetPrivateChannelSettingsAsync(this DiscordClient client, Dictionary<ulong, ChannelSettingsProperties> channels)
         {
@@ -159,7 +151,6 @@ namespace Discord
         {
             return client.SetPrivateChannelSettingsAsync(channels).GetAwaiter().GetResult();
         }
-
 
         public static async Task<IReadOnlyList<PartialGuild>> GetGuildsAsync(this DiscordClient client, uint limit = 100, ulong afterId = 0)
         {
@@ -177,7 +168,6 @@ namespace Discord
             return client.GetGuildsAsync(limit, afterId).GetAwaiter().GetResult();
         }
 
-
         public static async Task<DiscordGuild> GetGuildAsync(this DiscordClient client, ulong guildId)
         {
             return (await client.HttpClient.GetAsync("/guilds/" + guildId))
@@ -192,7 +182,6 @@ namespace Discord
         {
             return client.GetGuildAsync(guildId).GetAwaiter().GetResult();
         }
-
 
         public static async Task<GuildInvite> JoinGuildAsync(this DiscordClient client, string invCode, string captchaKey = null)
         {
@@ -209,7 +198,6 @@ namespace Discord
             return client.JoinGuildAsync(invCode).GetAwaiter().GetResult();
         }
 
-
         public static async Task LeaveGuildAsync(this DiscordClient client, ulong guildId, bool lurking = false)
         {
             await client.HttpClient.DeleteAsync($"/users/@me/guilds/{guildId}", $"{{\"lurking\":{lurking.ToString().ToLower()}}}");
@@ -224,7 +212,6 @@ namespace Discord
             client.LeaveGuildAsync(guildId, lurking).GetAwaiter().GetResult();
         }
 
-
         public static async Task AcknowledgeGuildMessagesAsync(this DiscordClient client, ulong guildId)
         {
             await client.HttpClient.PostAsync($"/guilds/{guildId}/ack");
@@ -238,7 +225,6 @@ namespace Discord
         {
             client.AcknowledgeGuildMessagesAsync(guildId).GetAwaiter().GetResult();
         }
-
 
         public static async Task<IImage> GetGoLivePreviewAsync(this DiscordClient client, ulong guildId, ulong channelId, ulong userId)
         {

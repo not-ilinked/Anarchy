@@ -19,7 +19,6 @@ namespace Discord
             return client.GetRelationshipsAsync().GetAwaiter().GetResult();
         }
 
-
         public static async Task SendFriendRequestAsync(this DiscordClient client, ulong userId)
         {
             await client.HttpClient.PutAsync("/users/@me/relationships/" + userId);
@@ -29,7 +28,6 @@ namespace Discord
         {
             client.SendFriendRequestAsync(userId).GetAwaiter().GetResult();
         }
-
 
         public static async Task SendFriendRequestAsync(this DiscordClient client, string username, uint discriminator)
         {
@@ -43,7 +41,6 @@ namespace Discord
         {
             client.SendFriendRequestAsync(username, discriminator).GetAwaiter().GetResult();
         }
-
 
         public static async Task BlockUserAsync(this DiscordClient client, ulong userId)
         {
@@ -59,7 +56,6 @@ namespace Discord
             client.BlockUserAsync(userId).GetAwaiter().GetResult();
         }
 
-
         public static async Task RemoveRelationshipAsync(this DiscordClient client, ulong userId)
         {
             await client.HttpClient.DeleteAsync($"/users/@me/relationships/{userId}");
@@ -73,7 +69,6 @@ namespace Discord
         {
             client.RemoveRelationshipAsync(userId).GetAwaiter().GetResult();
         }
-
 
         public static async Task<DiscordProfile> GetProfileAsync(this DiscordClient client, ulong userId)
         {
@@ -89,7 +84,6 @@ namespace Discord
         {
             return client.GetProfileAsync(userId).GetAwaiter().GetResult();
         }
-
 
         public static async Task<IReadOnlyList<DiscordUser>> GetMutualFriendsAsync(this DiscordClient client, ulong userId)
         {

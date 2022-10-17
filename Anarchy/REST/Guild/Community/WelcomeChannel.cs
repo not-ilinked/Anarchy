@@ -15,10 +15,8 @@ namespace Discord
         [JsonProperty("description")]
         public string Description { get; private set; }
 
-
         [JsonProperty("emoji_id")]
         public ulong? EmojiId { get; private set; }
-
 
         [JsonProperty("emoji_name")]
         public string EmojiName { get; private set; }

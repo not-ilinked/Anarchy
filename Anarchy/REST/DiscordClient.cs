@@ -38,12 +38,10 @@
             }
         }
 
-
         protected DiscordClient()
         {
             HttpClient = new DiscordHttpClient(this);
         }
-
 
         public DiscordClient(ApiConfig config = null) : this()
         {

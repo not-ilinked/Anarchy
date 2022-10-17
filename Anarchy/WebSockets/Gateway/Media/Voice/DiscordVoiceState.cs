@@ -14,7 +14,6 @@ namespace Discord.Gateway
             };
         }
 
-
         [JsonProperty("channel_id")]
         internal ulong? ChannelId { get; set; }
 
@@ -28,7 +27,6 @@ namespace Discord.Gateway
                     return null;
             }
         }
-
 
         [JsonProperty("member")]
         private readonly GuildMember _member;
@@ -45,10 +43,8 @@ namespace Discord.Gateway
             }
         }
 
-
         [JsonProperty("user_id")]
         public ulong UserId { get; private set; }
-
 
         [JsonProperty("guild_id")]
         private ulong? _guildId;
@@ -68,30 +64,23 @@ namespace Discord.Gateway
             }
         }
 
-
         [JsonProperty("mute")]
         public bool Muted { get; private set; }
-
 
         [JsonProperty("deaf")]
         public bool Deafened { get; private set; }
 
-
         [JsonProperty("self_deaf")]
         public bool SelfDeafened { get; private set; }
-
 
         [JsonProperty("self_mute")]
         public bool SelfMuted { get; private set; }
 
-
         [JsonProperty("self_video")]
         public bool Video { get; private set; }
 
-
         [JsonProperty("self_stream")]
         public bool Streaming { get; private set; }
-
 
         [JsonProperty("session_id")]
         internal string SessionId { get; private set; }

@@ -11,7 +11,6 @@ namespace Discord.Gateway
             Message = msg;
         }
 
-
         public override string ToString()
         {
             return Message.ToString();

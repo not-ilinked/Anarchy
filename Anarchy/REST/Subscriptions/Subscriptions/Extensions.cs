@@ -19,13 +19,12 @@ namespace Discord
             return client.GetActiveSubscriptionAsync().GetAwaiter().GetResult();
         }
 
-
         public static async Task<DiscordActiveSubscription> PurchaseSubscriptionAsync(this DiscordClient client, ulong paymentMethodId, ulong skuId, uint additionalBoosts = 0)
         {
             List<AdditionalSubscriptionPlan> plans = new List<AdditionalSubscriptionPlan>();
 
             if (additionalBoosts > 0)
-                plans.Add(new AdditionalSubscriptionPlan() { Id = DiscordNitroSubTypes.GuildBoost.SubscriptionPlanId, Quantity = (int)additionalBoosts });
+                plans.Add(new AdditionalSubscriptionPlan() { Id = DiscordNitroSubTypes.GuildBoost.SubscriptionPlanId, Quantity = (int) additionalBoosts });
 
             return (await client.HttpClient.PostAsync("/users/@me/billing/subscriptions", $"{{\"plan_id\":{skuId},\"payment_source_id\":{paymentMethodId},\"additional_plans\":{JsonConvert.SerializeObject(plans)}}}"))
                                 .Deserialize<DiscordActiveSubscription>();

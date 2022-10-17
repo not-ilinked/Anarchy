@@ -10,10 +10,8 @@ namespace Discord
         [JsonProperty("name")]
         public string Name { get; set; }
 
-
         [JsonProperty("region")]
         public string Region { get; set; }
-
 
         [JsonProperty("icon")]
         public DiscordImage Icon { get; set; }

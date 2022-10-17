@@ -15,12 +15,10 @@ namespace Discord
             set { BitrateProperty.Value = value; }
         }
 
-
         public bool ShouldSerializeBitrate()
         {
             return BitrateProperty.Set;
         }
-
 
         private readonly DiscordParameter<uint> UserLimitProperty = new DiscordParameter<uint>();
         [JsonProperty("user_limit")]
@@ -29,7 +27,6 @@ namespace Discord
             get { return UserLimitProperty; }
             set { UserLimitProperty.Value = value; }
         }
-
 
         public bool ShouldSerializeUserLimit()
         {

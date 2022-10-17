@@ -26,7 +26,6 @@ namespace Discord
             return client.GetGuildChannelsAsync(guildId).GetAwaiter().GetResult();
         }
 
-
         public static async Task<GuildChannel> CreateGuildChannelAsync(this DiscordClient client, ulong guildId, string name, ChannelType type, ulong? parentId = null)
         {
             var channel = (await client.HttpClient.PostAsync($"/guilds/{guildId}/channels", new GuildChannelCreationProperties() { Name = name, Type = type, ParentId = parentId }))
@@ -47,7 +46,6 @@ namespace Discord
             return client.CreateGuildChannelAsync(guildId, name, type, parentId).GetAwaiter().GetResult();
         }
 
-
         public static async Task<DiscordPermissionOverwrite> AddPermissionOverwriteAsync(this DiscordClient client, ulong channelId, ulong affectedId, PermissionOverwriteType type, DiscordPermission allow, DiscordPermission deny)
         {
             var overwrite = new DiscordPermissionOverwrite() { AffectedId = affectedId, Type = type, Allow = allow, Deny = deny };
@@ -66,7 +64,6 @@ namespace Discord
         {
             return client.AddPermissionOverwriteAsync(channelId, affectedId, type, allow, deny).GetAwaiter().GetResult();
         }
-
 
         public static async Task RemovePermissionOverwriteAsync(this DiscordClient client, ulong channelId, ulong affectedId)
         {
@@ -99,7 +96,6 @@ namespace Discord
 
         public static DiscordStageInstance CreateStageInstance(this DiscordClient client, ulong channelId, string topic, StagePrivacyLevel privacyLevel = StagePrivacyLevel.GuildOnly) =>
             client.CreateStageInstanceAsync(channelId, topic, privacyLevel).GetAwaiter().GetResult();
-
 
         public static Task DeleteStageInstanceAsync(this DiscordClient client, ulong channelId) => client.HttpClient.DeleteAsync("/stage-instances/" + channelId);
         public static void DeleteStageInstance(this DiscordClient client, ulong channelId) => client.DeleteStageInstanceAsync(channelId).GetAwaiter().GetResult();

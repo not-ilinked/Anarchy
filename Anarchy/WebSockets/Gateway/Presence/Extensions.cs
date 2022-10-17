@@ -16,7 +16,6 @@ namespace Discord.Gateway
             }
         }
 
-
         /// <summary>
         /// Updates the client's presence
         /// </summary>
@@ -24,7 +23,6 @@ namespace Discord.Gateway
         {
             client.Send(GatewayOpcode.PresenceChange, presence);
         }
-
 
         /// <summary>
         /// Changes the client's status (online, idle, dnd or invisible)
@@ -34,7 +32,6 @@ namespace Discord.Gateway
         {
             client.UpdatePresence(new PresenceProperties() { Status = status });
         }
-
 
         /// <summary>
         /// Sets the client's activity

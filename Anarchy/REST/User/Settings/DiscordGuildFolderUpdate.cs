@@ -15,18 +15,14 @@ namespace Discord
             _rnd = new Random();
         }
 
-
         [JsonProperty("guild_ids")]
         public List<ulong> Guilds { get; set; }
-
 
         [JsonProperty("id")]
         public long? Id { get; internal set; }
 
-
         [JsonProperty("name")]
         public string Name { get; set; }
-
 
         [JsonProperty("color")]
         private int? _color;
@@ -53,7 +49,6 @@ namespace Discord
             }
         }
 
-
         public bool Folder
         {
             get { return Id.HasValue; }
@@ -62,13 +57,12 @@ namespace Discord
                 if (value)
                 {
                     if (!Id.HasValue)
-                        Id = (long)_rnd.Next(1, 999999);
+                        Id = (long) _rnd.Next(1, 999999);
                 }
                 else
                     Id = null;
             }
         }
-
 
         public static List<DiscordGuildFolderUpdate> FromSettings(DiscordUserSettings settings)
         {

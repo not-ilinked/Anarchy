@@ -9,14 +9,11 @@ namespace Discord
             OnClientUpdated += (sender, e) => Emoji.SetClient(Client);
         }
 
-
         [JsonProperty("emoji")]
         public PartialEmoji Emoji { get; private set; }
 
-
         [JsonProperty("message_id")]
         public ulong MessageId { get; private set; }
-
 
         [JsonProperty("channel_id")]
         private readonly ulong _channelId;
@@ -29,7 +26,6 @@ namespace Discord
             }
         }
 
-
         [JsonProperty("guild_id")]
         private readonly ulong _guildId;
 
@@ -41,10 +37,8 @@ namespace Discord
             }
         }
 
-
         [JsonProperty("user_id")]
         public ulong UserId { get; private set; }
-
 
         public override string ToString()
         {

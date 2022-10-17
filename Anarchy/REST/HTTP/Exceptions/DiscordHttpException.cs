@@ -11,7 +11,7 @@ namespace Discord
 
         public FieldErrorDictionary InvalidFields { get; private set; }
 
-        public DiscordHttpException(DiscordHttpError error) : base($"{(int)error.Code} {error.Message}")
+        public DiscordHttpException(DiscordHttpError error) : base($"{(int) error.Code} {error.Message}")
         {
             Code = error.Code;
             ErrorMessage = error.Message;
@@ -27,7 +27,7 @@ namespace Discord
             foreach (JProperty child in obj.Children())
             {
                 if (child.Name == "_errors") dict.Errors = child.Value.ToObject<List<DiscordFieldError>>();
-                else dict[child.Name] = FindErrors((JObject)child.Value);
+                else dict[child.Name] = FindErrors((JObject) child.Value);
             }
 
             return dict;

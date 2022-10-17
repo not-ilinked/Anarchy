@@ -19,7 +19,6 @@ namespace Discord
             return client.GetPrivateChannelsAsync().GetAwaiter().GetResult();
         }
 
-
         public static async Task<PrivateChannel> CreateDMAsync(this DiscordClient client, ulong recipientId)
         {
             return (await client.HttpClient.PostAsync($"/users/@me/channels", $"{{\"recipient_id\":\"{recipientId}\"}}"))
@@ -35,7 +34,6 @@ namespace Discord
         {
             return client.CreateDMAsync(recipientId).GetAwaiter().GetResult();
         }
-
 
         public static async Task ChangePrivateCallRegionAsync(this DiscordClient client, ulong channelId, string regionId)
         {

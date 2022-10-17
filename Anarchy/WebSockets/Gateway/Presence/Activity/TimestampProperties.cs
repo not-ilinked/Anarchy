@@ -24,7 +24,6 @@ namespace Discord.Gateway
             }
         }
 
-
         public bool ShouldSerialize_startValue()
         {
             return _startParam.Set;

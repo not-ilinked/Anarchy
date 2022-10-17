@@ -7,12 +7,10 @@ namespace Discord
         [JsonProperty("id")]
         public ulong Id { get; private set; }
 
-
         [JsonProperty("channel_id")]
         private readonly ulong _channelId;
 
         public MinimalTextChannel Channel => new MinimalTextChannel(_channelId).SetClient(Client);
-
 
         [JsonProperty("guild_id")]
         private readonly ulong _guildId;
@@ -24,7 +22,6 @@ namespace Discord
                 return new MinimalGuild(_guildId).SetClient(Client);
             }
         }
-
 
         public static implicit operator ulong(DeletedMessage instance)
         {

@@ -17,7 +17,6 @@ namespace Discord
             return _contentProperty.Set;
         }
 
-
         private DiscordParameter<DiscordEmbed> _embedProperty = new DiscordParameter<DiscordEmbed>();
         [JsonProperty("embed")]
         public DiscordEmbed Embed
@@ -30,7 +29,6 @@ namespace Discord
         {
             return _embedProperty.Set;
         }
-
 
         private DiscordParameter<MessageFlags> _flagProperty = new DiscordParameter<MessageFlags>();
         [JsonProperty("flags")]

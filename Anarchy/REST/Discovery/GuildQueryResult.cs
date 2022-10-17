@@ -16,7 +16,6 @@ namespace Discord
         [JsonProperty("total")]
         public uint Total { get; private set; }
 
-
         [JsonProperty("guilds")]
         public IReadOnlyList<DiscoveryGuild> Guilds { get; private set; }
     }

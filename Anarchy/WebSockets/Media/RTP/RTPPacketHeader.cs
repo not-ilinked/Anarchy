@@ -24,7 +24,7 @@ namespace Discord.Media
         {
             get
             {
-                return HasExtensions ? (byte)0x90 : (byte)0x80;
+                return HasExtensions ? (byte) 0x90 : (byte) 0x80;
             }
         }
 
@@ -65,8 +65,8 @@ namespace Discord.Media
                 if (ExtraExtensionData != null)
                     Buffer.BlockCopy(ExtraExtensionData, 0, extensions, 0, Math.Min(ExtraExtensionData.Length, ExtensionLength / 2));
 
-                extensions[2] = (byte)(Extensions.Count >> 8);
-                extensions[3] = (byte)(Extensions.Count >> 0);
+                extensions[2] = (byte) (Extensions.Count >> 8);
+                extensions[3] = (byte) (Extensions.Count >> 0);
 
                 for (int i = 0; i < Extensions.Count; i++)
                     Buffer.BlockCopy(Extensions[i], 0, extensions, (i + 1) * ExtensionLength, ExtensionLength);
@@ -79,16 +79,16 @@ namespace Discord.Media
             byte[] header = new byte[HeaderLength];
             header[0] = Flags;
             header[1] = Type;
-            header[2] = (byte)(Sequence >> 8);
-            header[3] = (byte)(Sequence >> 0);
-            header[4] = (byte)(Timestamp >> 24);
-            header[5] = (byte)(Timestamp >> 16);
-            header[6] = (byte)(Timestamp >> 8);
-            header[7] = (byte)(Timestamp >> 0);
-            header[8] = (byte)(SSRC >> 24);
-            header[9] = (byte)(SSRC >> 16);
-            header[10] = (byte)(SSRC >> 8);
-            header[11] = (byte)(SSRC >> 0);
+            header[2] = (byte) (Sequence >> 8);
+            header[3] = (byte) (Sequence >> 0);
+            header[4] = (byte) (Timestamp >> 24);
+            header[5] = (byte) (Timestamp >> 16);
+            header[6] = (byte) (Timestamp >> 8);
+            header[7] = (byte) (Timestamp >> 0);
+            header[8] = (byte) (SSRC >> 24);
+            header[9] = (byte) (SSRC >> 16);
+            header[10] = (byte) (SSRC >> 8);
+            header[11] = (byte) (SSRC >> 0);
             Buffer.BlockCopy(header, 0, packet, 0, HeaderLength);
 
             Buffer.BlockCopy(extensions, 0, packet, header.Length, extensions.Length);
@@ -98,7 +98,6 @@ namespace Discord.Media
 
             return packet;
         }
-
 
         public static RTPPacketHeader Read(byte[] secretKey, byte[] packet, out byte[] payload)
         {

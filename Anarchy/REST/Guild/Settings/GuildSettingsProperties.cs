@@ -13,12 +13,10 @@ namespace Discord
             set { _supressProperty.Value = value; }
         }
 
-
         public bool ShouldSerializeSupressEveryone()
         {
             return _supressProperty.Set;
         }
-
 
         private readonly DiscordParameter<bool> _supressRolesProperty = new DiscordParameter<bool>();
         [JsonProperty("supress_roles")]
@@ -28,12 +26,10 @@ namespace Discord
             set { _supressRolesProperty.Value = value; }
         }
 
-
         public bool ShouldSerializeSupressRoles()
         {
             return _supressRolesProperty.Set;
         }
-
 
         private readonly DiscordParameter<Dictionary<ulong, ChannelSettingsProperties>> _channelsProperty = new DiscordParameter<Dictionary<ulong, ChannelSettingsProperties>>();
         [JsonProperty("channel_overrides")]

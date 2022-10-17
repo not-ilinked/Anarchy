@@ -25,18 +25,14 @@ namespace Discord
 
         public MinimalGuild Guild { get; private set; }
 
-
         [JsonProperty("position")]
         public uint Position { get; protected set; }
-
 
         [JsonProperty("parent_id")]
         public ulong? ParentId { get; protected set; }
 
-
         [JsonProperty("permission_overwrites")]
         public IReadOnlyList<DiscordPermissionOverwrite> PermissionOverwrites { get; protected set; }
-
 
         protected void Update(GuildChannel channel)
         {
@@ -46,10 +42,9 @@ namespace Discord
             PermissionOverwrites = channel.PermissionOverwrites;
         }
 
-
         public new async Task UpdateAsync()
         {
-            Update((GuildChannel)await Client.GetChannelAsync(Id));
+            Update((GuildChannel) await Client.GetChannelAsync(Id));
         }
 
         /// <summary>
@@ -59,7 +54,6 @@ namespace Discord
         {
             UpdateAsync().GetAwaiter().GetResult();
         }
-
 
         public async Task ModifyAsync(GuildChannelProperties properties)
         {
@@ -74,7 +68,6 @@ namespace Discord
         {
             ModifyAsync(properties).GetAwaiter().GetResult();
         }
-
 
         public async Task AddPermissionOverwriteAsync(ulong affectedId, PermissionOverwriteType type, DiscordPermission allow, DiscordPermission deny)
         {
@@ -99,7 +92,6 @@ namespace Discord
             AddPermissionOverwriteAsync(affectedId, type, allow, deny).GetAwaiter().GetResult();
         }
 
-
         public async Task RemovePermissionOverwriteAsync(ulong affectedId)
         {
             await Client.RemovePermissionOverwriteAsync(Id, affectedId);
@@ -121,7 +113,6 @@ namespace Discord
         {
             RemovePermissionOverwriteAsync(affectedId).GetAwaiter().GetResult();
         }
-
 
         public string AsMessagable()
         {

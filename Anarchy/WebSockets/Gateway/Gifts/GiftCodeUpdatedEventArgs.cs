@@ -7,10 +7,8 @@ namespace Discord.Gateway
     {
         public JObject Json { get; internal set; }
 
-
         [JsonProperty("uses")]
         public uint Uses { get; private set; }
-
 
         [JsonProperty("channel_id")]
         private readonly ulong _channelId;
@@ -19,7 +17,6 @@ namespace Discord.Gateway
         {
             get { return new MinimalTextChannel(_channelId).SetClient(Client); }
         }
-
 
         [JsonProperty("guild_id")]
         private readonly ulong _guildId;

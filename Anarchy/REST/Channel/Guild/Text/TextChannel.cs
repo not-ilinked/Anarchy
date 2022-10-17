@@ -13,14 +13,11 @@ namespace Discord
         [JsonProperty("topic")]
         public string Topic { get; private set; }
 
-
         [JsonProperty("nsfw")]
         public bool Nsfw { get; private set; }
 
-
         [JsonProperty("last_message_id")]
         public ulong? LastMessageId { get; private set; }
-
 
         private int _slowMode;
         [JsonProperty("rate_limit_per_user")]
@@ -29,7 +26,6 @@ namespace Discord
             get { return _slowMode; }
             private set { _slowMode = value * 10; } //convert to milliseconds
         }
-
 
         protected void Update(TextChannel channel)
         {
@@ -40,10 +36,9 @@ namespace Discord
             SlowMode = channel.SlowMode;
         }
 
-
         public new async Task UpdateAsync()
         {
-            Update((TextChannel)await Client.GetChannelAsync(Id));
+            Update((TextChannel) await Client.GetChannelAsync(Id));
         }
 
         /// <summary>
@@ -53,7 +48,6 @@ namespace Discord
         {
             UpdateAsync().GetAwaiter().GetResult();
         }
-
 
         public async Task ModifyAsync(TextChannelProperties properties)
         {
@@ -71,7 +65,6 @@ namespace Discord
         {
             ModifyAsync(properties).GetAwaiter().GetResult();
         }
-
 
         #region messages
         public async Task TriggerTypingAsync()
@@ -123,7 +116,6 @@ namespace Discord
             return SendMessageAsync(embed).GetAwaiter().GetResult();
         }
 
-
         public async Task<DiscordMessage> SendFileAsync(string fileName, byte[] fileData, string message = null, bool tts = false)
         {
             return await Client.SendFileAsync(Id, fileName, fileData, message, tts);
@@ -134,7 +126,6 @@ namespace Discord
             return SendFileAsync(fileName, fileData, message, tts).Result;
         }
 
-
         public async Task<DiscordMessage> SendFileAsync(string filePath, string message = null, bool tts = false)
         {
             return await Client.SendFileAsync(Id, filePath, message, tts);
@@ -144,7 +135,6 @@ namespace Discord
         {
             return SendFileAsync(filePath, message, tts).Result;
         }
-
 
         public async Task DeleteMessagesAsync(List<ulong> messages)
         {
@@ -161,7 +151,6 @@ namespace Discord
             DeleteMessagesAsync(messages).GetAwaiter().GetResult();
         }
 
-
         public async Task<IReadOnlyList<DiscordMessage>> GetMessagesAsync(MessageFilters filters = null)
         {
             return await Client.GetChannelMessagesAsync(Id, filters);
@@ -176,7 +165,6 @@ namespace Discord
             return GetMessagesAsync(filters).GetAwaiter().GetResult();
         }
 
-
         public async Task<IReadOnlyList<DiscordMessage>> GetPinnedMessagesAsync()
         {
             return await Client.GetPinnedMessagesAsync(Id);
@@ -189,7 +177,6 @@ namespace Discord
         {
             return GetPinnedMessagesAsync().Result;
         }
-
 
         public async Task PinMessageAsync(ulong messageId)
         {
@@ -204,7 +191,6 @@ namespace Discord
         {
             PinMessageAsync(messageId).GetAwaiter().GetResult();
         }
-
 
         public async Task UnpinMessageAsync(ulong messageId)
         {
@@ -221,7 +207,6 @@ namespace Discord
         }
         #endregion
 
-
         public async Task<ulong> FollowAsync(ulong crosspostChannelId)
         {
             return await Client.FollowChannelAsync(Id, crosspostChannelId);
@@ -234,7 +219,6 @@ namespace Discord
 
             return FollowAsync(crosspostChannelId).GetAwaiter().GetResult();
         }
-
 
         public async Task<DiscordInvite> CreateInviteAsync(InviteProperties properties = null)
         {
@@ -251,7 +235,6 @@ namespace Discord
             return CreateInviteAsync(properties).GetAwaiter().GetResult();
         }
 
-
         public async Task<IReadOnlyList<DiscordWebhook>> GetWebhooksAsync()
         {
             return await Client.GetChannelWebhooksAsync(Id);
@@ -264,7 +247,6 @@ namespace Discord
         {
             return GetWebhooksAsync().GetAwaiter().GetResult();
         }
-
 
         public async Task<DiscordDefaultWebhook> CreateWebhookAsync(DiscordWebhookProperties properties)
         {
@@ -281,20 +263,17 @@ namespace Discord
             return CreateWebhookAsync(properties).Result;
         }
 
-
         public Task<DiscordThread> CreateThreadAsync(ulong messageId, string name, TimeSpan ttl)
             => Client.CreateThreadAsync(Id, messageId, name, ttl);
 
         public DiscordThread CreateThread(ulong messageId, string name, TimeSpan ttl)
             => CreateThreadAsync(messageId, name, ttl).GetAwaiter().GetResult();
 
-
         public Task<DiscordThread> CreateThreadAsync(string name, TimeSpan ttl)
             => Client.CreateThreadAsync(Id, name, ttl);
 
         public DiscordThread CreateThread(string name, TimeSpan ttl)
             => CreateThreadAsync(name, ttl).GetAwaiter().GetResult();
-
 
         internal override void SetLastMessageId(ulong id)
         {

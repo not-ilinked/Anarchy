@@ -17,7 +17,6 @@ namespace Discord
             return client.BoostGuildAsync(guildId, boosts).GetAwaiter().GetResult();
         }
 
-
         public static async Task RemoveGuildBoostAsync(this DiscordClient client, ulong guildId, ulong subscriptionId)
         {
             await client.HttpClient.DeleteAsync($"/guilds/{guildId}/premium/subscriptions/{subscriptionId}");
@@ -27,7 +26,6 @@ namespace Discord
         {
             client.RemoveGuildBoostAsync(guildId, subscriptionId).GetAwaiter().GetResult();
         }
-
 
         public static async Task<IReadOnlyList<DiscordBoostSlot>> GetBoostSlotsAsync(this DiscordClient client)
         {
@@ -39,10 +37,9 @@ namespace Discord
             return client.GetBoostSlotsAsync().GetAwaiter().GetResult();
         }
 
-
         public static async Task<DiscordActiveSubscription> SetAdditionalBoostsAsync(this DiscordClient client, ulong paymentMethodId, ulong activeSubscriptionId, uint amount)
         {
-            string plan = JsonConvert.SerializeObject(new AdditionalSubscriptionPlan() { Id = DiscordNitroSubTypes.GuildBoost.SubscriptionPlanId, Quantity = (int)amount });
+            string plan = JsonConvert.SerializeObject(new AdditionalSubscriptionPlan() { Id = DiscordNitroSubTypes.GuildBoost.SubscriptionPlanId, Quantity = (int) amount });
 
             return (await client.HttpClient.PatchAsync("/users/@me/billing/subscriptions/" + activeSubscriptionId, $"{{\"payment_source_id\":{paymentMethodId},\"additional_plans\":[{plan}]}}")).Deserialize<DiscordActiveSubscription>();
         }

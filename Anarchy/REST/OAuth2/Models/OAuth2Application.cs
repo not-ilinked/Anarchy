@@ -15,14 +15,11 @@ namespace Discord
             };
         }
 
-
         [JsonProperty("id")]
         public ulong Id { get; private set; }
 
-
         [JsonProperty("name")]
         public string Name { get; private set; }
-
 
         [JsonProperty("icon")]
         private string _iconHash;
@@ -38,38 +35,29 @@ namespace Discord
             }
         }
 
-
         [JsonProperty("description")]
         public string Description { get; private set; }
-
 
         [JsonProperty("summary")]
         public string Summary { get; private set; }
 
-
         [JsonProperty("verify_key")]
         public string VerifyKey { get; private set; }
-
 
         [JsonProperty("bot_public")]
         public bool PublicBot { get; private set; }
 
-
         [JsonProperty("bot_require_code_grant")]
         public bool RequiresCodeGrant { get; private set; }
-
 
         [JsonProperty("owner")]
         public DiscordUser Owner { get; private set; }
 
-
         [JsonProperty("bot")]
         public ApplicationBot Bot { get; private set; }
 
-
         [JsonProperty("redirect_uris")]
         public IReadOnlyList<string> RedirectUris { get; private set; }
-
 
         private void Update(OAuth2Application app)
         {
@@ -85,7 +73,6 @@ namespace Discord
             RedirectUris = app.RedirectUris;
         }
 
-
         public async Task UpdateAsync()
         {
             Update(await Client.GetApplicationAsync(Id));
@@ -95,7 +82,6 @@ namespace Discord
         {
             UpdateAsync().GetAwaiter().GetResult();
         }
-
 
         public async Task ModifyAsync(DiscordApplicationProperties properties)
         {
@@ -107,12 +93,10 @@ namespace Discord
             ModifyAsync(properties).GetAwaiter().GetResult();
         }
 
-
         public ApplicationBot AddBot()
         {
             return Bot = Client.AddBotToApplication(Id);
         }
-
 
         public async Task DeleteAsync()
         {
@@ -123,7 +107,6 @@ namespace Discord
         {
             DeleteAsync().GetAwaiter().GetResult();
         }
-
 
         public static implicit operator ulong(OAuth2Application instance)
         {

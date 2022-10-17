@@ -10,18 +10,15 @@ namespace Discord
 
         public bool ShouldSerializeName() => Name != null;
 
-
         [JsonProperty("description")]
         public string Description { get; set; }
 
         public bool ShouldSerializeDescription() => Description != null;
 
-
         [JsonProperty("options")]
         public List<ApplicationCommandOption> Options { get; set; }
 
         public bool ShouldSerializeOptions() => Options != null;
-
 
         [JsonProperty("flags")]
         private int Flags => 64;

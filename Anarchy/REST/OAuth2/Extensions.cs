@@ -28,7 +28,6 @@ namespace Discord
             client.DeauthorizeAppAsync(appId).GetAwaiter().GetResult();
         }
 
-
         public static async Task AuthorizeBotAsync(this DiscordClient client, ulong botId, ulong guildId, DiscordPermission permissions, string captchaKey)
         {
             await client.HttpClient.PostAsync($"/oauth2/authorize?client_id={botId}&scope=bot", JsonConvert.SerializeObject(new DiscordBotAuthProperties()
@@ -51,7 +50,6 @@ namespace Discord
             client.AuthorizeBotAsync(botId, guildId, permissions, captchaKey).GetAwaiter().GetResult();
         }
 
-
         public static async Task<string> AuthorizeAppAsync(this DiscordClient client, ulong appId, string scope)
         {
             return (await client.HttpClient.PostAsync($"/oauth2/authorize?client_id={appId}&response_type=code&scope={scope}")).Deserialize<JObject>().Value<string>("location");
@@ -68,7 +66,6 @@ namespace Discord
             return client.AuthorizeAppAsync(appId, scope).GetAwaiter().GetResult();
         }
 
-
         public static async Task<IReadOnlyList<OAuth2Application>> GetApplicationsAsync(this DiscordClient client)
         {
             return (await client.HttpClient.GetAsync("/applications?with_team_applications=true"))
@@ -83,7 +80,6 @@ namespace Discord
             return client.GetApplicationsAsync().GetAwaiter().GetResult();
         }
 
-
         public static async Task<OAuth2Application> GetApplicationAsync(this DiscordClient client, ulong id)
         {
             return (await client.HttpClient.GetAsync("/applications/" + id)).Deserialize<OAuth2Application>().SetClient(client);
@@ -97,7 +93,6 @@ namespace Discord
         {
             return client.GetApplicationAsync(id).GetAwaiter().GetResult();
         }
-
 
         public static async Task<OAuth2Application> CreateApplicationAsync(this DiscordClient client, string name)
         {
@@ -114,7 +109,6 @@ namespace Discord
             return client.CreateApplicationAsync(name).GetAwaiter().GetResult();
         }
 
-
         public static async Task<OAuth2Application> ModifyApplicationAsync(this DiscordClient client, ulong id, DiscordApplicationProperties properties)
         {
             return (await client.HttpClient.PatchAsync("/applications/" + id, properties)).Deserialize<OAuth2Application>().SetClient(client);
@@ -130,7 +124,6 @@ namespace Discord
             return client.ModifyApplicationAsync(id, properties).GetAwaiter().GetResult();
         }
 
-
         public static async Task<ApplicationBot> AddBotToApplicationAsync(this DiscordClient client, ulong appId)
         {
             return (await client.HttpClient.PostAsync($"/oauth2/applications/{appId}/bot")).Deserialize<ApplicationBot>().SetClient(client);
@@ -145,7 +138,6 @@ namespace Discord
         {
             return client.AddBotToApplicationAsync(appId).GetAwaiter().GetResult();
         }
-
 
         public static async Task DeleteApplicationAsync(this DiscordClient client, ulong appId)
         {

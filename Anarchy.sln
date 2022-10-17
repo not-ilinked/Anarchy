@@ -7,6 +7,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{DF
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{48CAFB24-2F02-4E07-9E8E-CE64AA5A3C49}"
 	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
 		.gitignore = .gitignore
 		Changelog.md = Changelog.md
 	EndProjectSection
@@ -96,5 +97,8 @@ Global
 		{738BFD53-BB0D-45F7-A904-4FFD980C5A87} = {DF7071F8-A2B3-419A-951F-94946CFF12FC}
 		{A34F8993-D2B3-4F92-9CB3-DA7AACEA6186} = {DF7071F8-A2B3-419A-951F-94946CFF12FC}
 		{7EBF4ED8-CC72-41CB-ACE6-BFE6E5BB3FA8} = {DF7071F8-A2B3-419A-951F-94946CFF12FC}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A4CAD5AB-8223-4E10-8E41-A16FFED6C015}
 	EndGlobalSection
 EndGlobal

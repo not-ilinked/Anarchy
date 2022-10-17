@@ -26,7 +26,7 @@ namespace Discord.Media
             fixed (byte* inPtr = input)
             fixed (byte* outPtr = output)
                 result = Decode(_ptr, inPtr + inputOffset, inputCount, outPtr + outputOffset, FrameSamplesPerChannel, decodeFEC ? 1 : 0);
-            CheckError((OpusError)result);
+            CheckError((OpusError) result);
             return result * SampleBytes;
         }
     }

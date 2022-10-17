@@ -28,7 +28,6 @@ namespace Discord
             };
         }
 
-
         [JsonProperty("discovery_splash")]
         private string _discoverySplashHash;
 
@@ -43,18 +42,14 @@ namespace Discord
             }
         }
 
-
         [JsonProperty("max_members")]
         public uint MaxMembers { get; private set; }
-
 
         [JsonProperty("max_video_channel_users")]
         public uint MaxLivestreams { get; private set; }
 
-
         [JsonProperty("preferred_locale")]
         public DiscordLanguage? PreferredLanguage { get; private set; }
-
 
         [JsonProperty("rules_channel_id")]
         private ulong? _rulesChannelId;
@@ -70,7 +65,6 @@ namespace Discord
             }
         }
 
-
         [JsonProperty("public_updates_channel_id")]
         private ulong? _updateChannelId;
 
@@ -85,26 +79,20 @@ namespace Discord
             }
         }
 
-
         [JsonProperty("unavailable")]
         public bool Unavailable { get; internal set; }
-
 
         [JsonProperty("premium_subscription_count")]
         public uint? NitroBoosts { get; private set; }
 
-
         [JsonProperty("region")]
         public string Region { get; private set; }
-
 
         [JsonProperty("default_message_notifications")]
         public GuildDefaultNotifications DefaultNotifications { get; private set; }
 
-
         [JsonProperty("premium_tier")]
         public GuildPremiumTier PremiumTier { get; private set; }
-
 
         [JsonProperty("roles")]
         internal ConcurrentList<DiscordRole> _roles;
@@ -121,7 +109,6 @@ namespace Discord
                 return Unavailable ? null : Roles.First(r => r.Name == "@everyone");
             }
         }
-
 
         [JsonProperty("emojis")]
         internal List<DiscordEmoji> _emojis;
@@ -140,28 +127,22 @@ namespace Discord
             }
         }
 
-
         [JsonProperty("owner_id")]
         public ulong OwnerId { get; private set; }
-
 
         [JsonProperty("mfa_level")]
         public bool MfaRequired { get; private set; }
 
-
         [JsonProperty("system_channel_id")]
         private ulong? _sysChannelId;
 
-
         [JsonProperty("system_channel_flags")]
         private int _sysChannelFlags;
-
 
         public SystemChannelInformation SystemChannel
         {
             get { return new SystemChannelInformation(_sysChannelId, _sysChannelFlags).SetClient(Client); }
         }
-
 
         internal void Update(DiscordGuild guild)
         {
@@ -183,7 +164,6 @@ namespace Discord
             _sysChannelFlags = guild._sysChannelFlags;
         }
 
-
         public async Task UpdateAsync()
         {
             Update(await Client.GetGuildAsync(Id));
@@ -196,7 +176,6 @@ namespace Discord
         {
             UpdateAsync().GetAwaiter().GetResult();
         }
-
 
         public new async Task ModifyAsync(GuildProperties properties)
         {
@@ -211,7 +190,6 @@ namespace Discord
         {
             ModifyAsync(properties).GetAwaiter().GetResult();
         }
-
 
         public override async Task<IReadOnlyList<DiscordRole>> GetRolesAsync()
         {
@@ -229,7 +207,6 @@ namespace Discord
             return GetRolesAsync().Result;
         }
 
-
         public override async Task<IReadOnlyList<DiscordRole>> SetRolePositionsAsync(List<RolePositionUpdate> positions)
         {
             var roles = await base.SetRolePositionsAsync(positions);
@@ -243,7 +220,6 @@ namespace Discord
             return SetRolePositionsAsync(roles).GetAwaiter().GetResult();
         }
 
-
         public override async Task<IReadOnlyList<DiscordEmoji>> GetEmojisAsync()
         {
             return _emojis = (await base.GetEmojisAsync()).ToList();
@@ -256,7 +232,6 @@ namespace Discord
         {
             return GetEmojisAsync().Result;
         }
-
 
         public new void Dispose()
         {

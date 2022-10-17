@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 
 namespace Discord
 {
-    class ImageJsonConverter : JsonConverter<DiscordImage>
+    internal class ImageJsonConverter : JsonConverter<DiscordImage>
     {
         public override bool CanRead => false;
 

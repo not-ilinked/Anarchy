@@ -7,7 +7,6 @@ namespace Discord.Gateway
         [JsonProperty("code")]
         public string Code { get; private set; }
 
-
         [JsonProperty("guild_id")]
         private readonly ulong? _guildId;
 
@@ -21,7 +20,6 @@ namespace Discord.Gateway
                     return null;
             }
         }
-
 
         [JsonProperty("channel_id")]
         private readonly ulong _channelId;

@@ -8,7 +8,6 @@ namespace Discord
         [JsonProperty("description")]
         public string Description { get; protected set; }
 
-
         [JsonProperty("splash")]
         private string _splashHash;
 
@@ -23,18 +22,14 @@ namespace Discord
             }
         }
 
-
         [JsonProperty("features")]
         public IReadOnlyList<string> Features { get; private set; }
-
 
         [JsonProperty("vanity_url_code")]
         public string VanityInvite { get; private set; }
 
-
         [JsonProperty("verification_level")]
         public GuildVerificationLevel VerificationLevel { get; private set; }
-
 
         protected void Update(InviteGuild guild)
         {

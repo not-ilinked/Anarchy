@@ -22,7 +22,6 @@ namespace Discord
             client.RingAsync(channelId, recipients).GetAwaiter().GetResult();
         }
 
-
         public static async Task StartCallAsync(this DiscordClient client, ulong channelId)
         {
             await client.RingAsync(channelId, null);
@@ -35,7 +34,6 @@ namespace Discord
         {
             client.StartCallAsync(channelId).GetAwaiter().GetResult();
         }
-
 
         public static async Task StopRingingAsync(this DiscordClient client, ulong channelId, List<ulong> recipients)
         {
@@ -53,7 +51,6 @@ namespace Discord
             client.StopRingingAsync(channelId, recipients).GetAwaiter().GetResult();
         }
 
-
         public static async Task DeclineCallAsync(this DiscordClient client, ulong channelId)
         {
             await client.StopRingingAsync(channelId, null);
@@ -66,7 +63,6 @@ namespace Discord
         {
             client.DeclineCallAsync(channelId).GetAwaiter().GetResult();
         }
-
 
         public static async Task<IReadOnlyList<VoiceRegion>> GetVoiceRegionsAsync(this DiscordClient client)
         {

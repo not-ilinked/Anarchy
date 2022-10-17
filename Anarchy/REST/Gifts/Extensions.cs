@@ -24,7 +24,6 @@ namespace Discord
             return client.PurchaseGiftAsync(paymentMethodId, skuId, subPlanId, expectedAmount).GetAwaiter().GetResult();
         }
 
-
         public static async Task<IReadOnlyList<DiscordGift>> GetGiftInventoryAsync(this DiscordClient client)
         {
             return (await client.HttpClient.GetAsync("/users/@me/entitlements/gifts")).Deserialize<IReadOnlyList<DiscordGift>>();
@@ -34,7 +33,6 @@ namespace Discord
         {
             return client.GetGiftInventoryAsync().GetAwaiter().GetResult();
         }
-
 
         public static async Task<IReadOnlyList<RedeemableDiscordGift>> QueryGiftCodesAsync(this DiscordClient client, ulong skuId, ulong subPlanId)
         {
@@ -47,7 +45,6 @@ namespace Discord
             return client.QueryGiftCodesAsync(skuId, subPlanId).GetAwaiter().GetResult();
         }
 
-
         public static async Task<RedeemableDiscordGift> CreateGiftCodeAsync(this DiscordClient client, ulong skuId, ulong subPlanId)
         {
             return (await client.HttpClient.PostAsync("/users/@me/entitlements/gift-codes", $"{{\"sku_id\":{skuId},\"subscription_plan_id\":{subPlanId}}}"))
@@ -59,7 +56,6 @@ namespace Discord
             return client.CreateGiftCodeAsync(skuId, subPlanId).GetAwaiter().GetResult();
         }
 
-
         public static async Task RevokeGiftCodeAsync(this DiscordClient client, string code)
         {
             await client.HttpClient.DeleteAsync("/@me/entitlements/gift-codes/" + code);
@@ -69,7 +65,6 @@ namespace Discord
         {
             client.RevokeGiftCodeAsync(code).GetAwaiter().GetResult();
         }
-
 
         public static async Task RedeemGiftAsync(this DiscordClient client, string code, ulong? channelId = null)
         {
@@ -81,7 +76,6 @@ namespace Discord
             client.RedeemGiftAsync(code, channelId).GetAwaiter().GetResult();
         }
 
-
         public static async Task<RedeemableDiscordGift> GetGiftAsync(this DiscordClient client, string code)
         {
             return (await client.HttpClient.GetAsync($"/entitlements/gift-codes/{code}?with_application=false&with_subscription_plan=true"))
@@ -92,7 +86,6 @@ namespace Discord
         {
             return client.GetGiftAsync(code).GetAwaiter().GetResult();
         }
-
 
         public static async Task<string> PurchaseNitroGiftAsync(this DiscordClient client, ulong paymentMethodId, DiscordNitroSubType type)
         {

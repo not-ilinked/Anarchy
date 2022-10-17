@@ -13,10 +13,8 @@ namespace Discord
         [JsonProperty("user")]
         public DiscordUser User { get; private set; }
 
-
         [JsonProperty("type")]
         public RelationshipType Type { get; internal set; }
-
 
         public async Task RemoveAsync()
         {
@@ -28,12 +26,10 @@ namespace Discord
             RemoveAsync().GetAwaiter().GetResult();
         }
 
-
         public override string ToString()
         {
             return $"{Type} {User}";
         }
-
 
         public static implicit operator ulong(DiscordRelationship instance)
         {

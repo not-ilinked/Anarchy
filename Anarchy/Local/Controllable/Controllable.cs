@@ -20,7 +20,6 @@ namespace Discord
             }
         }
 
-
         public void Dispose()
         {
             _client = null;

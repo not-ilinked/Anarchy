@@ -7,7 +7,6 @@ namespace Discord
         [JsonProperty("plan_id")]
         public ulong Id { get; set; }
 
-
         [JsonProperty("quantity")]
         public int Quantity { get; set; } = 1;
     }

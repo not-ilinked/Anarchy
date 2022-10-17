@@ -49,12 +49,9 @@ namespace Discord.Media
             _nextTick = -1;
         }
 
-
         private List<byte> _toBeUsed = new List<byte>();
 
-
         private void UpdateEncoder() => _encoder = new OpusEncoder(_bitrate, _audioApp, _packetLoss);
-
 
         public void SetSpeakingState(DiscordSpeakingFlags flags)
         {
@@ -68,7 +65,6 @@ namespace Discord.Media
                 SSRC = _client.Connection.SSRC.Audio
             });
         }
-
 
         public int Write(byte[] buffer, int offset)
         {
@@ -84,7 +80,7 @@ namespace Discord.Media
                     long distance = _nextTick - Environment.TickCount;
 
                     if (distance > 0)
-                        Thread.Sleep((int)distance);
+                        Thread.Sleep((int) distance);
                 }
 
                 byte[] opusFrame = new byte[OpusConverter.FrameBytes];

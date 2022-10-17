@@ -20,12 +20,12 @@ namespace Discord
             else if (status == "dnd")
                 return UserStatus.DoNotDisturb;
             else
-                return (UserStatus)Enum.Parse(typeof(UserStatus), status, true);
+                return (UserStatus) Enum.Parse(typeof(UserStatus), status, true);
         }
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            writer.WriteValue(ToString((UserStatus)value));
+            writer.WriteValue(ToString((UserStatus) value));
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)

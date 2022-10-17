@@ -15,12 +15,10 @@ namespace Discord
             set { NameProperty.Value = value; }
         }
 
-
         public bool ShouldSerializeUsername()
         {
             return NameProperty.Set;
         }
-
 
         internal DiscordParameter<uint> DiscriminatorProperty = new DiscordParameter<uint>();
         [JsonProperty("discriminator")]
@@ -30,12 +28,10 @@ namespace Discord
             set { DiscriminatorProperty.Value = value; }
         }
 
-
         public bool ShouldSerializeDiscriminator()
         {
             return DiscriminatorProperty.Set;
         }
-
 
         private readonly DiscordParameter<string> EmailProperty = new DiscordParameter<string>();
         [JsonProperty("email")]
@@ -45,12 +41,10 @@ namespace Discord
             set { EmailProperty.Value = value; }
         }
 
-
         public bool ShouldSerializeEmail()
         {
             return EmailProperty.Set;
         }
-
 
         private readonly DiscordParameter<DiscordImage> AvatarProperty = new DiscordParameter<DiscordImage>();
         [JsonProperty("avatar")]
@@ -60,12 +54,10 @@ namespace Discord
             set { AvatarProperty.Value = value; }
         }
 
-
         public bool ShouldSerializeAvatar()
         {
             return AvatarProperty.Set;
         }
-
 
         private readonly DiscordParameter<string> _bioParam = new DiscordParameter<string>();
         [JsonProperty("bio")]
@@ -77,7 +69,6 @@ namespace Discord
 
         public bool ShouldSerializeBiography() => _bioParam.Set;
 
-
         private readonly DiscordParameter<DiscordImage> _bannerParam = new DiscordParameter<DiscordImage>();
         [JsonProperty("banner")]
         public DiscordImage Banner
@@ -88,11 +79,8 @@ namespace Discord
 
         public bool ShouldSerializeBanner() => _bannerParam.Set;
 
-
-
         [JsonProperty("password")]
         public string Password { get; set; }
-
 
         [JsonProperty("new_password")]
         public string NewPassword { get; set; }

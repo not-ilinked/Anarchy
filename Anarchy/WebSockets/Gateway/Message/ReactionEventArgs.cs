@@ -9,7 +9,6 @@
             Reaction = reaction;
         }
 
-
         public override string ToString()
         {
             return Reaction.ToString();

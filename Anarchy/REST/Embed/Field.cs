@@ -9,7 +9,6 @@ namespace Discord
 
         }
 
-
         internal EmbedField(string name, string content, bool inline)
         {
             Name = name;
@@ -17,18 +16,14 @@ namespace Discord
             Inline = inline;
         }
 
-
         [JsonProperty("name")]
         public string Name { get; private set; }
-
 
         [JsonProperty("value")]
         public string Content { get; private set; }
 
-
         [JsonProperty("inline")]
         public bool Inline { get; private set; }
-
 
         public override string ToString()
         {

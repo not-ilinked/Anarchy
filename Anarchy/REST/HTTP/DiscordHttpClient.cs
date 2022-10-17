@@ -16,12 +16,10 @@ namespace Discord
         private readonly DiscordClient _discordClient;
         public string BaseUrl => DiscordHttpUtil.BuildBaseUrl(_discordClient.Config.ApiVersion, _discordClient.Config.SuperProperties.ReleaseChannel);
 
-
         public DiscordHttpClient(DiscordClient discordClient)
         {
             _discordClient = discordClient;
         }
-
 
         private string _anarchyVersion;
         private string AnarchyVersion
@@ -36,7 +34,6 @@ namespace Discord
                 return _anarchyVersion;
             }
         }
-
 
         /// <summary>
         /// Sends an HTTP request and checks for errors
@@ -78,7 +75,7 @@ namespace Discord
                     });
 
                     var discordResponse = new DiscordHttpResponse(
-                        (int)response.StatusCode,
+                        (int) response.StatusCode,
                         await response.Content.ReadAsStringAsync()
                     );
                     DiscordHttpUtil.ValidateResponse(response, discordResponse.Body);
@@ -178,7 +175,7 @@ namespace Discord
             if (payload != null)
             {
                 if (payload.GetType() == typeof(string))
-                    json = (string)payload;
+                    json = (string) payload;
                 else
                     json = JsonConvert.SerializeObject(payload, new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore });
             }

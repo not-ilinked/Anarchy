@@ -21,14 +21,12 @@ namespace Discord
         [JsonProperty("options")]
         public IReadOnlyList<ApplicationCommandOption> Options { get; private set; }
 
-
         private void Update(ApplicationCommand updated)
         {
             Name = updated.Name;
             Description = updated.Description;
             Options = updated.Options;
         }
-
 
         public async Task UpdateAsync() => Update(await Client.GetGlobalCommandAsync(ApplicationId, Id));
         public void Update() => UpdateAsync().GetAwaiter().GetResult();

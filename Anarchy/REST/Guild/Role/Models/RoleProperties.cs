@@ -16,12 +16,10 @@ namespace Discord
             set { NameProperty.Value = value; }
         }
 
-
         public bool ShouldSerializeName()
         {
             return NameProperty.Set;
         }
-
 
         private readonly DiscordParameter<DiscordPermission> PermissionsProperty = new DiscordParameter<DiscordPermission>();
         [JsonProperty("permissions")]
@@ -31,12 +29,10 @@ namespace Discord
             set { PermissionsProperty.Value = value; }
         }
 
-
         public bool ShouldSerialize_permissions()
         {
             return PermissionsProperty.Set;
         }
-
 
         private readonly DiscordParameter<uint> ColorProperty = new DiscordParameter<uint>();
         [JsonProperty("color")]
@@ -49,16 +45,14 @@ namespace Discord
 #pragma warning restore IDE1006, IDE0051
         public Color Color
         {
-            get { return Color.FromArgb((int)_color); }
-            set { _color = (uint)Color.FromArgb(0, value.R, value.G, value.B).ToArgb(); }
+            get { return Color.FromArgb((int) _color); }
+            set { _color = (uint) Color.FromArgb(0, value.R, value.G, value.B).ToArgb(); }
         }
-
 
         public bool ShouldSerialize_color()
         {
             return ColorProperty.Set;
         }
-
 
         private readonly DiscordParameter<bool> SeperatedProperty = new DiscordParameter<bool>();
         [JsonProperty("hoist")]
@@ -68,12 +62,10 @@ namespace Discord
             set { SeperatedProperty.Value = value; }
         }
 
-
         public bool ShouldSerializeSeperated()
         {
             return SeperatedProperty.Set;
         }
-
 
         private readonly DiscordParameter<bool> MentionableProperty = new DiscordParameter<bool>();
         [JsonProperty("mentionable")]
@@ -83,12 +75,10 @@ namespace Discord
             set { MentionableProperty.Value = value; }
         }
 
-
         public bool ShouldSerializeMentionable()
         {
             return MentionableProperty.Set;
         }
-
 
         public override string ToString()
         {

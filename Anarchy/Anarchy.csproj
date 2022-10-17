@@ -6,7 +6,8 @@
 	  <DebugSymbols>true</DebugSymbols>
 	  <DebugType>full</DebugType>
 	  <ErrorReport>prompt</ErrorReport>
-	  <WarningLevel>4</WarningLevel>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <WarningLevel>4</WarningLevel>
 	  <PlatformTarget>AnyCPU</PlatformTarget>
 	  <NoWarn>IDE1006, CS0649, CS0414, IDE0051</NoWarn>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
@@ -17,10 +18,16 @@
     <VersionSuffix></VersionSuffix>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <Title>Anarchy</Title>
     <PackageId>Anarchy-Wrapper</PackageId>
     <PackageIcon>nuget-logo.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <PackageReleaseNotes>See the changelog on github (https://github.com/not-ilinked/Anarchy/blob/master/Changelog.md)</PackageReleaseNotes>
+    <PackageReleaseNotes>See the changelog on github:
+https://github.com/not-ilinked/Anarchy/blob/master/Changelog.md</PackageReleaseNotes>
+    <Authors>iLinked</Authors>
+    <PackageProjectUrl></PackageProjectUrl>
+    <RepositoryUrl>https://github.com/not-ilinked/Anarchy</RepositoryUrl>
+    <PackageTags>discord;anarchy</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>

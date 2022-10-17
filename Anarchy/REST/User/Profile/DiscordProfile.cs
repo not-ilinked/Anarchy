@@ -16,7 +16,6 @@ namespace Discord
             };
         }
 
-
         /// <summary>
         /// Updates the profile's info
         /// </summary>
@@ -28,22 +27,17 @@ namespace Discord
             ConnectedAccounts = profile.ConnectedAccounts;
         }
 
-
         [JsonProperty("user")]
         public DiscordProfileUser User { get; private set; }
-
 
         [JsonProperty("premium_since")]
         public DateTime? NitroSince { get; private set; }
 
-
         [JsonProperty("mutual_guilds")]
         public IReadOnlyList<MutualGuild> MutualGuilds { get; private set; }
 
-
         [JsonProperty("connected_accounts")]
         public IReadOnlyList<ConnectedAccount> ConnectedAccounts { get; private set; }
-
 
         public override string ToString()
         {

@@ -17,10 +17,8 @@ namespace Discord.Gateway
             set { Role.GuildId = _guildId = value; }
         }
 
-
         [JsonProperty("role")]
         public DiscordRole Role { get; private set; }
-
 
         public override string ToString()
         {

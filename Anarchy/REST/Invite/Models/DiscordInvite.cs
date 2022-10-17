@@ -15,29 +15,23 @@ namespace Discord
             };
         }
 
-
         [JsonProperty("code")]
         public string Code { get; private set; }
-
 
         [JsonProperty("channel")]
         [JsonConverter(typeof(DeepJsonConverter<DiscordChannel>))]
         public DiscordChannel Channel { get; private set; }
 
-
         [JsonProperty("inviter")]
         public DiscordUser Inviter { get; private set; }
 
-
         [JsonProperty("guild")]
         protected InviteGuild _guild;
-
 
         public InviteType Type
         {
             get { return _guild != null ? InviteType.Guild : InviteType.Group; }
         }
-
 
         public async Task DeleteAsync()
         {
@@ -53,7 +47,6 @@ namespace Discord
             DeleteAsync().GetAwaiter().GetResult();
         }
 
-
         public async Task JoinAsync()
         {
             if (Type == InviteType.Guild)
@@ -66,7 +59,6 @@ namespace Discord
         {
             JoinAsync().GetAwaiter().GetResult();
         }
-
 
         public override string ToString()
         {

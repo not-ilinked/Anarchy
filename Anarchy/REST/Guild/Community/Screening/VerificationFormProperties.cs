@@ -13,10 +13,8 @@ namespace Discord
 
         public bool ShouldSerializeDescription() => _descParam.Set;
 
-
         public List<GuildVerificationFormField> Fields { get; set; }
         public bool ShouldSerializeFields() => Fields != null;
-
 
         private readonly DiscordParameter<bool> _enabledParam = new DiscordParameter<bool>();
         public bool Enabled

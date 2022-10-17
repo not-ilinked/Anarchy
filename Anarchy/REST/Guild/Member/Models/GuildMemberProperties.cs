@@ -6,7 +6,6 @@ namespace Discord
     public class GuildMemberProperties
     {
 
-
         internal readonly DiscordParameter<string> NickProperty = new DiscordParameter<string>();
         [JsonProperty("nick")]
         public string Nickname
@@ -15,12 +14,10 @@ namespace Discord
             set { NickProperty.Value = value; }
         }
 
-
         public bool ShouldSerializeNickname()
         {
             return NickProperty.Set;
         }
-
 
         internal readonly DiscordParameter<List<ulong>> RoleProperty = new DiscordParameter<List<ulong>>();
         [JsonProperty("roles")]
@@ -30,12 +27,10 @@ namespace Discord
             set { RoleProperty.Value = value; }
         }
 
-
         public bool ShouldSerializeRoles()
         {
             return RoleProperty.Set;
         }
-
 
         private readonly DiscordParameter<ulong> ChannelProperty = new DiscordParameter<ulong>();
         [JsonProperty("channel_id")]
@@ -45,7 +40,6 @@ namespace Discord
             set { ChannelProperty.Value = value; }
         }
 
-
         private readonly DiscordParameter<bool> MuteProperty = new DiscordParameter<bool>();
         [JsonProperty("mute")]
         public bool Muted
@@ -54,12 +48,10 @@ namespace Discord
             set { MuteProperty.Value = value; }
         }
 
-
         public bool ShouldSerializeMuted()
         {
             return MuteProperty.Set;
         }
-
 
         private readonly DiscordParameter<bool> DeafProperty = new DiscordParameter<bool>();
         [JsonProperty("deaf")]
@@ -68,7 +60,6 @@ namespace Discord
             get { return DeafProperty; }
             set { DeafProperty.Value = value; }
         }
-
 
         public bool ShouldSerializeDeafened()
         {

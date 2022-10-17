@@ -11,7 +11,6 @@ namespace Discord
             return @class;
         }
 
-
         internal static IReadOnlyList<T> SetClientsInList<T>(this IReadOnlyList<T> classes, DiscordClient client) where T : Controllable
         {
             if (classes != null)

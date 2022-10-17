@@ -18,7 +18,6 @@ namespace Discord
             return client.GetUserAsync(userId).GetAwaiter().GetResult();
         }
 
-
         public static async Task<DiscordClientUser> GetClientUserAsync(this DiscordClient client)
         {
             try
@@ -39,7 +38,6 @@ namespace Discord
         {
             return client.GetClientUserAsync().GetAwaiter().GetResult();
         }
-
 
         public static Task ReportUserAsync(this DiscordClient client, DiscordReportReason reason, UserReportIdentification identification)
         {

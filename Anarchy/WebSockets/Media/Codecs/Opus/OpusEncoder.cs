@@ -45,12 +45,12 @@ namespace Discord.Media
                     throw new ArgumentOutOfRangeException(nameof(application));
             }
 
-            _ptr = CreateEncoder(SamplingRate, Channels, (int)opusApplication, out var error);
+            _ptr = CreateEncoder(SamplingRate, Channels, (int) opusApplication, out var error);
             CheckError(error);
-            CheckError(EncoderCtl(_ptr, OpusCtl.SetSignal, (int)opusSignal));
+            CheckError(EncoderCtl(_ptr, OpusCtl.SetSignal, (int) opusSignal));
             CheckError(EncoderCtl(_ptr, OpusCtl.SetPacketLossPercent, packetLoss)); //%
             CheckError(EncoderCtl(_ptr, OpusCtl.SetInbandFEC, 1)); //True
-            CheckError(EncoderCtl(_ptr, OpusCtl.SetBitrate, (int)bitrate));
+            CheckError(EncoderCtl(_ptr, OpusCtl.SetBitrate, (int) bitrate));
         }
 
         public unsafe int EncodeFrame(byte[] input, int inputOffset, byte[] output, int outputOffset)
@@ -59,7 +59,7 @@ namespace Discord.Media
             fixed (byte* inPtr = input)
             fixed (byte* outPtr = output)
                 result = Encode(_ptr, inPtr + inputOffset, FrameSamplesPerChannel, outPtr + outputOffset, output.Length - outputOffset);
-            CheckError((OpusError)result);
+            CheckError((OpusError) result);
             return result;
         }
     }

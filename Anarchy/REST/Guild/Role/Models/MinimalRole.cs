@@ -17,13 +17,11 @@ namespace Discord
         public MinimalRole()
         { }
 
-
         public MinimalRole(ulong guildId, ulong roleId)
         {
             GuildId = guildId;
             Id = roleId;
         }
-
 
         /// <summary>
         /// Modifies the role
@@ -34,7 +32,6 @@ namespace Discord
             return Client.ModifyRole(GuildId, Id, properties);
         }
 
-
         /// <summary>
         /// Deletes the role
         /// </summary>
@@ -42,7 +39,6 @@ namespace Discord
         {
             Client.DeleteRole(GuildId, Id);
         }
-
 
         public string AsMessagable()
         {
