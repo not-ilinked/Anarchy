@@ -13,8 +13,8 @@
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <BaseOutputPath>..\.bin\$(MSBuildProjectName)</BaseOutputPath>
     <Description>The superior Discord API wrapper.</Description>
-    <Copyright>Copyright ©iLinked  2022</Copyright>
-    <VersionPrefix>0.8.3</VersionPrefix>
+    <Copyright>Copyright ©iLinked 2022</Copyright>
+    <VersionPrefix>0.8.3.1</VersionPrefix>
     <VersionSuffix></VersionSuffix>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>

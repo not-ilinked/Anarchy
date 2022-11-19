@@ -1,3 +1,9 @@
+## 0.8.3.1
+### Improvements
+- Bugfix: .NET 7.0 verifies that StringContent ctor doesn't pass null arguments, which DiscordHttpClient (line 159) did.
+
+
+
 ## 0.8.3
 ### Improvements
 - Fixes #3330.

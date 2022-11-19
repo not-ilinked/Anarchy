@@ -156,7 +156,7 @@ namespace Discord
 
                 if (!string.IsNullOrEmpty(json))
                 {
-                    var jsonContent = new StringContent(json, null, null);
+                    var jsonContent = new StringContent(json);
                     jsonContent.Headers.Remove("Content-Type");
                     mpfc.Add(jsonContent, "\"payload_json\"");
                 }
