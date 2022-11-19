@@ -130,12 +130,13 @@ namespace Discord.Gateway
 
         private ulong _appId;
 
+        private bool _disposed = false;
+
         public DiscordSocketClient(DiscordSocketConfig config = null) : base()
         {
             RequestLock = new object();
 
-            if (config == null)
-                config = new DiscordSocketConfig();
+            config ??= new DiscordSocketConfig();
 
             Config = new LockedSocketConfig(config);
             base.Config = Config;
@@ -198,10 +199,10 @@ namespace Discord.Gateway
 
         ~DiscordSocketClient()
         {
-            Dispose(true);
+            Dispose(false);
         }
 
-        public void Login(string token)
+        public async Task LoginAsync(string token)
         {
             if (Token != token)
                 Token = token;
@@ -211,7 +212,27 @@ namespace Discord.Gateway
 
             State = GatewayConnectionState.Connecting;
 
-            WebSocket.ConnectAsync().GetAwaiter().GetResult();
+            await WebSocket.ConnectAsync();
+        }
+
+        public void Login(string token)
+        {
+            LoginAsync(token).GetAwaiter().GetResult();
+        }
+
+        public async Task LogoutAsync()
+        {
+            if (LoggedIn)
+            {
+                LoggedIn = false;
+
+                await WebSocket.DisconnectAsync((int) GatewayCloseCode.ClosedByClient, "Closed by client");
+            }
+        }
+
+        public void Logout()
+        {
+            LogoutAsync().GetAwaiter().GetResult();
         }
 
         public void Send<T>(GatewayOpcode op, T requestData)
@@ -838,8 +859,10 @@ namespace Discord.Gateway
 
                                 if (Config.Cache)
                                 {
-                                    var list = new List<DiscordThread>(GuildCache[thread.Guild.Id].Threads);
-                                    list.Add(thread);
+                                    var list = new List<DiscordThread>(GuildCache[thread.Guild.Id].Threads)
+                                    {
+                                        thread
+                                    };
 
                                     GuildCache[thread.Guild.Id].Threads = list;
                                 }
@@ -955,16 +978,6 @@ namespace Discord.Gateway
             }
         }
 
-        public void Logout()
-        {
-            if (LoggedIn)
-            {
-                LoggedIn = false;
-
-                WebSocket.DisconnectAsync((int) GatewayCloseCode.ClosedByClient, "Closed by client").GetAwaiter().GetResult();
-            }
-        }
-
         public void CreateCommandHandler(string prefix)
         {
             CommandHandler = new CommandHandler(prefix, this);
@@ -995,20 +1008,26 @@ namespace Discord.Gateway
             }
         }
 
-        internal void Dispose(bool destructor)
+        protected virtual void Dispose(bool disposing)
         {
+            if (_disposed)
+                return;
+
             Logout();
 
-            if (!destructor)
+            if (disposing)
             {
                 WebSocket.Dispose();
                 Reset();
             }
+
+            _disposed = true;
         }
 
         public void Dispose()
         {
-            Dispose(false);
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

@@ -1,3 +1,9 @@
+## 0.8.3.2
+### Improvements
+- DiscordSocketClient now offers Asynchronous versions of Login(string) and Logout()
+- Minor code cleanup as suggested by Visual Studio
+
+
 ## 0.8.3.1
 ### Improvements
 - Bugfix: .NET 7.0 verifies that StringContent ctor doesn't pass null arguments, which DiscordHttpClient (line 159) did.
