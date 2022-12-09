@@ -17,7 +17,7 @@ namespace Discord
         public bool Approved => ApplicationStatus == "APPROVED";
 
         [JsonProperty("guild_id")]
-        private ulong _guildId;
+        private readonly ulong _guildId;
 
         public MinimalGuild Guild => new MinimalGuild(_guildId).SetClient(Client);
     }

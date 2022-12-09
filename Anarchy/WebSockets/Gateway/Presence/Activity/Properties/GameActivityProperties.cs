@@ -23,7 +23,7 @@ namespace Discord.Gateway
         public string State { get; set; }
 
         [JsonProperty("timestamps")]
-        private TimestampProperties _timestamps;
+        private readonly TimestampProperties _timestamps;
 
         public TimeSpan Elapsed
         {

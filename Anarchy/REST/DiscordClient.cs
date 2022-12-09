@@ -45,9 +45,7 @@
 
         public DiscordClient(ApiConfig config = null) : this()
         {
-            if (config == null)
-                config = new ApiConfig();
-
+            config ??= new ApiConfig();
             Config = new LockedDiscordConfig(config);
         }
 

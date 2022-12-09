@@ -16,7 +16,7 @@ namespace Discord.Media
         private long _nextTick;
         private ushort _sequence;
         private uint _timestamp;
-        private DiscordVoiceClient _client;
+        private readonly DiscordVoiceClient _client;
 
         private uint _bitrate = 64000;
         private AudioApplication _audioApp = AudioApplication.Mixed;

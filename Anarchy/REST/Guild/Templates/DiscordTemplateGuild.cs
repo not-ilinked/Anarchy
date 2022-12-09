@@ -28,7 +28,7 @@ namespace Discord
 
         [JsonProperty("channels")]
         [JsonConverter(typeof(DeepJsonConverter<GuildChannel>))]
-        private List<GuildChannel> _channels;
+        private readonly List<GuildChannel> _channels;
 
         public IReadOnlyList<GuildChannel> Channels
         {

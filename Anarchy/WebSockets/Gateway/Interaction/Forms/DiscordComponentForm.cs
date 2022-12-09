@@ -6,7 +6,7 @@ namespace Discord.Gateway
 {
     public class DiscordComponentForm
     {
-        private DiscordSocketClient _client;
+        private readonly DiscordSocketClient _client;
 
         internal string Id { get; }
         public List<List<ComponentFormInput>> Rows { get; }
@@ -45,7 +45,7 @@ namespace Discord.Gateway
             }
         }
 
-        private static Random random = new Random();
+        private static readonly Random random = new();
         internal static string RandomString(int length)
         {
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";

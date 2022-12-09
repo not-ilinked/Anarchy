@@ -2,7 +2,7 @@
 
 namespace Discord.Media
 {
-    internal unsafe static class Sodium
+    internal static unsafe class Sodium
     {
         public static string EncryptionMode = "xsalsa20_poly1305";
         public static int LengthDifference = 16;

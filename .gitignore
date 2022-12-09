@@ -5,7 +5,8 @@
 
 # Excluded from versioning because it contains discord access credentials use by Anarchy's unit tests.
 # Use appsettings.json as a template to create your own version of this file.
-Anarchy.Tests/appsettings.Development.json
+**/appsettings.Development.json
+**/appsettings.Tests.json
 
 # User-specific files
 *.rsuser
