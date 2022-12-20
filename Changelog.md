@@ -1,3 +1,14 @@
+## 0.8.3.2
+### Improvements
+- DiscordSocketClient now offers asynchronous versions of Login(string token) and Logout().
+- Anarchy.Tests now less of a mess.
+- Minor code cleanup as suggested by Visual Studio.
+- Dependency upgrades:
+  - Newtonsoft.Json 13.0.1 > 13.0.2
+  - Microsoft.Maui.Graphics 6.0.403 > 7.0.49
+
+
+
 ## 0.8.3.1
 ### Improvements
 - Bugfix: .NET 7.0 verifies that StringContent ctor doesn't pass null arguments, which DiscordHttpClient (line 159) did.

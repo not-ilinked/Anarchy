@@ -7,7 +7,7 @@
 
     <IsPackable>false</IsPackable>
 
-    <RootNamespace>Discord</RootNamespace>
+    <RootNamespace>Anarchy</RootNamespace>
 
     <BaseOutputPath>..\.bin\$(MSBuildProjectName)</BaseOutputPath>
   </PropertyGroup>
@@ -27,7 +27,10 @@
     <None Update="appsettings.Development.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="appsettings.json">
+    <None Update="appsettings.Example.json">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="appsettings.Tests.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Resources\image1.png">

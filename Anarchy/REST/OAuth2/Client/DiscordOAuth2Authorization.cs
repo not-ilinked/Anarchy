@@ -23,7 +23,7 @@ namespace Discord
         public string RefreshToken { get; private set; }
 
         [JsonProperty("scope")]
-        private string _scope;
+        private readonly string _scope;
         public string[] Scopes => _scope.Split(' ');
     }
 }

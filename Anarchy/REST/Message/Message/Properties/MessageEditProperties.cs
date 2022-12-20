@@ -4,7 +4,7 @@ namespace Discord
 {
     public class MessageEditProperties
     {
-        private DiscordParameter<string> _contentProperty = new DiscordParameter<string>();
+        private readonly DiscordParameter<string> _contentProperty = new();
         [JsonProperty("content")]
         public string Content
         {
@@ -17,7 +17,7 @@ namespace Discord
             return _contentProperty.Set;
         }
 
-        private DiscordParameter<DiscordEmbed> _embedProperty = new DiscordParameter<DiscordEmbed>();
+        private readonly DiscordParameter<DiscordEmbed> _embedProperty = new();
         [JsonProperty("embed")]
         public DiscordEmbed Embed
         {
@@ -30,7 +30,7 @@ namespace Discord
             return _embedProperty.Set;
         }
 
-        private DiscordParameter<MessageFlags> _flagProperty = new DiscordParameter<MessageFlags>();
+        private readonly DiscordParameter<MessageFlags> _flagProperty = new();
         [JsonProperty("flags")]
         public MessageFlags Flags
         {

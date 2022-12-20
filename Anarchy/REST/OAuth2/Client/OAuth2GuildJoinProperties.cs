@@ -8,7 +8,7 @@ namespace Discord
         [JsonProperty("access_token")]
         internal string AccessToken { get; set; }
 
-        private DiscordParameter<string> _nickParam = new DiscordParameter<string>();
+        private readonly DiscordParameter<string> _nickParam = new DiscordParameter<string>();
         [JsonProperty("nick")]
         public string Nickname
         {
@@ -18,7 +18,7 @@ namespace Discord
 
         public bool ShouldSerializeNickname() => _nickParam.Set;
 
-        private DiscordParameter<List<ulong>> _roleParam = new DiscordParameter<List<ulong>>();
+        private readonly DiscordParameter<List<ulong>> _roleParam = new DiscordParameter<List<ulong>>();
         [JsonProperty("roles")]
         public List<ulong> Roles
         {
@@ -28,7 +28,7 @@ namespace Discord
 
         public bool ShouldSerializeRoles() => _roleParam.Set;
 
-        private DiscordParameter<bool> _muteParam = new DiscordParameter<bool>();
+        private readonly DiscordParameter<bool> _muteParam = new DiscordParameter<bool>();
         [JsonProperty("mute")]
         public bool Mute
         {
@@ -38,7 +38,7 @@ namespace Discord
 
         public bool ShouldSerializeMute() => _muteParam.Set;
 
-        private DiscordParameter<bool> _deafParam = new DiscordParameter<bool>();
+        private readonly DiscordParameter<bool> _deafParam = new DiscordParameter<bool>();
         [JsonProperty("deaf")]
         public bool Deaf
         {

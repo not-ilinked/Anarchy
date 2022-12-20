@@ -15,11 +15,11 @@ namespace Discord.Commands
             public bool Delayed { get; set; }
         }
 
-        private DiscordSocketClient _client;
+        private readonly DiscordSocketClient _client;
         public ulong ApplicationId { get; private set; }
-        private List<ApplicationCommandProperties> _commands;
+        private readonly List<ApplicationCommandProperties> _commands;
 
-        private Dictionary<string, LocalCommandInfo> _handlerDict;
+        private readonly Dictionary<string, LocalCommandInfo> _handlerDict;
 
         public SlashCommandHandler(DiscordSocketClient client, ulong appId, ulong? guildId)
         {
