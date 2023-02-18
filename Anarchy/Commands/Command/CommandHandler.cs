@@ -10,14 +10,15 @@ namespace Discord.Commands
     public class CommandHandler
     {
         private readonly DiscordSocketClient _client;
-        public string Prefix { get; private set; }
-        public Dictionary<string, DiscordCommand> Commands { get; private set; }
+        private readonly CommandHandlerConfig _config;
 
-        internal CommandHandler(string prefix, DiscordSocketClient client)
+        internal CommandHandler(string prefix, DiscordSocketClient client, CommandHandlerConfig config = null)
         {
+            _config = config ?? new CommandHandlerConfig();
             _client = client;
 
             Prefix = prefix;
+
             client.OnMessageReceived += Client_OnMessageReceived;
 
             Assembly executable = Assembly.GetEntryAssembly();
@@ -30,13 +31,34 @@ namespace Discord.Commands
             }
         }
 
+        public Dictionary<string, DiscordCommand> Commands { get; private set; }
+        public string Prefix { get; private set; }
+
+        internal static bool TryGetAttribute<TAttr>(IEnumerable<object> attributes, out TAttr attr) where TAttr : Attribute
+        {
+            foreach (var attribute in attributes)
+            {
+                if (attribute.GetType() == typeof(TAttr))
+                {
+                    attr = (TAttr) attribute;
+                    return true;
+                }
+            }
+
+            attr = null;
+            return false;
+        }
+
         private void Client_OnMessageReceived(DiscordSocketClient client, MessageEventArgs args)
         {
-            if (args.Message.Content.StartsWith(Prefix))
+            string prefix = _config.GetGuildPrefix(args.Message.Guild.Id) ?? Prefix;
+
+            if (args.Message.Content.StartsWith(prefix))
             {
                 List<string> parts = args.Message.Content.Split(' ').ToList();
+                DiscordCommand command;
 
-                if (Commands.TryGetValue(parts[0].Substring(Prefix.Length), out DiscordCommand command))
+                if (_config.CaseInsensitiveCommands ? Commands.TryGetValue(parts[0].ToLower()[prefix.Length..], out command) : Commands.TryGetValue(parts[0][prefix.Length..], out command))
                 {
                     parts.RemoveAt(0);
 
@@ -162,21 +184,6 @@ namespace Discord.Commands
             }
 
             throw new ArgumentException("Invalid reference");
-        }
-
-        internal static bool TryGetAttribute<TAttr>(IEnumerable<object> attributes, out TAttr attr) where TAttr : Attribute
-        {
-            foreach (var attribute in attributes)
-            {
-                if (attribute.GetType() == typeof(TAttr))
-                {
-                    attr = (TAttr) attribute;
-                    return true;
-                }
-            }
-
-            attr = null;
-            return false;
         }
     }
 }
