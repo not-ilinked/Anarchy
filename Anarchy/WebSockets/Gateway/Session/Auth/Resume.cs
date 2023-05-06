@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿
+
+using System.Text.Json.Serialization;
 
 namespace Discord.Gateway
 {
@@ -14,13 +16,13 @@ namespace Discord.Gateway
             Sequence = client.Sequence;
         }
 
-        [JsonProperty("token")]
+        [JsonPropertyName("token")]
         public string Token { get; set; }
 
-        [JsonProperty("session_id")]
+        [JsonPropertyName("session_id")]
         public string SessionId { get; set; }
 
-        [JsonProperty("seq")]
+        [JsonPropertyName("seq")]
         public uint? Sequence { get; set; }
     }
 }

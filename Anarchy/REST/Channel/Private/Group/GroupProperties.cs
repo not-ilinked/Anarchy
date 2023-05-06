@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace Discord
 {
@@ -8,7 +8,7 @@ namespace Discord
     public class GroupProperties
     {
         private readonly DiscordParameter<string> NameProperty = new DiscordParameter<string>();
-        [JsonProperty("name")]
+        [JsonPropertyName("name")]
         public string Name
         {
             get { return NameProperty; }
@@ -21,7 +21,7 @@ namespace Discord
         }
 
         internal readonly DiscordParameter<DiscordImage> IconProperty = new DiscordParameter<DiscordImage>();
-        [JsonProperty("icon")]
+        [JsonPropertyName("icon")]
         public DiscordImage Icon
         {
             get { return IconProperty; }

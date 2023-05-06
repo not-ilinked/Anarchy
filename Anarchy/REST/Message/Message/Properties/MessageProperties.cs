@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Discord
 {
@@ -13,27 +13,27 @@ namespace Discord
             _nonce = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds().ToString();
         }
 
-        [JsonProperty("content")]
+        [JsonPropertyName("content")]
         public string Content { get; set; }
 
-        [JsonProperty("nonce")]
+        [JsonPropertyName("nonce")]
 #pragma warning disable IDE0052
         private readonly string _nonce;
 #pragma warning restore
 
-        [JsonProperty("tts")]
+        [JsonPropertyName("tts")]
         public bool Tts { get; set; }
 
-        [JsonProperty("message_reference")]
+        [JsonPropertyName("message_reference")]
         public MessageReference ReplyTo { get; set; }
 
-        [JsonProperty("embed")]
+        [JsonPropertyName("embed")]
         public DiscordEmbed Embed { get; set; }
 
-        [JsonProperty("components")]
+        [JsonPropertyName("components")]
         public List<MessageComponent> Components { get; set; }
 
-        [JsonProperty("attachments")]
+        [JsonPropertyName("attachments")]
         public List<PartialDiscordAttachment> Attachments { get; set; }
 
         public bool ShouldSerializeAttachments()

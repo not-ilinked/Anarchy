@@ -7,7 +7,7 @@ using Anarchy;
 using Discord.Commands;
 using Discord.Media;
 using Discord.WebSockets;
-using Newtonsoft.Json;
+
 using Newtonsoft.Json.Linq;
 
 namespace Discord.Gateway

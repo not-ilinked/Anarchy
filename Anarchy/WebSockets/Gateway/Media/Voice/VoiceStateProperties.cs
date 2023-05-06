@@ -1,11 +1,13 @@
-﻿using Newtonsoft.Json;
+﻿
+
+using System.Text.Json.Serialization;
 
 namespace Discord.Gateway
 {
     public class VoiceStateProperties
     {
         internal readonly DiscordParameter<ulong?> GuildProperty = new DiscordParameter<ulong?>();
-        [JsonProperty("guild_id")]
+        [JsonPropertyName("guild_id")]
         public ulong? GuildId
         {
             get { return GuildProperty; }
@@ -13,7 +15,7 @@ namespace Discord.Gateway
         }
 
         internal readonly DiscordParameter<ulong?> ChannelProperty = new DiscordParameter<ulong?>();
-        [JsonProperty("channel_id")]
+        [JsonPropertyName("channel_id")]
         public ulong? ChannelId
         {
             get { return ChannelProperty; }
@@ -21,7 +23,7 @@ namespace Discord.Gateway
         }
 
         internal readonly DiscordParameter<bool> MutedProperty = new DiscordParameter<bool>();
-        [JsonProperty("self_mute")]
+        [JsonPropertyName("self_mute")]
         public bool Muted
         {
             get { return MutedProperty; }
@@ -29,7 +31,7 @@ namespace Discord.Gateway
         }
 
         internal readonly DiscordParameter<bool> DeafProperty = new DiscordParameter<bool>();
-        [JsonProperty("self_deaf")]
+        [JsonPropertyName("self_deaf")]
         public bool Deafened
         {
             get { return DeafProperty; }
@@ -37,7 +39,7 @@ namespace Discord.Gateway
         }
 
         internal readonly DiscordParameter<bool> VideoProperty = new DiscordParameter<bool>();
-        [JsonProperty("self_video")]
+        [JsonPropertyName("self_video")]
         public bool Video
         {
             get { return VideoProperty; }

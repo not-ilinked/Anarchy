@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Discord
 {
@@ -12,15 +12,15 @@ namespace Discord
             _computePrunes = true;
         }
 
-        [JsonProperty("compute_prune_count")]
+        [JsonPropertyName("compute_prune_count")]
 #pragma warning disable IDE0052
         private readonly bool _computePrunes;
 #pragma warning restore
 
-        [JsonProperty("days")]
+        [JsonPropertyName("days")]
         public uint Days { get; set; }
 
-        [JsonProperty("include_roles")]
+        [JsonPropertyName("include_roles")]
         public List<ulong> IncludedRoles { get; set; }
     }
 }

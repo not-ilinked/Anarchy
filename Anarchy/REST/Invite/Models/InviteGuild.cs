@@ -1,14 +1,14 @@
 ﻿using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Discord
 {
     public class InviteGuild : BaseGuild
     {
-        [JsonProperty("description")]
+        [JsonPropertyName("description")]
         public string Description { get; protected set; }
 
-        [JsonProperty("splash")]
+        [JsonPropertyName("splash")]
         private string _splashHash;
 
         public DiscordCDNImage Splash
@@ -22,13 +22,13 @@ namespace Discord
             }
         }
 
-        [JsonProperty("features")]
+        [JsonPropertyName("features")]
         public IReadOnlyList<string> Features { get; private set; }
 
-        [JsonProperty("vanity_url_code")]
+        [JsonPropertyName("vanity_url_code")]
         public string VanityInvite { get; private set; }
 
-        [JsonProperty("verification_level")]
+        [JsonPropertyName("verification_level")]
         public GuildVerificationLevel VerificationLevel { get; private set; }
 
         protected void Update(InviteGuild guild)

@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿
+
+using System.Text.Json.Serialization;
 
 namespace Discord.Media
 {
@@ -6,16 +8,16 @@ namespace Discord.Media
     internal class StartStream
     {
         // "guild" for Go Live
-        [JsonProperty("type")]
+        [JsonPropertyName("type")]
         public string Type { get; set; }
 
-        [JsonProperty("guild_id")]
+        [JsonPropertyName("guild_id")]
         public ulong GuildId { get; set; }
 
-        [JsonProperty("channel_id")]
+        [JsonPropertyName("channel_id")]
         public ulong ChannelId { get; set; }
 
-        [JsonProperty("preferred_region")]
+        [JsonPropertyName("preferred_region")]
         public string PreferredRegion { get; set; }
     }
 }

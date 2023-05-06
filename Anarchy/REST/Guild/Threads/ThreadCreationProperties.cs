@@ -1,13 +1,15 @@
-﻿using Newtonsoft.Json;
+﻿
+
+using System.Text.Json.Serialization;
 
 namespace Discord
 {
     internal class ThreadCreationProperties : ThreadProperties
     {
-        [JsonProperty("location")]
+        [JsonPropertyName("location")]
         public string Location { get; set; }
 
-        [JsonProperty("type")]
+        [JsonPropertyName("type")]
         public ChannelType Type { get; set; }
     }
 }

@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿
+
+using System.Text.Json.Serialization;
 
 namespace Discord
 {
@@ -8,7 +10,7 @@ namespace Discord
     public class DiscordWebhookProperties
     {
         private readonly DiscordParameter<string> NameProperty = new DiscordParameter<string>();
-        [JsonProperty("name")]
+        [JsonPropertyName("name")]
         public string Name
         {
             get { return NameProperty; }
@@ -21,7 +23,7 @@ namespace Discord
         }
 
         private readonly DiscordParameter<DiscordImage> AvatarProperty = new DiscordParameter<DiscordImage>();
-        [JsonProperty("avatar")]
+        [JsonPropertyName("avatar")]
         public DiscordImage Avatar
         {
             get { return AvatarProperty; }
@@ -34,7 +36,7 @@ namespace Discord
         }
 
         private readonly DiscordParameter<ulong> ChannelProperty = new DiscordParameter<ulong>();
-        [JsonProperty("channel_id")]
+        [JsonPropertyName("channel_id")]
         public ulong ChannelId
         {
             get { return ChannelProperty; }

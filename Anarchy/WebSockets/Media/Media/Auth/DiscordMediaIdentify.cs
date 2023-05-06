@@ -1,22 +1,24 @@
-﻿using Newtonsoft.Json;
+﻿
+
+using System.Text.Json.Serialization;
 
 namespace Discord.Media
 {
     internal class DiscordMediaIdentify
     {
-        [JsonProperty("server_id")]
+        [JsonPropertyName("server_id")]
         public ulong ServerId { get; set; }
 
-        [JsonProperty("user_id")]
+        [JsonPropertyName("user_id")]
         public ulong UserId { get; set; }
 
-        [JsonProperty("session_id")]
+        [JsonPropertyName("session_id")]
         public string SessionId { get; set; }
 
-        [JsonProperty("token")]
+        [JsonPropertyName("token")]
         public string Token { get; set; }
 
-        [JsonProperty("video")]
+        [JsonPropertyName("video")]
         public bool Video { get; set; }
     }
 }

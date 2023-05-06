@@ -1,12 +1,12 @@
 ﻿using System;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Discord
 {
     public class ThreadProperties
     {
         private readonly DiscordParameter<int> _durationParam = new DiscordParameter<int>();
-        [JsonProperty("auto_archive_duration")]
+        [JsonPropertyName("auto_archive_duration")]
         private int _duration => _durationParam.Value;
 
         public TimeSpan? TTL
@@ -23,7 +23,7 @@ namespace Discord
         public bool ShouldSerialize_duration() => _durationParam.Set;
 
         private readonly DiscordParameter<bool> _archiveParam = new DiscordParameter<bool>();
-        [JsonProperty("archived")]
+        [JsonPropertyName("archived")]
         public bool Archived
         {
             get { return _archiveParam.Value; }
@@ -33,7 +33,7 @@ namespace Discord
         public bool ShouldSerializeArchived() => _archiveParam.Set;
 
         private readonly DiscordParameter<string> _nameParam = new DiscordParameter<string>();
-        [JsonProperty("name")]
+        [JsonPropertyName("name")]
         public string Name
         {
             get { return _nameParam.Value; }

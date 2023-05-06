@@ -1,23 +1,23 @@
 ﻿using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Discord
 {
     public class GuildVerificationFormField
     {
-        [JsonProperty("field_type")]
+        [JsonPropertyName("field_type")]
         public string FieldType { get; set; }
 
-        [JsonProperty("label")]
+        [JsonPropertyName("label")]
         public string Label { get; set; }
 
-        [JsonProperty("values")]
+        [JsonPropertyName("values")]
         public IReadOnlyList<string> Values { get; set; }
 
-        [JsonProperty("required")]
+        [JsonPropertyName("required")]
         public bool Required { get; set; }
 
-        [JsonProperty("response")]
+        [JsonPropertyName("response")]
         public object Response { get; set; }
     }
 }

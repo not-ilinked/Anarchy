@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Discord.Gateway
 {
@@ -10,25 +10,25 @@ namespace Discord.Gateway
             OnClientUpdated += (s, e) => Resolved.SetClient(Client);
         }
 
-        [JsonProperty("id")]
+        [JsonPropertyName("id")]
         public ulong CommandId { get; private set; }
 
-        [JsonProperty("name")]
+        [JsonPropertyName("name")]
         public string CommandName { get; private set; }
 
-        [JsonProperty("options")]
+        [JsonPropertyName("options")]
         public IReadOnlyList<SlashCommandArgument> CommandArguments { get; private set; }
 
-        [JsonProperty("resolved")]
+        [JsonPropertyName("resolved")]
         public ResolvedInteractionData Resolved { get; private set; }
 
-        [JsonProperty("custom_id")]
+        [JsonPropertyName("custom_id")]
         public string ComponentId { get; private set; }
 
-        [JsonProperty("component_type")]
+        [JsonPropertyName("component_type")]
         public MessageComponentType ComponentType { get; private set; }
 
-        [JsonProperty("values")]
+        [JsonPropertyName("values")]
         public string[] SelectMenuValues { get; private set; }
     }
 }

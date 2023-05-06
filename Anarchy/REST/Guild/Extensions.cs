@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
+using System.Net.Http.Json;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Maui.Graphics;
 using Microsoft.Maui.Graphics.Platform;
-using Newtonsoft.Json.Linq;
 
 namespace Discord
 {
@@ -139,12 +140,18 @@ namespace Discord
 
         public static async Task<IReadOnlyList<DiscordChannelSettings>> SetPrivateChannelSettingsAsync(this DiscordClient client, Dictionary<ulong, ChannelSettingsProperties> channels)
         {
-            JObject container = new JObject
+            var container = new
             {
-                ["channel_overrides"] = JObject.FromObject(channels)
+                channel_overrides = channels
             };
 
-            return (await client.HttpClient.PatchAsync($"/users/@me/guilds/@me/settings", container)).Deserialize<JObject>()["channel_overrides"].ToObject<List<DiscordChannelSettings>>();
+            var response = await client.HttpClient.PatchAsync($"/users/@me/guilds/@me/settings", JsonContent.Create(container));
+
+            var options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            };
+            return JsonSerializer.Deserialize<List<DiscordChannelSettings>>(response.Body, options);
         }
 
         public static IReadOnlyList<DiscordChannelSettings> SetPrivateChannelSettings(this DiscordClient client, Dictionary<ulong, ChannelSettingsProperties> channels)

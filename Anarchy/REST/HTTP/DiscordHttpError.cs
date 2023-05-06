@@ -1,17 +1,18 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+﻿
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Discord
 {
     public class DiscordHttpError
     {
-        [JsonProperty("code")]
+        [JsonPropertyName("code")]
         public DiscordError Code { get; private set; }
 
-        [JsonProperty("errors")]
-        public JObject Fields { get; private set; }
+        [JsonPropertyName("errors")]
+        public JsonElement Fields { get; private set; }
 
-        [JsonProperty("message")]
+        [JsonPropertyName("message")]
         public string Message { get; private set; }
 
         public DiscordHttpError() { }

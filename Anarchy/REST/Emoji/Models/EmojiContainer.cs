@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Discord.Gateway
 {
@@ -16,10 +16,10 @@ namespace Discord.Gateway
             };
         }
 
-        [JsonProperty("guild_id")]
+        [JsonPropertyName("guild_id")]
         public ulong GuildId { get; private set; }
 
-        [JsonProperty("emojis")]
+        [JsonPropertyName("emojis")]
         public IReadOnlyList<DiscordEmoji> Emojis { get; private set; }
     }
 }

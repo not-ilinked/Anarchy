@@ -1,16 +1,17 @@
-﻿using Newtonsoft.Json;
+﻿
 
+using System.Text.Json.Serialization;
 namespace Discord.Media
 {
     internal class MediaProtocolData
     {
-        [JsonProperty("address")]
+        [JsonPropertyName("address")]
         public string Host { get; set; }
 
-        [JsonProperty("port")]
+        [JsonPropertyName("port")]
         public int Port { get; set; }
 
-        [JsonProperty("mode")]
+        [JsonPropertyName("mode")]
         public string EncryptionMode { get; set; }
     }
 }

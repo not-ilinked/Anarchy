@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Discord
 {
@@ -16,22 +16,22 @@ namespace Discord
             };
         }
 
-        [JsonProperty("instance")]
+        [JsonPropertyName("instance")]
         public DiscordStageInstance Instance { get; private set; }
 
-        [JsonProperty("speakers")]
+        [JsonPropertyName("speakers")]
         public IReadOnlyList<ulong> Speakers { get; private set; }
 
-        [JsonProperty("sample_speaker_members")]
+        [JsonPropertyName("sample_speaker_members")]
         public IReadOnlyList<GuildMember> SampleSpeakers { get; private set; }
 
-        [JsonProperty("participant_count")]
+        [JsonPropertyName("participant_count")]
         public uint ParticipantCount { get; private set; }
 
-        [JsonProperty("guild")]
+        [JsonPropertyName("guild")]
         public DiscordGuild Guild { get; private set; }
 
-        [JsonProperty("channel")]
+        [JsonPropertyName("channel")]
         public StageChannel Channel { get; private set; }
     }
 }

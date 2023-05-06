@@ -1,16 +1,18 @@
-﻿using Newtonsoft.Json;
+﻿
+
+using System.Text.Json.Serialization;
 
 namespace Discord.Gateway
 {
     public class ActiveSessionPlatforms
     {
-        [JsonProperty("desktop")]
+        [JsonPropertyName("desktop")]
         public UserStatus Desktop { get; private set; } = UserStatus.Offline;
 
-        [JsonProperty("web")]
+        [JsonPropertyName("web")]
         public UserStatus Website { get; private set; } = UserStatus.Offline;
 
-        [JsonProperty("mobile")]
+        [JsonPropertyName("mobile")]
         public UserStatus Mobile { get; private set; } = UserStatus.Offline;
     }
 }

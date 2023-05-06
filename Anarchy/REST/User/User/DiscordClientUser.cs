@@ -1,5 +1,6 @@
-﻿using System.Threading.Tasks;
-using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
+using System.Threading.Tasks;
+
 
 namespace Discord
 {
@@ -8,31 +9,31 @@ namespace Discord
     /// </summary>
     public class DiscordClientUser : DiscordUser
     {
-        [JsonProperty("token")]
+        [JsonPropertyName("token")]
         internal string Token { get; private set; }
 
-        [JsonProperty("email")]
+        [JsonPropertyName("email")]
         public string Email { get; private set; }
 
-        [JsonProperty("verified")]
+        [JsonPropertyName("verified")]
         public bool EmailVerified { get; private set; }
 
-        [JsonProperty("mfa_enabled")]
+        [JsonPropertyName("mfa_enabled")]
         public bool TwoFactorAuth { get; private set; }
 
-        [JsonProperty("nsfw_allowed")]
+        [JsonPropertyName("nsfw_allowed")]
         public bool? NsfwAllowed { get; private set; }
 
-        [JsonProperty("phone")]
+        [JsonPropertyName("phone")]
         public string PhoneNumber { get; private set; }
 
-        [JsonProperty("explicit_content_filter")]
+        [JsonPropertyName("explicit_content_filter")]
         public ExplicitContentFilter ExplicitContentFilter { get; private set; }
 
-        [JsonProperty("locale")]
+        [JsonPropertyName("locale")]
         public DiscordLanguage RegistrationLanguage { get; private set; }
 
-        [JsonProperty("premium_type")]
+        [JsonPropertyName("premium_type")]
         private DiscordNitroType? _nitro;
 
         public DiscordNitroType Nitro

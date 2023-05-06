@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Discord
 {
     public class WelcomeScreenProperties
     {
         private readonly DiscordParameter<bool> _enabled = new DiscordParameter<bool>();
-        [JsonProperty("enabled")]
+        [JsonPropertyName("enabled")]
         public bool Enabled
         {
             get { return _enabled; }
@@ -19,7 +19,7 @@ namespace Discord
         }
 
         private readonly DiscordParameter<List<WelcomeChannelProperties>> _channels = new DiscordParameter<List<WelcomeChannelProperties>>();
-        [JsonProperty("welcome_channels")]
+        [JsonPropertyName("welcome_channels")]
         public List<WelcomeChannelProperties> Channels
         {
             get { return _channels; }
@@ -32,7 +32,7 @@ namespace Discord
         }
 
         private readonly DiscordParameter<string> _description = new DiscordParameter<string>();
-        [JsonProperty("description")]
+        [JsonPropertyName("description")]
         public string Description
         {
             get { return _description; }

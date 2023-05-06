@@ -1,16 +1,16 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace Discord
 {
     public class EmbedImage
     {
-        [JsonProperty("url")]
+        [JsonPropertyName("url")]
         public string Url { get; internal set; }
 
-        [JsonProperty("width")]
+        [JsonPropertyName("width")]
         public uint Width { get; private set; }
 
-        [JsonProperty("height")]
+        [JsonPropertyName("height")]
         public uint Height { get; private set; }
 
         public override string ToString()

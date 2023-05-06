@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Discord
 {
@@ -13,10 +13,10 @@ namespace Discord
             };
         }
 
-        [JsonProperty("description")]
+        [JsonPropertyName("description")]
         public string Description { get; private set; }
 
-        [JsonProperty("welcome_channels")]
+        [JsonPropertyName("welcome_channels")]
         public IReadOnlyList<WelcomeChannel> Channels { get; private set; }
     }
 }

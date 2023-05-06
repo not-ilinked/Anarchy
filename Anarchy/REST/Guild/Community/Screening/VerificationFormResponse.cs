@@ -1,22 +1,22 @@
 ﻿using System;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Discord
 {
     public class VerificationFormResponse : Controllable
     {
-        [JsonProperty("created_at")]
+        [JsonPropertyName("created_at")]
         public DateTime SubmittedAt { get; private set; }
 
-        [JsonProperty("rejection_reason")]
+        [JsonPropertyName("rejection_reason")]
         public string RejectionReason { get; private set; }
 
-        [JsonProperty("application_status")]
+        [JsonPropertyName("application_status")]
         public string ApplicationStatus { get; private set; }
 
         public bool Approved => ApplicationStatus == "APPROVED";
 
-        [JsonProperty("guild_id")]
+        [JsonPropertyName("guild_id")]
         private readonly ulong _guildId;
 
         public MinimalGuild Guild => new MinimalGuild(_guildId).SetClient(Client);

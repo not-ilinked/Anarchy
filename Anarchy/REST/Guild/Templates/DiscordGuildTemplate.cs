@@ -1,6 +1,7 @@
 ﻿using System;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
+
 
 namespace Discord
 {
@@ -16,28 +17,28 @@ namespace Discord
             };
         }
 
-        [JsonProperty("code")]
+        [JsonPropertyName("code")]
         public string Code { get; private set; }
 
-        [JsonProperty("name")]
+        [JsonPropertyName("name")]
         public string Name { get; private set; }
 
-        [JsonProperty("description")]
+        [JsonPropertyName("description")]
         public string Description { get; private set; }
 
-        [JsonProperty("usage_count")]
+        [JsonPropertyName("usage_count")]
         public int Usages { get; private set; }
 
-        [JsonProperty("creator")]
+        [JsonPropertyName("creator")]
         public DiscordUser Creator { get; private set; }
 
-        [JsonProperty("created_at")]
+        [JsonPropertyName("created_at")]
         public DateTime CreatedAt { get; private set; }
 
-        [JsonProperty("updated_at")]
+        [JsonPropertyName("updated_at")]
         public DateTime UpdatedAt { get; private set; }
 
-        [JsonProperty("source_guild_id")]
+        [JsonPropertyName("source_guild_id")]
         private ulong _guildId;
 
         public MinimalGuild SourceGuild
@@ -45,7 +46,7 @@ namespace Discord
             get { return new MinimalGuild(_guildId).SetClient(Client); }
         }
 
-        [JsonProperty("serialized_source_guild")]
+        [JsonPropertyName("serialized_source_guild")]
         private DiscordTemplateGuild _guild;
 
         public DiscordTemplateGuild Snapshot
@@ -62,7 +63,7 @@ namespace Discord
             }
         }
 
-        [JsonProperty("is_dirty")]
+        [JsonPropertyName("is_dirty")]
         private readonly bool? _dirty;
 
         public bool HasUnsyncedChanges

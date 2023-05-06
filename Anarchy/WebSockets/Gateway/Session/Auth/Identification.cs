@@ -1,22 +1,24 @@
-﻿using Newtonsoft.Json;
+﻿
+
+using System.Text.Json.Serialization;
 
 namespace Discord.Gateway
 {
     internal class GatewayIdentification
     {
-        [JsonProperty("token")]
+        [JsonPropertyName("token")]
         public string Token { get; set; }
 
-        [JsonProperty("properties")]
+        [JsonPropertyName("properties")]
         public SuperProperties Properties { get; set; }
 
-        [JsonProperty("presence")]
+        [JsonPropertyName("presence")]
         public PresenceProperties Presence { get; set; }
 
-        [JsonProperty("compress")]
+        [JsonPropertyName("compress")]
         public bool Compress { get; set; }
 
-        [JsonProperty("intents")]
+        [JsonPropertyName("intents")]
         public DiscordGatewayIntent? Intents { get; set; }
 
         public bool ShouldSerializeIntents()
@@ -24,7 +26,7 @@ namespace Discord.Gateway
             return Intents.HasValue;
         }
 
-        [JsonProperty("shard")]
+        [JsonPropertyName("shard")]
         private uint[] _shard
         {
             get { return new uint[] { Shard.Index, Shard.Total }; }

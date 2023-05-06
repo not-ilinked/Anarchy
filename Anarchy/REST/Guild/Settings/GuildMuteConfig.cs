@@ -1,13 +1,15 @@
-﻿using Newtonsoft.Json;
+﻿
+
+using System.Text.Json.Serialization;
 
 namespace Discord
 {
     public class GuildMuteConfig
     {
-        [JsonProperty("end_time")]
+        [JsonPropertyName("end_time")]
         public int? EndTime { get; set; }
 
-        [JsonProperty("selected_time_window")]
+        [JsonPropertyName("selected_time_window")]
         public int SelectedTimeWindow { get; set; }
     }
 }

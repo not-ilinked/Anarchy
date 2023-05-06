@@ -1,16 +1,18 @@
-﻿using Newtonsoft.Json;
+﻿
+
+using System.Text.Json.Serialization;
 
 namespace Discord
 {
     public class FriendRequestFlags
     {
-        [JsonProperty("all")]
+        [JsonPropertyName("all")]
         public bool Everyone { get; private set; }
 
-        [JsonProperty("mutual_friends")]
+        [JsonPropertyName("mutual_friends")]
         public bool MutualFriends { get; private set; }
 
-        [JsonProperty("mutual_guilds")]
+        [JsonPropertyName("mutual_guilds")]
         public bool MutualGuilds { get; private set; }
     }
 }

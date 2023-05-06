@@ -1,24 +1,24 @@
 ﻿using System;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 
 namespace Discord
 {
     public class RedeemableDiscordGift : DiscordGift
     {
-        [JsonProperty("code")]
+        [JsonPropertyName("code")]
         public string Code { get; private set; }
 
-        [JsonProperty("expires_at")]
+        [JsonPropertyName("expires_at")]
         public DateTime ExpiresAt { get; private set; }
 
-        [JsonProperty("redeemed")]
+        [JsonPropertyName("redeemed")]
         public bool Redeemed { get; private set; }
 
-        [JsonProperty("uses")]
+        [JsonPropertyName("uses")]
         public uint Uses { get; private set; }
 
-        [JsonProperty("max_uses")]
+        [JsonPropertyName("max_uses")]
         public uint MaxUses { get; private set; }
 
         public async Task RedeemAsync(ulong? channelId = null)

@@ -1,14 +1,16 @@
-﻿using Newtonsoft.Json;
+﻿
+
+using System.Text.Json.Serialization;
 
 namespace Discord
 {
     public class UserReportIdentification
     {
-        [JsonProperty("reason")]
+        [JsonPropertyName("reason")]
         internal DiscordReportReason Reason { get; set; }
 
         private readonly DiscordParameter<ulong> _userParam = new();
-        [JsonProperty("user_id")]
+        [JsonPropertyName("user_id")]
         public ulong UserId
         {
             get { return _userParam; }
@@ -16,7 +18,7 @@ namespace Discord
         }
 
         private readonly DiscordParameter<ulong> _guildParam = new();
-        [JsonProperty("guild_id")]
+        [JsonPropertyName("guild_id")]
         public ulong GuildId
         {
             get { return _guildParam; }
@@ -26,7 +28,7 @@ namespace Discord
         public bool ShouldSerializeGuildId() => _guildParam.Set;
 
         private readonly DiscordParameter<ulong> _channelParam = new();
-        [JsonProperty("channel_id")]
+        [JsonPropertyName("channel_id")]
         public ulong ChannelId
         {
             get { return _channelParam; }
@@ -36,7 +38,7 @@ namespace Discord
         public bool ShouldSerializeChannelId() => _channelParam.Set;
 
         private readonly DiscordParameter<ulong> _messageParam = new();
-        [JsonProperty("message_id")]
+        [JsonPropertyName("message_id")]
         public ulong MessageId
         {
             get { return _messageParam; }

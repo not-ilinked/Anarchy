@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Discord.Gateway
 {
@@ -10,16 +10,16 @@ namespace Discord.Gateway
             OnClientUpdated += (s, e) => Items.SetClientsInList(Client);
         }
 
-        [JsonProperty("range")]
+        [JsonPropertyName("range")]
         public int[] Range { get; private set; }
 
-        [JsonProperty("index")]
+        [JsonPropertyName("index")]
         public int Index { get; private set; }
 
-        [JsonProperty("op")]
+        [JsonPropertyName("op")]
         public string Type { get; private set; }
 
-        [JsonProperty("items")]
+        [JsonPropertyName("items")]
         public IReadOnlyList<MemberListItem> Items { get; private set; }
     }
 }

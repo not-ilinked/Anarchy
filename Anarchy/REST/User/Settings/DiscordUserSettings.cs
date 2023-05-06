@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Discord
 {
@@ -14,98 +14,98 @@ namespace Discord
         }
 
         // Privacy & Safety
-        [JsonProperty("explicit_content_filter")]
+        [JsonPropertyName("explicit_content_filter")]
         public ExplicitContentFilter ExplicitContentFilter { get; private set; }
 
-        [JsonProperty("default_guilds_restricted")]
+        [JsonPropertyName("default_guilds_restricted")]
         public bool RestrictGuildsByDefault { get; private set; }
 
-        [JsonProperty("view_nsfw_guilds")]
+        [JsonPropertyName("view_nsfw_guilds")]
         public bool ViewNsfwGuilds { get; private set; }
 
-        [JsonProperty("friend_source_flags")]
+        [JsonPropertyName("friend_source_flags")]
         public FriendRequestFlags FriendRequestFlags { get; private set; }
 
         // Appearance
-        [JsonProperty("theme")]
+        [JsonPropertyName("theme")]
         private string _theme;
 
         public DiscordTheme Theme => (DiscordTheme) Enum.Parse(typeof(DiscordTheme), _theme, true);
 
-        [JsonProperty("message_display_compact")]
+        [JsonPropertyName("message_display_compact")]
         public bool CompactMessages { get; private set; }
 
         // Accessability
-        [JsonProperty("gif_auto_play")]
+        [JsonPropertyName("gif_auto_play")]
         public bool PlayGifsAutomatically { get; private set; }
 
-        [JsonProperty("animate_emoji")]
+        [JsonPropertyName("animate_emoji")]
         public bool PlayAnimatedEmojis { get; private set; }
 
-        [JsonProperty("animate_stickers")]
+        [JsonPropertyName("animate_stickers")]
         public StickerAnimationAvailability StickerAnimation { get; private set; }
 
-        [JsonProperty("enable_tts_playback")]
+        [JsonPropertyName("enable_tts_playback")]
         public bool EnableTts { get; private set; }
 
         // Text and images
-        [JsonProperty("inline_embed_media")]
+        [JsonPropertyName("inline_embed_media")]
         public bool EmbedMedia { get; private set; }
 
-        [JsonProperty("inline_attachment_media")]
+        [JsonPropertyName("inline_attachment_media")]
         public bool EmbedAttachments { get; private set; }
 
-        [JsonProperty("render_embeds")]
+        [JsonPropertyName("render_embeds")]
         public bool EmbedLinks { get; private set; }
 
-        [JsonProperty("render_reactions")]
+        [JsonPropertyName("render_reactions")]
         public bool ShowReactions { get; private set; }
 
-        [JsonProperty("convert_emoticons")]
+        [JsonPropertyName("convert_emoticons")]
         public bool ConvertEmoticons { get; private set; }
 
         // Language
-        [JsonProperty("locale")]
+        [JsonPropertyName("locale")]
         public DiscordLanguage Language { get; private set; }
 
         // Advanced
-        [JsonProperty("developer_mode")]
+        [JsonPropertyName("developer_mode")]
         public bool DeveloperMode { get; private set; }
 
         // Other
-        [JsonProperty("custom_status")]
+        [JsonPropertyName("custom_status")]
         public CustomStatus CustomStatus { get; private set; }
 
-        [JsonProperty("guild_positions")]
+        [JsonPropertyName("guild_positions")]
         public IReadOnlyList<ulong> GuildPositions { get; private set; }
 
-        [JsonProperty("guild_folders")]
+        [JsonPropertyName("guild_folders")]
         public IReadOnlyList<DiscordGuildFolder> GuildFolders { get; private set; }
 
-        [JsonProperty("restricted_guilds")]
+        [JsonPropertyName("restricted_guilds")]
         private readonly List<ulong> _restrictedGuilds;
         public IReadOnlyList<MinimalGuild> RestrictedGuilds => _restrictedGuilds.Select(id => new MinimalGuild(id).SetClient(Client)).ToList();
 
-        internal void Update(JObject jObj)
+        internal void Update(JsonElement element)
         {
             foreach (var property in this.GetType().GetProperties())
             {
                 foreach (var attr in property.GetCustomAttributes(false))
                 {
-                    if (attr.GetType() == typeof(JsonPropertyAttribute))
+                    if (attr.GetType() == typeof(JsonPropertyNameAttribute))
                     {
-                        var jsonAttr = (JsonPropertyAttribute) attr;
+                        var jsonAttr = (JsonPropertyNameAttribute) attr;
 
-                        if (jObj.TryGetValue(jsonAttr.PropertyName, out JToken value))
-                            property.SetValue(this, value.ToObject(property.PropertyType));
+                        if (element.TryGetProperty(jsonAttr.Name, out JsonElement value))
+                            property.SetValue(this, JsonSerializer.Deserialize(value.GetRawText(), property.PropertyType));
 
                         break;
                     }
                 }
             }
 
-            if (jObj.TryGetValue("theme", out JToken theme))
-                _theme = theme.ToObject<string>();
+            if (element.TryGetProperty("theme", out JsonElement theme))
+                _theme = theme.GetString();
         }
     }
 }

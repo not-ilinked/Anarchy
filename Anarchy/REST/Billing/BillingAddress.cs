@@ -1,28 +1,29 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
+using System.Text.Json;
 
 namespace Discord
 {
     public class BillingAddress
     {
-        [JsonProperty("name")]
+        [JsonPropertyName("name")]
         public string Name { get; private set; }
 
-        [JsonProperty("line_1")]
+        [JsonPropertyName("line_1")]
         public string Address1 { get; private set; }
 
-        [JsonProperty("line_2")]
+        [JsonPropertyName("line_2")]
         public string Address2 { get; private set; }
 
-        [JsonProperty("city")]
+        [JsonPropertyName("city")]
         public string City { get; private set; }
 
-        [JsonProperty("state")]
+        [JsonPropertyName("state")]
         public string State { get; private set; }
 
-        [JsonProperty("country")]
+        [JsonPropertyName("country")]
         public string Country { get; private set; }
 
-        [JsonProperty("postal_code")]
-        public dynamic PostalCode { get; private set; }
+        [JsonPropertyName("postal_code")]
+        public JsonElement PostalCode { get; private set; }
     }
 }

@@ -1,26 +1,26 @@
-﻿using System.Threading.Tasks;
-using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 
 namespace Discord
 {
     public class PaymentMethod : Controllable
     {
-        [JsonProperty("id")]
+        [JsonPropertyName("id")]
         public ulong Id { get; private set; }
 
-        [JsonProperty("type")]
+        [JsonPropertyName("type")]
         public PaymentMethodType Type { get; private set; }
 
-        [JsonProperty("invalid")]
+        [JsonPropertyName("invalid")]
         public bool Invalid { get; private set; }
 
-        [JsonProperty("billing_address")]
+        [JsonPropertyName("billing_address")]
         public BillingAddress BillingAddress { get; private set; }
 
-        [JsonProperty("country")]
+        [JsonPropertyName("country")]
         public string County { get; private set; }
 
-        [JsonProperty("default")]
+        [JsonPropertyName("default")]
         public bool Default { get; private set; }
 
         public async Task<string> PurchaseGiftAsync(ulong skuId, ulong subPlanId, int expectedAmount)

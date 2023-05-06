@@ -1,29 +1,29 @@
 ﻿using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Discord.Media
 {
     internal class MediaProtocolSelection
     {
-        [JsonProperty("protocol")]
+        [JsonPropertyName("protocol")]
         public string Protocol { get; set; }
 
-        [JsonProperty("data")]
+        [JsonPropertyName("data")]
         public MediaProtocolData ProtocolData { get; set; }
 
-        [JsonProperty("rtc_connection_id")]
+        [JsonPropertyName("rtc_connection_id")]
         public string RtcConnectionId { get; set; }
 
-        [JsonProperty("codecs")]
+        [JsonPropertyName("codecs")]
         public List<MediaCodec> Codecs { get; set; }
 
-        [JsonProperty("address")]
+        [JsonPropertyName("address")]
         public string Host
         {
             get { return ProtocolData.Host; }
         }
 
-        [JsonProperty("port")]
+        [JsonPropertyName("port")]
         public int Port
         {
             get { return ProtocolData.Port; }

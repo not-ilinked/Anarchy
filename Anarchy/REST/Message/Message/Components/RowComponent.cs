@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Discord
 {
@@ -15,7 +15,7 @@ namespace Discord
             Components = children;
         }
 
-        [JsonProperty("components")]
+        [JsonPropertyName("components")]
         [JsonConverter(typeof(DeepJsonConverter<MessageInputComponent>))]
         public List<MessageInputComponent> Components { get; private set; }
     }

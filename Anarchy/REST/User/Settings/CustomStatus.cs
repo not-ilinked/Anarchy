@@ -1,11 +1,13 @@
-﻿using Newtonsoft.Json;
+﻿
+
+using System.Text.Json.Serialization;
 
 namespace Discord
 {
     public class CustomStatus
     {
         private readonly DiscordParameter<ulong?> EmojiProperty = new DiscordParameter<ulong?>();
-        [JsonProperty("emoji_id")]
+        [JsonPropertyName("emoji_id")]
         public ulong? EmojiId
         {
             get { return EmojiProperty; }
@@ -17,10 +19,10 @@ namespace Discord
             return EmojiProperty.Set;
         }
 
-        [JsonProperty("emoji_name")]
+        [JsonPropertyName("emoji_name")]
         public string EmojiName { get; set; }
 
-        [JsonProperty("text")]
+        [JsonPropertyName("text")]
         public string Text { get; set; }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Text.Json;
 using System.Threading.Tasks;
-using Newtonsoft.Json.Linq;
 
 namespace Discord
 {
@@ -11,12 +11,17 @@ namespace Discord
 
         public static async Task<string> PurchaseGiftAsync(this DiscordClient client, ulong paymentMethodId, ulong skuId, ulong subPlanId, int expectedAmount)
         {
-            return (await client.HttpClient.PostAsync($"/store/skus/{skuId}/purchase", new PurchaseOptions()
+            var options = new PurchaseOptions()
             {
                 PaymentMethodId = paymentMethodId,
                 SkuPlanId = subPlanId,
                 ExpectedAmount = expectedAmount
-            })).Deserialize<JObject>().Value<string>("gift_code");
+            };
+
+            var response = await client.HttpClient.PostAsync($"/store/skus/{skuId}/purchase", options);
+            var json = await response.Body.ReadAsStringAsync();
+            var jsonObject = JsonDocument.Parse(json).RootElement;
+            return jsonObject.GetProperty("gift_code").GetString();
         }
 
         public static string PurchaseGift(this DiscordClient client, ulong paymentMethodId, ulong skuId, ulong subPlanId, int expectedAmount)

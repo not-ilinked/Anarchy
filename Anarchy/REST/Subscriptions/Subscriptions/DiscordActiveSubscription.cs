@@ -1,36 +1,36 @@
 ﻿using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Discord
 {
     public class DiscordActiveSubscription
     {
-        [JsonProperty("id")]
+        [JsonPropertyName("id")]
         public ulong Id { get; private set; }
 
-        [JsonProperty("type")]
+        [JsonPropertyName("type")]
         public int Type { get; private set; }
 
-        [JsonProperty("created_at")]
+        [JsonPropertyName("created_at")]
         public DateTime CreatedAt { get; private set; }
 
-        [JsonProperty("currency")]
+        [JsonPropertyName("currency")]
         public string Currency { get; private set; }
 
-        [JsonProperty("status")]
+        [JsonPropertyName("status")]
         public DiscordSubscriptionStatus Status { get; private set; }
 
-        [JsonProperty("payment_source_id")]
+        [JsonPropertyName("payment_source_id")]
         public ulong? PaymentMethodId { get; private set; }
 
-        [JsonProperty("payment_gateway_plan_id")]
+        [JsonPropertyName("payment_gateway_plan_id")]
         public string SubscriptionTier { get; private set; }
 
-        [JsonProperty("plan_id")]
+        [JsonPropertyName("plan_id")]
         public ulong PrimaryPlanId { get; private set; }
 
-        [JsonProperty("items")]
+        [JsonPropertyName("items")]
         public IReadOnlyList<DiscordSubscription> Subscriptions { get; private set; }
     }
 }

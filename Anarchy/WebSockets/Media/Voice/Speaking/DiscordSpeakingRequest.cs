@@ -1,16 +1,18 @@
-﻿using Newtonsoft.Json;
+﻿
+
+using System.Text.Json.Serialization;
 
 namespace Discord.Media
 {
     internal class DiscordSpeakingRequest
     {
-        [JsonProperty("speaking")]
+        [JsonPropertyName("speaking")]
         public DiscordSpeakingFlags State { get; set; }
 
-        [JsonProperty("delay")]
+        [JsonPropertyName("delay")]
         public int Delay { get; set; }
 
-        [JsonProperty("ssrc")]
+        [JsonPropertyName("ssrc")]
         public uint SSRC { get; set; }
     }
 }

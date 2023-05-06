@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace Discord
 {
@@ -7,10 +7,10 @@ namespace Discord
     /// </summary>
     public class EmojiProperties
     {
-        [JsonProperty("name")]
+        [JsonPropertyName("name")]
         public string Name { get; set; }
 
-        [JsonProperty("image")]
+        [JsonPropertyName("image")]
         public DiscordImage Image { get; set; }
 
         public override string ToString()

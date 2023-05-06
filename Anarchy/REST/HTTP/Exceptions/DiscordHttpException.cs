@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Newtonsoft.Json.Linq;
+using System.Text.Json;
 
 namespace Discord
 {
@@ -20,14 +20,25 @@ namespace Discord
                 InvalidFields = FindErrors(error.Fields);
         }
 
-        private static FieldErrorDictionary FindErrors(JObject obj)
+        private static FieldErrorDictionary FindErrors(JsonElement element)
         {
             var dict = new FieldErrorDictionary();
 
-            foreach (JProperty child in obj.Children())
+            if (element.ValueKind != JsonValueKind.Object)
             {
-                if (child.Name == "_errors") dict.Errors = child.Value.ToObject<List<DiscordFieldError>>();
-                else dict[child.Name] = FindErrors((JObject) child.Value);
+                return dict;
+            }
+
+            foreach (JsonProperty child in element.EnumerateObject())
+            {
+                if (child.Name == "_errors")
+                {
+                    dict.Errors = JsonSerializer.Deserialize<List<DiscordFieldError>>(child.Value.GetRawText());
+                }
+                else
+                {
+                    dict[child.Name] = FindErrors(child.Value);
+                }
             }
 
             return dict;

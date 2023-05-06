@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using Anarchy;
-using Newtonsoft.Json;
+
 
 namespace Discord.Gateway
 {
@@ -39,14 +40,14 @@ namespace Discord.Gateway
             };
         }
 
-        [JsonProperty("large")]
+        [JsonPropertyName("large")]
         public bool Large { get; private set; }
 
-        [JsonProperty("member_count")]
+        [JsonPropertyName("member_count")]
         public uint MemberCount { get; internal set; }
 
         // i'm not 100% sure of how this functions yet. All i have so far is https://discord.com/developers/docs/topics/gateway#request-guild-members, but it doesn't seem like that applies to users.
-        [JsonProperty("members")]
+        [JsonPropertyName("members")]
         internal List<GuildMember> Members { get; private set; }
 
         public GuildMember ClientMember
@@ -62,7 +63,7 @@ namespace Discord.Gateway
             }
         }
 
-        [JsonProperty("channels")]
+        [JsonPropertyName("channels")]
         [JsonConverter(typeof(DeepJsonConverter<GuildChannel>))]
         internal ConcurrentList<GuildChannel> ChannelsConcurrent;
 
@@ -77,13 +78,13 @@ namespace Discord.Gateway
             }
         }
 
-        [JsonProperty("threads")]
+        [JsonPropertyName("threads")]
         public IReadOnlyList<DiscordThread> Threads { get; internal set; }
 
-        [JsonProperty("presences")]
+        [JsonPropertyName("presences")]
         public IReadOnlyList<DiscordPresence> Presences { get; private set; }
 
-        [JsonProperty("voice_states")]
+        [JsonPropertyName("voice_states")]
         internal ConcurrentList<DiscordVoiceState> _voiceStates;
 
         public IReadOnlyList<DiscordVoiceState> VoiceStates

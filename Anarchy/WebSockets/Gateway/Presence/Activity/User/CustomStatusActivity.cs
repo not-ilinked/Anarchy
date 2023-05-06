@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿
+
+using System.Text.Json.Serialization;
 
 namespace Discord.Gateway
 {
@@ -9,10 +11,10 @@ namespace Discord.Gateway
             OnClientUpdated += (s, e) => Emoji.SetClient(Client);
         }
 
-        [JsonProperty("state")]
+        [JsonPropertyName("state")]
         public string Text { get; private set; }
 
-        [JsonProperty("emoji")]
+        [JsonPropertyName("emoji")]
         public PartialEmoji Emoji { get; private set; }
 
         public override string ToString()

@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace Discord
 {
@@ -16,13 +16,13 @@ namespace Discord
             Inline = inline;
         }
 
-        [JsonProperty("name")]
+        [JsonPropertyName("name")]
         public string Name { get; private set; }
 
-        [JsonProperty("value")]
+        [JsonPropertyName("value")]
         public string Content { get; private set; }
 
-        [JsonProperty("inline")]
+        [JsonPropertyName("inline")]
         public bool Inline { get; private set; }
 
         public override string ToString()

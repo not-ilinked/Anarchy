@@ -1,21 +1,21 @@
 ﻿using System;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Discord
 {
     public class DiscordThreadMember : Controllable
     {
-        [JsonProperty("id")]
+        [JsonPropertyName("id")]
         private readonly ulong _threadId;
         public MinimalTextChannel Thread => new MinimalTextChannel(_threadId).SetClient(Client);
 
-        [JsonProperty("user_id")]
+        [JsonPropertyName("user_id")]
         public ulong UserId { get; private set; }
 
-        [JsonProperty("join_timestamp")]
+        [JsonPropertyName("join_timestamp")]
         public DateTime JoinedAt { get; private set; }
 
-        [JsonProperty("flags")]
+        [JsonPropertyName("flags")]
         public int Flags { get; private set; }
     }
 }

@@ -1,5 +1,5 @@
 ﻿using System.Net.Http;
-using Newtonsoft.Json.Linq;
+using System.Text.Json;
 
 namespace Discord
 {
@@ -11,21 +11,21 @@ namespace Discord
         public static void ValidateResponse(HttpResponseMessage response)
         {
             string content = response.Content.ReadAsStringAsync().Result;
-            JToken body = (content != null && content.Length != 0) ? JToken.Parse(content) : null;
+            JsonElement body = content != null && content.Length != 0 ? JsonDocument.Parse(content).RootElement : default;
 
             ValidateResponse(response, body);
         }
 
-        public static void ValidateResponse(HttpResponseMessage response, JToken body)
+        public static void ValidateResponse(HttpResponseMessage response, JsonElement body)
         {
             int statusCode = (int) response.StatusCode;
 
             if (statusCode >= 400)
             {
                 if (statusCode == 429)
-                    throw new RateLimitException(body.Value<int>("retry_after"));
+                    throw new RateLimitException(body.GetProperty("retry_after").GetInt32());
                 else
-                    throw new DiscordHttpException(body.ToObject<DiscordHttpError>());
+                    throw new DiscordHttpException(body.Deserialize<DiscordHttpError>());
             }
         }
     }

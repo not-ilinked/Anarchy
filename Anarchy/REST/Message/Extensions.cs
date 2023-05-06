@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace Discord
 {
@@ -132,7 +131,7 @@ namespace Discord
 
         public static async Task DeleteMessagesAsync(this DiscordClient client, ulong channelId, List<ulong> messages)
         {
-            await client.HttpClient.PostAsync($"/channels/{channelId}/messages/bulk-delete", $"{{\"messages\":{JsonConvert.SerializeObject(messages)}}}");
+            await client.HttpClient.PostAsync($"/channels/{channelId}/messages/bulk-delete", $"{{\"messages\":{JsonSerializer.Serialize(messages)}}}");
         }
 
         /// <summary>
@@ -151,7 +150,7 @@ namespace Discord
             var resp = await client.HttpClient.PostAsync($"/channels/{channelId}/typing");
 
             if (resp.ToString().Contains("cooldown"))
-                throw new RateLimitException(resp.Deserialize<JObject>().GetValue("message_send_cooldown_ms").ToObject<int>());
+                throw new RateLimitException(JsonDocument.Parse(await resp.Body).RootElement.GetProperty("message_send_cooldown_ms").GetInt32());
         }
 
         /// <summary>

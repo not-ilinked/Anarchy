@@ -1,5 +1,5 @@
 ﻿using System.Drawing;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Discord
 {
@@ -9,7 +9,7 @@ namespace Discord
     public class RoleProperties
     {
         private readonly DiscordParameter<string> NameProperty = new DiscordParameter<string>();
-        [JsonProperty("name")]
+        [JsonPropertyName("name")]
         public string Name
         {
             get { return NameProperty; }
@@ -22,7 +22,7 @@ namespace Discord
         }
 
         private readonly DiscordParameter<DiscordPermission> PermissionsProperty = new DiscordParameter<DiscordPermission>();
-        [JsonProperty("permissions")]
+        [JsonPropertyName("permissions")]
         public DiscordPermission Permissions
         {
             get { return PermissionsProperty; }
@@ -35,7 +35,7 @@ namespace Discord
         }
 
         private readonly DiscordParameter<uint> ColorProperty = new DiscordParameter<uint>();
-        [JsonProperty("color")]
+        [JsonPropertyName("color")]
 #pragma warning disable IDE1006, IDE0051
         private uint _color
         {
@@ -55,7 +55,7 @@ namespace Discord
         }
 
         private readonly DiscordParameter<bool> SeperatedProperty = new DiscordParameter<bool>();
-        [JsonProperty("hoist")]
+        [JsonPropertyName("hoist")]
         public bool Seperated
         {
             get { return SeperatedProperty; }
@@ -68,7 +68,7 @@ namespace Discord
         }
 
         private readonly DiscordParameter<bool> MentionableProperty = new DiscordParameter<bool>();
-        [JsonProperty("mentionable")]
+        [JsonPropertyName("mentionable")]
         public bool Mentionable
         {
             get { return MentionableProperty; }

@@ -1,10 +1,12 @@
-﻿using Newtonsoft.Json;
+﻿
+
+using System.Text.Json.Serialization;
 
 namespace Discord.Gateway
 {
     public class ChannelUnreadMessages : Controllable
     {
-        [JsonProperty("id")]
+        [JsonPropertyName("id")]
         private readonly ulong _channelId;
 
         public MinimalTextChannel Channel
@@ -12,7 +14,7 @@ namespace Discord.Gateway
             get { return new MinimalTextChannel(_channelId).SetClient(Client); }
         }
 
-        [JsonProperty("last_message_id")]
+        [JsonPropertyName("last_message_id")]
         public ulong LastMessageId { get; private set; }
     }
 }

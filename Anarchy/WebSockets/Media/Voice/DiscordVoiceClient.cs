@@ -3,7 +3,6 @@ using System.IO;
 using System.Linq;
 using Discord.Gateway;
 using Discord.WebSockets;
-using Newtonsoft.Json.Linq;
 
 namespace Discord.Media
 {

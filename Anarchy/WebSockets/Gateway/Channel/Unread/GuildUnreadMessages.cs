@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Discord.Gateway
 {
@@ -10,7 +10,7 @@ namespace Discord.Gateway
             OnClientUpdated += (s, args) => Channels.SetClientsInList(Client);
         }
 
-        [JsonProperty("guild_id")]
+        [JsonPropertyName("guild_id")]
         private readonly ulong _guildId;
 
         public MinimalGuild Guild
@@ -18,7 +18,7 @@ namespace Discord.Gateway
             get { return new MinimalGuild(_guildId).SetClient(Client); }
         }
 
-        [JsonProperty("channel_unread_updates")]
+        [JsonPropertyName("channel_unread_updates")]
         public IReadOnlyList<ChannelUnreadMessages> Channels { get; private set; }
     }
 }

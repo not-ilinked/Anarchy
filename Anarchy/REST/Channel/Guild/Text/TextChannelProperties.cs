@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace Discord
 {
@@ -8,7 +8,7 @@ namespace Discord
     public class TextChannelProperties : GuildChannelProperties
     {
         internal readonly DiscordParameter<ChannelType> TypeProperty = new DiscordParameter<ChannelType>();
-        [JsonProperty("type")]
+        [JsonPropertyName("type")]
         private ChannelType _type
         {
             get { return TypeProperty; }
@@ -26,7 +26,7 @@ namespace Discord
         }
 
         private readonly DiscordParameter<string> TopicProperty = new DiscordParameter<string>();
-        [JsonProperty("topic")]
+        [JsonPropertyName("topic")]
         public string Topic
         {
             get { return TopicProperty; }
@@ -39,7 +39,7 @@ namespace Discord
         }
 
         private readonly DiscordParameter<bool> NsfwProperty = new DiscordParameter<bool>();
-        [JsonProperty("nsfw")]
+        [JsonPropertyName("nsfw")]
         public bool Nsfw
         {
             get { return NsfwProperty; }
@@ -52,7 +52,7 @@ namespace Discord
         }
 
         private readonly DiscordParameter<int> SlowModeProperty = new DiscordParameter<int>();
-        [JsonProperty("rate_limit_per_user")]
+        [JsonPropertyName("rate_limit_per_user")]
         public int SlowMode
         {
             get { return SlowModeProperty; }

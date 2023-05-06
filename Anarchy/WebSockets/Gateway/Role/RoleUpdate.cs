@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿
+
+using System.Text.Json.Serialization;
 
 namespace Discord.Gateway
 {
@@ -10,14 +12,14 @@ namespace Discord.Gateway
         }
 
         private ulong _guildId;
-        [JsonProperty("guild_id")]
+        [JsonPropertyName("guild_id")]
         public ulong GuildId
         {
             get { return _guildId; }
             set { Role.GuildId = _guildId = value; }
         }
 
-        [JsonProperty("role")]
+        [JsonPropertyName("role")]
         public DiscordRole Role { get; private set; }
 
         public override string ToString()

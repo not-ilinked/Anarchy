@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace Discord
 {
@@ -12,7 +12,7 @@ namespace Discord
             }
         }
 
-        [JsonProperty("user")]
+        [JsonPropertyName("user")]
         public new DiscordUser Gifter { get; private set; }
     }
 }

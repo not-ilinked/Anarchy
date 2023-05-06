@@ -1,11 +1,13 @@
-﻿using Newtonsoft.Json;
+﻿
+
+using System.Text.Json.Serialization;
 
 namespace Discord
 {
     public class ConnectionProperties
     {
         private readonly DiscordParameter<bool> _visibleParameter = new DiscordParameter<bool>();
-        [JsonProperty("visibility")]
+        [JsonPropertyName("visibility")]
         public bool Visible
         {
             get { return _visibleParameter; }
@@ -18,7 +20,7 @@ namespace Discord
         }
 
         private readonly DiscordParameter<bool> _showParameter = new DiscordParameter<bool>();
-        [JsonProperty("show_activity")]
+        [JsonPropertyName("show_activity")]
         public bool ShowAsActivity
         {
             get { return _showParameter; }

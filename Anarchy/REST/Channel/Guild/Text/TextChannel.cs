@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 
 namespace Discord
 {
@@ -10,17 +10,17 @@ namespace Discord
     /// </summary>
     public class TextChannel : GuildChannel, IMessageChannel
     {
-        [JsonProperty("topic")]
+        [JsonPropertyName("topic")]
         public string Topic { get; private set; }
 
-        [JsonProperty("nsfw")]
+        [JsonPropertyName("nsfw")]
         public bool Nsfw { get; private set; }
 
-        [JsonProperty("last_message_id")]
+        [JsonPropertyName("last_message_id")]
         public ulong? LastMessageId { get; private set; }
 
         private int _slowMode;
-        [JsonProperty("rate_limit_per_user")]
+        [JsonPropertyName("rate_limit_per_user")]
         public int SlowMode
         {
             get { return _slowMode; }

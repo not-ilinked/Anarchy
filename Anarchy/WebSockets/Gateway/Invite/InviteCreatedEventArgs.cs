@@ -1,14 +1,14 @@
 ﻿using System;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Discord.Gateway
 {
     public class InviteCreatedEventArgs : Controllable
     {
-        [JsonProperty("code")]
+        [JsonPropertyName("code")]
         public string Code { get; private set; }
 
-        [JsonProperty("channel_id")]
+        [JsonPropertyName("channel_id")]
         private readonly ulong _channelId;
 
         public MinimalTextChannel Channel
@@ -16,10 +16,10 @@ namespace Discord.Gateway
             get { return new MinimalTextChannel(_channelId).SetClient(Client); }
         }
 
-        [JsonProperty("created_at")]
+        [JsonPropertyName("created_at")]
         public DateTime CreatedAt { get; private set; }
 
-        [JsonProperty("guild_id")]
+        [JsonPropertyName("guild_id")]
         private readonly ulong? _guildId;
 
         public MinimalGuild Guild
@@ -33,16 +33,16 @@ namespace Discord.Gateway
             }
         }
 
-        [JsonProperty("inviter")]
+        [JsonPropertyName("inviter")]
         public DiscordUser Inviter { get; private set; }
 
-        [JsonProperty("max_age")]
+        [JsonPropertyName("max_age")]
         public uint MaxAge { get; private set; }
 
-        [JsonProperty("max_uses")]
+        [JsonPropertyName("max_uses")]
         public uint MaxUses { get; private set; }
 
-        [JsonProperty("temporary")]
+        [JsonPropertyName("temporary")]
         public bool Temporary { get; private set; }
     }
 }

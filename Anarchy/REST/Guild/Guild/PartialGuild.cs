@@ -1,18 +1,19 @@
 ﻿using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
+
 
 namespace Discord
 {
     public class PartialGuild : BaseGuild
     {
-        [JsonProperty("owner")]
+        [JsonPropertyName("owner")]
         public bool Owner { get; private set; }
 
-        [JsonProperty("permissions")]
+        [JsonPropertyName("permissions")]
         public DiscordPermission Permissions { get; private set; }
 
-        [JsonProperty("features")]
+        [JsonPropertyName("features")]
         public IReadOnlyList<string> Features { get; private set; }
 
         public async Task<DiscordGuild> GetGuildAsync()

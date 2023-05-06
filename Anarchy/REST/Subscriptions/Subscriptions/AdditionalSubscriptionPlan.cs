@@ -1,13 +1,15 @@
-﻿using Newtonsoft.Json;
+﻿
+
+using System.Text.Json.Serialization;
 
 namespace Discord
 {
     public class AdditionalSubscriptionPlan
     {
-        [JsonProperty("plan_id")]
+        [JsonPropertyName("plan_id")]
         public ulong Id { get; set; }
 
-        [JsonProperty("quantity")]
+        [JsonPropertyName("quantity")]
         public int Quantity { get; set; } = 1;
     }
 }

@@ -1,25 +1,27 @@
-﻿using Newtonsoft.Json;
+﻿
+
+using System.Text.Json.Serialization;
 
 namespace Discord
 {
     public class DiscordSticker
     {
-        [JsonProperty("id")]
+        [JsonPropertyName("id")]
         public ulong Id { get; private set; }
 
-        [JsonProperty("pack_id")]
+        [JsonPropertyName("pack_id")]
         public ulong PackId { get; private set; }
 
-        [JsonProperty("name")]
+        [JsonPropertyName("name")]
         public string Name { get; private set; }
 
-        [JsonProperty("description")]
+        [JsonPropertyName("description")]
         public string Description { get; private set; }
 
-        [JsonProperty("asset")]
+        [JsonPropertyName("asset")]
         public string AssetHash { get; private set; }
 
-        [JsonProperty("format_type")]
+        [JsonPropertyName("format_type")]
         public StickerFormatType FormatType { get; private set; }
     }
 }

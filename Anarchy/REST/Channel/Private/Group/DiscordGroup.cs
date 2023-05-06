@@ -1,5 +1,5 @@
-﻿using System.Threading.Tasks;
-using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 
 namespace Discord
 {
@@ -8,7 +8,7 @@ namespace Discord
     /// </summary>
     public class DiscordGroup : PrivateChannel
     {
-        [JsonProperty("icon")]
+        [JsonPropertyName("icon")]
         private string _iconHash;
 
         public DiscordCDNImage Icon
@@ -22,7 +22,7 @@ namespace Discord
             }
         }
 
-        [JsonProperty("owner_id")]
+        [JsonPropertyName("owner_id")]
         public ulong OwnerId { get; private set; }
 
         protected void Update(DiscordGroup group)

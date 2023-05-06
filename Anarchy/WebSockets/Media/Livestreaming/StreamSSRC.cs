@@ -1,16 +1,18 @@
-﻿using Newtonsoft.Json;
+﻿
+
+using System.Text.Json.Serialization;
 
 namespace Discord.Media
 {
     public class StreamSSRC
     {
-        [JsonProperty("type")]
+        [JsonPropertyName("type")]
         public string Type { get; private set; }
 
-        [JsonProperty("ssrc")]
+        [JsonPropertyName("ssrc")]
         public uint SSRC { get; private set; }
 
-        [JsonProperty("rtx_ssrc")]
+        [JsonPropertyName("rtx_ssrc")]
         public uint RtxSsrc { get; private set; }
     }
 }

@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Discord.Gateway
 {
@@ -10,21 +10,21 @@ namespace Discord.Gateway
             OnClientUpdated += (s, e) => Operations.SetClientsInList(Client);
         }
 
-        [JsonProperty("ops")]
+        [JsonPropertyName("ops")]
         public IReadOnlyList<MemberListUpdateOperation> Operations { get; private set; }
 
-        [JsonProperty("online_count")]
+        [JsonPropertyName("online_count")]
         public uint OnlineMembers { get; private set; }
 
-        [JsonProperty("member_count")]
+        [JsonPropertyName("member_count")]
         public uint Members { get; private set; }
 
-        [JsonProperty("guild_id")]
+        [JsonPropertyName("guild_id")]
         private readonly ulong _guildId;
 
         public MinimalGuild Guild => new MinimalGuild(_guildId).SetClient(Client);
 
-        [JsonProperty("groups")]
+        [JsonPropertyName("groups")]
         public IReadOnlyList<MemberListGroup> Groups { get; private set; }
     }
 }

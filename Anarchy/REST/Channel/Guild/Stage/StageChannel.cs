@@ -1,14 +1,14 @@
-﻿using System.Threading.Tasks;
-using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 
 namespace Discord
 {
     public class StageChannel : VoiceChannel
     {
-        [JsonProperty("topic")]
+        [JsonPropertyName("topic")]
         public string Topic { get; private set; }
 
-        [JsonProperty("nsfw")]
+        [JsonPropertyName("nsfw")]
         public string Nsfw { get; private set; }
 
         public Task<DiscordStageInstance> CreateInstanceAsync(string topic, StagePrivacyLevel privacyLevel = StagePrivacyLevel.GuildOnly) =>

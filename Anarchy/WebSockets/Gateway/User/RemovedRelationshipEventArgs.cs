@@ -1,14 +1,14 @@
 ﻿using System;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Discord
 {
     public class RemovedRelationshipEventArgs : EventArgs
     {
-        [JsonProperty("id")]
+        [JsonPropertyName("id")]
         public ulong UserId { get; private set; }
 
-        [JsonProperty("type")]
+        [JsonPropertyName("type")]
         public RelationshipType PreviousType { get; private set; }
     }
 }

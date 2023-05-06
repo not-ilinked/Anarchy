@@ -1,44 +1,45 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
+
 
 namespace Discord
 {
     public class DiscordThread : DiscordChannel
     {
-        [JsonProperty("guild_id")]
+        [JsonPropertyName("guild_id")]
         private readonly ulong _guildId;
         public MinimalGuild Guild => new MinimalGuild(_guildId).SetClient(Client);
 
-        [JsonProperty("parent_id")]
+        [JsonPropertyName("parent_id")]
         private readonly ulong _parentId;
         public MinimalTextChannel Channel => new MinimalTextChannel(_parentId).SetClient(Client);
 
-        [JsonProperty("owner_id")]
+        [JsonPropertyName("owner_id")]
         public ulong OwnerId { get; private set; }
 
-        [JsonProperty("last_message_id")]
+        [JsonPropertyName("last_message_id")]
         public ulong? LastMessageId { get; private set; }
 
         private int _slowMode;
-        [JsonProperty("rate_limit_per_user")]
+        [JsonPropertyName("rate_limit_per_user")]
         public int SlowMode
         {
             get { return _slowMode; }
             private set { _slowMode = value * 10; } //convert to milliseconds
         }
 
-        [JsonProperty("member_count")]
+        [JsonPropertyName("member_count")]
         public int MemberCount { get; internal set; }
 
-        [JsonProperty("flags")]
+        [JsonPropertyName("flags")]
         public int Flags { get; private set; }
 
-        [JsonProperty("thread_members_preview")]
+        [JsonPropertyName("thread_members_preview")]
         public IReadOnlyList<ulong> MemberPreview { get; internal set; }
 
-        [JsonProperty("thread_metadata")]
+        [JsonPropertyName("thread_metadata")]
         public DiscordThreadMetadata Metadata { get; private set; }
 
         protected void Update(DiscordThread thread)
