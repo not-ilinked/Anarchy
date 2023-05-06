@@ -1,11 +1,13 @@
-﻿using Newtonsoft.Json;
+﻿
+
+using System.Text.Json.Serialization;
 
 namespace Discord
 {
     public class MessageEditProperties
     {
         private readonly DiscordParameter<string> _contentProperty = new();
-        [JsonProperty("content")]
+        [JsonPropertyName("content")]
         public string Content
         {
             get { return _contentProperty; }
@@ -18,7 +20,7 @@ namespace Discord
         }
 
         private readonly DiscordParameter<DiscordEmbed> _embedProperty = new();
-        [JsonProperty("embed")]
+        [JsonPropertyName("embed")]
         public DiscordEmbed Embed
         {
             get { return _embedProperty; }
@@ -31,7 +33,7 @@ namespace Discord
         }
 
         private readonly DiscordParameter<MessageFlags> _flagProperty = new();
-        [JsonProperty("flags")]
+        [JsonPropertyName("flags")]
         public MessageFlags Flags
         {
             get { return _flagProperty; }

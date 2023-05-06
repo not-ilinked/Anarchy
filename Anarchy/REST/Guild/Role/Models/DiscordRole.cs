@@ -1,13 +1,14 @@
 ﻿using System.Drawing;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Discord.Commands;
-using Newtonsoft.Json;
+
 
 namespace Discord
 {
     public class DiscordRole : Controllable, IMentionable
     {
-        [JsonProperty("id")]
+        [JsonPropertyName("id")]
         public ulong Id { get; private set; }
 
         internal ulong GuildId { get; set; }
@@ -17,10 +18,10 @@ namespace Discord
             get { return new MinimalGuild(GuildId).SetClient(Client); }
         }
 
-        [JsonProperty("name")]
+        [JsonPropertyName("name")]
         public string Name { get; private set; }
 
-        [JsonProperty("color")]
+        [JsonPropertyName("color")]
         private uint _color;
         public Color Color
         {
@@ -28,16 +29,16 @@ namespace Discord
             private set { _color = (uint) Color.FromArgb(0, value.R, value.G, value.B).ToArgb(); }
         }
 
-        [JsonProperty("position")]
+        [JsonPropertyName("position")]
         public int Position { get; private set; }
 
-        [JsonProperty("hoist")]
+        [JsonPropertyName("hoist")]
         public bool Seperated { get; private set; }
 
-        [JsonProperty("mentionable")]
+        [JsonPropertyName("mentionable")]
         public bool Mentionable { get; private set; }
 
-        [JsonProperty("permissions")]
+        [JsonPropertyName("permissions")]
         public DiscordPermission Permissions { get; private set; }
 
         public async Task<DiscordRole> ModifyAsync(RoleProperties properties)

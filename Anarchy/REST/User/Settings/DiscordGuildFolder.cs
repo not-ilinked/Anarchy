@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Discord
 {
     public class DiscordGuildFolder : Controllable
     {
-        [JsonProperty("guild_ids")]
+        [JsonPropertyName("guild_ids")]
         private readonly IReadOnlyList<ulong> _guilds;
 
         public IReadOnlyList<MinimalGuild> Guilds
@@ -22,13 +22,13 @@ namespace Discord
             }
         }
 
-        [JsonProperty("id")]
+        [JsonPropertyName("id")]
         public long? Id { get; private set; }
 
-        [JsonProperty("name")]
+        [JsonPropertyName("name")]
         public string Name { get; private set; }
 
-        [JsonProperty("color")]
+        [JsonPropertyName("color")]
         private readonly int? _color;
 
         public Color? Color

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Text.Json;
 using System.Threading.Tasks;
-using Newtonsoft.Json.Linq;
 
 namespace Discord
 {
@@ -83,7 +83,7 @@ namespace Discord
 
         public static async Task<ulong> FollowChannelAsync(this DiscordClient client, ulong channelToFollowId, ulong crosspostChannelId)
         {
-            return (await client.HttpClient.PostAsync($"/channels/{channelToFollowId}/followers", $"{{\"webhook_channel_id\":{crosspostChannelId}}}")).Deserialize<JObject>().Value<ulong>("webhook_id");
+            return (await client.HttpClient.PostAsync($"/channels/{channelToFollowId}/followers", $"{{\"webhook_channel_id\":{crosspostChannelId}}}")).Deserialize<JsonElement>().GetProperty("webhook_id").GetUInt64();
         }
 
         public static ulong FollowChannel(this DiscordClient client, ulong channelToFollowId, ulong crosspostChannelId)

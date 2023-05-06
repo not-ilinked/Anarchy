@@ -1,15 +1,15 @@
 ﻿using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Discord.Gateway
 {
     public class GuildSubscriptionProperties
     {
-        [JsonProperty("guild_id")]
+        [JsonPropertyName("guild_id")]
         internal ulong GuildId { get; set; }
 
         private readonly DiscordParameter<bool> _typeParam = new DiscordParameter<bool>();
-        [JsonProperty("typing")]
+        [JsonPropertyName("typing")]
         public bool Typing
         {
             get { return _typeParam; }
@@ -19,7 +19,7 @@ namespace Discord.Gateway
         public bool ShouldSerializeTyping() => _typeParam.Set;
 
         private readonly DiscordParameter<bool> _threadParam = new DiscordParameter<bool>();
-        [JsonProperty("threads")]
+        [JsonPropertyName("threads")]
         public bool Threads
         {
             get { return _threadParam; }
@@ -29,7 +29,7 @@ namespace Discord.Gateway
         public bool ShouldSerializeThreads() => _threadParam.Set;
 
         private readonly DiscordParameter<bool> _activityParam = new DiscordParameter<bool>();
-        [JsonProperty("activities")]
+        [JsonPropertyName("activities")]
         public bool Activities
         {
             get { return _activityParam; }
@@ -38,13 +38,13 @@ namespace Discord.Gateway
 
         public bool ShouldSerializeActivities() => _activityParam.Set;
 
-        [JsonProperty("members")]
+        [JsonPropertyName("members")]
         public List<ulong> Members { get; set; } = new List<ulong>();
 
-        [JsonProperty("channels")]
+        [JsonPropertyName("channels")]
         public Dictionary<ulong, int[][]> Channels { get; set; } = new Dictionary<ulong, int[][]>();
 
-        [JsonProperty("thread_member_lists")]
+        [JsonPropertyName("thread_member_lists")]
         private readonly List<object> _threadMemberLists = new List<object>();
     }
 }

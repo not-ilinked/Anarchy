@@ -1,16 +1,18 @@
-﻿using Newtonsoft.Json;
+﻿
+
+using System.Text.Json.Serialization;
 
 namespace Discord
 {
     public class DiscordChannelSettings
     {
-        [JsonProperty("channel_id")]
+        [JsonPropertyName("channel_id")]
         public ulong Id { get; private set; }
 
-        [JsonProperty("muted")]
+        [JsonPropertyName("muted")]
         public bool Muted { get; private set; }
 
-        [JsonProperty("message_notifications")]
+        [JsonPropertyName("message_notifications")]
         public ClientNotificationLevel Notifications { get; private set; }
     }
 }

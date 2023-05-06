@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿
+
+using System.Text.Json.Serialization;
 
 namespace Discord
 {
@@ -9,16 +11,16 @@ namespace Discord
             Type = MessageComponentType.Button;
         }
 
-        [JsonProperty("style")]
+        [JsonPropertyName("style")]
         public MessageButtonStyle Style { get; set; }
 
-        [JsonProperty("label")]
+        [JsonPropertyName("label")]
         public string Text { get; set; }
 
-        [JsonProperty("emoji")]
+        [JsonPropertyName("emoji")]
         public PartialEmoji Emoji { get; set; }
 
-        [JsonProperty("url")]
+        [JsonPropertyName("url")]
         public string RedirectUrl { get; set; }
     }
 }

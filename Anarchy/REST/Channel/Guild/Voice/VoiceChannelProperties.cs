@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace Discord
 {
@@ -8,7 +8,7 @@ namespace Discord
     public class VoiceChannelProperties : GuildChannelProperties
     {
         private readonly DiscordParameter<uint> BitrateProperty = new DiscordParameter<uint>();
-        [JsonProperty("bitrate")]
+        [JsonPropertyName("bitrate")]
         public uint Bitrate
         {
             get { return BitrateProperty; }
@@ -21,7 +21,7 @@ namespace Discord
         }
 
         private readonly DiscordParameter<uint> UserLimitProperty = new DiscordParameter<uint>();
-        [JsonProperty("user_limit")]
+        [JsonPropertyName("user_limit")]
         public uint UserLimit
         {
             get { return UserLimitProperty; }

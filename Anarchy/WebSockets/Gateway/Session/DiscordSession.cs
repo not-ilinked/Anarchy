@@ -1,20 +1,20 @@
 ﻿using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Discord.Gateway
 {
     public class DiscordSession
     {
-        [JsonProperty("status")]
+        [JsonPropertyName("status")]
         public UserStatus Status { get; private set; }
 
-        [JsonProperty("session_id")]
+        [JsonPropertyName("session_id")]
         public string Id { get; private set; }
 
-        [JsonProperty("client_info")]
+        [JsonPropertyName("client_info")]
         public DiscordSessionClientInfo ClientInfo { get; private set; }
 
-        [JsonProperty("activities")]
+        [JsonPropertyName("activities")]
         public IReadOnlyList<DiscordActivity> Activities { get; private set; }
     }
 }

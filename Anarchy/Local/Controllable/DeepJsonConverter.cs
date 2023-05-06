@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
+using System.Text.Json;
 using Discord.Gateway;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace Discord
 {
@@ -77,26 +77,24 @@ namespace Discord
         };
     }
 
-    internal class DeepJsonConverter<T> : JsonConverter
+    internal class DeepJsonConverter<T> : JsonConverter<T>
     {
-        public override bool CanWrite => false;
-
-        public override bool CanConvert(Type objectType)
+        public override bool CanConvert(Type typeToConvert)
         {
             return true;
         }
 
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        public override T Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            if (reader.TokenType == JsonToken.StartObject)
-                return JObject.Load(reader).ParseDeterministic<T>();
-            else if (reader.TokenType == JsonToken.StartArray)
-                return Activator.CreateInstance(objectType, JArray.Load(reader).MultipleDeterministic<T>());
+            if (reader.TokenType == JsonTokenType.StartObject)
+                return JsonSerializer.Deserialize<T>(ref reader, options);
+            else if (reader.TokenType == JsonTokenType.StartArray)
+                return JsonSerializer.Deserialize<List<T>>(ref reader, options)[0];
             else
                 throw new JsonException("Invalid use of DeepJsonConverter");
         }
 
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        public override void Write(Utf8JsonWriter writer, T value, JsonSerializerOptions options)
         {
             throw new NotImplementedException();
         }

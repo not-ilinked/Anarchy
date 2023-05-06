@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Net.Http;
+using System.Text.Json;
+using System.Text;
 using System.Threading.Tasks;
-using Newtonsoft.Json.Linq;
 
 namespace Discord
 {
@@ -8,10 +10,13 @@ namespace Discord
     {
         public static async Task RingAsync(this DiscordClient client, ulong channelId, List<ulong> recipients)
         {
-            await client.HttpClient.PostAsync($"/channels/{channelId}/call/ring", new JObject
+            var payload = new
             {
-                ["recipients"] = recipients == null ? null : JArray.FromObject(recipients)
-            });
+                recipients = recipients == null ? null : recipients.ToArray()
+            };
+
+            var requestContent = new StringContent(JsonSerializer.Serialize(payload), Encoding.UTF8, "application/json");
+            await client.HttpClient.PostAsync($"/channels/{channelId}/call/ring", requestContent);
         }
 
         /// <summary>
@@ -37,10 +42,13 @@ namespace Discord
 
         public static async Task StopRingingAsync(this DiscordClient client, ulong channelId, List<ulong> recipients)
         {
-            await client.HttpClient.PostAsync($"/channels/{channelId}/call/stop-ringing", new JObject
+
+            var payload = new
             {
-                ["recipients"] = recipients == null ? null : JArray.FromObject(recipients)
-            });
+                recipients = recipients == null ? null : recipients.ToArray()
+            };
+            var requestContent = new StringContent(JsonSerializer.Serialize(payload), Encoding.UTF8, "application/json");
+            await client.HttpClient.PostAsync($"/channels/{channelId}/call/stop-ringing", requestContent);
         }
 
         /// <summary>

@@ -1,5 +1,5 @@
 ﻿using System;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Discord
 {
@@ -10,19 +10,19 @@ namespace Discord
             OnClientUpdated += (sender, e) => GuildSubscription.SetClient(Client);
         }
 
-        [JsonProperty("id")]
+        [JsonPropertyName("id")]
         public ulong Id { get; private set; }
 
-        [JsonProperty("subscription_id")]
+        [JsonPropertyName("subscription_id")]
         public ulong ActiveSubscriptionId { get; private set; }
 
-        [JsonProperty("premium_guild_subscription")]
+        [JsonPropertyName("premium_guild_subscription")]
         public DiscordGuildSubscription GuildSubscription { get; private set; }
 
-        [JsonProperty("canceled")]
+        [JsonPropertyName("canceled")]
         public bool Canceled { get; private set; }
 
-        [JsonProperty("cooldown_ends_at")]
+        [JsonPropertyName("cooldown_ends_at")]
         public DateTime? Cooldown { get; private set; }
 
         // TODO: Get an endpoint for cancelling

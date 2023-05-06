@@ -1,20 +1,20 @@
 ﻿using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Discord.Media
 {
     internal class GoLiveUpdate
     {
-        [JsonProperty("stream_key")]
+        [JsonPropertyName("stream_key")]
         public string StreamKey { get; private set; }
 
-        [JsonProperty("region")]
+        [JsonPropertyName("region")]
         public string Region { get; private set; }
 
-        [JsonProperty("paused")]
+        [JsonPropertyName("paused")]
         public bool Paused { get; private set; }
 
-        [JsonProperty("viewer_ids")]
+        [JsonPropertyName("viewer_ids")]
         public IReadOnlyList<ulong> ViewerIds { get; private set; }
     }
 }

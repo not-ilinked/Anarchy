@@ -1,10 +1,11 @@
-﻿using Newtonsoft.Json;
+﻿
+using System.Text.Json.Serialization;
 
 namespace Discord
 {
     public class MessageComponent
     {
-        [JsonProperty("type")]
+        [JsonPropertyName("type")]
         public MessageComponentType Type { get; protected set; }
     }
 }

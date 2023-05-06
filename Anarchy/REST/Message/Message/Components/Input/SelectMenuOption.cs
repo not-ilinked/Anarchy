@@ -1,22 +1,24 @@
-﻿using Newtonsoft.Json;
+﻿
+
+using System.Text.Json.Serialization;
 
 namespace Discord
 {
     public class SelectMenuOption
     {
-        [JsonProperty("label")]
+        [JsonPropertyName("label")]
         public string Text { get; set; }
 
-        [JsonProperty("value")]
+        [JsonPropertyName("value")]
         public string Value { get; set; }
 
-        [JsonProperty("description")]
+        [JsonPropertyName("description")]
         public string Description { get; set; }
 
-        [JsonProperty("emoji")]
+        [JsonPropertyName("emoji")]
         public PartialEmoji Emoji { get; set; }
 
-        [JsonProperty("default")]
+        [JsonPropertyName("default")]
         public bool? Default { get; set; }
     }
 }

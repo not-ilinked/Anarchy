@@ -1,5 +1,6 @@
-﻿using System.Threading.Tasks;
-using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
+using System.Threading.Tasks;
+
 
 namespace Discord
 {
@@ -15,17 +16,17 @@ namespace Discord
             };
         }
 
-        [JsonProperty("code")]
+        [JsonPropertyName("code")]
         public string Code { get; private set; }
 
-        [JsonProperty("channel")]
+        [JsonPropertyName("channel")]
         [JsonConverter(typeof(DeepJsonConverter<DiscordChannel>))]
         public DiscordChannel Channel { get; private set; }
 
-        [JsonProperty("inviter")]
+        [JsonPropertyName("inviter")]
         public DiscordUser Inviter { get; private set; }
 
-        [JsonProperty("guild")]
+        [JsonPropertyName("guild")]
         protected InviteGuild _guild;
 
         public InviteType Type

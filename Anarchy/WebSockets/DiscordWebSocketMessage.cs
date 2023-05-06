@@ -1,16 +1,16 @@
 ﻿using System;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Discord.WebSockets
 {
-    public class DiscordWebSocketMessage<TOpcode> : DiscordWebSocketRequest<JToken, TOpcode> where TOpcode : Enum
+    public class DiscordWebSocketMessage<TOpcode> : DiscordWebSocketRequest<JsonElement, TOpcode> where TOpcode : Enum
     {
         // these members only apply to the Gateway :P
-        [JsonProperty("t")]
+        [JsonPropertyName("t")]
         public string EventName { get; private set; }
 
-        [JsonProperty("s")]
+        [JsonPropertyName("s")]
         public uint? Sequence { get; private set; }
     }
 }

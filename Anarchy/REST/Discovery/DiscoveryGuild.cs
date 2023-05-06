@@ -1,29 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Discord.Gateway;
-using Newtonsoft.Json;
 
 namespace Discord
 {
     public class DiscoveryGuild : BaseGuild
     {
-        [JsonProperty("description")]
+        [JsonPropertyName("description")]
         public string Description { get; protected set; }
 
-        [JsonProperty("approximate_presence_count")]
+        [JsonPropertyName("approximate_presence_count")]
         public int OnlineMembers { get; private set; }
 
-        [JsonProperty("approximate_member_count")]
+        [JsonPropertyName("approximate_member_count")]
         public int Members { get; private set; }
 
-        [JsonProperty("premium_subscription_count")]
+        [JsonPropertyName("premium_subscription_count")]
         public int PremiumSubscriptions { get; private set; }
 
-        [JsonProperty("preferred_locale")]
+        [JsonPropertyName("preferred_locale")]
         public DiscordLanguage PreferredLanguage { get; private set; }
 
-        [JsonProperty("discovery_splash")]
+        [JsonPropertyName("discovery_splash")]
         private readonly string _discoverySplashHash;
 
         public DiscordCDNImage DiscoverySplash
@@ -37,13 +37,13 @@ namespace Discord
             }
         }
 
-        [JsonProperty("emojis")]
+        [JsonPropertyName("emojis")]
         public IReadOnlyList<DiscordEmoji> Emojis { get; private set; }
 
-        [JsonProperty("keywords")]
+        [JsonPropertyName("keywords")]
         public IReadOnlyList<string> Keywords { get; private set; }
 
-        [JsonProperty("vanity_url_code")]
+        [JsonPropertyName("vanity_url_code")]
         public string VanityInvite { get; private set; }
 
         public async Task<DiscordGuild> LurkAsync()

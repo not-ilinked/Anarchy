@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿
+
+using System.Text.Json.Serialization;
 
 namespace Discord
 {
@@ -8,7 +10,7 @@ namespace Discord
     public class UserProfileUpdate
     {
         private readonly DiscordParameter<string> NameProperty = new DiscordParameter<string>();
-        [JsonProperty("username")]
+        [JsonPropertyName("username")]
         public string Username
         {
             get { return NameProperty; }
@@ -21,7 +23,7 @@ namespace Discord
         }
 
         internal DiscordParameter<uint> DiscriminatorProperty = new DiscordParameter<uint>();
-        [JsonProperty("discriminator")]
+        [JsonPropertyName("discriminator")]
         public uint Discriminator
         {
             get { return DiscriminatorProperty; }
@@ -34,7 +36,7 @@ namespace Discord
         }
 
         private readonly DiscordParameter<string> EmailProperty = new DiscordParameter<string>();
-        [JsonProperty("email")]
+        [JsonPropertyName("email")]
         public string Email
         {
             get { return EmailProperty; }
@@ -47,7 +49,7 @@ namespace Discord
         }
 
         private readonly DiscordParameter<DiscordImage> AvatarProperty = new DiscordParameter<DiscordImage>();
-        [JsonProperty("avatar")]
+        [JsonPropertyName("avatar")]
         public DiscordImage Avatar
         {
             get { return AvatarProperty; }
@@ -60,7 +62,7 @@ namespace Discord
         }
 
         private readonly DiscordParameter<string> _bioParam = new DiscordParameter<string>();
-        [JsonProperty("bio")]
+        [JsonPropertyName("bio")]
         public string Biography
         {
             get { return _bioParam; }
@@ -70,7 +72,7 @@ namespace Discord
         public bool ShouldSerializeBiography() => _bioParam.Set;
 
         private readonly DiscordParameter<DiscordImage> _bannerParam = new DiscordParameter<DiscordImage>();
-        [JsonProperty("banner")]
+        [JsonPropertyName("banner")]
         public DiscordImage Banner
         {
             get { return _bannerParam; }
@@ -79,10 +81,10 @@ namespace Discord
 
         public bool ShouldSerializeBanner() => _bannerParam.Set;
 
-        [JsonProperty("password")]
+        [JsonPropertyName("password")]
         public string Password { get; set; }
 
-        [JsonProperty("new_password")]
+        [JsonPropertyName("new_password")]
         public string NewPassword { get; set; }
     }
 }

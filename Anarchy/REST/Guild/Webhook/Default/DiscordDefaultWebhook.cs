@@ -1,11 +1,12 @@
-﻿using System.Threading.Tasks;
-using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
+using System.Threading.Tasks;
+
 
 namespace Discord
 {
     public class DiscordDefaultWebhook : DiscordWebhook
     {
-        [JsonProperty("token")]
+        [JsonPropertyName("token")]
         public string Token { get; private set; }
 
         public DiscordDefaultWebhook() : base()

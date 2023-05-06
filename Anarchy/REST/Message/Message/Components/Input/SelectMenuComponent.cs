@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Discord
 {
@@ -10,16 +10,16 @@ namespace Discord
             Type = MessageComponentType.Select;
         }
 
-        [JsonProperty("options")]
+        [JsonPropertyName("options")]
         public List<SelectMenuOption> Options { get; set; }
 
-        [JsonProperty("min_values")]
+        [JsonPropertyName("min_values")]
         public uint? MinimumSelected { get; set; }
 
-        [JsonProperty("max_values")]
+        [JsonPropertyName("max_values")]
         public uint? MaxSelected { get; set; }
 
-        [JsonProperty("placeholder")]
+        [JsonPropertyName("placeholder")]
         public string Placeholder { get; set; }
     }
 }

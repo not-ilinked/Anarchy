@@ -1,17 +1,17 @@
 ﻿using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Discord
 {
     public class GuildVerificationForm
     {
-        [JsonProperty("description")]
+        [JsonPropertyName("description")]
         public string Description { get; private set; }
 
-        [JsonProperty("version")]
+        [JsonPropertyName("version")]
         public string Version { get; private set; }
 
-        [JsonProperty("form_fields")]
+        [JsonPropertyName("form_fields")]
         public IReadOnlyList<GuildVerificationFormField> Fields { get; private set; }
     }
 }

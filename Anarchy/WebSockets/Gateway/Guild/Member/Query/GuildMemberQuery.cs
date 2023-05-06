@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿
+
+using System.Text.Json.Serialization;
 
 namespace Discord.Gateway
 {
@@ -7,13 +9,13 @@ namespace Discord.Gateway
     /// </summary>
     public class GuildMemberQuery
     {
-        [JsonProperty("guild_id")]
+        [JsonPropertyName("guild_id")]
         public ulong GuildId { get; set; }
 
-        [JsonProperty("query")]
+        [JsonPropertyName("query")]
         private readonly string _query = "";
 
-        [JsonProperty("limit")]
+        [JsonPropertyName("limit")]
         public uint Limit { get; set; }
 
         public override string ToString()

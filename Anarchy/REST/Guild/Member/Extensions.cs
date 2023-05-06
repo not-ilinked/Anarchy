@@ -1,5 +1,5 @@
-﻿using System.Threading.Tasks;
-using Newtonsoft.Json.Linq;
+﻿using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace Discord
 {
@@ -65,7 +65,8 @@ namespace Discord
             foreach (var role in properties.IncludedRoles)
                 url += "&include_roles=" + role;
 
-            return (await client.HttpClient.GetAsync(url)).Deserialize<JObject>().Value<uint>("pruned");
+            var response = await client.HttpClient.GetAsync(url);
+            return JsonSerializer.Deserialize<JsonElement>(response.Body).GetProperty("pruned").GetUInt32();
         }
 
         public static uint GetGuildPrunableMembers(this DiscordClient client, ulong guildId, MemberPruneProperties properties)
@@ -75,8 +76,15 @@ namespace Discord
 
         public static async Task<uint> PruneGuildMembersAsync(this DiscordClient client, ulong guildId, MemberPruneProperties properties)
         {
-            return (await client.HttpClient.PostAsync($"/guilds/{guildId}/prune", properties))
-                                    .Deserialize<JObject>().Value<uint>("pruned");
+            var requestBody = new
+            {
+                days = properties.Days,
+                include_roles = properties.IncludedRoles
+            };
+
+            var response = await client.HttpClient.PostAsync($"/guilds/{guildId}/prune", requestBody);
+
+            return JsonSerializer.Deserialize<JsonElement>(response.Body).GetProperty("pruned").GetUInt32();
         }
 
         public static uint PruneGuildMembers(this DiscordClient client, ulong guildId, MemberPruneProperties properties)

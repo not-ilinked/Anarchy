@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Discord.Gateway
 {
@@ -30,16 +30,16 @@ namespace Discord.Gateway
             };
         }
 
-        [JsonProperty("channels")]
+        [JsonPropertyName("channels")]
         public Dictionary<ulong, DiscordChannel> Channels { get; private set; }
 
-        [JsonProperty("users")]
+        [JsonPropertyName("users")]
         public Dictionary<ulong, DiscordUser> Users { get; private set; }
 
-        [JsonProperty("members")]
+        [JsonPropertyName("members")]
         public Dictionary<ulong, GuildMember> Members { get; private set; }
 
-        [JsonProperty("roles")]
+        [JsonPropertyName("roles")]
         public Dictionary<ulong, DiscordRole> Roles { get; private set; }
     }
 }

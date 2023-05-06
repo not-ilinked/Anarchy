@@ -1,25 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Discord.Commands;
 using Discord.Gateway;
-using Newtonsoft.Json;
+
 
 namespace Discord
 {
     public class GuildMember : PartialGuildMember, IDisposable, IMentionable
     {
-        [JsonProperty("nick")]
+        [JsonPropertyName("nick")]
         public string Nickname { get; private set; }
 
-        [JsonProperty("roles")]
+        [JsonPropertyName("roles")]
         public IReadOnlyList<ulong> Roles { get; private set; }
 
-        [JsonProperty("joined_at")]
+        [JsonPropertyName("joined_at")]
         public DateTime JoinedAt { get; internal set; }
 
-        [JsonProperty("premium_since")]
+        [JsonPropertyName("premium_since")]
         public DateTime? BoostingSince { get; private set; }
 
         /// <summary>

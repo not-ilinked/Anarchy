@@ -1,22 +1,21 @@
 ﻿using System;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Microsoft.Maui.Graphics;
 using Microsoft.Maui.Graphics.Platform;
-using Newtonsoft.Json;
 
 namespace Discord
 {
     internal class ImageJsonConverter : JsonConverter<DiscordImage>
     {
-        public override bool CanRead => false;
-
-        public override DiscordImage ReadJson(JsonReader reader, Type objectType, DiscordImage existingValue, bool hasExistingValue, JsonSerializer serializer)
+        public override void Write(Utf8JsonWriter writer, DiscordImage value, JsonSerializerOptions options)
         {
-            throw new NotImplementedException();
+            writer.WriteStringValue($"data:{value.ImageFormat.ToMediaType()};base64,{Convert.ToBase64String(value.PlatformImage.Bytes)}");
         }
 
-        public override void WriteJson(JsonWriter writer, DiscordImage image, JsonSerializer serializer)
+        public override DiscordImage Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            writer.WriteValue($"data:{image.ImageFormat.ToMediaType()};base64,{Convert.ToBase64String(image.PlatformImage.Bytes)}");
+            throw new NotImplementedException();
         }
     }
 

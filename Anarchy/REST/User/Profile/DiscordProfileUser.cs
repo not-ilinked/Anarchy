@@ -1,13 +1,14 @@
-﻿using Newtonsoft.Json;
+﻿
 
+using System.Text.Json.Serialization;
 namespace Discord
 {
     public class DiscordProfileUser : DiscordUser
     {
-        [JsonProperty("bio")]
+        [JsonPropertyName("bio")]
         public string Biography { get; private set; }
 
-        [JsonProperty("banner")]
+        [JsonPropertyName("banner")]
         private readonly string _bannerHash;
         public DiscordCDNImage Banner => _bannerHash == null ? null : new DiscordCDNImage(CDNEndpoints.Banner, Id, _bannerHash);
     }

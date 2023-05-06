@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Anarchy;
-using Newtonsoft.Json;
+
 
 namespace Discord
 {
@@ -28,7 +29,7 @@ namespace Discord
             };
         }
 
-        [JsonProperty("discovery_splash")]
+        [JsonPropertyName("discovery_splash")]
         private string _discoverySplashHash;
 
         public DiscordCDNImage DiscoverySplash
@@ -42,16 +43,16 @@ namespace Discord
             }
         }
 
-        [JsonProperty("max_members")]
+        [JsonPropertyName("max_members")]
         public uint MaxMembers { get; private set; }
 
-        [JsonProperty("max_video_channel_users")]
+        [JsonPropertyName("max_video_channel_users")]
         public uint MaxLivestreams { get; private set; }
 
-        [JsonProperty("preferred_locale")]
+        [JsonPropertyName("preferred_locale")]
         public DiscordLanguage? PreferredLanguage { get; private set; }
 
-        [JsonProperty("rules_channel_id")]
+        [JsonPropertyName("rules_channel_id")]
         private ulong? _rulesChannelId;
 
         public MinimalTextChannel RulesChannel
@@ -65,7 +66,7 @@ namespace Discord
             }
         }
 
-        [JsonProperty("public_updates_channel_id")]
+        [JsonPropertyName("public_updates_channel_id")]
         private ulong? _updateChannelId;
 
         public MinimalTextChannel PublicUpdatesChannel
@@ -79,22 +80,22 @@ namespace Discord
             }
         }
 
-        [JsonProperty("unavailable")]
+        [JsonPropertyName("unavailable")]
         public bool Unavailable { get; internal set; }
 
-        [JsonProperty("premium_subscription_count")]
+        [JsonPropertyName("premium_subscription_count")]
         public uint? NitroBoosts { get; private set; }
 
-        [JsonProperty("region")]
+        [JsonPropertyName("region")]
         public string Region { get; private set; }
 
-        [JsonProperty("default_message_notifications")]
+        [JsonPropertyName("default_message_notifications")]
         public GuildDefaultNotifications DefaultNotifications { get; private set; }
 
-        [JsonProperty("premium_tier")]
+        [JsonPropertyName("premium_tier")]
         public GuildPremiumTier PremiumTier { get; private set; }
 
-        [JsonProperty("roles")]
+        [JsonPropertyName("roles")]
         internal ConcurrentList<DiscordRole> _roles;
 
         public IReadOnlyList<DiscordRole> Roles
@@ -110,7 +111,7 @@ namespace Discord
             }
         }
 
-        [JsonProperty("emojis")]
+        [JsonPropertyName("emojis")]
         internal List<DiscordEmoji> _emojis;
 
         public IReadOnlyList<DiscordEmoji> Emojis
@@ -127,16 +128,16 @@ namespace Discord
             }
         }
 
-        [JsonProperty("owner_id")]
+        [JsonPropertyName("owner_id")]
         public ulong OwnerId { get; private set; }
 
-        [JsonProperty("mfa_level")]
+        [JsonPropertyName("mfa_level")]
         public bool MfaRequired { get; private set; }
 
-        [JsonProperty("system_channel_id")]
+        [JsonPropertyName("system_channel_id")]
         private ulong? _sysChannelId;
 
-        [JsonProperty("system_channel_flags")]
+        [JsonPropertyName("system_channel_flags")]
         private int _sysChannelFlags;
 
         public SystemChannelInformation SystemChannel

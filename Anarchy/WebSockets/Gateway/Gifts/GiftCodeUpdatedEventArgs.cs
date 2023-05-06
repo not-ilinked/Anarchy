@@ -1,16 +1,17 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+﻿
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Discord.Gateway
 {
     public class GiftCodeUpdatedEventArgs : GiftCodeCreatedEventArgs
     {
-        public JObject Json { get; internal set; }
+        public JsonElement Json { get; internal set; }
 
-        [JsonProperty("uses")]
+        [JsonPropertyName("uses")]
         public uint Uses { get; private set; }
 
-        [JsonProperty("channel_id")]
+        [JsonPropertyName("channel_id")]
         private readonly ulong _channelId;
 
         public MinimalTextChannel Channel
@@ -18,7 +19,7 @@ namespace Discord.Gateway
             get { return new MinimalTextChannel(_channelId).SetClient(Client); }
         }
 
-        [JsonProperty("guild_id")]
+        [JsonPropertyName("guild_id")]
         private readonly ulong _guildId;
 
         public MinimalGuild Guild

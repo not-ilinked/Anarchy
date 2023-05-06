@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Discord
 {
-    public class LanguageConverter : JsonConverter
+    public class LanguageConverter : JsonConverter<DiscordLanguage>
     {
         private static readonly Dictionary<DiscordLanguage, string> Languages = new Dictionary<DiscordLanguage, string>()
         {
@@ -56,19 +57,14 @@ namespace Discord
             throw new InvalidOperationException("Invalid language string");
         }
 
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        public override void Write(Utf8JsonWriter writer, DiscordLanguage value, JsonSerializerOptions options)
         {
-            writer.WriteValue(ToString((DiscordLanguage) value));
+            writer.WriteStringValue(Languages[value]);
         }
 
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        public override DiscordLanguage Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            return FromString(reader.Value.ToString());
-        }
-
-        public override bool CanConvert(Type objectType)
-        {
-            return true;
+            return FromString(reader.GetString());
         }
     }
 

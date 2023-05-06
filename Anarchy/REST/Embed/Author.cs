@@ -1,10 +1,10 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace Discord
 {
     public class EmbedAuthor
     {
-        [JsonProperty("name")]
+        [JsonPropertyName("name")]
         private string _name;
 
         public string Name
@@ -19,13 +19,13 @@ namespace Discord
             }
         }
 
-        [JsonProperty("url")]
+        [JsonPropertyName("url")]
         public string Url { get; set; }
 
-        [JsonProperty("icon_url")]
+        [JsonPropertyName("icon_url")]
         public string IconUrl { get; set; }
 
-        [JsonProperty("proxy_icon_url")]
+        [JsonPropertyName("proxy_icon_url")]
         public string IconProxyUrl { get; private set; }
 
         public override string ToString()

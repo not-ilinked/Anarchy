@@ -1,11 +1,11 @@
 ﻿using System;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Discord.Gateway
 {
     public class UserTyping : Controllable
     {
-        [JsonProperty("channel_id")]
+        [JsonPropertyName("channel_id")]
         private readonly ulong _channelId;
 
         public MinimalTextChannel Channel
@@ -16,7 +16,7 @@ namespace Discord.Gateway
             }
         }
 
-        [JsonProperty("guild_id")]
+        [JsonPropertyName("guild_id")]
         private readonly ulong? _guildId;
 
         public MinimalGuild Guild
@@ -30,10 +30,10 @@ namespace Discord.Gateway
             }
         }
 
-        [JsonProperty("user_id")]
+        [JsonPropertyName("user_id")]
         public ulong UserId { get; private set; }
 
-        [JsonProperty("timestamp")]
+        [JsonPropertyName("timestamp")]
 #pragma warning disable CS0649
         private readonly ulong _timestamp;
 #pragma warning restore CS0649

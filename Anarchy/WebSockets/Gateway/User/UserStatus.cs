@@ -1,9 +1,10 @@
-﻿using System;
-using Newtonsoft.Json;
+﻿using System.Text.Json;
+using System;
+using System.Text.Json.Serialization;
 
 namespace Discord
 {
-    internal class UserStatusConverter : JsonConverter
+    internal class UserStatusConverter : JsonConverter<UserStatus>
     {
         private string ToString(UserStatus status)
         {
@@ -23,19 +24,14 @@ namespace Discord
                 return (UserStatus) Enum.Parse(typeof(UserStatus), status, true);
         }
 
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        public override UserStatus Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            writer.WriteValue(ToString((UserStatus) value));
+            return FromString(reader.GetString());
         }
 
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        public override void Write(Utf8JsonWriter writer, UserStatus value, JsonSerializerOptions options)
         {
-            return FromString(reader.Value.ToString());
-        }
-
-        public override bool CanConvert(Type objectType)
-        {
-            return true;
+            writer.WriteStringValue(ToString(value));
         }
     }
 

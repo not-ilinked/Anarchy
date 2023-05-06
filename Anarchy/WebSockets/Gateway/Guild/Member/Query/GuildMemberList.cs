@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Discord.Gateway
 {
@@ -11,7 +11,7 @@ namespace Discord.Gateway
         }
 
         private ulong _guildId;
-        [JsonProperty("guild_id")]
+        [JsonPropertyName("guild_id")]
         public ulong GuildId
         {
             get { return _guildId; }
@@ -23,13 +23,13 @@ namespace Discord.Gateway
             }
         }
 
-        [JsonProperty("members")]
+        [JsonPropertyName("members")]
         public IReadOnlyList<GuildMember> Members { get; private set; }
 
-        [JsonProperty("chunk_index")]
+        [JsonPropertyName("chunk_index")]
         public int ChunkIndex { get; private set; }
 
-        [JsonProperty("chunk_count")]
+        [JsonPropertyName("chunk_count")]
         public int ChunkCount { get; private set; }
     }
 }

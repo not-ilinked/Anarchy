@@ -1,11 +1,13 @@
-﻿using Newtonsoft.Json;
+﻿
+
+using System.Text.Json.Serialization;
 
 namespace Discord.Media
 {
     // Opcode: EndGoLive
     internal class GoLiveStreamKey
     {
-        [JsonProperty("stream_key")]
+        [JsonPropertyName("stream_key")]
         public string StreamKey { get; set; }
     }
 }

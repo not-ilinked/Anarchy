@@ -4,9 +4,8 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Text.Json;
 using Discord.Gateway;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace Discord
 {
@@ -50,9 +49,9 @@ namespace Discord
             var resp = _httpClient.PostAsync(DiscordHttpUtil.BuildBaseUrl(9, DiscordReleaseChannel.Stable) + "/oauth2/token", new FormUrlEncodedContent(values)).Result;
 
             if (resp.StatusCode >= HttpStatusCode.BadRequest)
-                throw new OAuth2Exception(JsonConvert.DeserializeObject<OAuth2HttpError>(resp.Content.ReadAsStringAsync().Result));
+                throw new OAuth2Exception(JsonSerializer.Deserialize<OAuth2HttpError>(resp.Content.ReadAsStringAsync().Result));
 
-            _auth = JsonConvert.DeserializeObject<DiscordOAuth2Authorization>(resp.Content.ReadAsStringAsync().Result);
+            _auth = JsonSerializer.Deserialize<DiscordOAuth2Authorization>(resp.Content.ReadAsStringAsync().Result);
         }
 
         public void Refresh(string refreshToken) => authorize("refresh_token", new Dictionary<string, string>() { { "refresh_token", refreshToken } });
@@ -72,17 +71,17 @@ namespace Discord
             {
                 Method = new HttpMethod(method),
                 RequestUri = new Uri(DiscordHttpUtil.BuildBaseUrl(9, DiscordReleaseChannel.Stable) + endpoint),
-                Content = data == null ? null : new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json")
+                Content = data == null ? null : new StringContent(JsonSerializer.Serialize(data), Encoding.UTF8, "application/json")
             };
 
             req.Headers.Add("Authorization", $"{_auth.TokenType} {_auth.AccessToken}");
 
             var response = _httpClient.SendAsync(req).GetAwaiter().GetResult();
-            var body = JToken.Parse(response.Content.ReadAsStringAsync().Result);
+            var body = JsonDocument.Parse(response.Content.ReadAsStringAsync().Result).RootElement;
 
             DiscordHttpUtil.ValidateResponse(response, body);
 
-            return body.ToObject<T>();
+            return JsonSerializer.Deserialize<T>(body.GetRawText());
         }
 
         public DiscordUser GetUser()

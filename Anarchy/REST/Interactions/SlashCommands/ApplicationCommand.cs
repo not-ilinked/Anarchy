@@ -1,24 +1,25 @@
 ﻿using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
+
 
 namespace Discord
 {
     public class ApplicationCommand : Controllable
     {
-        [JsonProperty("id")]
+        [JsonPropertyName("id")]
         public ulong Id { get; private set; }
 
-        [JsonProperty("application_id")]
+        [JsonPropertyName("application_id")]
         public ulong ApplicationId { get; private set; }
 
-        [JsonProperty("name")]
+        [JsonPropertyName("name")]
         public string Name { get; private set; }
 
-        [JsonProperty("description")]
+        [JsonPropertyName("description")]
         public string Description { get; private set; }
 
-        [JsonProperty("options")]
+        [JsonPropertyName("options")]
         public IReadOnlyList<ApplicationCommandOption> Options { get; private set; }
 
         private void Update(ApplicationCommand updated)

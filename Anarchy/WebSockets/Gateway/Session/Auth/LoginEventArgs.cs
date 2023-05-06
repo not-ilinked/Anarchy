@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Discord.Gateway
 {
@@ -26,27 +26,27 @@ namespace Discord.Gateway
             };
         }
 
-        [JsonProperty("session_id")]
+        [JsonPropertyName("session_id")]
         internal string SessionId { get; private set; }
 
-        [JsonProperty("user")]
+        [JsonPropertyName("user")]
         public DiscordClientUser User { get; private set; }
 
-        [JsonProperty("status")]
+        [JsonPropertyName("status")]
         public UserStatus Status { get; private set; }
 
-        [JsonProperty("locale")]
+        [JsonPropertyName("locale")]
         public DiscordLanguage Language { get; private set; }
 
-        [JsonProperty("user_settings")]
+        [JsonPropertyName("user_settings")]
         public DiscordUserSettings Settings { get; private set; }
 
-        [JsonProperty("guilds")]
+        [JsonPropertyName("guilds")]
         private readonly List<JObject> _guilds;
 
         public IReadOnlyList<MinimalGuild> Guilds { get; private set; }
 
-        [JsonProperty("private_channels")]
+        [JsonPropertyName("private_channels")]
         [JsonConverter(typeof(DeepJsonConverter<PrivateChannel>))]
         private readonly List<PrivateChannel> _channels;
 
@@ -55,20 +55,20 @@ namespace Discord.Gateway
             get { return _channels; }
         }
 
-        [JsonProperty("relationships")]
+        [JsonPropertyName("relationships")]
         public IReadOnlyList<DiscordRelationship> Relationships { get; private set; }
 
-        [JsonProperty("user_guild_settings")]
+        [JsonPropertyName("user_guild_settings")]
         internal IReadOnlyList<ClientGuildSettings> ClientGuildSettings { get; private set; }
 
-        [JsonProperty("connected_accounts")]
+        [JsonPropertyName("connected_accounts")]
         public IReadOnlyList<ClientConnectedAccount> ConnectedAccounts { get; private set; }
 
-        [JsonProperty("presences")]
+        [JsonPropertyName("presences")]
         public IReadOnlyList<DiscordPresence> Presences { get; private set; }
 
-        [JsonProperty("application")]
-        internal JObject Application { get; private set; }
+        [JsonPropertyName("application")]
+        internal JsonElement Application { get; private set; }
 
         public override string ToString()
         {

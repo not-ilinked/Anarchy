@@ -1,13 +1,14 @@
-﻿using Newtonsoft.Json;
+﻿
 
+using System.Text.Json.Serialization;
 namespace Discord
 {
     public class MessageInputComponent : MessageComponent
     {
-        [JsonProperty("custom_id")]
+        [JsonPropertyName("custom_id")]
         public string Id { get; set; }
 
-        [JsonProperty("disabled")]
+        [JsonPropertyName("disabled")]
         public bool Disabled { get; set; }
     }
 }

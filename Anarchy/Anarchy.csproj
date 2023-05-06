@@ -42,8 +42,7 @@ https://github.com/not-ilinked/Anarchy/blob/master/Changelog.md</PackageReleaseN
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Maui.Graphics" Version="7.0.49" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+    <PackageReference Include="Microsoft.Maui.Graphics" Version="7.0.81" />
   </ItemGroup>
 
 </Project>

@@ -1,13 +1,15 @@
-﻿using Newtonsoft.Json;
+﻿
+
+using System.Text.Json.Serialization;
 
 namespace Discord.Gateway
 {
     public class MemberListGroup
     {
-        [JsonProperty("id")]
+        [JsonPropertyName("id")]
         public string Id { get; private set; }
 
-        [JsonProperty("count")]
+        [JsonPropertyName("count")]
         public int Count { get; private set; }
     }
 }

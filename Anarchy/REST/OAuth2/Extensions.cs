@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Text.Json;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace Discord
 {
@@ -30,7 +29,7 @@ namespace Discord
 
         public static async Task AuthorizeBotAsync(this DiscordClient client, ulong botId, ulong guildId, DiscordPermission permissions, string captchaKey)
         {
-            await client.HttpClient.PostAsync($"/oauth2/authorize?client_id={botId}&scope=bot", JsonConvert.SerializeObject(new DiscordBotAuthProperties()
+            await client.HttpClient.PostAsync($"/oauth2/authorize?client_id={botId}&scope=bot", JsonSerializer.Serialize(new DiscordBotAuthProperties()
             {
                 GuildId = guildId,
                 Permissions = permissions,
@@ -52,7 +51,10 @@ namespace Discord
 
         public static async Task<string> AuthorizeAppAsync(this DiscordClient client, ulong appId, string scope)
         {
-            return (await client.HttpClient.PostAsync($"/oauth2/authorize?client_id={appId}&response_type=code&scope={scope}")).Deserialize<JObject>().Value<string>("location");
+            var response = await client.HttpClient.PostAsync($"/oauth2/authorize?client_id={appId}&response_type=code&scope={scope}");
+            var location = response.Body.Location;
+
+            return location;
         }
 
         /// <summary>

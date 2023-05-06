@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿
+
+using System.Text.Json.Serialization;
 
 namespace Discord.Gateway
 {
@@ -14,7 +16,7 @@ namespace Discord.Gateway
             };
         }
 
-        [JsonProperty("channel_id")]
+        [JsonPropertyName("channel_id")]
         internal ulong? ChannelId { get; set; }
 
         public MinimalChannel Channel
@@ -28,7 +30,7 @@ namespace Discord.Gateway
             }
         }
 
-        [JsonProperty("member")]
+        [JsonPropertyName("member")]
         private readonly GuildMember _member;
 
         [JsonIgnore]
@@ -43,10 +45,10 @@ namespace Discord.Gateway
             }
         }
 
-        [JsonProperty("user_id")]
+        [JsonPropertyName("user_id")]
         public ulong UserId { get; private set; }
 
-        [JsonProperty("guild_id")]
+        [JsonPropertyName("guild_id")]
         private ulong? _guildId;
 
         public MinimalGuild Guild
@@ -64,25 +66,25 @@ namespace Discord.Gateway
             }
         }
 
-        [JsonProperty("mute")]
+        [JsonPropertyName("mute")]
         public bool Muted { get; private set; }
 
-        [JsonProperty("deaf")]
+        [JsonPropertyName("deaf")]
         public bool Deafened { get; private set; }
 
-        [JsonProperty("self_deaf")]
+        [JsonPropertyName("self_deaf")]
         public bool SelfDeafened { get; private set; }
 
-        [JsonProperty("self_mute")]
+        [JsonPropertyName("self_mute")]
         public bool SelfMuted { get; private set; }
 
-        [JsonProperty("self_video")]
+        [JsonPropertyName("self_video")]
         public bool Video { get; private set; }
 
-        [JsonProperty("self_stream")]
+        [JsonPropertyName("self_stream")]
         public bool Streaming { get; private set; }
 
-        [JsonProperty("session_id")]
+        [JsonPropertyName("session_id")]
         internal string SessionId { get; private set; }
     }
 }

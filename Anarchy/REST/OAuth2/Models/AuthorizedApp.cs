@@ -1,18 +1,19 @@
 ﻿using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
+
 
 namespace Discord
 {
     public class AuthorizedApp : Controllable
     {
-        [JsonProperty("id")]
+        [JsonPropertyName("id")]
         public ulong Id { get; private set; }
 
-        [JsonProperty("scopes")]
+        [JsonPropertyName("scopes")]
         public IReadOnlyList<string> Scopes { get; private set; }
 
-        [JsonProperty("application")]
+        [JsonPropertyName("application")]
         public OAuth2Application Application { get; private set; }
 
         public async Task DeauthorizeAsync()

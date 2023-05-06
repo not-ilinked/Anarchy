@@ -1,14 +1,13 @@
-﻿using System.Threading.Tasks;
-using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 
 namespace Discord
 {
     public class DiscordChannel : MinimalChannel
     {
-        [JsonProperty("name")]
+        [JsonPropertyName("name")]
         public string Name { get; private set; }
-
-        [JsonProperty("type")]
+        [JsonPropertyName("type")]
         public ChannelType Type { get; protected set; }
 
         public bool InGuild

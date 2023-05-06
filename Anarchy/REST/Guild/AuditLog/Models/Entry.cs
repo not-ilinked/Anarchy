@@ -1,26 +1,26 @@
 ﻿using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Discord
 {
     public class AuditLogEntry
     {
-        [JsonProperty("id")]
+        [JsonPropertyName("id")]
         public ulong Id { get; private set; }
 
-        [JsonProperty("target_id")]
+        [JsonPropertyName("target_id")]
         public ulong? TargetId { get; private set; }
 
-        [JsonProperty("changes")]
+        [JsonPropertyName("changes")]
         public IReadOnlyList<AuditLogChange> Changes { get; private set; }
 
-        [JsonProperty("user_id")]
+        [JsonPropertyName("user_id")]
         public ulong ChangerId { get; private set; }
 
-        [JsonProperty("action_type")]
+        [JsonPropertyName("action_type")]
         public AuditLogActionType Type { get; private set; }
 
-        [JsonProperty("reason")]
+        [JsonPropertyName("reason")]
         public string Reason { get; private set; }
 
         public override string ToString()

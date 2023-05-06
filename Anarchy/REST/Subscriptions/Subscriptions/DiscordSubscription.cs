@@ -1,16 +1,18 @@
-﻿using Newtonsoft.Json;
+﻿
+
+using System.Text.Json.Serialization;
 
 namespace Discord
 {
     public class DiscordSubscription
     {
-        [JsonProperty("id")]
+        [JsonPropertyName("id")]
         public ulong Id { get; private set; }
 
-        [JsonProperty("plan_id")]
+        [JsonPropertyName("plan_id")]
         public ulong PlanId { get; private set; }
 
-        [JsonProperty("quantity")]
+        [JsonPropertyName("quantity")]
         public int Quantity { get; private set; }
     }
 }

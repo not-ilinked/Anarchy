@@ -1,23 +1,24 @@
-﻿using System.Threading.Tasks;
-using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
+using System.Threading.Tasks;
+
 
 namespace Discord
 {
     public class ApplicationBot : Controllable
     {
-        [JsonProperty("id")]
+        [JsonPropertyName("id")]
         public ulong Id { get; private set; }
 
-        [JsonProperty("username")]
+        [JsonPropertyName("username")]
         public string Username { get; private set; }
 
-        [JsonProperty("discriminator")]
+        [JsonPropertyName("discriminator")]
         public uint Discriminator { get; private set; }
 
-        [JsonProperty("avatar")]
+        [JsonPropertyName("avatar")]
         public string AvatarId { get; private set; }
 
-        [JsonProperty("token")]
+        [JsonPropertyName("token")]
         public string Token { get; private set; }
 
         public async Task AuthorizeAsync(ulong guildId, DiscordPermission permissions, string captchaKey)

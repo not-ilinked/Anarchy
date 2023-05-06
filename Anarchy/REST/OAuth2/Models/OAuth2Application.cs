@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
+
 
 namespace Discord
 {
@@ -15,13 +16,13 @@ namespace Discord
             };
         }
 
-        [JsonProperty("id")]
+        [JsonPropertyName("id")]
         public ulong Id { get; private set; }
 
-        [JsonProperty("name")]
+        [JsonPropertyName("name")]
         public string Name { get; private set; }
 
-        [JsonProperty("icon")]
+        [JsonPropertyName("icon")]
         private string _iconHash;
 
         public DiscordCDNImage Icon
@@ -35,28 +36,28 @@ namespace Discord
             }
         }
 
-        [JsonProperty("description")]
+        [JsonPropertyName("description")]
         public string Description { get; private set; }
 
-        [JsonProperty("summary")]
+        [JsonPropertyName("summary")]
         public string Summary { get; private set; }
 
-        [JsonProperty("verify_key")]
+        [JsonPropertyName("verify_key")]
         public string VerifyKey { get; private set; }
 
-        [JsonProperty("bot_public")]
+        [JsonPropertyName("bot_public")]
         public bool PublicBot { get; private set; }
 
-        [JsonProperty("bot_require_code_grant")]
+        [JsonPropertyName("bot_require_code_grant")]
         public bool RequiresCodeGrant { get; private set; }
 
-        [JsonProperty("owner")]
+        [JsonPropertyName("owner")]
         public DiscordUser Owner { get; private set; }
 
-        [JsonProperty("bot")]
+        [JsonPropertyName("bot")]
         public ApplicationBot Bot { get; private set; }
 
-        [JsonProperty("redirect_uris")]
+        [JsonPropertyName("redirect_uris")]
         public IReadOnlyList<string> RedirectUris { get; private set; }
 
         private void Update(OAuth2Application app)

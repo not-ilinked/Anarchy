@@ -1,16 +1,18 @@
-﻿using Newtonsoft.Json;
+﻿
+
+using System.Text.Json.Serialization;
 
 namespace Discord.Media
 {
     public class DiscordSSRC
     {
-        [JsonProperty("audio_ssrc")]
+        [JsonPropertyName("audio_ssrc")]
         public uint Audio { get; set; }
 
-        [JsonProperty("video_ssrc")]
+        [JsonPropertyName("video_ssrc")]
         public uint Video { get; set; }
 
-        [JsonProperty("rtx_ssrc")]
+        [JsonPropertyName("rtx_ssrc")]
         public uint Rtx { get; set; }
     }
 }

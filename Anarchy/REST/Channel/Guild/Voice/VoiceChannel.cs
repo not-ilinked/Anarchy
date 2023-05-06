@@ -1,5 +1,5 @@
-﻿using System.Threading.Tasks;
-using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 
 namespace Discord
 {
@@ -8,10 +8,10 @@ namespace Discord
     /// </summary>
     public class VoiceChannel : GuildChannel
     {
-        [JsonProperty("bitrate")]
+        [JsonPropertyName("bitrate")]
         public uint Bitrate { get; private set; }
 
-        [JsonProperty("user_limit")]
+        [JsonPropertyName("user_limit")]
         public uint UserLimit { get; private set; }
 
         protected void Update(VoiceChannel channel)

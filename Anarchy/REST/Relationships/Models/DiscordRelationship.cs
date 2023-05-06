@@ -1,5 +1,6 @@
-﻿using System.Threading.Tasks;
-using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
+using System.Threading.Tasks;
+
 
 namespace Discord
 {
@@ -10,10 +11,10 @@ namespace Discord
             OnClientUpdated += (sender, e) => User.SetClient(Client);
         }
 
-        [JsonProperty("user")]
+        [JsonPropertyName("user")]
         public DiscordUser User { get; private set; }
 
-        [JsonProperty("type")]
+        [JsonPropertyName("type")]
         public RelationshipType Type { get; internal set; }
 
         public async Task RemoveAsync()

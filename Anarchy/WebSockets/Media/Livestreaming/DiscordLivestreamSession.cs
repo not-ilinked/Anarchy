@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using Discord.Gateway;
-using Newtonsoft.Json.Linq;
+using Discord.WebSockets;
 
 namespace Discord.Media
 {
@@ -69,11 +70,11 @@ namespace Discord.Media
             _connection.DisconnectAsync(1000, "Closed by client").GetAwaiter().GetResult();
         }
 
-        private void HandleMessage(DiscordMediaConnection connection, WebSockets.DiscordWebSocketMessage<DiscordMediaOpcode> message)
+        private void HandleMessage(DiscordMediaConnection connection, DiscordWebSocketMessage<DiscordMediaOpcode> message)
         {
             if (message.Opcode == DiscordMediaOpcode.SSRCUpdate)
             {
-                SSRCUpdate ssrc = message.Data.ToObject<SSRCUpdate>();
+                SSRCUpdate ssrc = JsonSerializer.Deserialize<SSRCUpdate>(message.Data.GetRawText());
 
                 if (!Viewers.Contains(ssrc.UserId))
                 {
@@ -85,7 +86,7 @@ namespace Discord.Media
             }
             else if (message.Opcode == DiscordMediaOpcode.UserDisconnect)
             {
-                ulong userId = message.Data.ToObject<JObject>().Value<ulong>("user_id");
+                ulong userId = JsonSerializer.Deserialize<JsonElement>(message.Data.GetRawText()).GetProperty("user_id").GetUInt64();
 
                 List<ulong> viewers = Viewers.ToList();
                 if (viewers.Remove(userId))

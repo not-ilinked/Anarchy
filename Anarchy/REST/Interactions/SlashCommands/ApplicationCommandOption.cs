@@ -1,26 +1,26 @@
 ﻿using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Discord
 {
     public class ApplicationCommandOption
     {
-        [JsonProperty("type")]
+        [JsonPropertyName("type")]
         public CommandOptionType Type { get; set; }
 
-        [JsonProperty("name")]
+        [JsonPropertyName("name")]
         public string Name { get; set; }
 
-        [JsonProperty("description")]
+        [JsonPropertyName("description")]
         public string Description { get; set; }
 
-        [JsonProperty("required")]
+        [JsonPropertyName("required")]
         public bool Required { get; set; }
 
-        [JsonProperty("choices")]
+        [JsonPropertyName("choices")]
         public IReadOnlyList<CommandOptionChoice> Choices { get; set; }
 
-        [JsonProperty("options")]
+        [JsonPropertyName("options")]
         public IReadOnlyList<ApplicationCommandOption> Options { get; set; }
     }
 }

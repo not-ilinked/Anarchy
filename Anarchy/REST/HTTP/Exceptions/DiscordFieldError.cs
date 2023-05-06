@@ -1,13 +1,15 @@
-﻿using Newtonsoft.Json;
+﻿
+
+using System.Text.Json.Serialization;
 
 namespace Discord
 {
     public class DiscordFieldError
     {
-        [JsonProperty("code")]
+        [JsonPropertyName("code")]
         public string Code { get; private set; }
 
-        [JsonProperty("message")]
+        [JsonPropertyName("message")]
         public string Message { get; private set; }
     }
 }

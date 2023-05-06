@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 
 namespace Discord
 {
@@ -10,7 +10,7 @@ namespace Discord
     /// </summary>
     public class GuildChannel : DiscordChannel
     {
-        [JsonProperty("guild_id")]
+        [JsonPropertyName("guild_id")]
         internal ulong GuildId
         {
             get
@@ -25,13 +25,13 @@ namespace Discord
 
         public MinimalGuild Guild { get; private set; }
 
-        [JsonProperty("position")]
+        [JsonPropertyName("position")]
         public uint Position { get; protected set; }
 
-        [JsonProperty("parent_id")]
+        [JsonPropertyName("parent_id")]
         public ulong? ParentId { get; protected set; }
 
-        [JsonProperty("permission_overwrites")]
+        [JsonPropertyName("permission_overwrites")]
         public IReadOnlyList<DiscordPermissionOverwrite> PermissionOverwrites { get; protected set; }
 
         protected void Update(GuildChannel channel)

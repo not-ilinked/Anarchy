@@ -1,13 +1,15 @@
-﻿using Newtonsoft.Json;
+﻿
+
+using System.Text.Json.Serialization;
 
 namespace Discord.Media
 {
     internal class GoLiveCreate : GoLiveUpdate
     {
-        [JsonProperty("session_id")]
+        [JsonPropertyName("session_id")]
         public string SessionId { get; private set; }
 
-        [JsonProperty("rtc_server_id")]
+        [JsonPropertyName("rtc_server_id")]
         public ulong RtcServerId { get; private set; }
     }
 }

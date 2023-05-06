@@ -1,19 +1,21 @@
-﻿using Newtonsoft.Json;
+﻿
+
+using System.Text.Json.Serialization;
 
 namespace Discord
 {
     public class DiscordPermissionOverwrite
     {
-        [JsonProperty("id")]
+        [JsonPropertyName("id")]
         public ulong AffectedId { get; internal set; }
 
-        [JsonProperty("type")]
+        [JsonPropertyName("type")]
         public PermissionOverwriteType Type { get; internal set; }
 
-        [JsonProperty("allow")]
+        [JsonPropertyName("allow")]
         public DiscordPermission Allow { get; internal set; }
 
-        [JsonProperty("deny")]
+        [JsonPropertyName("deny")]
         public DiscordPermission Deny { get; internal set; }
 
         public OverwrittenPermissionState GetPermissionState(DiscordPermission permission)

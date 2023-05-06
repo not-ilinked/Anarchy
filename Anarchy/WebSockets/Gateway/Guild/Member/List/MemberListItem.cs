@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿
+
+using System.Text.Json.Serialization;
 
 namespace Discord.Gateway
 {
@@ -9,7 +11,7 @@ namespace Discord.Gateway
             OnClientUpdated += (s, e) => Member.SetClient(Client);
         }
 
-        [JsonProperty("member")]
+        [JsonPropertyName("member")]
         public GuildMember Member { get; private set; }
     }
 }

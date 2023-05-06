@@ -1,5 +1,5 @@
 ﻿using System;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Discord
 {
@@ -18,13 +18,13 @@ namespace Discord
             Animated = animated;
         }
 
-        [JsonProperty("id")]
+        [JsonPropertyName("id")]
         public ulong? Id { get; private set; }
 
-        [JsonProperty("name")]
+        [JsonPropertyName("name")]
         public string Name { get; protected set; }
 
-        [JsonProperty("animated")]
+        [JsonPropertyName("animated")]
         public bool Animated { get; private set; }
 
         public DiscordCDNImage Icon

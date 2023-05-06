@@ -1,13 +1,15 @@
-﻿using Newtonsoft.Json;
+﻿
+
+using System.Text.Json.Serialization;
 
 namespace Discord
 {
     internal class OAuth2HttpError
     {
-        [JsonProperty("error")]
+        [JsonPropertyName("error")]
         public string Error { get; private set; }
 
-        [JsonProperty("error_description")]
+        [JsonPropertyName("error_description")]
         public string Description { get; private set; }
     }
 }

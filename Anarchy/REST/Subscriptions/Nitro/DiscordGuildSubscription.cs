@@ -1,17 +1,18 @@
-﻿using System.Threading.Tasks;
-using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
+using System.Threading.Tasks;
+
 
 namespace Discord
 {
     public class DiscordGuildSubscription : Controllable
     {
-        [JsonProperty("id")]
+        [JsonPropertyName("id")]
         public ulong Id { get; private set; }
 
-        [JsonProperty("user_id")]
+        [JsonPropertyName("user_id")]
         public ulong UserId { get; private set; }
 
-        [JsonProperty("guild_id")]
+        [JsonPropertyName("guild_id")]
 #pragma warning disable CS0649
         private readonly ulong _guildId;
 #pragma warning restore CS0649
@@ -24,7 +25,7 @@ namespace Discord
             }
         }
 
-        [JsonProperty("ended")]
+        [JsonPropertyName("ended")]
         public bool Ended { get; private set; }
 
         public async Task RemoveAsync()

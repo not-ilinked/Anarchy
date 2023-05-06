@@ -1,17 +1,17 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace Discord
 {
     //as far as i know videos cannot be put into an embed
     public class EmbedVideo
     {
-        [JsonProperty("url")]
+        [JsonPropertyName("url")]
         public string Url { get; private set; }
 
-        [JsonProperty("width")]
+        [JsonPropertyName("width")]
         public uint Width { get; private set; }
 
-        [JsonProperty("height")]
+        [JsonPropertyName("height")]
         public uint Height { get; private set; }
 
         public override string ToString()

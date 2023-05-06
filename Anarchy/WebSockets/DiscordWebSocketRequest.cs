@@ -1,5 +1,5 @@
 ﻿using System;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Discord.WebSockets
 {
@@ -14,10 +14,10 @@ namespace Discord.WebSockets
             Data = data;
         }
 
-        [JsonProperty("op")]
+        [JsonPropertyName("op")]
         public TOpcode Opcode { get; private set; }
 
-        [JsonProperty("d")]
+        [JsonPropertyName("d")]
         public TData Data { get; private set; }
     }
 }

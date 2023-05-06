@@ -1,19 +1,19 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace Discord
 {
     public class WelcomeChannelProperties
     {
-        [JsonProperty("channel_id")]
+        [JsonPropertyName("channel_id")]
         public ulong ChannelId { get; set; }
 
-        [JsonProperty("description")]
+        [JsonPropertyName("description")]
         public string Description { get; set; }
 
-        [JsonProperty("emoji_id")]
+        [JsonPropertyName("emoji_id")]
         public ulong? EmojiId { get; set; }
 
-        [JsonProperty("emoji_name")]
+        [JsonPropertyName("emoji_name")]
         public string EmojiName { get; set; }
     }
 }

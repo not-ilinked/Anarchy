@@ -1,10 +1,12 @@
-﻿using Newtonsoft.Json;
+﻿
+
+using System.Text.Json.Serialization;
 
 namespace Discord.Gateway
 {
     public class DeletedRole : Controllable
     {
-        [JsonProperty("guild_id")]
+        [JsonPropertyName("guild_id")]
         private readonly ulong _guildId;
 
         public MinimalGuild Guild
@@ -12,7 +14,7 @@ namespace Discord.Gateway
             get { return new MinimalGuild(_guildId).SetClient(Client); }
         }
 
-        [JsonProperty("role_id")]
+        [JsonPropertyName("role_id")]
         public ulong Id { get; private set; }
     }
 }

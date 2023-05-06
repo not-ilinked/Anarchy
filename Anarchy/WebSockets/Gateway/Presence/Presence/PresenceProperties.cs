@@ -1,11 +1,13 @@
-﻿using Newtonsoft.Json;
+﻿
+
+using System.Text.Json.Serialization;
 
 namespace Discord.Gateway
 {
     public class PresenceProperties
     {
         private readonly DiscordParameter<UserStatus> _statusParam = new DiscordParameter<UserStatus>();
-        [JsonProperty("status")]
+        [JsonPropertyName("status")]
         public UserStatus Status
         {
             get { return _statusParam; }
@@ -13,19 +15,19 @@ namespace Discord.Gateway
         }
 
         private readonly DiscordParameter<ActivityProperties> _activityParam = new DiscordParameter<ActivityProperties>();
-        [JsonProperty("game")]
+        [JsonPropertyName("game")]
         public ActivityProperties Activity
         {
             get { return _activityParam; }
             set { _activityParam.Value = value; }
         }
 
-        [JsonProperty("since")]
+        [JsonPropertyName("since")]
 #pragma warning disable CS0169, IDE0051
         private readonly long _since;
 #pragma warning restore CS0169, IDE0051
 
-        [JsonProperty("afk")]
+        [JsonPropertyName("afk")]
         private readonly bool _afk = true;
 
         public override string ToString()

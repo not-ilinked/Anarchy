@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace Discord
 {
@@ -7,10 +7,10 @@ namespace Discord
     /// </summary>
     public class ChannelCreationProperties
     {
-        [JsonProperty("name")]
+        [JsonPropertyName("name")]
         public string Name { get; set; }
 
-        [JsonProperty("type")]
+        [JsonPropertyName("type")]
         public ChannelType Type { get; set; }
 
         public override string ToString()

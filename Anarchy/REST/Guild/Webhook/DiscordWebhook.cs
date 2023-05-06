@@ -1,20 +1,21 @@
-﻿using System.Threading.Tasks;
-using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
+using System.Threading.Tasks;
+
 
 namespace Discord
 {
     public class DiscordWebhook : Controllable
     {
-        [JsonProperty("id")]
+        [JsonPropertyName("id")]
         public ulong Id { get; private set; }
 
-        [JsonProperty("type")]
+        [JsonPropertyName("type")]
         public DiscordWebhookType Type { get; private set; }
 
-        [JsonProperty("name")]
+        [JsonPropertyName("name")]
         public string Name { get; private set; }
 
-        [JsonProperty("avatar")]
+        [JsonPropertyName("avatar")]
         private string _avatarHash;
 
         public DiscordCDNImage Avatar
@@ -28,13 +29,13 @@ namespace Discord
             }
         }
 
-        [JsonProperty("user")]
+        [JsonPropertyName("user")]
         public DiscordUser Creator { get; private set; }
 
-        [JsonProperty("channel_id")]
+        [JsonPropertyName("channel_id")]
         public ulong ChannelId { get; private set; }
 
-        [JsonProperty("guild_id")]
+        [JsonPropertyName("guild_id")]
         public ulong GuildId { get; private set; }
 
         public DiscordWebhook()

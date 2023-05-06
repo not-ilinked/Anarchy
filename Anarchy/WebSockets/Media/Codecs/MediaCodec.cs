@@ -1,14 +1,14 @@
 ﻿using System;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Discord.Media
 {
     internal class MediaCodec
     {
-        [JsonProperty("name")]
+        [JsonPropertyName("name")]
         public string Name { get; set; }
 
-        [JsonProperty("type")]
+        [JsonPropertyName("type")]
         private string _type;
 
         public CodecType Type
@@ -23,10 +23,10 @@ namespace Discord.Media
             }
         }
 
-        [JsonProperty("priority")]
+        [JsonPropertyName("priority")]
         public int Priority { get; set; } = 1000;
 
-        [JsonProperty("payload_type")]
+        [JsonPropertyName("payload_type")]
         public byte PayloadType { get; set; }
     }
 }

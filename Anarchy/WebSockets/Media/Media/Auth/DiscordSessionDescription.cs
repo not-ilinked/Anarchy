@@ -1,16 +1,17 @@
-﻿using Newtonsoft.Json;
+﻿
 
+using System.Text.Json.Serialization;
 namespace Discord.Media
 {
     internal class DiscordSessionDescription : MediaCodecSelection
     {
-        [JsonProperty("media_session_id")]
+        [JsonPropertyName("media_session_id")]
         public string SessionId { get; private set; }
 
-        [JsonProperty("mode")]
+        [JsonPropertyName("mode")]
         public string EncryptionMode { get; private set; }
 
-        [JsonProperty("secret_key")]
+        [JsonPropertyName("secret_key")]
         public byte[] SecretKey { get; private set; }
     }
 }
