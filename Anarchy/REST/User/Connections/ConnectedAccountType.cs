@@ -1,4 +1,4 @@
-﻿namespace Discord
+namespace Discord
 {
     public enum ConnectedAccountType
     {
@@ -13,6 +13,14 @@
         XBox,
         Spotify,
         Facebook,
-        Github
+        Github,
+        eBay,
+        Crunchyroll,
+        TikTok,
+        PlayStation,
+        PlayStation-Stg,
+        Instagram,
+        RiotGames,
+        PayPal
     }
 }
