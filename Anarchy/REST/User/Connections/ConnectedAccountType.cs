@@ -2,17 +2,24 @@
 {
     public enum ConnectedAccountType
     {
-        Twitch,
-        YouTube,
         BattleNet,
-        Skype,
-        LeagueOfLegends,
-        Steam,
-        Twitter,
-        Reddit,
-        XBox,
-        Spotify,
+        eBay,
+        EpicGames,
         Facebook,
-        Github
+        GitHub,
+        Instagram,
+        LeagueOfLegends,
+        PayPal,
+        PlayStationNetwork,
+        Reddit,
+        RiotGames,
+        Spotify,
+        Skype,
+        Steam,
+        TikTok,
+        Twitch,
+        Twitter,
+        Xbox,
+        YouTube
     }
 }
