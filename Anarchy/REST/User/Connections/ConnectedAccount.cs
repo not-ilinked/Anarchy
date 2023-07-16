@@ -24,6 +24,9 @@ namespace Discord
         [JsonProperty("verified")]
         public bool Verified { get; protected set; }
 
+        [JsonProperty("metadata")]
+        public ConnectedAccountMetadata Metadata { get; protected set; }
+
         public override string ToString()
         {
             return Name;
