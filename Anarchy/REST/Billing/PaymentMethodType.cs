@@ -3,6 +3,7 @@
     public enum PaymentMethodType
     {
         Card = 1,
-        PayPal
+        PayPal,
+        PaySafeCard = 7
     }
 }

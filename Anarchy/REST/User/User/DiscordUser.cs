@@ -136,7 +136,10 @@ namespace Discord
             if (Id == Client.User.Id)
                 throw new NotSupportedException("Cannot send a friend request to self.");
 
-            await Client.SendFriendRequestAsync(Username, Discriminator);
+            if (Discriminator == 0)
+                await Client.SendFriendRequestAsync(Username);
+            else
+                await Client.SendFriendRequestAsync(Username, Discriminator);
         }
 
         /// <summary>

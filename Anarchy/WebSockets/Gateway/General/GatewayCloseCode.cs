@@ -3,7 +3,6 @@
     public enum GatewayCloseCode : ushort
     {
         ClosedByClient = 3000,
-
         UnknownError = 4000,
         UnknownOpcode,
         DecodeError,
