@@ -4,6 +4,7 @@
     {
         Pending,
         Success,
-        Failed
+        Failed,
+        Refunded = 4
     }
 }
