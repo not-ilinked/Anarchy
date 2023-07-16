@@ -61,6 +61,16 @@ namespace Discord
 
         public async Task ChangeProfileAsync(UserProfileUpdate settings)
         {
+            DiscordClientUser user = (await Client.HttpClient.PatchAsync("/users/@me/profile", settings)).Deserialize<DiscordClientUser>();
+
+            Update(user);
+
+            if (user.Token != null)
+                Client.Token = user.Token;
+        }
+
+        public async Task ChangeAccountSettingsAsync(AccountSettingsUpdate settings)
+        {
             if (settings.Email == null)
                 settings.Email = Email;
             if (!settings.DiscriminatorProperty.Set)
@@ -74,6 +84,15 @@ namespace Discord
 
             if (user.Token != null)
                 Client.Token = user.Token;
+        }
+
+        /// <summary>
+        /// Changes the user's settings
+        /// </summary>
+        /// <param name="settings">Options for changing the profile</param>
+        public void ChangeAccountSettings(AccountSettingsUpdate settings)
+        {
+            ChangeAccountSettingsAsync(settings).GetAwaiter().GetResult();
         }
 
         /// <summary>

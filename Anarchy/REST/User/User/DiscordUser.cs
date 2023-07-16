@@ -18,6 +18,9 @@ namespace Discord
         [JsonProperty("discriminator")]
         public uint Discriminator { get; private set; }
 
+        [JsonProperty("legacy_username")]
+        public string LegacyUsername { get; private set; }
+
         [JsonProperty("avatar")]
         protected string _avatarHash;
 
@@ -61,7 +64,7 @@ namespace Discord
         {
             get
             {
-                if (Discriminator == 0)
+                if (Discriminator == 0 && _bot)
                     return DiscordUserType.Webhook;
                 else
                     return _bot ? DiscordUserType.Bot : DiscordUserType.User;
@@ -123,6 +126,8 @@ namespace Discord
         /// </summary>
         public DiscordProfile GetProfile()
         {
+            if (Type == DiscordUserType.Webhook) 
+                throw new NotSupportedException("Cannot get the profile of a webhook.");
             return GetProfileAsync().GetAwaiter().GetResult();
         }
 
@@ -181,7 +186,7 @@ namespace Discord
 
         public override string ToString()
         {
-            return $"{Username}#{"0000".Remove(4 - Discriminator.ToString().Length) + Discriminator.ToString()}";
+            return $"{Username}{(Discriminator != 0 ? $"#{"0000".Remove(4 - Discriminator.ToString().Length) + Discriminator.ToString()}" : "")}";
         }
 
         public static implicit operator ulong(DiscordUser instance)
