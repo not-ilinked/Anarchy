@@ -61,7 +61,7 @@ namespace Discord
         {
             get
             {
-                if (Discriminator == 0 && Client.User.Id == 0)
+                if (Discriminator == 0 && !string.IsNullOrEmpty(Client.User.Email))
                     return DiscordUserType.Webhook;
                 else
                     return _bot ? DiscordUserType.Bot : DiscordUserType.User;
