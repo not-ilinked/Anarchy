@@ -30,8 +30,22 @@ namespace Discord
         [JsonProperty("user")]
         public DiscordProfileUser User { get; private set; }
 
+        [JsonProperty("user_profile")]
+        public DiscordUserProfileUser UserProfile { get; private set; }
+        
+        [JsonProperty("premium_type")]
+        private DiscordNitroType? _nitro;
+
+        public DiscordNitroType Nitro
+        {
+            get { return _nitro ?? DiscordNitroType.None; }
+        }
+
         [JsonProperty("premium_since")]
         public DateTime? NitroSince { get; private set; }
+
+        [JsonProperty("premium_guild_since")]
+        public DateTime? BoostingSince { get; private set; }
 
         [JsonProperty("mutual_guilds")]
         public IReadOnlyList<MutualGuild> MutualGuilds { get; private set; }

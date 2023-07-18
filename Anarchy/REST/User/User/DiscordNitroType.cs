@@ -4,6 +4,7 @@
     {
         None,
         Classic,
-        Nitro
+        Nitro,
+        Basic
     }
 }

@@ -3,7 +3,8 @@
     public enum DiscordMediaCloseCode
     {
         UnknownOpcode = 4001,
-        NotAuthenticated = 4003,
+        FailedToDecodePayload,
+        NotAuthenticated,
         AuthenticationFailed,
         AlreadyAuthenticated,
         InvalidSession,

@@ -3,6 +3,7 @@
     public enum GuildDefaultNotifications
     {
         AllMessages,
-        OnlyMentions
+        OnlyMentions,
+        Nothing
     }
 }

@@ -35,11 +35,24 @@ namespace Discord
         }
 
         /// <summary>
-        /// Sends a friend request to a user
+        /// Sends a friend request to a user with discriminator
         /// </summary>
         public static void SendFriendRequest(this DiscordClient client, string username, uint discriminator)
         {
             client.SendFriendRequestAsync(username, discriminator).GetAwaiter().GetResult();
+        }
+
+        public static async Task SendFriendRequestAsync(this DiscordClient client, string username)
+        {
+            await client.HttpClient.PostAsync("/users/@me/relationships", $"{{\"username\":\"{username}\",\"discriminator\":null}}");
+        }
+
+        /// <summary>
+        /// Sends a friend request to a user without discriminator
+        /// </summary>
+        public static void SendFriendRequest(this DiscordClient client, string username)
+        {
+            client.SendFriendRequestAsync(username).GetAwaiter().GetResult();
         }
 
         public static async Task BlockUserAsync(this DiscordClient client, ulong userId)

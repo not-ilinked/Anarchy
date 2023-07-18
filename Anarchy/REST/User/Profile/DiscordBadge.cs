@@ -19,6 +19,9 @@ namespace Discord
         System = 1 << 12,
         BugHunterLevel2 = 1 << 14,
         VerifiedBot = 1 << 16,
-        VerifiedBotDeveloper = 1 << 17
+        VerifiedBotDeveloper = 1 << 17,
+        CertifiedModerator = 1 << 18,
+        Spammer = 1 << 20, // not a badge however this flag applies if a user is flagged as spammer.
+        ActiveDeveloper = 1 << 22
     }
 }
