@@ -73,8 +73,6 @@ namespace Discord
         {
             if (settings.Email == null)
                 settings.Email = Email;
-            if (!settings.DiscriminatorProperty.Set)
-                settings.Discriminator = Discriminator;
             if (settings.Username == null)
                 settings.Username = Username;
 
